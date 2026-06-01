@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <title>@yield('title')</title>
     <!--== META TAGS ==-->
@@ -26,28 +26,16 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/pages.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/extra.style.css?v=0.3')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/extra.style2.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/admin-xisti.css')}}">
     @yield('page-css')
     <style>
         .currency:before {
             content: '{{ isset($currency_symbol) ? $currency_symbol : "COP" }}';
         }
-        @media only screen and (max-width: 576px) {
-            #google_translate_element {
-                position: absolute !important;
-                /*right: 2px !important;*/
-                top: 75px !important;
-                left: 0 !important;
-                z-index: 1000000 !important;
-            }
-            #render-content{
-                padding-top: 25px;
-            }
-        }
     </style>
 <!--    <script type='text/javascript' data-cfasync='false'>window.purechatApi = { l: [], t: [], on: function () { this.l.push(arguments); } }; (function () { var done = false; var script = document.createElement('script'); script.async = true; script.type = 'text/javascript'; script.src = 'https://app.purechat.com/VisitorWidget/WidgetScript'; document.getElementsByTagName('HEAD').item(0).appendChild(script); script.onreadystatechange = script.onload = function (e) { if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) { var w = new PCWidget({c: '54190bda-b8e9-437e-9990-1ca4e22849be', f: true }); done = true; } }; })();</script>-->
 </head>
 <body>
-<div id="google_translate_element" style="position: absolute; right: 350px; top:12px; z-index: 1000000"></div>
 <div id="render-css-link"></div>
 <div id="render-css"></div>
 <!-- [ Pre-loader ] start -->

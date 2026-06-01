@@ -12,6 +12,7 @@
 */
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminLocaleController;
 use App\Http\Controllers\Api\CustomerApiController;
 use App\Http\Controllers\Auth\AuthPagesController;
 use App\Http\Controllers\Auth\LoginController;
@@ -75,6 +76,9 @@ Route::post('post-heat-map', array(HeatMapController::class,'postAjaxDriverWebVi
 Route::get('cancel-heat-map', array(HeatMapController::class,'postDriverWebViewCancelHeatMap'))->name('cancel.heat.map');
 
 //======= Super Admin =======//
+
+Route::middleware(['setAdminLocale'])->group(function () {
+    Route::post('/admin/locale', [AdminLocaleController::class, 'update'])->name('post:admin:locale');
 
 Route::group(['middleware' => 'revalidate'], function () {
     Route::get('/admin/login', [AuthPagesController::class,'getAdminLogin'])->name('get:admin:login');
@@ -369,4 +373,5 @@ Route::prefix('admin')->group(function () {
             });
         });
     });
+});
 });

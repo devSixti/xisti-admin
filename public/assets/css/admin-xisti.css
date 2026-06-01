@@ -1,0 +1,60 @@
+/**
+ * Zimo admin — layout scroll, i18n navbar, form UX (dev branch).
+ */
+#render-content {
+    min-height: calc(100vh - 70px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.pcoded-inner-content {
+    min-height: calc(100vh - 70px);
+}
+
+.pcoded-main-container {
+    overflow: visible;
+}
+
+.admin-page-scroll {
+    overflow-x: hidden;
+    overflow-y: visible;
+}
+
+.admin-table-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.admin-locale-switcher .dropdown-menu {
+    min-width: 10rem;
+}
+
+.admin-locale-switcher .dropdown-item.active {
+    font-weight: 600;
+}
+
+.page-header.card {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: #fff;
+}
+
+.pcoded[layout-type="dark"] .page-header.card {
+    background: #2a3a4b;
+}
+
+.admin-settings-tabs .nav-link {
+    font-weight: 600;
+}
+
+.admin-settings-tab-pane {
+    padding-top: 1rem;
+}
+
+/* Sidebar scroll only inside menu */
+.pcoded-navbar .pcoded-inner-navbar.main-menu {
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+}

@@ -1,0 +1,86 @@
+<?php
+
+return array (
+  'locale' => 
+  array (
+    'es' => 'Espanhol',
+    'en' => 'Inglês',
+    'pt' => 'Português',
+    'fr' => 'Francês',
+    'it' => 'Italiano',
+    'switch' => 'Idioma',
+  ),
+  'nav' => 
+  array (
+    'navigation' => 'Navegação',
+    'dashboard' => 'Painel',
+    'logout' => 'Sair',
+    'change_password' => 'Alterar senha',
+    'security' => 'Segurança',
+  ),
+  'common' => 
+  array (
+    'save' => 'Salvar',
+    'submit' => 'Enviar',
+    'update' => 'Atualizar',
+    'back' => 'Voltar',
+    'cancel' => 'Cancelar',
+    'search' => 'Buscar',
+    'edit' => 'Editar',
+    'delete' => 'Excluir',
+    'add' => 'Adicionar',
+    'view' => 'Ver',
+    'actions' => 'Ações',
+    'status' => 'Status',
+    'yes' => 'Sim',
+    'no' => 'Não',
+    'active' => 'Ativo',
+    'inactive' => 'Inativo',
+    'required' => 'Obrigatório',
+    'select' => 'Selecionar',
+    'enabled' => 'Ativado',
+    'disabled' => 'Desativado',
+    'loading' => 'Carregando…',
+    'no_permission' => 'Você não tem permissão para acessar este módulo',
+    'session_expired' => 'Sua sessão expirou. Tente novamente.',
+  ),
+  'auth' => 
+  array (
+    'login_title' => 'Entrar',
+    'email' => 'E-mail',
+    'password' => 'Senha',
+  ),
+  'settings' => 
+  array (
+    'site_title' => 'Configurações do site',
+    'tab_general' => 'Geral',
+    'tab_payments' => 'Pagamentos',
+    'tab_auth' => 'Autenticação',
+    'tab_mobile_v102' => 'App móvel v1.0.2',
+    'tab_branding' => 'Marca',
+    'mobile_v102_heading' => 'Recursos opcionais v1.0.2 (desativados por padrão)',
+    'enable_expreso' => 'Mostrar Expreso no app',
+    'enable_encomiendas' => 'Mostrar Encomiendas no app',
+    'require_dimensions' => 'Exigir dimensões do pacote',
+    'destination_payments' => 'Métodos de pagamento no destino',
+    'mobile_v102_help' => 'Ative apenas com o app 1.0.2 publicado.',
+  ),
+  'modules' => 
+  array (
+    'misc' => 'Módulo',
+    'customer_list' => 'Clientes',
+    'site_setting' => 'Configurações do site',
+    'push_notification' => 'Notificações push',
+    'transport_providers_list' => 'Prestadores de transporte',
+    'drivers_list' => 'Motoristas',
+    'rides' => 'Corridas',
+    'service_settings' => 'Configurações de serviço',
+    'customer_report_issues' => 'Relatos de clientes',
+    'driver_report_issues' => 'Relatos de motoristas',
+    'report_issue_setting' => 'Configuração de relatos',
+    'faqs' => 'FAQs',
+    'heat_map' => 'Mapa de calor',
+    'language_lists' => 'Idiomas (app)',
+    'language_constant' => 'Constantes de idioma (app)',
+  ),
+);

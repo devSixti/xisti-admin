@@ -32,10 +32,6 @@
         .auth-box{
             margin: 20px auto 0 auto;
         }
-
-        #google_translate_element{
-            top:0;
-        }
     </style>
 @endsection
 @section('page-content')

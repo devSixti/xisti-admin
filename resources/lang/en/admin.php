@@ -1,0 +1,86 @@
+<?php
+
+return array (
+  'locale' => 
+  array (
+    'es' => 'Spanish',
+    'en' => 'English',
+    'pt' => 'Portuguese',
+    'fr' => 'French',
+    'it' => 'Italian',
+    'switch' => 'Language',
+  ),
+  'nav' => 
+  array (
+    'navigation' => 'Navigation',
+    'dashboard' => 'Dashboard',
+    'logout' => 'Logout',
+    'change_password' => 'Change Password',
+    'security' => 'Security',
+  ),
+  'common' => 
+  array (
+    'save' => 'Save',
+    'submit' => 'Submit',
+    'update' => 'Update',
+    'back' => 'Back',
+    'cancel' => 'Cancel',
+    'search' => 'Search',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
+    'add' => 'Add',
+    'view' => 'View',
+    'actions' => 'Actions',
+    'status' => 'Status',
+    'yes' => 'Yes',
+    'no' => 'No',
+    'active' => 'Active',
+    'inactive' => 'Inactive',
+    'required' => 'Required',
+    'select' => 'Select',
+    'enabled' => 'Enabled',
+    'disabled' => 'Disabled',
+    'loading' => 'Loading…',
+    'no_permission' => 'You don\'t have permission to access this module',
+    'session_expired' => 'Your page session expired. Please try again',
+  ),
+  'auth' => 
+  array (
+    'login_title' => 'Login',
+    'email' => 'Email',
+    'password' => 'Password',
+  ),
+  'settings' => 
+  array (
+    'site_title' => 'Site Setting',
+    'tab_general' => 'General',
+    'tab_payments' => 'Payments',
+    'tab_auth' => 'Authentication',
+    'tab_mobile_v102' => 'Mobile v1.0.2',
+    'tab_branding' => 'Branding',
+    'mobile_v102_heading' => 'Mobile v1.0.2 (production)',
+    'enable_expreso' => 'Show Expreso in mobile app',
+    'enable_encomiendas' => 'Show Encomiendas in mobile app',
+    'require_dimensions' => 'Require package dimensions (courier)',
+    'destination_payments' => 'Destination payment methods',
+    'mobile_v102_help' => 'Expreso and Encomiendas are on for app 1.0.2. Migration enable_official_mobile_v1_0_2 enables them by default; uncheck only for 1.0.1-only mode.',
+  ),
+  'modules' => 
+  array (
+    'misc' => 'Module',
+    'customer_list' => 'Customers',
+    'site_setting' => 'Site Settings',
+    'push_notification' => 'Push Notification',
+    'transport_providers_list' => 'Transport Providers List',
+    'drivers_list' => 'Drivers',
+    'rides' => 'Rides',
+    'service_settings' => 'Service Settings',
+    'customer_report_issues' => 'Customer report issues',
+    'driver_report_issues' => 'Driver report issues',
+    'report_issue_setting' => 'Report issue setting',
+    'faqs' => 'FAQs',
+    'heat_map' => 'Heat Map',
+    'language_lists' => 'Language Lists',
+    'language_constant' => 'Language Constant',
+  ),
+);

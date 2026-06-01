@@ -28,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'adminrole' =>\App\Http\Middleware\adminRole::class,
             'VerifyUser' => \App\Http\Middleware\VerifyUser::class,
             'setLocaleLang' => \App\Http\Middleware\SetLocalLang::class,
+            'setAdminLocale' => \App\Http\Middleware\SetAdminLocale::class,
         ]);
         $middleware->validateCsrfTokens(except: [
             '/webhook/wompi',

@@ -1,0 +1,86 @@
+<?php
+
+return array (
+  'locale' => 
+  array (
+    'es' => 'Español',
+    'en' => 'Inglés',
+    'pt' => 'Portugués',
+    'fr' => 'Francés',
+    'it' => 'Italiano',
+    'switch' => 'Idioma',
+  ),
+  'nav' => 
+  array (
+    'navigation' => 'Navegación',
+    'dashboard' => 'Panel',
+    'logout' => 'Cerrar sesión',
+    'change_password' => 'Cambiar contraseña',
+    'security' => 'Seguridad',
+  ),
+  'common' => 
+  array (
+    'save' => 'Guardar',
+    'submit' => 'Enviar',
+    'update' => 'Actualizar',
+    'back' => 'Volver',
+    'cancel' => 'Cancelar',
+    'search' => 'Buscar',
+    'edit' => 'Editar',
+    'delete' => 'Eliminar',
+    'add' => 'Agregar',
+    'view' => 'Ver',
+    'actions' => 'Acciones',
+    'status' => 'Estado',
+    'yes' => 'Sí',
+    'no' => 'No',
+    'active' => 'Activo',
+    'inactive' => 'Inactivo',
+    'required' => 'Obligatorio',
+    'select' => 'Seleccionar',
+    'enabled' => 'Habilitado',
+    'disabled' => 'Deshabilitado',
+    'loading' => 'Cargando…',
+    'no_permission' => 'No tienes permiso para acceder a este módulo',
+    'session_expired' => 'Tu sesión expiró. Intenta de nuevo.',
+  ),
+  'auth' => 
+  array (
+    'login_title' => 'Iniciar sesión',
+    'email' => 'Correo',
+    'password' => 'Contraseña',
+  ),
+  'settings' => 
+  array (
+    'site_title' => 'Configuración del sitio',
+    'tab_general' => 'General',
+    'tab_payments' => 'Pagos',
+    'tab_auth' => 'Autenticación',
+    'tab_mobile_v102' => 'App móvil v1.0.2',
+    'tab_branding' => 'Marca e imágenes',
+    'mobile_v102_heading' => 'App móvil v1.0.2 (producción)',
+    'enable_expreso' => 'Mostrar Expreso en la app',
+    'enable_encomiendas' => 'Mostrar Encomiendas en la app',
+    'require_dimensions' => 'Exigir dimensiones de paquete (envíos)',
+    'destination_payments' => 'Métodos de pago en destino',
+    'mobile_v102_help' => 'Expreso y Encomiendas activos para la app 1.0.2. La migración enable_official_mobile_v1_0_2 los enciende por defecto; desmarca solo si necesitas modo 1.0.1.',
+  ),
+  'modules' => 
+  array (
+    'misc' => 'Módulo',
+    'customer_list' => 'Clientes',
+    'site_setting' => 'Configuración del sitio',
+    'push_notification' => 'Notificaciones push',
+    'transport_providers_list' => 'Conductores transporte',
+    'drivers_list' => 'Conductores',
+    'rides' => 'Viajes',
+    'service_settings' => 'Configuración de servicios',
+    'customer_report_issues' => 'Reportes de clientes',
+    'driver_report_issues' => 'Reportes de conductores',
+    'report_issue_setting' => 'Configuración de reportes',
+    'faqs' => 'Preguntas frecuentes',
+    'heat_map' => 'Mapa de calor',
+    'language_lists' => 'Idiomas (app)',
+    'language_constant' => 'Constantes de idioma (app)',
+  ),
+);

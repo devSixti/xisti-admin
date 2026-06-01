@@ -1,0 +1,86 @@
+<?php
+
+return array (
+  'locale' => 
+  array (
+    'es' => 'Espagnol',
+    'en' => 'Anglais',
+    'pt' => 'Portugais',
+    'fr' => 'Français',
+    'it' => 'Italien',
+    'switch' => 'Langue',
+  ),
+  'nav' => 
+  array (
+    'navigation' => 'Navigation',
+    'dashboard' => 'Tableau de bord',
+    'logout' => 'Déconnexion',
+    'change_password' => 'Changer le mot de passe',
+    'security' => 'Sécurité',
+  ),
+  'common' => 
+  array (
+    'save' => 'Enregistrer',
+    'submit' => 'Soumettre',
+    'update' => 'Mettre à jour',
+    'back' => 'Retour',
+    'cancel' => 'Annuler',
+    'search' => 'Rechercher',
+    'edit' => 'Modifier',
+    'delete' => 'Supprimer',
+    'add' => 'Ajouter',
+    'view' => 'Voir',
+    'actions' => 'Actions',
+    'status' => 'Statut',
+    'yes' => 'Oui',
+    'no' => 'Non',
+    'active' => 'Actif',
+    'inactive' => 'Inactif',
+    'required' => 'Obligatoire',
+    'select' => 'Sélectionner',
+    'enabled' => 'Activé',
+    'disabled' => 'Désactivé',
+    'loading' => 'Chargement…',
+    'no_permission' => 'Vous n\'avez pas la permission d\'accéder à ce module',
+    'session_expired' => 'Votre session a expiré. Veuillez réessayer.',
+  ),
+  'auth' => 
+  array (
+    'login_title' => 'Connexion',
+    'email' => 'E-mail',
+    'password' => 'Mot de passe',
+  ),
+  'settings' => 
+  array (
+    'site_title' => 'Paramètres du site',
+    'tab_general' => 'Général',
+    'tab_payments' => 'Paiements',
+    'tab_auth' => 'Authentification',
+    'tab_mobile_v102' => 'Mobile v1.0.2',
+    'tab_branding' => 'Image de marque',
+    'mobile_v102_heading' => 'Fonctions v1.0.2 (optionnel, désactivé par défaut)',
+    'enable_expreso' => 'Afficher Expreso dans l’app',
+    'enable_encomiendas' => 'Afficher Encomiendas dans l’app',
+    'require_dimensions' => 'Exiger les dimensions du colis',
+    'destination_payments' => 'Modes de paiement à destination',
+    'mobile_v102_help' => 'Activer uniquement lorsque l’app 1.0.2 est déployée.',
+  ),
+  'modules' => 
+  array (
+    'misc' => 'Module',
+    'customer_list' => 'Clients',
+    'site_setting' => 'Paramètres du site',
+    'push_notification' => 'Notifications push',
+    'transport_providers_list' => 'Prestataires transport',
+    'drivers_list' => 'Chauffeurs',
+    'rides' => 'Courses',
+    'service_settings' => 'Paramètres de service',
+    'customer_report_issues' => 'Signalements clients',
+    'driver_report_issues' => 'Signalements chauffeurs',
+    'report_issue_setting' => 'Paramètres signalements',
+    'faqs' => 'FAQ',
+    'heat_map' => 'Carte thermique',
+    'language_lists' => 'Langues (app)',
+    'language_constant' => 'Constantes langue (app)',
+  ),
+);

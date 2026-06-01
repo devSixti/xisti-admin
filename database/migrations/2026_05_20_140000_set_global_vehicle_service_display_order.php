@@ -16,12 +16,22 @@ return new class extends Migration
             return;
         }
 
+        $hasServiceMode = Schema::hasColumn('vehicle_services', 'service_mode');
+
         $updates = [
-            3 => ['service_mode' => 'transport', 'display_order' => 1],
-            5 => ['service_mode' => 'transport', 'display_order' => 2],
-            1 => ['service_mode' => 'transport', 'display_order' => 3],
-            4 => ['service_mode' => 'delivery', 'display_order' => 4],
+            3 => ['display_order' => 1],
+            5 => ['display_order' => 2],
+            1 => ['display_order' => 3],
+            4 => ['display_order' => 4],
         ];
+        if ($hasServiceMode) {
+            $updates = [
+                3 => ['service_mode' => 'transport', 'display_order' => 1],
+                5 => ['service_mode' => 'transport', 'display_order' => 2],
+                1 => ['service_mode' => 'transport', 'display_order' => 3],
+                4 => ['service_mode' => 'delivery', 'display_order' => 4],
+            ];
+        }
 
         foreach ($updates as $id => $values) {
             DB::table('vehicle_services')->where('id', $id)->update($values);

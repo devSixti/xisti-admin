@@ -1,0 +1,86 @@
+<?php
+
+return array (
+  'locale' => 
+  array (
+    'es' => 'Spagnolo',
+    'en' => 'Inglese',
+    'pt' => 'Portoghese',
+    'fr' => 'Francese',
+    'it' => 'Italiano',
+    'switch' => 'Lingua',
+  ),
+  'nav' => 
+  array (
+    'navigation' => 'Navigazione',
+    'dashboard' => 'Dashboard',
+    'logout' => 'Esci',
+    'change_password' => 'Cambia password',
+    'security' => 'Sicurezza',
+  ),
+  'common' => 
+  array (
+    'save' => 'Salva',
+    'submit' => 'Invia',
+    'update' => 'Aggiorna',
+    'back' => 'Indietro',
+    'cancel' => 'Annulla',
+    'search' => 'Cerca',
+    'edit' => 'Modifica',
+    'delete' => 'Elimina',
+    'add' => 'Aggiungi',
+    'view' => 'Visualizza',
+    'actions' => 'Azioni',
+    'status' => 'Stato',
+    'yes' => 'Sì',
+    'no' => 'No',
+    'active' => 'Attivo',
+    'inactive' => 'Inattivo',
+    'required' => 'Obbligatorio',
+    'select' => 'Seleziona',
+    'enabled' => 'Abilitato',
+    'disabled' => 'Disabilitato',
+    'loading' => 'Caricamento…',
+    'no_permission' => 'Non hai il permesso di accedere a questo modulo',
+    'session_expired' => 'La sessione è scaduta. Riprova.',
+  ),
+  'auth' => 
+  array (
+    'login_title' => 'Accedi',
+    'email' => 'Email',
+    'password' => 'Password',
+  ),
+  'settings' => 
+  array (
+    'site_title' => 'Impostazioni sito',
+    'tab_general' => 'Generale',
+    'tab_payments' => 'Pagamenti',
+    'tab_auth' => 'Autenticazione',
+    'tab_mobile_v102' => 'Mobile v1.0.2',
+    'tab_branding' => 'Brand',
+    'mobile_v102_heading' => 'Funzioni v1.0.2 (opzionali, disattivate)',
+    'enable_expreso' => 'Mostra Expreso nell’app',
+    'enable_encomiendas' => 'Mostra Encomiendas nell’app',
+    'require_dimensions' => 'Richiedi dimensioni pacco',
+    'destination_payments' => 'Metodi di pagamento a destinazione',
+    'mobile_v102_help' => 'Abilita solo con l’app 1.0.2 pubblicata.',
+  ),
+  'modules' => 
+  array (
+    'misc' => 'Modulo',
+    'customer_list' => 'Clienti',
+    'site_setting' => 'Impostazioni sito',
+    'push_notification' => 'Notifiche push',
+    'transport_providers_list' => 'Provider trasporto',
+    'drivers_list' => 'Autisti',
+    'rides' => 'Corse',
+    'service_settings' => 'Impostazioni servizio',
+    'customer_report_issues' => 'Segnalazioni clienti',
+    'driver_report_issues' => 'Segnalazioni autisti',
+    'report_issue_setting' => 'Impostazioni segnalazioni',
+    'faqs' => 'FAQ',
+    'heat_map' => 'Mappa termica',
+    'language_lists' => 'Lingue (app)',
+    'language_constant' => 'Costanti lingua (app)',
+  ),
+);

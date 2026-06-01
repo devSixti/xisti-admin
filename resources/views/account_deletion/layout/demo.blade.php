@@ -42,7 +42,6 @@
 </head>
 
 <body>
-<div id="google_translate_element" style="position: absolute; right: 350px; top:12px; z-index: 1000000"></div>
 <div id="render-css-link">
 </div>
 <div id="render-css">
@@ -79,14 +78,6 @@
 
 {{--</div>--}}
 <!--======== SCRIPT FILES =========-->
-<script type="text/javascript">
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'pt'}, 'google_translate_element');
-    }
-</script>
-
-<script type="text/javascript"
-        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <script type="text/javascript" src="{{ asset('assets/js/jquery.min.js')}}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/jquery-ui.min.js')}}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/popper.min.js')}}"></script>

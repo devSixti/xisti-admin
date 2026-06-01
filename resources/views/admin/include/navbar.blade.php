@@ -23,6 +23,7 @@
             <ul class="nav-left">
             </ul>
             <ul class="nav-right">
+                @include('admin.include.locale_switcher')
                 <li class="user-profile header-notification">
                     <div class="dropdown-primary dropdown">
                         <div class="dropdown-toggle" data-toggle="dropdown">
@@ -34,13 +35,13 @@
                             @if(Illuminate\Support\Facades\Auth::guard("admin")->check() && Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 1)
                                 <li>
                                     <a href="@if(Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 1 || Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 4) {{ route('get:admin:change_password') }} @elseif(Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 2) {{ route('get:dispatcher:change_password') }} @elseif(Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 3) {{ route('get:account:change_password') }} @endif">
-                                        <i class="feather icon-edit"></i> Change Password
+                                        <i class="feather icon-edit"></i> {{ __('admin.nav.change_password') }}
                                     </a>
                                 </li>
                             @endif
                             <li>
                                 @if(Illuminate\Support\Facades\Auth::guard("admin")->check())
-                                    <a href="{{ route('admin:logout',[ 'admin' ]) }}"><i class="feather icon-log-out"></i>Logout</a>
+                                    <a href="{{ route('admin:logout',[ 'admin' ]) }}"><i class="feather icon-log-out"></i>{{ __('admin.nav.logout') }}</a>
                                 @endif
                             </li>
                         </ul>
