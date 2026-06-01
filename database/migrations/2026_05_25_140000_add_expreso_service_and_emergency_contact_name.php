@@ -50,6 +50,9 @@ return new class extends Migration
         if (Schema::hasColumn('vehicle_services', 'max_bargain_percent')) {
             $row['max_bargain_percent'] = 10;
         }
+        if (Schema::hasColumn('vehicle_services', 'max_offer_percent')) {
+            $row['max_offer_percent'] = 10;
+        }
         DB::table('vehicle_services')->insert($row);
     }
 

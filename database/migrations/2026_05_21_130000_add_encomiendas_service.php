@@ -20,11 +20,15 @@ return new class extends Migration
             return;
         }
 
-        if (!DB::table('vehicle_services')->where('service_mode', 'encomiendas')->exists()) {
+        $hasServiceMode = Schema::hasColumn('vehicle_services', 'service_mode');
+        $encomiendasExists = $hasServiceMode
+            ? DB::table('vehicle_services')->where('service_mode', 'encomiendas')->exists()
+            : DB::table('vehicle_services')->where('name', 'Encomiendas')->exists();
+
+        if (! $encomiendasExists) {
             $now = now();
             $row = [
                 'name' => 'Encomiendas',
-                'service_mode' => 'encomiendas',
                 'status' => 1,
                 'cost_for_km' => 2.0,
                 'vehicle_service_description' => 'Compras y entregas por encargo',
@@ -47,6 +51,12 @@ return new class extends Migration
             if (Schema::hasColumn('vehicle_services', 'max_bargain_percent')) {
                 $row['max_bargain_percent'] = 15;
             }
+            if (Schema::hasColumn('vehicle_services', 'max_offer_percent')) {
+                $row['max_offer_percent'] = 15;
+            }
+            if ($hasServiceMode) {
+                $row['service_mode'] = 'encomiendas';
+            }
             DB::table('vehicle_services')->insert($row);
         }
     }
@@ -60,7 +70,11 @@ return new class extends Migration
         }
 
         if (Schema::hasTable('vehicle_services')) {
-            DB::table('vehicle_services')->where('service_mode', 'encomiendas')->delete();
+            if (Schema::hasColumn('vehicle_services', 'service_mode')) {
+                DB::table('vehicle_services')->where('service_mode', 'encomiendas')->delete();
+            } else {
+                DB::table('vehicle_services')->where('name', 'Encomiendas')->delete();
+            }
         }
     }
 };
