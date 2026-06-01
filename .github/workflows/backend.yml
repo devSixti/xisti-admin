@@ -77,9 +77,9 @@ jobs:
     environment: production
 
     env:
-      APP_DIR: /var/www/app-zimo-fox-drive-v2-clone
-      DEPLOY_USER: appzimodevop
-      CD_STAGING: /tmp/appzimo-cd-staging
+      APP_DIR: /var/www/xisti-admin
+      DEPLOY_USER: ubuntu
+      CD_STAGING: /tmp/xisti-cd-staging
 
     steps:
       - name: Checkout código
@@ -88,8 +88,8 @@ jobs:
       - name: Empaquetar release (sin .git ni vendor)
         run: |
           # Tarball fuera del workspace: si se crea dentro de ".", tar falla con
-          # "file changed as we read it" al escribir appzimo-release.tar.gz.
-          RELEASE_TAR="${RUNNER_TEMP}/appzimo-release.tar.gz"
+          # "file changed as we read it" al escribir xisti-release.tar.gz.
+          RELEASE_TAR="${RUNNER_TEMP}/xisti-release.tar.gz"
           tar czf "${RELEASE_TAR}" \
             -C "${GITHUB_WORKSPACE}" \
             --exclude=.git \
@@ -102,8 +102,8 @@ jobs:
             --exclude=storage/framework/views \
             --exclude=database/database.sqlite \
             .
-          cp "${RELEASE_TAR}" "${GITHUB_WORKSPACE}/appzimo-release.tar.gz"
-          ls -lh "${GITHUB_WORKSPACE}/appzimo-release.tar.gz"
+          cp "${RELEASE_TAR}" "${GITHUB_WORKSPACE}/xisti-release.tar.gz"
+          ls -lh "${GITHUB_WORKSPACE}/xisti-release.tar.gz"
 
       - name: Subir paquete a EC2
         uses: appleboy/scp-action@v0.1.7
@@ -112,7 +112,7 @@ jobs:
           username: ${{ secrets.EC2_SSH_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           port: ${{ secrets.EC2_SSH_PORT }}
-          source: appzimo-release.tar.gz
+          source: xisti-release.tar.gz
           target: /tmp
           strip_components: 0
           overwrite: true
@@ -135,15 +135,15 @@ jobs:
           script: |
             bash <<'DEPLOY_EOF'
             set -euo pipefail
-            APP_DIR="${APP_DIR:-/var/www/app-zimo-fox-drive-v2-clone}"
-            DEPLOY_USER="${DEPLOY_USER:-appzimodevop}"
-            CD_STAGING="${CD_STAGING:-/tmp/appzimo-cd-staging}"
+            APP_DIR="${APP_DIR:-/var/www/xisti-admin}"
+            DEPLOY_USER="${DEPLOY_USER:-ubuntu}"
+            CD_STAGING="${CD_STAGING:-/tmp/xisti-cd-staging}"
 
             rm -rf "${CD_STAGING}"
             mkdir -p "${CD_STAGING}"
-            TAR_PATH="/tmp/appzimo-release.tar.gz"
+            TAR_PATH="/tmp/xisti-release.tar.gz"
             if [ ! -f "${TAR_PATH}" ]; then
-              TAR_PATH="/tmp/tmp/appzimo-release.tar.gz"
+              TAR_PATH="/tmp/tmp/xisti-release.tar.gz"
             fi
             if [ ! -f "${TAR_PATH}" ]; then
               echo "ERROR: release tarball not found under /tmp"
@@ -151,7 +151,7 @@ jobs:
               exit 1
             fi
             tar xzf "${TAR_PATH}" -C "${CD_STAGING}"
-            rm -f "${TAR_PATH}" /tmp/tmp/appzimo-release.tar.gz 2>/dev/null || true
+            rm -f "${TAR_PATH}" /tmp/tmp/xisti-release.tar.gz 2>/dev/null || true
 
             sudo -u "${DEPLOY_USER}" rsync -av \
               --exclude '.env' \
@@ -167,7 +167,7 @@ jobs:
               composer install --no-dev --optimize-autoloader --no-interaction
             "
 
-            # Migrations need ALTER; .env uses zimo_restricted_user (DML only).
+            # Migrations need ALTER; use dedicated migrate creds from GitHub Secrets.
             bash "${APP_DIR}/scripts/ec2-artisan-migrate.sh" "${APP_DIR}" "${DEPLOY_USER}"
 
             sudo -u "${DEPLOY_USER}" bash -lc "
