@@ -11,11 +11,15 @@ return new class extends Migration
         if (!Schema::hasTable('general_settings')) {
             return;
         }
-        Schema::table('general_settings', function (Blueprint $table) {
-            if (!Schema::hasColumn('general_settings', 'destination_payment_methods')) {
-                $table->text('destination_payment_methods')->nullable()->after('vat_rate_on_commission');
-            }
-        });
+        if (! Schema::hasColumn('general_settings', 'destination_payment_methods')) {
+            Schema::table('general_settings', function (Blueprint $table) {
+                if (Schema::hasColumn('general_settings', 'vat_rate_on_commission')) {
+                    $table->text('destination_payment_methods')->nullable()->after('vat_rate_on_commission');
+                } else {
+                    $table->text('destination_payment_methods')->nullable();
+                }
+            });
+        }
     }
 
     public function down(): void
