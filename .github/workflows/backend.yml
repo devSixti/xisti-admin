@@ -53,6 +53,11 @@ jobs:
       - name: Generar APP_KEY válido
         run: php artisan key:generate --force --no-interaction
 
+      - name: Preparar directorios storage (Blade cache, logs)
+        run: |
+          mkdir -p storage/framework/{cache/data,sessions,views} storage/logs bootstrap/cache
+          chmod -R u+rwX storage bootstrap/cache
+
       - name: Migrar base de datos (SQLite)
         run: php artisan migrate --force
 
