@@ -1,0 +1,187 @@
+name: Backend CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  ci-tests:
+    name: CI Testing (Laravel / PHP)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Código
+        uses: actions/checkout@v4
+
+      - name: Configurar PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, sqlite3, bcmath, gd, curl, openssl
+          tools: composer:v2
+          coverage: none
+
+      - name: Configurar Variables de Entorno (.env)
+        run: |
+          cp .env.example .env
+          {
+            echo "APP_ENV=testing"
+            echo "DB_CONNECTION=sqlite"
+            echo "DB_DATABASE=:memory:"
+            echo "CACHE_STORE=array"
+            echo "SESSION_DRIVER=array"
+            echo "QUEUE_CONNECTION=sync"
+          } >> .env
+
+      - name: Cachear Dependencias de Composer
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-8.2-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-8.2-composer-
+
+      - name: Instalar Dependencias (Composer)
+        run: composer install --no-ansi --no-interaction --no-progress --prefer-dist
+
+      - name: Generar APP_KEY válido
+        run: php artisan key:generate --force --no-interaction
+
+      - name: Migrar base de datos (SQLite)
+        run: php artisan migrate --force
+
+      - name: Validar rutas y autoload
+        run: |
+          php artisan route:list --except-vendor --no-ansi
+          php -r "require 'vendor/autoload.php'; class_exists(\\App\\Http\\Controllers\\Api\\Auth\\ResetPasswordController::class) || exit(1);"
+
+      - name: Ejecutar Pruebas Automatizadas (PHPUnit)
+        run: ./vendor/bin/phpunit
+
+  deploy-production:
+    name: CD — Deploy to EC2 (production)
+    needs: ci-tests
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+
+    env:
+      APP_DIR: /var/www/app-zimo-fox-drive-v2-clone
+      DEPLOY_USER: appzimodevop
+      CD_STAGING: /tmp/appzimo-cd-staging
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Empaquetar release (sin .git ni vendor)
+        run: |
+          # Tarball fuera del workspace: si se crea dentro de ".", tar falla con
+          # "file changed as we read it" al escribir appzimo-release.tar.gz.
+          RELEASE_TAR="${RUNNER_TEMP}/appzimo-release.tar.gz"
+          tar czf "${RELEASE_TAR}" \
+            -C "${GITHUB_WORKSPACE}" \
+            --exclude=.git \
+            --exclude=vendor \
+            --exclude=node_modules \
+            --exclude=.env \
+            --exclude=storage/logs \
+            --exclude=storage/framework/cache/data \
+            --exclude=storage/framework/sessions \
+            --exclude=storage/framework/views \
+            --exclude=database/database.sqlite \
+            .
+          cp "${RELEASE_TAR}" "${GITHUB_WORKSPACE}/appzimo-release.tar.gz"
+          ls -lh "${GITHUB_WORKSPACE}/appzimo-release.tar.gz"
+
+      - name: Subir paquete a EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_SSH_USER }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT }}
+          source: appzimo-release.tar.gz
+          target: /tmp
+          strip_components: 0
+          overwrite: true
+
+      - name: Instalar en EC2
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          APP_DIR: ${{ env.APP_DIR }}
+          DEPLOY_USER: ${{ env.DEPLOY_USER }}
+          CD_STAGING: ${{ env.CD_STAGING }}
+          DB_MIGRATE_USERNAME: ${{ secrets.EC2_DB_MIGRATE_USERNAME }}
+          DB_MIGRATE_PASSWORD: ${{ secrets.EC2_DB_MIGRATE_PASSWORD }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_SSH_USER }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT }}
+          envs: APP_DIR,DEPLOY_USER,CD_STAGING,DB_MIGRATE_USERNAME,DB_MIGRATE_PASSWORD
+          script_stop: false
+          script: |
+            bash <<'DEPLOY_EOF'
+            set -euo pipefail
+            APP_DIR="${APP_DIR:-/var/www/app-zimo-fox-drive-v2-clone}"
+            DEPLOY_USER="${DEPLOY_USER:-appzimodevop}"
+            CD_STAGING="${CD_STAGING:-/tmp/appzimo-cd-staging}"
+
+            rm -rf "${CD_STAGING}"
+            mkdir -p "${CD_STAGING}"
+            TAR_PATH="/tmp/appzimo-release.tar.gz"
+            if [ ! -f "${TAR_PATH}" ]; then
+              TAR_PATH="/tmp/tmp/appzimo-release.tar.gz"
+            fi
+            if [ ! -f "${TAR_PATH}" ]; then
+              echo "ERROR: release tarball not found under /tmp"
+              ls -la /tmp /tmp/tmp 2>/dev/null || true
+              exit 1
+            fi
+            tar xzf "${TAR_PATH}" -C "${CD_STAGING}"
+            rm -f "${TAR_PATH}" /tmp/tmp/appzimo-release.tar.gz 2>/dev/null || true
+
+            sudo -u "${DEPLOY_USER}" rsync -av \
+              --exclude '.env' \
+              --exclude 'storage' \
+              --exclude 'vendor' \
+              --exclude '.git' \
+              --exclude 'node_modules' \
+              "${CD_STAGING}/" "${APP_DIR}/"
+
+            sudo -u "${DEPLOY_USER}" bash -lc "
+              set -euo pipefail
+              cd '${APP_DIR}'
+              composer install --no-dev --optimize-autoloader --no-interaction
+            "
+
+            # Migrations need ALTER; .env uses zimo_restricted_user (DML only).
+            bash "${APP_DIR}/scripts/ec2-artisan-migrate.sh" "${APP_DIR}" "${DEPLOY_USER}"
+
+            sudo -u "${DEPLOY_USER}" bash -lc "
+              set -euo pipefail
+              cd '${APP_DIR}'
+              php artisan config:cache
+              php artisan view:cache
+              rm -f bootstrap/cache/routes-v7.php bootstrap/cache/routes.php 2>/dev/null || true
+              chmod -R ug+rwx storage bootstrap/cache 2>/dev/null || true
+            "
+
+            sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/storage" "${APP_DIR}/bootstrap/cache"
+            sudo chmod -R ug+rwx "${APP_DIR}/storage" "${APP_DIR}/bootstrap/cache"
+            # PHP-FPM (www-data) must write profile/document uploads under public/assets/images
+            if [ -d "${APP_DIR}/public/assets/images" ]; then
+              sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/public/assets/images"
+              sudo find "${APP_DIR}/public/assets/images" -type d -exec chmod 2775 {} \;
+              sudo find "${APP_DIR}/public/assets/images" -type f -exec chmod 664 {} \;
+            fi
+            rm -rf "${CD_STAGING}"
+            sudo systemctl reload php8.2-fpm nginx
+            DEPLOY_EOF

@@ -1,0 +1,19 @@
+sequenceDiagram
+    participant P as Pasajero app
+    participant API as UserController API
+    participant DB as MySQL
+    participant D as Conductor app
+    participant FCM as Firebase FCM
+
+    P->>API: POST ride-booking
+    API->>DB: crear user_ride_booking
+    API->>FCM: notificar conductores cercanos
+
+    D->>API: POST available-ride-request
+    D->>API: POST driver-bid
+    P->>API: POST accept-ride / decline-request
+
+    D->>API: POST update-ride-status
+    P->>API: POST ride-payment
+    API->>DB: wallet / Wompi según método
+    P->>API: POST ride-user-rating

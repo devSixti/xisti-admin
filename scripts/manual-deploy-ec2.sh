@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+# Manual production deploy to AWS EC2 (when GitHub Actions billing blocks CD).
+# Usage: ./scripts/manual-deploy-ec2.sh
+# Requires: ssh alias "zimo-ec2" or env EC2_SSH_HOST, EC2_SSH_PORT, EC2_SSH_KEY
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "${ROOT}"
+
+EC2_HOST="${EC2_SSH_HOST:-ec2-18-208-4-15.compute-1.amazonaws.com}"
+EC2_PORT="${EC2_SSH_PORT:-927}"
+EC2_USER="${EC2_SSH_USER:-ubuntu}"
+EC2_KEY="${EC2_SSH_KEY:-${HOME}/.ssh/app-zimo-root-key.pem}"
+SSH_TARGET="${EC2_USER}@${EC2_HOST}"
+SSH_OPTS=(-i "${EC2_KEY}" -p "${EC2_PORT}" -o IdentitiesOnly=yes)
+
+if [[ -f "${HOME}/.ssh/config" ]] && grep -q '^Host zimo-ec2' "${HOME}/.ssh/config" 2>/dev/null; then
+  SSH_CMD=(ssh zimo-ec2)
+  SCP_CMD=(scp -P 927 -o IdentitiesOnly=yes -i "${EC2_KEY}")
+else
+  SSH_CMD=(ssh "${SSH_OPTS[@]}" "${SSH_TARGET}")
+  SCP_CMD=(scp "${SSH_OPTS[@]}")
+fi
+
+RELEASE_TAR="$(mktemp /tmp/appzimo-release.XXXXXX.tar.gz)"
+trap 'rm -f "${RELEASE_TAR}"' EXIT
+
+echo "==> Branch: $(git branch --show-current) @ $(git rev-parse --short HEAD)"
+echo "==> Building release tarball..."
+tar czf "${RELEASE_TAR}" \
+  --exclude=.git \
+  --exclude=vendor \
+  --exclude=node_modules \
+  --exclude=.env \
+  --exclude=storage/logs \
+  --exclude=storage/framework/cache/data \
+  --exclude=storage/framework/sessions \
+  --exclude=storage/framework/views \
+  --exclude=database/database.sqlite \
+  .
+
+echo "==> Uploading to EC2..."
+"${SCP_CMD[@]}" "${RELEASE_TAR}" "${SSH_TARGET}:/tmp/appzimo-release.tar.gz"
+
+echo "==> Installing on EC2..."
+"${SSH_CMD[@]}" 'bash -s' <<'DEPLOY_EOF'
+set -euo pipefail
+APP_DIR="/var/www/app-zimo-fox-drive-v2-clone"
+DEPLOY_USER="appzimodevop"
+CD_STAGING="/tmp/appzimo-cd-staging"
+
+rm -rf "${CD_STAGING}"
+mkdir -p "${CD_STAGING}"
+TAR_PATH="/tmp/appzimo-release.tar.gz"
+tar xzf "${TAR_PATH}" -C "${CD_STAGING}"
+rm -f "${TAR_PATH}"
+
+sudo -u "${DEPLOY_USER}" rsync -av \
+  --exclude '.env' \
+  --exclude 'storage' \
+  --exclude 'vendor' \
+  --exclude '.git' \
+  --exclude 'node_modules' \
+  "${CD_STAGING}/" "${APP_DIR}/"
+
+sudo -u "${DEPLOY_USER}" bash -lc "
+  set -euo pipefail
+  cd '${APP_DIR}'
+  composer install --no-dev --optimize-autoloader --no-interaction
+"
+
+bash "${APP_DIR}/scripts/ec2-artisan-migrate.sh" "${APP_DIR}" "${DEPLOY_USER}"
+
+sudo -u "${DEPLOY_USER}" bash -lc "
+  set -euo pipefail
+  cd '${APP_DIR}'
+  php artisan config:cache
+  php artisan view:cache
+  rm -f bootstrap/cache/routes-v7.php bootstrap/cache/routes.php 2>/dev/null || true
+  chmod -R ug+rwx storage bootstrap/cache 2>/dev/null || true
+"
+
+sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/storage" "${APP_DIR}/bootstrap/cache"
+sudo chmod -R ug+rwx "${APP_DIR}/storage" "${APP_DIR}/bootstrap/cache"
+if [ -d "${APP_DIR}/public/assets/images" ]; then
+  sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/public/assets/images"
+  sudo find "${APP_DIR}/public/assets/images" -type d -exec chmod 2775 {} \;
+  sudo find "${APP_DIR}/public/assets/images" -type f -exec chmod 664 {} \;
+fi
+rm -rf "${CD_STAGING}"
+sudo systemctl reload php8.2-fpm nginx
+echo "==> Deploy OK — $(sudo -u ${DEPLOY_USER} bash -lc "cd ${APP_DIR} && git rev-parse --short HEAD 2>/dev/null || echo 'no-git'")"
+DEPLOY_EOF
+
+echo "==> Done."

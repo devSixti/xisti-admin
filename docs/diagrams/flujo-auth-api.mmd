@@ -1,0 +1,22 @@
+sequenceDiagram
+    participant App as App móvil
+    participant API as Laravel API
+    participant Auth as AuthAlertClass SG
+    participant DB as MySQL users
+
+    App->>API: POST /api/customer/login
+    API->>Auth: checkAuthorizationApp()
+    Auth-->>API: OK / rechazo
+    API->>DB: buscar o crear usuario
+    API->>DB: generar access_token
+    API-->>App: status 1 + user_id + access_token
+
+    Note over App,DB: Requests posteriores incluyen user_id + access_token
+
+    App->>API: POST /api/customer/home
+    API->>DB: checkUserAllow(user_id, access_token)
+    alt token inválido
+        API-->>App: status 4
+    else OK
+        API-->>App: datos home
+    end

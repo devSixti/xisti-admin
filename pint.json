@@ -1,0 +1,7 @@
+{
+    "exclude": [
+        "app/Classes/AuthAlertClass.php",
+        "app/Classes/ixed.8.2.lin",
+        "vendor"
+    ]
+}

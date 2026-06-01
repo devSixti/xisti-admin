@@ -1,0 +1,32 @@
+flowchart TB
+    subgraph clients [Clientes]
+        MobileP[App pasajero Flutter]
+        MobileD[App conductor Flutter]
+        Browser[Admin navegador]
+    end
+
+    subgraph ec2 [AWS EC2]
+        Nginx[Nginx :443 / :80]
+        PHP[PHP 8.2-FPM]
+        Laravel[Laravel 11 Appzimo Admin]
+        MySQL[(MySQL db_zemo_app)]
+    end
+
+    subgraph external [Servicios externos]
+        Firebase[(Firebase RTDB + FCM)]
+        Wompi[Wompi pagos]
+        Twilio[Twilio Verify OTP]
+        GMaps[Google Maps APIs]
+        OAuth[Facebook / Google OAuth]
+    end
+
+    MobileP -->|HTTPS POST /api/customer/*| Nginx
+    MobileD -->|HTTPS POST /api/customer/*| Nginx
+    Browser -->|HTTPS /admin/* session| Nginx
+    Nginx --> PHP --> Laravel
+    Laravel --> MySQL
+    Laravel --> Firebase
+    Laravel --> Wompi
+    Laravel --> Twilio
+    Laravel --> GMaps
+    Laravel --> OAuth
