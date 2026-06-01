@@ -188,5 +188,5 @@ jobs:
               sudo find "${APP_DIR}/public/assets/images" -type f -exec chmod 664 {} \;
             fi
             rm -rf "${CD_STAGING}"
-            sudo systemctl reload php8.2-fpm nginx
+            sudo systemctl reload php8.5-fpm nginx 2>/dev/null || sudo systemctl reload php-fpm nginx
             DEPLOY_EOF

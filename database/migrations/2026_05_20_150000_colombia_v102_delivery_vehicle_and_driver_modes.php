@@ -18,10 +18,23 @@ return new class extends Migration
 
         if (Schema::hasTable('transport_driver_details')) {
             Schema::table('transport_driver_details', function (Blueprint $table) {
-                if (!Schema::hasColumn('transport_driver_details', 'also_transport_passengers')) {
-                    $table->tinyInteger('also_transport_passengers')->default(0)->after('accept_delivery');
+                if (! Schema::hasColumn('transport_driver_details', 'accept_transport')) {
+                    $table->tinyInteger('accept_transport')->default(0);
+                }
+                if (! Schema::hasColumn('transport_driver_details', 'accept_delivery')) {
+                    $table->tinyInteger('accept_delivery')->default(0);
                 }
             });
+
+            if (! Schema::hasColumn('transport_driver_details', 'also_transport_passengers')) {
+                Schema::table('transport_driver_details', function (Blueprint $table) {
+                    if (Schema::hasColumn('transport_driver_details', 'accept_delivery')) {
+                        $table->tinyInteger('also_transport_passengers')->default(0)->after('accept_delivery');
+                    } else {
+                        $table->tinyInteger('also_transport_passengers')->default(0);
+                    }
+                });
+            }
         }
 
         if (Schema::hasTable('vehicle_type_service_eligibility')) {
