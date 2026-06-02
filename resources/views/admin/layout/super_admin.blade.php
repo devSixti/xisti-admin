@@ -45,7 +45,7 @@
     <script>
         // Your web app's Firebase configuration
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-        var firebaseConfig = @json(array_filter([
+        var firebaseConfig = {!! json_encode(array_filter([
             'apiKey' => config('firebase-web.api_key'),
             'authDomain' => config('firebase-web.auth_domain'),
             'databaseURL' => config('firebase-web.database_url'),
@@ -54,7 +54,7 @@
             'messagingSenderId' => config('firebase-web.messaging_sender_id'),
             'appId' => config('firebase-web.app_id'),
             'measurementId' => config('firebase-web.measurement_id'),
-        ]));
+        ])) !!};
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
     </script>
