@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Run Laravel migrations on EC2 with a MySQL user that has ALTER (DDL).
-# App .env typically uses zimo_restricted_user (DML only); CD must not use that for migrate.
+# App .env typically uses xisti_restricted_user (DML only); CD must not use that for migrate.
 set -euo pipefail
 
 APP_DIR="${1:-/var/www/xisti-admin}"
@@ -75,4 +75,8 @@ sudo -u "${DEPLOY_USER}" \
     php artisan db:seed --class=WorldCurrencySeeder --force
     php artisan db:seed --class=LanguageListsSeeder --force
     php artisan db:seed --class=XistiEnableSocialLoginSeeder --force
+    php artisan db:seed --class=XistiPurgeLegacyBrandingSeeder --force
+    php artisan db:seed --class=PageSettingsSeeder --force
+    php artisan db:seed --class=EmailTemplatesSeeder --force
+    php artisan db:seed --class=VehicleServicesSeeder --force
   "

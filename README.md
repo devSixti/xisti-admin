@@ -2,7 +2,7 @@
 
 Backend Laravel 11 para **XISTI App**: panel `/admin` + API `/api/customer/*`.
 
-Derivado del motor Fox Drive, con **autorización de app y FCM reimplementados** (sin dependencia SourceGuardian).
+Derivado de un motor de movilidad urbana, con **autorización de app y FCM reimplementados** para XISTI (sin dependencia SourceGuardian).
 
 ## Inicio rápido (local)
 
@@ -30,7 +30,3 @@ Credencial seed: ver `database/seeders/SuperAdminSeeder.php` (cambiar en producc
 ## Repositorio
 
 https://github.com/devSixti/xisti-admin
-
-## Zimo
-
-Este repo **no** despliega ni altera `admin.appzimo.com`. Instancia y base de datos separadas.

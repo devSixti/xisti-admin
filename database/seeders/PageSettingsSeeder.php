@@ -36,7 +36,7 @@ class PageSettingsSeeder extends Seeder
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">
                                   <span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                  <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
@@ -44,7 +44,7 @@ class PageSettingsSeeder extends Seeder
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">
                                   <span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                  <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -56,14 +56,14 @@ class PageSettingsSeeder extends Seeder
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">
                                     <span style="font-family: Verdana, sans-serif;">Schreiben Sie uns eine E-Mail:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Allgemeine und technische Anfragen</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">
-                                    <span style="font-family: Verdana, sans-serif;">Schreiben Sie uns eine E-Mail:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="font-family: Verdana, sans-serif;">Schreiben Sie uns eine E-Mail:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -71,14 +71,14 @@ class PageSettingsSeeder extends Seeder
                 'es_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -86,14 +86,14 @@ class PageSettingsSeeder extends Seeder
                 'fr_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -101,14 +101,14 @@ class PageSettingsSeeder extends Seeder
                 'ko_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -116,14 +116,14 @@ class PageSettingsSeeder extends Seeder
                 'ja_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -131,14 +131,14 @@ class PageSettingsSeeder extends Seeder
                 'zh_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -146,14 +146,14 @@ class PageSettingsSeeder extends Seeder
                 'fil_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                      <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                      <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                       <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                      <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                      <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                       <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -161,14 +161,14 @@ class PageSettingsSeeder extends Seeder
                 'ar_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -176,14 +176,14 @@ class PageSettingsSeeder extends Seeder
                 'lo_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -618,7 +618,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'pt_description' => null,
@@ -649,7 +649,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'es_description' => '<div style="margin-left: 20px; padding-top: 20px;">
@@ -677,7 +677,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'fr_description' => '<div style="margin-left: 20px; padding-top: 20px;">
@@ -705,7 +705,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'ko_description' => '<div style="margin-left: 20px; padding-top: 20px;">
@@ -733,7 +733,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'ja_description' => '<div style="margin-left: 20px; padding-top: 20px;">
@@ -761,7 +761,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'zh_description' => '<div style="margin-left: 20px; padding-top: 20px;">
@@ -789,7 +789,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'fil_description' => '<div style="margin-left: 20px; padding-top: 20px;">
@@ -817,7 +817,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'ar_description' => '<div style="margin-left: 20px; padding-top: 20px;">
@@ -845,7 +845,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'lo_description' => '<div style="margin-left: 20px; padding-top: 20px;">
@@ -873,7 +873,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
             ],
             [
@@ -1023,13 +1023,13 @@ class PageSettingsSeeder extends Seeder
                 'type' => 2,
                 'description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -1039,117 +1039,117 @@ class PageSettingsSeeder extends Seeder
                 'he_description' => null,
                 'de_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
 
                 'es_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
 
                 'fr_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
 
                 'ko_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
 
                 'ja_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
 
                 'zh_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
 
                 'fil_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
 
                 'ar_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
 
                 'lo_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -1172,9 +1172,9 @@ class PageSettingsSeeder extends Seeder
                 'type' => 2,
                 'description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -1196,9 +1196,9 @@ class PageSettingsSeeder extends Seeder
                 'he_description' => null,
                 'de_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -1217,9 +1217,9 @@ class PageSettingsSeeder extends Seeder
 
                 'es_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -1238,9 +1238,9 @@ class PageSettingsSeeder extends Seeder
 
                 'fr_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -1259,9 +1259,9 @@ class PageSettingsSeeder extends Seeder
 
                 'ko_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -1280,9 +1280,9 @@ class PageSettingsSeeder extends Seeder
 
                 'ja_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -1301,9 +1301,9 @@ class PageSettingsSeeder extends Seeder
 
                 'zh_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -1322,9 +1322,9 @@ class PageSettingsSeeder extends Seeder
 
                 'fil_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -1343,9 +1343,9 @@ class PageSettingsSeeder extends Seeder
 
                 'ar_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -1364,9 +1364,9 @@ class PageSettingsSeeder extends Seeder
 
                 'lo_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -1583,7 +1583,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'pt_description' => null,
@@ -1614,7 +1614,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'es_description' => '<div style="margin-left: 20px; color: black; background-color: ghostwhite; padding-top: 20px;">
@@ -1642,7 +1642,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'fr_description' => '<div style="margin-left: 20px; color: black; background-color: ghostwhite; padding-top: 20px;">
@@ -1670,7 +1670,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'ko_description' => '<div style="margin-left: 20px; color: black; background-color: ghostwhite; padding-top: 20px;">
@@ -1698,7 +1698,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'ja_description' => '<div style="margin-left: 20px; color: black; background-color: ghostwhite; padding-top: 20px;">
@@ -1726,7 +1726,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'zh_description' => '<div style="margin-left: 20px; color: black; background-color: ghostwhite; padding-top: 20px;">
@@ -1754,7 +1754,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'fil_description' => '<div style="margin-left: 20px; color: black; background-color: ghostwhite; padding-top: 20px;">
@@ -1782,7 +1782,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'ar_description' => '<div style="margin-left: 20px; color: black; background-color: ghostwhite; padding-top: 20px;">
@@ -1810,7 +1810,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'lo_description' => '<div style="margin-left: 20px; color: black; background-color: ghostwhite; padding-top: 20px;">
@@ -1838,7 +1838,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
             ],
             [
@@ -1990,7 +1990,7 @@ class PageSettingsSeeder extends Seeder
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">
                                   <span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                  <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
@@ -1998,7 +1998,7 @@ class PageSettingsSeeder extends Seeder
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">
                                   <span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                  <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -2010,14 +2010,14 @@ class PageSettingsSeeder extends Seeder
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">
                                     <span style="font-family: Verdana, sans-serif;">Schreiben Sie uns eine E-Mail:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Allgemeine und technische Anfragen</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">
-                                    <span style="font-family: Verdana, sans-serif;">Schreiben Sie uns eine E-Mail:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="font-family: Verdana, sans-serif;">Schreiben Sie uns eine E-Mail:&nbsp;</span><span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -2025,14 +2025,14 @@ class PageSettingsSeeder extends Seeder
                 'es_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -2040,14 +2040,14 @@ class PageSettingsSeeder extends Seeder
                 'fr_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -2055,14 +2055,14 @@ class PageSettingsSeeder extends Seeder
                 'ko_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -2070,14 +2070,14 @@ class PageSettingsSeeder extends Seeder
                 'ja_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -2085,14 +2085,14 @@ class PageSettingsSeeder extends Seeder
                 'zh_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -2100,14 +2100,14 @@ class PageSettingsSeeder extends Seeder
                 'fil_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                      <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                      <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                       <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                      <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                      <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                       <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                       <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -2115,28 +2115,28 @@ class PageSettingsSeeder extends Seeder
                 'ar_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
                 'lo_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Media and Business Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">General and Technical Inquiries</span></strong></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                    <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                     <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                     <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -2159,9 +2159,9 @@ class PageSettingsSeeder extends Seeder
                 'type' => 3,
                 'description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -2183,9 +2183,9 @@ class PageSettingsSeeder extends Seeder
                 'he_description' => null,
                 'de_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -2204,9 +2204,9 @@ class PageSettingsSeeder extends Seeder
 
                 'es_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -2225,9 +2225,9 @@ class PageSettingsSeeder extends Seeder
 
                 'fr_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -2246,9 +2246,9 @@ class PageSettingsSeeder extends Seeder
 
                 'ko_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -2267,9 +2267,9 @@ class PageSettingsSeeder extends Seeder
 
                 'ja_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -2288,9 +2288,9 @@ class PageSettingsSeeder extends Seeder
 
                 'zh_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -2309,9 +2309,9 @@ class PageSettingsSeeder extends Seeder
 
                 'fil_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -2330,9 +2330,9 @@ class PageSettingsSeeder extends Seeder
 
                 'ar_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -2351,9 +2351,9 @@ class PageSettingsSeeder extends Seeder
 
                 'lo_description' => '<p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Why us?</span></strong></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> is a multi-service platform that provides an all-in-one solution to consumers and businesses.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
-                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">Fox-jek</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
+                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><strong><span style="font-family: Verdana, sans-serif;">XISTI</span></strong><span style="font-family: Verdana, sans-serif;"> will be a valued partner to our potential clients delivering turnkey solutions and measurable results.&nbsp;</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;"><span style="font-family: Wingdings;">+</span><span style="font-family: Times New Roman, serif;">&nbsp;</span><span style="font-family: Verdana, sans-serif;">We&nbsp;<strong>CONNECT BUSINESSES</strong>&nbsp;with their customer base and help acquire new ones.</span></p>
                                    <p class="MsoNormal" style="margin: 0in 0in 0.0001pt 0.5in; font-size: medium; font-family: Calibri, sans-serif; text-indent: -0.25in;">&nbsp;</p>
@@ -2570,7 +2570,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'pt_description' => null,
@@ -2601,7 +2601,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'es_description' => '<div style="margin-left: 20px; color: black; background-color: ghostwhite; padding-top: 20px;">
@@ -2629,7 +2629,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'fr_description' => '<div style="margin-left: 20px; color: black; background-color: ghostwhite; padding-top: 20px;">
@@ -2657,7 +2657,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'ko_description' => '<div style="margin-left: 20px; color: black; background-color: ghostwhite; padding-top: 20px;">
@@ -2685,7 +2685,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'ja_description' => '<div style="margin-left: 20px; color: black; background-color: ghostwhite; padding-top: 20px;">
@@ -2713,7 +2713,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'zh_description' => '<div style="margin-left: 20px; color: black; background-color: ghostwhite; padding-top: 20px;">
@@ -2741,7 +2741,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'fil_description' => '<div style="margin-left: 20px; color: black; background-color: ghostwhite; padding-top: 20px;">
@@ -2769,7 +2769,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'ar_description' => '<div style="margin-left: 20px; color: black; background-color: ghostwhite; padding-top: 20px;">
@@ -2797,7 +2797,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
 
                 'lo_description' => '<div style="margin-left: 20px; color: black; background-color: ghostwhite; padding-top: 20px;">
@@ -2825,7 +2825,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
             ],
             [
@@ -2977,7 +2977,7 @@ class PageSettingsSeeder extends Seeder
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">
                                   <span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                  <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
@@ -2985,7 +2985,7 @@ class PageSettingsSeeder extends Seeder
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">
                                   <span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                  <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -3136,7 +3136,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
                 'pt_description' => null,
                 'vi_description' => null,
@@ -3211,7 +3211,7 @@ class PageSettingsSeeder extends Seeder
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">
                                   <span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                  <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
@@ -3219,7 +3219,7 @@ class PageSettingsSeeder extends Seeder
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">
                                   <span style="font-family: Verdana, sans-serif;">Email us:&nbsp;</span>
-                                  <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">zimoapp@gmail.com.</span></p>
+                                  <span style="background-color: #ffffff; color: #333333; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 14px;">soporte@xistiapp.com.</span></p>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;">&nbsp;</p>
                                   <div class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif; text-align: center;" align="center"><hr style="color: #a0a0a0;" align="center" noshade="noshade" size="1" width="100%" data-darkreader-inline-color="" /></div>
                                   <p class="MsoNormal" style="margin: 0in 0in 0.0001pt; font-size: medium; font-family: Calibri, sans-serif;"><span style="font-family: Verdana, sans-serif;">&nbsp;&nbsp;</span></p>',
@@ -3370,7 +3370,7 @@ class PageSettingsSeeder extends Seeder
                                 <p><strong>Changes to This Privacy Policy</strong></p>
                                 <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
                                 <p><strong>Contact Us</strong></p>
-                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at zimoapp@gmail.com.</p>
+                                <p>If you have any questions or suggestions about our] Privacy Policy, do not hesitate to contact us at soporte@xistiapp.com.</p>
                                 </div>',
                 'pt_description' => null,
                 'vi_description' => null,

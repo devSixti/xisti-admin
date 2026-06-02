@@ -1,28 +1,28 @@
 #!/usr/bin/env bash
 # Manual production deploy to AWS EC2 (when GitHub Actions billing blocks CD).
 # Usage: ./scripts/manual-deploy-ec2.sh
-# Requires: ssh alias "zimo-ec2" or env EC2_SSH_HOST, EC2_SSH_PORT, EC2_SSH_KEY
+# Requires: env EC2_SSH_HOST, EC2_SSH_PORT, EC2_SSH_KEY (or SSH config Host xisti-ec2)
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${ROOT}"
 
-EC2_HOST="${EC2_SSH_HOST:-ec2-18-208-4-15.compute-1.amazonaws.com}"
-EC2_PORT="${EC2_SSH_PORT:-927}"
+EC2_HOST="${EC2_SSH_HOST:-54.159.169.235}"
+EC2_PORT="${EC2_SSH_PORT:-987}"
 EC2_USER="${EC2_SSH_USER:-ubuntu}"
-EC2_KEY="${EC2_SSH_KEY:-${HOME}/.ssh/app-zimo-root-key.pem}"
+EC2_KEY="${EC2_SSH_KEY:-${HOME}/.ssh/id_rsa}"
 SSH_TARGET="${EC2_USER}@${EC2_HOST}"
 SSH_OPTS=(-i "${EC2_KEY}" -p "${EC2_PORT}" -o IdentitiesOnly=yes)
 
-if [[ -f "${HOME}/.ssh/config" ]] && grep -q '^Host zimo-ec2' "${HOME}/.ssh/config" 2>/dev/null; then
-  SSH_CMD=(ssh zimo-ec2)
-  SCP_CMD=(scp -P 927 -o IdentitiesOnly=yes -i "${EC2_KEY}")
+if [[ -f "${HOME}/.ssh/config" ]] && grep -q '^Host xisti-ec2' "${HOME}/.ssh/config" 2>/dev/null; then
+  SSH_CMD=(ssh xisti-ec2)
+  SCP_CMD=(scp -P "${EC2_PORT}" -o IdentitiesOnly=yes -i "${EC2_KEY}")
 else
   SSH_CMD=(ssh "${SSH_OPTS[@]}" "${SSH_TARGET}")
   SCP_CMD=(scp "${SSH_OPTS[@]}")
 fi
 
-RELEASE_TAR="$(mktemp /tmp/appzimo-release.XXXXXX.tar.gz)"
+RELEASE_TAR="$(mktemp /tmp/xisti-release.XXXXXX.tar.gz)"
 trap 'rm -f "${RELEASE_TAR}"' EXIT
 
 echo "==> Branch: $(git branch --show-current) @ $(git rev-parse --short HEAD)"
@@ -40,18 +40,18 @@ tar czf "${RELEASE_TAR}" \
   .
 
 echo "==> Uploading to EC2..."
-"${SCP_CMD[@]}" "${RELEASE_TAR}" "${SSH_TARGET}:/tmp/appzimo-release.tar.gz"
+"${SCP_CMD[@]}" "${RELEASE_TAR}" "${SSH_TARGET}:/tmp/xisti-release.tar.gz"
 
 echo "==> Installing on EC2..."
 "${SSH_CMD[@]}" 'bash -s' <<'DEPLOY_EOF'
 set -euo pipefail
-APP_DIR="/var/www/app-zimo-fox-drive-v2-clone"
-DEPLOY_USER="appzimodevop"
-CD_STAGING="/tmp/appzimo-cd-staging"
+APP_DIR="/var/www/xisti-admin"
+DEPLOY_USER="ubuntu"
+CD_STAGING="/tmp/xisti-cd-staging"
 
 rm -rf "${CD_STAGING}"
 mkdir -p "${CD_STAGING}"
-TAR_PATH="/tmp/appzimo-release.tar.gz"
+TAR_PATH="/tmp/xisti-release.tar.gz"
 tar xzf "${TAR_PATH}" -C "${CD_STAGING}"
 rm -f "${TAR_PATH}"
 
@@ -66,7 +66,7 @@ sudo -u "${DEPLOY_USER}" rsync -av \
 sudo -u "${DEPLOY_USER}" bash -lc "
   set -euo pipefail
   cd '${APP_DIR}'
-  composer install --no-dev --optimize-autoloader --no-interaction
+  composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
 "
 
 bash "${APP_DIR}/scripts/ec2-artisan-migrate.sh" "${APP_DIR}" "${DEPLOY_USER}"
@@ -88,8 +88,8 @@ if [ -d "${APP_DIR}/public/assets/images" ]; then
   sudo find "${APP_DIR}/public/assets/images" -type f -exec chmod 664 {} \;
 fi
 rm -rf "${CD_STAGING}"
-sudo systemctl reload php8.2-fpm nginx
-echo "==> Deploy OK — $(sudo -u ${DEPLOY_USER} bash -lc "cd ${APP_DIR} && git rev-parse --short HEAD 2>/dev/null || echo 'no-git'")"
+sudo systemctl reload php8.5-fpm nginx 2>/dev/null || sudo systemctl reload php-fpm nginx
+echo "==> Deploy OK"
 DEPLOY_EOF
 
 echo "==> Done."

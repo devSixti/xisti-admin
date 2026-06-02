@@ -26,11 +26,11 @@ class VehicleServicesSeeder extends Seeder
             ],
             [
                 'id' => 3,
-                'name' => 'Bike',
-                'pt_name' => 'Bicicleta',
-                'es_name' => 'Bicicleta',
-                'fr_name' => 'Vélo',
-                'it_name' => 'Bicicletta',
+                'name' => 'Moto',
+                'pt_name' => 'Moto',
+                'es_name' => 'Moto',
+                'fr_name' => 'Moto',
+                'it_name' => 'Moto',
                 'icon_name' => '09031020241208.png',
                 'cost_for_km' => 8.00,
                 'max_bargain_percent' => 10.00,
@@ -62,9 +62,9 @@ class VehicleServicesSeeder extends Seeder
                 'icon_name' => '24031020241208.png',
                 'cost_for_km' => 15.00,
                 'max_bargain_percent' => 5.00,
-                'status' => 1,
+                'status' => 0,
                 'service_mode' => 'transport',
-                'display_order' => 2,
+                'display_order' => 99,
             ],
         ];
 

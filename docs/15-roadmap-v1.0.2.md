@@ -1,20 +1,16 @@
-# Roadmap API/Admin v1.0.2
+# Roadmap v1.0.2 (XISTI)
 
-Documento completo: `AppZimo-Mobile/docs/15-roadmap-v1.0.2-stage-main.md`
+Ver issues y milestones en https://github.com/devSixti/xisti-mobile y https://github.com/devSixti/xisti-admin.
 
-## Cambios Admin/API (esta entrega)
+## Mobile
 
-- Wallet: debito comisión al cobro efectivo (`WalletSettlementHelper`)
-- Topup presets Colombia 13000/26000/39000
-- Envíos visibles para conductores de transporte activo
-- PDF facturas conductor/pasajero
+- Branding XISTI completo (splash, iconos, onboarding urbano)
+- Negociación tarifa pasos 500 COP
+- Social login + moneda COP fallback
+- Modo Expreso deshabilitado (`enable_expreso_mobile = 0`)
 
-Migración: `2026_05_25_120000_set_colombia_topup_wallet_presets.php`
+## Admin
 
-## Compatibilidad tiendas 1.0.1 (temporal)
-
-Mientras la app en stores sigue en **1.0.1**, el backend no exige peso/dimensiones de envío:
-
-- `App\Helpers\AppMobileSettingsHelper::REQUIRE_COURIER_PACKAGE_DIMENSIONS = false`
-
-Al publicar mobile **1.0.2**, cambiar a `true` y desplegar Admin.
+- Seeders XISTI (comisión 8%, Medellín, social login)
+- Purge branding legacy en CMS/emails
+- Firebase SW dinámico por proyecto XISTI

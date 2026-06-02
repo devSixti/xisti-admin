@@ -26,7 +26,7 @@ class CustomerStoreRequest extends FormRequest
     public function rules()
     {
         //dd($this->get('country_code')."---".$this->get('contact_number'));
-        //(($this->getHost() == "fox-jek.startuptrinity.com")? 'email|' : '' )
+        // Optional email validation when hosted on custom domain.
         $rules = [
             'first_name' => 'required',
 //            'last_name' => 'required',

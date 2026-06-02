@@ -13,6 +13,8 @@ return [
     'firebase_database_url' => env('FIREBASE_DATABASE_URL'),
     'fcm_user_topic' => env('FIREBASE_FCM_USER_TOPIC', 'XistiUser'),
     'fcm_driver_topic' => env('FIREBASE_FCM_DRIVER_TOPIC', 'XistiDriver'),
+    'firebase_chat_admin_email' => env('XISTI_FIREBASE_CHAT_ADMIN_EMAIL', 'admin@xistiapp.com'),
+    'firebase_chat_admin_password' => env('XISTI_FIREBASE_CHAT_ADMIN_PASSWORD'),
     'brand' => [
         'primary' => '#39FF14',
         'secondary' => '#9333EA',

@@ -48,7 +48,6 @@ class FirebaseService
     public function fetchChatHistory($order_no,$order_id,$chat_type){
         //order_chat for chat wise order & ticket_chat for ticket wise chat
         $chat_order_id = $this->CreateOrderNumberForChat($order_no,$order_id);
-        $this->chat_domain = "staging-fox-drive-startuptrinity-com";
         $chat_history = $this->firebase->getReference($this->chat_domain."/".$chat_type."/".$chat_order_id);
 
 //        return response()->json($chat_history->getValue());

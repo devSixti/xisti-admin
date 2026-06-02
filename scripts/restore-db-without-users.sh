@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# Restore production DB from pre-fresh backup; keep config/admin, no app users.
+# Restore XISTI DB from backup; keep config/admin, no app users.
 # Run on EC2 as root: sudo bash scripts/restore-db-without-users.sh
 set -euo pipefail
 
-BACKUP="${BACKUP:-/var/backups/appzimo-pre-fresh-20260521232310/db_zemo_app_full.sql.gz}"
-DB="${DB:-db_zemo_app}"
+BACKUP="${BACKUP:-/var/backups/xisti-pre-fresh/db_xisti_app_full.sql.gz}"
+DB="${DB:-db_xisti_app}"
+DEPLOY_USER="${DEPLOY_USER:-ubuntu}"
 
 if [ ! -f "$BACKUP" ]; then
   echo "Backup not found: $BACKUP"
@@ -38,7 +39,7 @@ USER_TABLES=(
 )
 
 echo "==> Safety backup of current DB"
-SAFETY="/var/backups/appzimo-before-restore-$(date +%Y%m%d%H%M%S)"
+SAFETY="/var/backups/xisti-before-restore-$(date +%Y%m%d%H%M%S)"
 mkdir -p "$SAFETY"
 mysqldump --defaults-file=/etc/mysql/debian.cnf "$DB" | gzip > "$SAFETY/${DB}.sql.gz"
 echo "Saved: $SAFETY/${DB}.sql.gz"
@@ -58,13 +59,13 @@ done
 mysql --defaults-file=/etc/mysql/debian.cnf "$DB" -e "SET FOREIGN_KEY_CHECKS=1;"
 
 echo "==> Post-restore migrate (new columns since backup)"
-APP="${APP:-/var/www/app-zimo-fox-drive-v2-clone}"
+APP="${APP:-/var/www/xisti-admin}"
 if [[ -x "$APP/scripts/ec2-artisan-migrate.sh" ]]; then
-  bash "$APP/scripts/ec2-artisan-migrate.sh" "$APP" appzimodevop
+  bash "$APP/scripts/ec2-artisan-migrate.sh" "$APP" "$DEPLOY_USER"
 else
-  sudo -u appzimodevop bash -lc "cd '$APP' && php artisan config:clear && php artisan migrate --force"
+  sudo -u "$DEPLOY_USER" bash -lc "cd '$APP' && php artisan config:clear && php artisan migrate --force"
 fi
-sudo -u appzimodevop bash -lc "cd '$APP' && php artisan config:cache && php artisan view:cache"
+sudo -u "$DEPLOY_USER" bash -lc "cd '$APP' && php artisan config:cache && php artisan view:cache"
 
 mysql --defaults-file=/etc/mysql/debian.cnf -N -e "
 SELECT CONCAT('users=', (SELECT COUNT(*) FROM users),

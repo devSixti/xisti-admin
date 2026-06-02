@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Despliegue xisti-admin en EC2 (ejecutar EN EL SERVIDOR, no en Zimo).
+# Despliegue xisti-admin en EC2 (ejecutar EN EL SERVIDOR).
 set -euo pipefail
 
 APP_DIR="${APP_DIR:-/var/www/xisti-admin}"

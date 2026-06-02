@@ -24,6 +24,13 @@ use App\Http\Controllers\ReportIssueController;
 use App\Http\Controllers\TransportController;
 use Illuminate\Support\Facades\Auth;
 
+Route::get('/firebase-messaging-sw.js', function () {
+    return response()
+        ->view('firebase-messaging-sw.js')
+        ->header('Content-Type', 'application/javascript; charset=UTF-8')
+        ->header('Service-Worker-Allowed', '/');
+})->name('get:firebase.messaging.sw');
+
 Route::get('/', function () {
 //    return view('comingsoonpage');
     return view('homepage');

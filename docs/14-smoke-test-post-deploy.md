@@ -1,52 +1,36 @@
-# Smoke test post-deploy (AppZimo)
+# Smoke test post-deploy (XISTI)
 
-Ejecutar en **~30 min** tras cada deploy de Admin (EC2) y build móvil QA.
+Ejecutar tras cada deploy a producción o staging.
 
-## Pre-requisitos
+## Precondiciones
 
-- APK/IPA desde GitHub Actions (rama `main`)
-- Acceso admin: `https://admin.appzimo.com`
-- Usuario pasajero y conductor de prueba (Colombia +57)
+- Admin accesible: `https://admin.xistiapp.com` (o IP `http://54.159.169.235` si DNS pendiente)
+- `.env` con Firebase, Twilio y Wompi configurados según entorno
 
-## 1. Configuración API
+## Checks API
 
 ```bash
-curl -s -X POST https://admin.appzimo.com/api/customer/app-version-check \
+curl -s -X POST https://admin.xistiapp.com/api/customer/app-version-check \
   -H "Content-Type: application/json" \
-  -d '{"app_version":"1.0.2","device_type":1}' | jq '.fare_negotiation_step, .vat_rate_on_commission'
+  -d '{"app_version":"1.0.2","device_type":"android"}' | jq .
 ```
 
-Esperado: `fare_negotiation_step` = **500**, IVA = **19**.
+Verificar en respuesta:
 
-## 2. Auth Google + OTP (misma cuenta)
+- `is_google_login`, `is_facebook_login` según configuración
+- `enable_encomiendas_mobile = 1`
+- `enable_expreso_mobile = 0`
+- `currency_list` no vacío (COP presente)
 
-1. Login Google → completar teléfono en perfil.
-2. Logout → login OTP con el **mismo** número.
-3. Debe entrar a la **misma** cuenta (no cuenta nueva).
+## Checks admin
 
-## 3. Conductor en línea + wallet
+- Login en `/admin/login`
+- Site Settings muestra XISTI / Medellín
+- Vehicle services: Taxi, Moto, Courier activos; Rickshaw inactivo
 
-1. Conductor con wallet **0** → toggle **En línea** → debe funcionar (sin error servidor).
-2. Recarga Wompi **&lt; 13.000 COP** → rechazada.
-3. Recarga **≥ 13.000** → aceptada; volver en línea → lista de viajes carga.
+## Checks mobile (manual)
 
-## 4. Tarifa negociable (B3)
-
-1. Reservar viaje → oferta ± debe mover **500 COP** por paso (no 1 COP).
-
-## 5. Envíos / courier (B1)
-
-1. Servicio envíos → teléfono destinatario **10 dígitos** sin error API.
-
-## 6. Borrado cuenta + wallet
-
-1. Usuario con saldo wallet → eliminar cuenta.
-2. En BD: `user_wallet_transaction` con `subject_code` **19**, saldo **0**.
-
-## 7. Report issue (auth)
-
-1. Durante viaje → abrir reporte / FAQs → debe exigir token válido (no 500).
-
-## SQL verificación rápida (EC2)
-
-Ver `scripts/verify-prod-settings.sql`.
+- Icono y splash XISTI
+- Onboarding urbano Medellín
+- Login social visible si flags activos
+- Moneda COP seleccionable

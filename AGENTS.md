@@ -1,6 +1,6 @@
 # Agente XISTI Admin (Backend Laravel)
 
-Panel administrativo y API REST para **XISTI** (pasajero + conductor). Proyecto **independiente** de Zimo producción.
+Panel administrativo y API REST para **XISTI** (pasajero + conductor).
 
 ## Stack
 
@@ -33,6 +33,5 @@ Ver `../docs/SETUP_SERVICIOS.md`.
 
 ## Importante
 
-- **No modificar** el repositorio Zimo en producción.
 - Colocar `service-account.json` en `storage/app/firebase/` (no commitear).
 - Configurar `XISTI_APP_KEY` en `.env` y en Admin → Site Settings → app_key (deben coincidir).

@@ -8,7 +8,7 @@ $chat_replace_domain = preg_replace("/[\s_\-\.]/", "-",$get_host);
 
     const database  = firebase.database();
     //for sing-up
-    // firebase.auth().createUserWithEmailAndPassword("admin@zimo.com", "w(0Gu(127Y}7$O50eMZD")
+    // firebase.auth().createUserWithEmailAndPassword("admin@xistiapp.com", "***")
     //     .then((userCredential) => {
     //         // Signed in
     //         var user = userCredential.user;
@@ -24,7 +24,7 @@ $chat_replace_domain = preg_replace("/[\s_\-\.]/", "-",$get_host);
     //         console.log(error);
     //     });
     //for sing-in
-    firebase.auth().signInWithEmailAndPassword("admin@zimo.com", "w(0Gu(127Y}7$O50eMZD")
+    firebase.auth().signInWithEmailAndPassword("admin@xistiapp.com", "{{ config('xisti.firebase_chat_admin_password', '') }}")
         .then((userCredential) => {
             // Signed in
             var user = userCredential.user;
@@ -84,7 +84,7 @@ $chat_replace_domain = preg_replace("/[\s_\-\.]/", "-",$get_host);
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
-            var url = "{{ asset('firebase-messaging-sw.js') }}";
+            var url = "{{ route('get:firebase.messaging.sw') }}";
             navigator.serviceWorker.register(url)
                 .then(function (registration) {
                     // Request for permission

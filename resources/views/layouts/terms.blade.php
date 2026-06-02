@@ -28,7 +28,7 @@
 {{--        (function () {--}}
 {{--            var options = {--}}
 {{--                viber: "+639104627859", // Viber number--}}
-{{--                email: "sales@whitelabelfox.com", // Email--}}
+{{--                email: "soporte@xistiapp.com", // Email--}}
 {{--                call_to_action: "Message us", // Call to action--}}
 {{--                button_color: "#E74339", // Color of button--}}
 {{--                position: "right", // Position may be 'right' or 'left'--}}
