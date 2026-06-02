@@ -82,16 +82,14 @@ class GeneralSettingsSeeder extends Seeder
 //            'created_at' => NULL,
 //            'updated_at' => NULL,
         ];
-        /*
-        | updateOrInsert
-        |--------------------------------------------------------------------------
-        |
-        | We are using updateOrInsert here, which functions to either update an existing record or insert a new one. If
-        | the record already exists, it updates it; if not, it inserts a new record. It identifies records by comparing a unique
-        | key and is designed to handle a single record at a time.
-        |
-        */
-        DB::table('general_settings')->updateOrInsert( ['id' => 1], $general_settings_record);
+        $record = [];
+        foreach ($general_settings_record as $column => $value) {
+            if ($column === 'id' || Schema::hasColumn('general_settings', $column)) {
+                $record[$column] = $value;
+            }
+        }
+
+        DB::table('general_settings')->updateOrInsert(['id' => 1], $record);
 
         $xistiColumns = [
             'fare_negotiation_step' => (int) config('xisti.fare_negotiation_step_cop', 500),

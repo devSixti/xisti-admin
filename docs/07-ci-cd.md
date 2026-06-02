@@ -26,7 +26,14 @@ El script `scripts/ec2-artisan-migrate.sh` ejecuta seeders XISTI incluyendo:
 - `PageSettingsSeeder`, `EmailTemplatesSeeder`, `VehicleServicesSeeder`
 - `XistiPurgeLegacyBrandingSeeder`
 
-Usa credenciales de `/etc/mysql/debian.cnf` o secrets `EC2_DB_MIGRATE_*`.
+Usa credenciales de `/etc/mysql/debian.cnf` o secrets GitHub:
+
+| Secret | Uso |
+|--------|-----|
+| `EC2_DB_MIGRATE_USERNAME` | Usuario MySQL con permiso `ALTER` (migraciones DDL) |
+| `EC2_DB_MIGRATE_PASSWORD` | Contraseña del usuario migrate |
+
+Si faltan, el script usa `DB_USERNAME` del `.env` de la app (p. ej. `xisti`) y las migraciones DDL pueden fallar.
 
 ## Deploy manual alternativo
 

@@ -23,11 +23,20 @@ class XistiEnableSocialLoginSeeder extends Seeder
             return;
         }
 
-        DB::table('general_settings')->where('id', 1)->update([
+        $socialLogin = [
             'is_google_login' => 1,
             'is_facebook_login' => 1,
             'is_apple_login' => 1,
             'is_finger_login' => 1,
-        ]);
+        ];
+        $patch = [];
+        foreach ($socialLogin as $column => $value) {
+            if (Schema::hasColumn('general_settings', $column)) {
+                $patch[$column] = $value;
+            }
+        }
+        if ($patch !== []) {
+            DB::table('general_settings')->where('id', 1)->update($patch);
+        }
     }
 }

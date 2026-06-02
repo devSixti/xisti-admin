@@ -60,6 +60,8 @@ if ! export_db_migrate_credentials; then
     echo "ERROR: could not resolve DB credentials for migrate" >&2
     exit 1
   fi
+  echo "WARNING: migrate is using app .env DB user; DDL may fail if user lacks ALTER." >&2
+  echo "WARNING: set GitHub secrets EC2_DB_MIGRATE_USERNAME and EC2_DB_MIGRATE_PASSWORD (or fix /etc/mysql/debian.cnf)." >&2
 fi
 
 # sudo strips the parent environment unless variables are passed explicitly.
