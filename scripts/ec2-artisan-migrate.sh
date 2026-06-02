@@ -74,4 +74,5 @@ sudo -u "${DEPLOY_USER}" \
     php artisan migrate --force
     php artisan db:seed --class=WorldCurrencySeeder --force
     php artisan db:seed --class=LanguageListsSeeder --force
+    php artisan db:seed --class=XistiEnableSocialLoginSeeder --force
   "
