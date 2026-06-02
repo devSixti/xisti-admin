@@ -51,6 +51,19 @@ class AppServiceProvider extends ServiceProvider
 
         if (Schema::hasTable('general_settings')) {
             $this->general_settings = GeneralSettings::query()->first();
+            if ($this->general_settings === null) {
+                // Keep admin/pages usable even before first settings save.
+                $fallback = new GeneralSettings();
+                $fallback->website_name = config('xisti.product_name', 'XISTI');
+                $fallback->copy_right = config('xisti.product_name', 'XISTI') . ' - ' . config('xisti.tagline', 'Fácil y Seguro');
+                $fallback->login_timeout_time = 120;
+                $fallback->report_chat_history_delete = 0;
+                $fallback->chat_deletion_days_after_issue_resolution = 7;
+                $fallback->min_report_issue_image_upload = 1;
+                $fallback->max_report_issue_image_upload = 5;
+                $fallback->auto_settle_wallet = 0;
+                $this->general_settings = $fallback;
+            }
         }
 
         try {

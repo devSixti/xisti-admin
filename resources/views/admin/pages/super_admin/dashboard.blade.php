@@ -3,79 +3,76 @@
     Dashboard
 @endsection
 @section('page-css')
-    <link rel="stylesheet" href="{{ asset('/assets/css/widget/widget.css') }}">
     <style>
-        .sos-st-card h5:after {
-            width: 0;
+        .xisti-dashboard-hero {
+            border: 1px solid rgba(57, 255, 20, 0.2);
+            border-radius: 16px;
+            background: linear-gradient(130deg, #0f172a 0%, #111827 50%, rgba(147, 51, 234, 0.35) 100%);
+            color: #f9fafb;
+            padding: 1.5rem;
+            box-shadow: 0 18px 44px rgba(0, 0, 0, 0.2);
         }
-        .sos-st-card.green h3, .sos-st-card.green h5 {
-            color: #2ed8b6;
+        .xisti-dashboard-hero__title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: .25rem;
         }
-        .sos-st-card.purple h3, .sos-st-card.purple h5 {
-            color: #b881e6;
+        .xisti-dashboard-hero__meta {
+            color: #d1d5db;
+            font-size: .9rem;
+            margin-bottom: 1rem;
         }
-        .sos-st-card.blue h3, .sos-st-card.blue h5 {
-            color: #4099ff;
+        .xisti-quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .5rem;
         }
-        .sos-st-card.yellow h3, .sos-st-card.yellow h5 {
-            color: #FFB64D;
+        .xisti-quick-actions .btn {
+            border-radius: 999px;
+            font-size: .78rem;
+            font-weight: 700;
+            letter-spacing: .03em;
         }
-        .sos-st-card.red h3, .sos-st-card.red h5 {
-            color: #FF5370;
+        .xisti-metric-card {
+            border-radius: 14px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 26px rgba(17, 24, 39, 0.08);
+            overflow: hidden;
+            height: 100%;
         }
-        .services .col-xl-3 {
-            max-width: 20%;
+        .xisti-metric-card .card-body {
+            padding: 1rem;
         }
-        .services .card-block {
-            padding-top: 10px;
-            padding-bottom: 10px;
+        .xisti-metric-card__label {
+            font-size: .8rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: .07em;
+            margin-bottom: .45rem;
         }
-        .services h3 {
-            font-size: 10px;
-            font-weight: bold;
+        .xisti-metric-card__value {
+            font-size: 1.55rem;
+            line-height: 1.15;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 0;
         }
-        .services h5 {
-            padding-top: 5px;
-            font-size: 16px;
+        .xisti-metric-card__icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #111827;
+            font-size: 1rem;
+            background: rgba(57, 255, 20, .2);
         }
-        .services .col-auto {
-            padding: 0;
-            padding-left: 5px;
-        }
-        .services .text-right {
-            padding: 0 5px;
-            padding-left: 7px;
-        }
-        .services .text-right {
-            display: inline-block;
-        }
-        .sos-st-card h5:after {
-            width: 0;
-        }
-        .latest-update-card .card-block .latest-update-box:after {
-            width: 0;
-        }
-        .latest-update-box p {
-            margin-bottom: .5rem;
-        }
-        .latest-update-box p span.offers {
-            font-size: 16px;
-            font-weight: 500;
-            font-family: "Quicksand", sans-serif;
-        }
-        .dashboard-box {
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 5px 0 rgba(43, 43, 43, 0.1), 0 2px 6px -7px rgba(43, 43, 43, 0.1) !important;
-        }
-        .dashboard-title {
-            padding: 1rem !important;
-        }
-        .dashboard-title h5 {
-            font-size: 16px;
-        }
-        .order-list td, .table th {
-            padding: 0.7rem 0.75rem !important;
-        }
+        .xisti-metric-card.--revenue { border-top: 3px solid #39ff14; }
+        .xisti-metric-card.--completed { border-top: 3px solid #22c55e; }
+        .xisti-metric-card.--cancelled { border-top: 3px solid #ef4444; }
+        .xisti-metric-card.--rides { border-top: 3px solid #9333ea; }
     </style>
 @endsection
 @section('page-content')
@@ -87,8 +84,8 @@
                     <div class="page-header-title">
                         <i class="feather icon-home bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>Dashboard</h5>
-                            <span>Summary</span>
+                            <h5>{{ __('admin.nav.dashboard') }}</h5>
+                            <span>{{ config('xisti.product_name', 'XISTI') }} · {{ config('xisti.tagline', 'Fácil y Seguro') }}</span>
                         </div>
                     </div>
                 </div>
@@ -102,78 +99,81 @@
 
                         <div class="row">
                             <div class="col-xl-12 col-md-12">
-                                <div class="card dashboard-box">
-                                    <div class="card-block dashboard-title">
-                                        <h5>Today Summary</h5>
+                                <div class="xisti-dashboard-hero">
+                                    <h5 class="xisti-dashboard-hero__title">Panel de control XISTI</h5>
+                                    <p class="xisti-dashboard-hero__meta">Monitorea operación, ingresos y estado del servicio desde un solo lugar.</p>
+                                    <div class="xisti-quick-actions">
+                                        <a href="{{ route('get:admin:ride_list_new') }}" class="btn btn-outline-light btn-sm">Ver viajes</a>
+                                        <a href="{{ route('get:admin:transport_service_provider_list', ['approved']) }}" class="btn btn-outline-light btn-sm">Ver conductores</a>
+                                        <a href="{{ route('get:admin:user_list_new') }}" class="btn btn-outline-light btn-sm">Ver usuarios</a>
+                                        <a href="{{ route('get:admin:general_setting') }}" class="btn btn-success btn-sm">Configurar plataforma</a>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- product profit start -->
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card prod-p-card card-blue">
+                            <div class="col-xl-3 col-md-6 mb-3">
+                                <div class="card xisti-metric-card --revenue">
                                     <div class="card-body">
-                                        <div class="row align-items-center m-b-30" style="">
+                                        <div class="d-flex justify-content-between align-items-start">
                                             <div class="col">
-                                                <h6 class="m-b-5 text-white">Total Revenue</h6>
-                                                <h3 class="m-b-0 f-w-700 text-white ">
-                                                    <span class="currency"></span>
+                                                <p class="xisti-metric-card__label">Ingresos Totales</p>
+                                                <h3 class="xisti-metric-card__value">
+                                                    <span class="currency"></span>&nbsp;
                                                     {{ isset($total_revenue) ? $total_revenue : 0 }}
                                                 </h3>
                                             </div>
-                                            <div class="col-auto">
-                                                <i class="fa fa-money text-c-blue f-18"></i>
+                                            <div class="xisti-metric-card__icon">
+                                                <i class="fa fa-money"></i>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card prod-p-card card-green">
+                            <div class="col-xl-3 col-md-6 mb-3">
+                                <div class="card xisti-metric-card --completed">
                                     <div class="card-body">
-                                        <div class="row align-items-center m-b-30">
+                                        <div class="d-flex justify-content-between align-items-start">
                                             <div class="col">
-                                                <h6 class="m-b-5 text-white">Complete Rides</h6>
-                                                <h3 class="m-b-0 f-w-700 text-white">{{ isset($total_completed_order) ? $total_completed_order : 0 }}</h3>
+                                                <p class="xisti-metric-card__label">Viajes Completados</p>
+                                                <h3 class="xisti-metric-card__value">{{ isset($total_completed_order) ? $total_completed_order : 0 }}</h3>
                                             </div>
-                                            <div class="col-auto">
-                                                <i class="fas fa-clipboard-check text-c-green f-18"></i>
+                                            <div class="xisti-metric-card__icon">
+                                                <i class="fas fa-clipboard-check"></i>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card prod-p-card card-red">
+                            <div class="col-xl-3 col-md-6 mb-3">
+                                <div class="card xisti-metric-card --cancelled">
                                     <div class="card-body">
-                                        <div class="row align-items-center m-b-30">
+                                        <div class="d-flex justify-content-between align-items-start">
                                             <div class="col">
-                                                <h6 class="m-b-5 text-white">Cancelled Rides</h6>
-                                                <h3 class="m-b-0 f-w-700 text-white">{{ isset($total_cancelled_order) ? $total_cancelled_order : 0 }}</h3>
+                                                <p class="xisti-metric-card__label">Viajes Cancelados</p>
+                                                <h3 class="xisti-metric-card__value">{{ isset($total_cancelled_order) ? $total_cancelled_order : 0 }}</h3>
                                             </div>
-                                            <div class="col-auto">
-                                                <i class="fas fa-cart-arrow-down text-c-red f-18"></i>
+                                            <div class="xisti-metric-card__icon">
+                                                <i class="fas fa-times-circle"></i>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card prod-p-card card-yellow">
+                            <div class="col-xl-3 col-md-6 mb-3">
+                                <div class="card xisti-metric-card --rides">
                                     <div class="card-body">
-                                        <div class="row align-items-center m-b-30">
+                                        <div class="d-flex justify-content-between align-items-start">
                                             <div class="col">
-                                                <h6 class="m-b-5 text-white">Total Rides</h6>
-                                                <h3 class="m-b-0 f-w-700 text-white">{{ isset($total_order) ? $total_order : 0 }}</h3>
+                                                <p class="xisti-metric-card__label">Viajes Totales</p>
+                                                <h3 class="xisti-metric-card__value">{{ isset($total_order) ? $total_order : 0 }}</h3>
                                             </div>
-                                            <div class="col-auto">
-                                                <i class="fa fa-tags text-c-yellow f-18"></i>
+                                            <div class="xisti-metric-card__icon">
+                                                <i class="fa fa-route"></i>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- product profit end -->
                         </div>
                     </div>
                 </div>
@@ -183,15 +183,5 @@
     <div id="styleSelector"></div>
 @endsection
 @section('page-js')
-    <script type="text/javascript" src="{{ asset('assets/js/chart/jquery.flot.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('assets/js/chart/amcharts.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('assets/js/chart/serial.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('assets/js/chart/light.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('assets/js/chart/custom-dashboard.min.js')}}"></script>
-    <script>
-        $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
-        });
-    </script>
 @endsection
 

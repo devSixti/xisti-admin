@@ -804,6 +804,12 @@ class AdminController extends Controller
     public function getAdminGeneralSetting(Request $request)
     {
         $general_settings = request()->get("general_settings");
+        if ($general_settings == null || !$general_settings->exists) {
+            $general_settings = GeneralSettings::query()->first();
+            if ($general_settings == null) {
+                $general_settings = new GeneralSettings();
+            }
+        }
         if ($request->ajax()) {
             $view = view('admin.pages.super_admin.general_settings.form', compact('general_settings'))->renderSections();
             return $this->adminClass->renderingResponce($view);

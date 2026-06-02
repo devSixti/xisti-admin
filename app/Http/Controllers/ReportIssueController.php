@@ -8,6 +8,7 @@ use App\Http\Requests\FaqsRequest;
 use App\Http\Requests\ReportIssueSettingRequest;
 use App\Models\Admin;
 use App\Models\Faqs;
+use App\Models\GeneralSettings;
 use App\Models\ReportIssueImage;
 use App\Models\LanguageLists;
 use App\Models\ReportIssues;
@@ -423,7 +424,14 @@ info($report_issue);
     //Form of report issue setting
     public function getAdminReportIssueSetting(Request $request)
     {
-        return view("admin.pages.super_admin.report_issues.report_issue_setting");
+        $general_settings = request()->get("general_settings");
+        if ($general_settings == null || !$general_settings->exists) {
+            $general_settings = GeneralSettings::query()->first();
+            if ($general_settings == null) {
+                $general_settings = new GeneralSettings();
+            }
+        }
+        return view("admin.pages.super_admin.report_issues.report_issue_setting", compact('general_settings'));
     }
 
     //updating the report issue settings
@@ -438,7 +446,8 @@ info($report_issue);
         // Handle icon file upload
         if ($request->file('general_report_issue_icon')) {
             // Delete the existing icon if it exists
-            $currentIcon = request()->get("general_settings")->general_report_issue_icon;
+            $existingSettings = request()->get("general_settings");
+            $currentIcon = $existingSettings != null ? $existingSettings->general_report_issue_icon : null;
             $currentIconPath = public_path('/assets/images/report-issue/logo/' . $currentIcon);
             if (\File::exists($currentIconPath)) {
                 \File::delete($currentIconPath);
@@ -448,11 +457,19 @@ info($report_issue);
             $file = $request->file('general_report_issue_icon');
             $file_new = random_int(1, 99) . date('siHYdm') . random_int(1, 99) . '.' . $file->getClientOriginalExtension();
             $file->move(public_path() . '/assets/images/report-issue/logo/', $file_new);
-            request()->get("general_settings")->general_report_issue_icon = $file_new;
+            if ($existingSettings != null) {
+                $existingSettings->general_report_issue_icon = $file_new;
+            }
         }
 
         // Update report issue settings
         $general_settings = request()->get("general_settings");
+        if ($general_settings == null || !$general_settings->exists) {
+            $general_settings = GeneralSettings::query()->first();
+            if ($general_settings == null) {
+                $general_settings = new GeneralSettings();
+            }
+        }
         $general_settings->report_chat_history_delete = $request->get('report_chat_history_delete');
         $general_settings->chat_deletion_days_after_issue_resolution = $request->get('chat_deletion_days_after_issue_resolution');
         $general_settings->min_report_issue_image_upload = $request->get('min_report_issue_image_upload');

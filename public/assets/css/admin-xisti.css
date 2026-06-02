@@ -284,3 +284,44 @@ body.xisti-admin-auth {
     border: 1px solid rgba(0, 0, 0, 0.06);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
+
+/* ---- Data tables and forms polish ---- */
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background: #111827;
+    color: #e5e7eb;
+    border-color: #1f2937;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table tbody tr:hover {
+    background: rgba(57, 255, 20, 0.04);
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+}
+
+.form-control,
+.form-control:focus,
+select.form-control,
+textarea.form-control {
+    border-radius: 10px;
+}
+
+.card .card-header {
+    border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+    background: linear-gradient(120deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.badge {
+    border-radius: 999px;
+    padding: 0.38rem 0.6rem;
+}
