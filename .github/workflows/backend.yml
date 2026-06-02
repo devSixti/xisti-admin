@@ -167,7 +167,7 @@ jobs:
             sudo -u "${DEPLOY_USER}" bash -lc "
               set -euo pipefail
               cd '${APP_DIR}'
-              composer install --no-dev --optimize-autoloader --no-interaction
+              composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
             "
 
             # Migrations need ALTER; use dedicated migrate creds from GitHub Secrets.
