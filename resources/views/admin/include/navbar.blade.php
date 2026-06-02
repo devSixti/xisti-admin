@@ -5,9 +5,7 @@
             @if(Illuminate\Support\Facades\Auth::guard("admin")->check())
                 <a class="render_link" href="{{ route('get:admin:dashboard') }}">
             @endif
-                @if(isset($general_settings) && $general_settings->website_logo != Null)
-                    <img class="img-fluid" src="{{ asset('assets/images/website-logo-icon/'.$general_settings->website_logo)}}" alt="{{$general_settings->website_logo}}">
-                @endif
+                @include('admin.include.brand_logo', ['class' => 'xisti-navbar-logo'])
             </a>
             <a class="mobile-menu" id="mobile-collapse">
                 <i class="feather icon-toggle-right" style="cursor: pointer;"></i>

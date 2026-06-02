@@ -8,9 +8,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 
-    <link rel="icon" href="{{ isset($general_settings)? ($general_settings->website_favicon != Null) ? asset('assets/images/website-logo-icon/'.$general_settings->website_favicon) : '' : '' }}" type="image/x-icon">
+    <link rel="icon" href="{{ (isset($general_settings) && $general_settings->website_favicon) ? asset('assets/images/website-logo-icon/'.$general_settings->website_favicon) : asset('assets/images/website-logo-icon/xisti-logo.svg') }}" type="image/x-icon">
     <!-- Google font-->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Quicksand:500,700" rel="stylesheet">
     <!-- Required Fremwork -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.min.css')}}">
@@ -24,13 +24,12 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/admin-xisti.css')}}">
     @yield('page-css')
     <style>
-        .btn-md {
-            padding: 5px 16px;
-        }
+        body.xisti-admin-auth { font-family: Inter, "Open Sans", sans-serif; }
+        .btn-md { padding: 5px 16px; }
     </style>
 {{--    <script type='text/javascript' data-cfasync='false'>window.purechatApi = { l: [], t: [], on: function () { this.l.push(arguments); } }; (function () { var done = false; var script = document.createElement('script'); script.async = true; script.type = 'text/javascript'; script.src = 'https://app.purechat.com/VisitorWidget/WidgetScript'; document.getElementsByTagName('HEAD').item(0).appendChild(script); script.onreadystatechange = script.onload = function (e) { if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) { var w = new PCWidget({c: '54190bda-b8e9-437e-9990-1ca4e22849be', f: true }); done = true; } }; })();</script>--}}
 </head>
-<body>
+<body class="xisti-admin-auth">
 @include('admin.include.auth_locale_bar')
 <div class="theme-loader">
     <div class="loader-track">

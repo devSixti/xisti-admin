@@ -2,12 +2,12 @@
 <nav class="pcoded-navbar" id="render-navbar">
     <div class="nav-list">
         <div class="pcoded-inner-navbar main-menu">
-            <div class="pcoded-navigation-label">Navigation</div>
+            <div class="pcoded-navigation-label">{{ __('admin.nav.navigation') }}</div>
             <ul class="pcoded-item pcoded-left-item">
                 <li class="@if(Request::segment(2) === 'dashboard') active pcoded-trigger @endif">
                     <a href="{{ route('get:admin:dashboard') }}" class="waves-effect waves-dark">
                         <span class="pcoded-micon"><i class="fa fa-home"></i></span>
-                        <span class="pcoded-mtext">Dashboard</span>
+                        <span class="pcoded-mtext">{{ __('admin.nav.dashboard') }}</span>
                     </a>
                 </li>
             </ul>

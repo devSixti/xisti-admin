@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
     <!-- Favicon icon -->
-    <link rel="icon" href="{{ isset($general_settings)? ($general_settings->website_favicon != Null) ? asset('assets/images/website-logo-icon/'.$general_settings->website_favicon) : '' : '' }}" type="image/x-icon">
+    <link rel="icon" href="{{ (isset($general_settings) && $general_settings->website_favicon) ? asset('assets/images/website-logo-icon/'.$general_settings->website_favicon) : asset('assets/images/website-logo-icon/xisti-logo.svg') }}" type="image/x-icon">
     <!-- Google font-->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -70,7 +70,7 @@
 {{--without refresh page--}}
 <div class="pre-loader"></div>
 <!-- [ Pre-loader ] end -->
-<div id="pcoded" class="pcoded">
+<div id="pcoded" class="pcoded xisti-admin-shell" theme-layout="vertical" vertical-nav-type="expanded" vertical-effect="overlay">
     <div class="pcoded-overlay-box"></div>
     <div class="pcoded-container navbar-wrapper">
 
@@ -104,7 +104,7 @@
 <div id="render-js"></div>
 <!--======== SCRIPT FILES =========-->
 
-<script type="text/javascript"> src="{{ asset('assets/js/jquery.min.js')}}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/jquery.min.js')}}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/jquery-ui.min.js')}}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/popper.min.js')}}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/bootstrap.min.js')}}"></script>

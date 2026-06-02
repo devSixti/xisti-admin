@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
     <!-- Favicon icon -->
-    <link rel="icon" href="{{ isset($general_settings)? ($general_settings->website_favicon != Null) ? asset('assets/images/website-logo-icon/'.$general_settings->website_favicon) : '' : '' }}" type="image/x-icon">
+    <link rel="icon" href="{{ (isset($general_settings) && $general_settings->website_favicon) ? asset('assets/images/website-logo-icon/'.$general_settings->website_favicon) : asset('assets/images/website-logo-icon/xisti-logo.svg') }}" type="image/x-icon">
     <!-- Google font-->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Quicksand:500,700" rel="stylesheet">

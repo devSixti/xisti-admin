@@ -1,4 +1,4 @@
-<div class="text-right p-3">
+<div class="xisti-auth-locale-bar">
     @foreach (\App\Helpers\AdminUi::LOCALES as $code)
         <form method="post" action="{{ route('post:admin:locale') }}" class="d-inline">
             @csrf
