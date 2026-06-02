@@ -36,7 +36,31 @@ export_db_migrate_credentials() {
   return 1
 }
 
-export_db_migrate_credentials
+load_db_credentials_from_env_file() {
+  local env_file="${APP_DIR}/.env"
+  if [[ ! -f "${env_file}" ]]; then
+    return 1
+  fi
+
+  local user pass
+  user="$(grep -E '^DB_USERNAME=' "${env_file}" | tail -1 | cut -d= -f2- | xargs)"
+  pass="$(grep -E '^DB_PASSWORD=' "${env_file}" | tail -1 | cut -d= -f2- | xargs)"
+  if [[ -n "${user}" && -n "${pass}" ]]; then
+    export DB_USERNAME="${user}"
+    export DB_PASSWORD="${pass}"
+    echo "==> migrate: using DB credentials from ${env_file} (${DB_USERNAME})"
+    return 0
+  fi
+
+  return 1
+}
+
+if ! export_db_migrate_credentials; then
+  if ! load_db_credentials_from_env_file; then
+    echo "ERROR: could not resolve DB credentials for migrate" >&2
+    exit 1
+  fi
+fi
 
 # sudo strips the parent environment unless variables are passed explicitly.
 sudo -u "${DEPLOY_USER}" \

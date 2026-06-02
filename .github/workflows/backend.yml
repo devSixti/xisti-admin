@@ -161,6 +161,9 @@ jobs:
               --exclude 'node_modules' \
               "${CD_STAGING}/" "${APP_DIR}/"
 
+            sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/storage" "${APP_DIR}/bootstrap/cache"
+            sudo chmod -R ug+rwx "${APP_DIR}/storage" "${APP_DIR}/bootstrap/cache"
+
             sudo -u "${DEPLOY_USER}" bash -lc "
               set -euo pipefail
               cd '${APP_DIR}'
