@@ -72,4 +72,6 @@ sudo -u "${DEPLOY_USER}" \
     rm -f bootstrap/cache/config.php 2>/dev/null || true
     php artisan config:clear
     php artisan migrate --force
+    php artisan db:seed --class=WorldCurrencySeeder --force
+    php artisan db:seed --class=LanguageListsSeeder --force
   "
