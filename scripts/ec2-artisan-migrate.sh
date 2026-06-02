@@ -3,8 +3,8 @@
 # App .env typically uses zimo_restricted_user (DML only); CD must not use that for migrate.
 set -euo pipefail
 
-APP_DIR="${1:-/var/www/app-zimo-fox-drive-v2-clone}"
-DEPLOY_USER="${2:-appzimodevop}"
+APP_DIR="${1:-/var/www/xisti-admin}"
+DEPLOY_USER="${2:-ubuntu}"
 
 if [[ ! -d "${APP_DIR}" ]]; then
   echo "ERROR: APP_DIR not found: ${APP_DIR}" >&2
