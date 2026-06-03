@@ -88,8 +88,8 @@ class ServiceCatalogHelper
         return $ids;
     }
 
-    /** Transport services (moto, carro, moto-ratón) may receive envíos by default. */
-    public const DELIVERY_CAPABLE_TRANSPORT_SERVICE_IDS = [1, 3, 5];
+    /** Transport services (moto, carro) may receive envíos by default. */
+    public const DELIVERY_CAPABLE_TRANSPORT_SERVICE_IDS = [1, 3];
 
     public static function driverCanReceiveDelivery(int $vehicleTypeId, int $fallbackServiceId): bool
     {

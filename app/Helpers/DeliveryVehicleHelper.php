@@ -6,63 +6,83 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Colombia — envíos: Moto, Carro y Motoratón (sin motocarro ni bicicleta).
+ * XISTI — medios activos para pasajero: Moto (3) y Carro (1) únicamente.
  */
 class DeliveryVehicleHelper
 {
     /** Bump when vehicle-service/*.png assets change (cache bust for mobile). */
-    public const ICON_CACHE_VERSION = '1.1';
+    public const ICON_CACHE_VERSION = '1.2';
 
-    /** vehicle_services.id values passengers may request for envíos */
-    public const PASSENGER_DELIVERY_SERVICE_IDS = [1, 3, 5];
+    /** vehicle_services.id — únicos medios habilitados (viajes, envíos, encomiendas). */
+    public const PASSENGER_ACTIVE_VEHICLE_SERVICE_IDS = [1, 3];
+
+    /** @deprecated Use PASSENGER_ACTIVE_VEHICLE_SERVICE_IDS */
+    public const PASSENGER_DELIVERY_SERVICE_IDS = self::PASSENGER_ACTIVE_VEHICLE_SERVICE_IDS;
+
+    public static function isPassengerActiveVehicleServiceId(?int $id): bool
+    {
+        if ($id === null || $id <= 0) {
+            return false;
+        }
+
+        return in_array($id, self::PASSENGER_ACTIVE_VEHICLE_SERVICE_IDS, true);
+    }
 
     public static function deliveryOptionsForApi(string $langPrefix = ''): array
     {
-        if (!Schema::hasTable('vehicle_services')) {
+        if (! Schema::hasTable('vehicle_services')) {
             return [];
         }
 
         $iconBase = url('/assets/images/vehicle-service/');
         $rows = DB::table('vehicle_services')
-            ->whereIn('id', self::PASSENGER_DELIVERY_SERVICE_IDS)
+            ->whereIn('id', self::PASSENGER_ACTIVE_VEHICLE_SERVICE_IDS)
             ->where('status', 1)
-            ->orderByRaw("CASE id WHEN 3 THEN 1 WHEN 1 THEN 2 WHEN 5 THEN 3 ELSE 99 END")
+            ->orderByRaw('CASE id WHEN 3 THEN 1 WHEN 1 THEN 2 ELSE 99 END')
             ->get(['id', 'name', 'es_name', 'icon_name', 'service_mode']);
 
         $options = [];
         foreach ($rows as $row) {
             $serviceId = (int) $row->id;
             $label = self::colombiaDeliveryLabel($serviceId, $langPrefix, $row);
-            $iconName = self::deliveryIconFileName($serviceId, (string) ($row->icon_name ?? ''));
-            $entry = [
+            $iconName = (string) ($row->icon_name ?? '');
+            $options[] = [
                 'vehicle_service_id' => $serviceId,
                 'label' => $label,
                 'service_icon' => $iconName !== ''
                     ? $iconBase . '/' . $iconName . '?v=' . self::ICON_CACHE_VERSION
                     : '',
             ];
-            if ($serviceId === 5) {
-                $entry['delivery_variant'] = 'motoraton';
-                $entry['label'] = ($langPrefix === '' || str_starts_with($langPrefix, 'es')) ? 'Motoratón' : 'Motoratón';
-                $motoratonIcon = (string) ($row->icon_name ?? '');
-                if ($motoratonIcon === '') {
-                    $motoratonIcon = '27531520260705.png';
-                }
-                $entry['service_icon'] = $iconBase . '/' . $motoratonIcon . '?v=' . self::ICON_CACHE_VERSION;
-            }
-            $options[] = $entry;
         }
 
         return $options;
     }
 
+    /**
+     * Oculta Motoratón (id 5) y otros transport legacy del home / service_modes.
+     *
+     * @param  array<int, array<string, mixed>>  $services
+     * @return array<int, array<string, mixed>>
+     */
+    public static function filterHomeServiceRows(array $services): array
+    {
+        return array_values(array_filter($services, static function (array $row): bool {
+            $id = (int) ($row['service_id'] ?? 0);
+            if ($id === 5) {
+                return false;
+            }
+            $mode = (string) ($row['service_mode'] ?? 'transport');
+            if ($mode === 'transport') {
+                return self::isPassengerActiveVehicleServiceId($id);
+            }
+
+            return true;
+        }));
+    }
+
     public static function isValidRequestedVehicleServiceId(?int $id): bool
     {
-        if ($id === null || $id <= 0) {
-            return false;
-        }
-
-        return in_array($id, self::PASSENGER_DELIVERY_SERVICE_IDS, true);
+        return self::isPassengerActiveVehicleServiceId($id);
     }
 
     /**
@@ -74,7 +94,7 @@ class DeliveryVehicleHelper
             return true;
         }
 
-        if (!Schema::hasTable('transport_vehicle_type')) {
+        if (! Schema::hasTable('transport_vehicle_type')) {
             return true;
         }
 
@@ -87,7 +107,7 @@ class DeliveryVehicleHelper
 
     public static function serviceSupportsPassengerToggle(int $vehicleServiceId): bool
     {
-        return in_array($vehicleServiceId, self::PASSENGER_DELIVERY_SERVICE_IDS, true);
+        return self::isPassengerActiveVehicleServiceId($vehicleServiceId);
     }
 
     public static function passengerDisclaimer(string $language = 'es'): string
@@ -104,10 +124,10 @@ class DeliveryVehicleHelper
     private static function colombiaDeliveryLabel(int $serviceId, string $langPrefix, object $row): string
     {
         $nameField = $langPrefix . 'name';
-        if ($langPrefix !== '' && !empty($row->{$nameField})) {
+        if ($langPrefix !== '' && ! empty($row->{$nameField})) {
             return (string) $row->{$nameField};
         }
-        if (!empty($row->es_name)) {
+        if (! empty($row->es_name)) {
             return (string) $row->es_name;
         }
 
@@ -116,19 +136,5 @@ class DeliveryVehicleHelper
             3 => 'Moto',
             default => (string) ($row->name ?? 'Envío'),
         };
-    }
-
-    private static function deliveryIconFileName(int $serviceId, string $dbIcon): string
-    {
-        if ($serviceId === 5) {
-            $icon = trim($dbIcon);
-            if ($icon === '' || $icon === 'motocarro.png') {
-                return '27531520260705.png';
-            }
-
-            return $icon;
-        }
-
-        return $dbIcon;
     }
 }

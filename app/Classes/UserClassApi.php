@@ -271,7 +271,7 @@ class UserClassApi
             "child_seat" => "required",
             "payment_type" => "required",
             "destination_payment_method" => DestinationPaymentHelper::validationRule(),
-            "requested_vehicle_service_id" => "nullable|integer|in:1,3,5",
+            "requested_vehicle_service_id" => "nullable|integer|in:1,3",
             "errand_type" => "nullable|in:delivery,encomienda",
         ], AppMobileSettingsHelper::courierPackageDimensionValidationRules()));
 
@@ -391,6 +391,16 @@ class UserClassApi
                 "status" => 0,
                 'message' => __('user_messages.9'),
                 "message_code" => 9,
+            ]);
+        }
+
+        if ((int) $get_vehicle_service->id === 5
+            || ((string) ($get_vehicle_service->service_mode ?? '') === 'transport'
+                && ! DeliveryVehicleHelper::isPassengerActiveVehicleServiceId((int) $get_vehicle_service->id))) {
+            return response()->json([
+                'status' => 0,
+                'message' => __('user_messages.9'),
+                'message_code' => 9,
             ]);
         }
 

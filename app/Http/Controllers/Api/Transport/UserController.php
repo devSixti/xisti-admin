@@ -903,7 +903,7 @@ class UserController extends Controller
             "accept_delivery" => "nullable|in:0,1",
             "accept_encomiendas" => "nullable|in:0,1",
             "also_transport_passengers" => "nullable|in:0,1",
-            "delivery_variant" => "nullable|string|in:motoraton",
+            "delivery_variant" => "nullable|string",
         ]);
         if ($validator->fails()) {
             if ($validator->errors()->has('vehicle_plat_no')) {

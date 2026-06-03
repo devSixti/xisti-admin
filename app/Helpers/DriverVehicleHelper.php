@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Schema;
  */
 class DriverVehicleHelper
 {
-    /** vehicle_services.id excluidos del registro (modos pasajero, no medio de transporte). */
-    public const EXCLUDED_SERVICE_IDS = [4];
+    /** vehicle_services.id excluidos del registro (envíos dedicados, motoratón deshabilitado). */
+    public const EXCLUDED_SERVICE_IDS = [4, 5];
 
     public const EXCLUDED_SERVICE_MODES = ['delivery', 'encomiendas'];
 
@@ -46,14 +46,6 @@ class DriverVehicleHelper
                 continue;
             }
 
-            if ($serviceId === 5) {
-                $row = clone $row;
-                $icon = (string) ($row->icon_name ?? '');
-                if ($icon === '' || $icon === 'motocarro.png') {
-                    $row->icon_name = '27531520260705.png';
-                }
-            }
-
             $list[] = self::mapServiceRow($row, $langPrefix, $serviceIconUrl, $vehicleIconUrl, null);
         }
 
@@ -84,10 +76,6 @@ class DriverVehicleHelper
             $serviceName = (string) $row->es_name;
         } else {
             $serviceName = (string) ($row->name ?? '');
-        }
-
-        if ($serviceId === 5) {
-            $serviceName = ($langPrefix === '' || str_starts_with($langPrefix, 'es')) ? 'Motoratón' : 'Motoratón';
         }
 
         $iconName = (string) ($row->icon_name ?? '');
@@ -150,7 +138,6 @@ class DriverVehicleHelper
         }
 
         $order = [
-            5 => '00010',
             3 => '00050',
             1 => '00060',
         ];

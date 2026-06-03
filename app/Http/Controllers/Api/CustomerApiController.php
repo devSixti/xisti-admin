@@ -181,6 +181,7 @@ class CustomerApiController extends Controller
             ->toArray();
 
         $services = \App\Helpers\MobileFeatureFlagsHelper::filterServiceRows($services);
+        $services = \App\Helpers\DeliveryVehicleHelper::filterHomeServiceRows($services);
         $service_modes = ServiceCatalogHelper::buildServiceModesFromRows($services, $user_details->language ?? 'es');
 
         $general_settings = request()->get("general_settings");
