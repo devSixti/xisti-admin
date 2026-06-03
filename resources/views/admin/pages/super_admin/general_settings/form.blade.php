@@ -823,8 +823,8 @@
                             </div>
                             <div class="card border-info">
                                 <div class="card-header bg-light">
-                                    <h5>Mobile v1.0.2 (optional — off for stable 1.0.1)</h5>
-                                    <span class="text-muted">Enable only when the 1.0.2 app build is deployed. While unchecked, APIs and apps behave like 1.0.1 (no Expreso/Encomiendas UI, optional courier dimensions).</span>
+                                    <h5>XISTI mobile — modos opcionales</h5>
+                                    <span class="text-muted">XISTI (Medellín): deja Expreso desmarcado hasta definir rutas intermunicipales. Encomiendas suele ir activo en lanzamiento urbano. No confundir con ZIMO (flags municipales en su propia instancia).</span>
                                 </div>
                                 <div class="card-block">
                                     <div class="form-group row">

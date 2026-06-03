@@ -325,6 +325,9 @@ Route::prefix('admin')->group(function () {
 
                     // Update SOS status via AJAX call
                     Route::get('/updateSosStatus', [AdminController::class, 'updateSosStatus'])->name('get:admin:update_sos_status');
+
+                    Route::get('/trigger-logs', [AdminController::class, 'showSosTriggerLogs'])->name('get:admin:sos_trigger_logs');
+                    Route::get('/fetch-sos-trigger-logs', [AdminController::class, 'getSosTriggerLogList'])->name('get:admin:sos_trigger_logs_list');
                 });
 
                 //available ride screen distance filter

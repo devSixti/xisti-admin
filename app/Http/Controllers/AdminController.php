@@ -50,6 +50,7 @@ use App\Models\UserAddress;
 use App\Models\VehicleService;
 use App\Models\WorldCurrency;
 use App\Models\Sos;
+use App\Models\SosTriggerLog;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -2626,6 +2627,92 @@ class AdminController extends Controller
     //Manage sos list
     public function showSos(){
         return view('admin.pages.super_admin.sos.manage');
+    }
+
+    public function showSosTriggerLogs()
+    {
+        return view('admin.pages.super_admin.sos.trigger_logs');
+    }
+
+    public function getSosTriggerLogList(Request $request)
+    {
+        if (! Schema::hasTable('sos_trigger_logs')) {
+            return response()->json([
+                'draw' => intval($request->get('draw')),
+                'iTotalRecords' => 0,
+                'iTotalDisplayRecords' => 0,
+                'aaData' => [],
+            ]);
+        }
+
+        $start = $request->get('start');
+        $columnIndex = $request->get('order')[0]['column'] ?? 0;
+        $columnName = $request->get('columns')[$columnIndex]['data'] ?? 'triggered_at';
+        $columnSortOrder = $request->get('order')[0]['dir'] ?? 'desc';
+        $searchValue = $request->get('search')['value'] ?? '';
+
+        $baseQuery = SosTriggerLog::query()
+            ->leftJoin('users', 'users.id', '=', 'sos_trigger_logs.user_id')
+            ->select(
+                'sos_trigger_logs.*',
+                DB::raw("CONCAT(COALESCE(users.first_name,''), ' ', COALESCE(users.last_name,'')) as user_display_name")
+            );
+
+        $totalRecords = SosTriggerLog::query()->count();
+
+        if ($searchValue !== '') {
+            $baseQuery->where(function ($query) use ($searchValue) {
+                $query->where('sos_trigger_logs.contact_name', 'like', '%' . $searchValue . '%')
+                    ->orWhere('sos_trigger_logs.contact_number', 'like', '%' . $searchValue . '%')
+                    ->orWhere('sos_trigger_logs.ride_id', 'like', '%' . $searchValue . '%')
+                    ->orWhere('users.first_name', 'like', '%' . $searchValue . '%')
+                    ->orWhere('users.last_name', 'like', '%' . $searchValue . '%');
+            });
+        }
+
+        $iTotalDisplayRecords = (clone $baseQuery)->count();
+
+        $sortable = [
+            'id' => 'sos_trigger_logs.id',
+            'triggered_at' => 'sos_trigger_logs.triggered_at',
+            'ride_id' => 'sos_trigger_logs.ride_id',
+            'user_role' => 'sos_trigger_logs.user_role',
+        ];
+        $orderColumn = $sortable[$columnName] ?? 'sos_trigger_logs.triggered_at';
+
+        $records = $baseQuery
+            ->orderBy($orderColumn, $columnSortOrder)
+            ->skip($start)
+            ->take($request->get('length'))
+            ->get();
+
+        $data_arr = [];
+        foreach ($records as $record) {
+            $temp = ++$start;
+            $userLabel = trim((string) ($record->user_display_name ?? ''));
+            if ($userLabel === '') {
+                $userLabel = 'User #' . $record->user_id;
+            }
+            $data_arr[] = [
+                'id' => $temp,
+                'triggered_at' => $record->triggered_at?->format('Y-m-d H:i:s') ?? '',
+                'user' => $userLabel . ' (' . $record->user_id . ')',
+                'user_role' => ucfirst((string) $record->user_role),
+                'ride_id' => $record->ride_id ?? '—',
+                'contact' => trim(($record->country_code ?? '') . ' ' . ($record->contact_number ?? '')),
+                'contact_name' => $record->contact_name ?? '—',
+                'location' => ($record->latitude && $record->longitude)
+                    ? round((float) $record->latitude, 5) . ', ' . round((float) $record->longitude, 5)
+                    : '—',
+            ];
+        }
+
+        return response()->json([
+            'draw' => intval($request->get('draw')),
+            'iTotalRecords' => $totalRecords,
+            'iTotalDisplayRecords' => $iTotalDisplayRecords,
+            'aaData' => $data_arr,
+        ]);
     }
 
     //Fetch sos list for datatable through ajax

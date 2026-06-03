@@ -6,12 +6,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Colombia v1.0.2 — envíos por medio de transporte (moto, carro, etc.).
+ * Colombia — envíos: Moto, Carro y Motoratón (sin motocarro ni bicicleta).
  */
 class DeliveryVehicleHelper
 {
     /** Bump when vehicle-service/*.png assets change (cache bust for mobile). */
-    public const ICON_CACHE_VERSION = '1.0';
+    public const ICON_CACHE_VERSION = '1.1';
 
     /** vehicle_services.id values passengers may request for envíos */
     public const PASSENGER_DELIVERY_SERVICE_IDS = [1, 3, 5];
@@ -53,7 +53,7 @@ class DeliveryVehicleHelper
             $options[] = $entry;
         }
 
-        return self::appendExtraDeliveryMedia($options, $langPrefix, $iconBase);
+        return $options;
     }
 
     public static function isValidRequestedVehicleServiceId(?int $id): bool
@@ -118,40 +118,17 @@ class DeliveryVehicleHelper
         };
     }
 
-    /**
-     * Envíos / Encomiendas: bicicleta adicional (motocarro = vehicle_service id 5).
-     */
-    private static function appendExtraDeliveryMedia(array $options, string $langPrefix, string $iconBase): array
-    {
-        $moto = collect($options)->firstWhere('vehicle_service_id', 3);
-        if ($moto === null) {
-            return $options;
-        }
-
-        $isEs = $langPrefix === '' || str_starts_with($langPrefix, 'es');
-        $v = self::ICON_CACHE_VERSION;
-        $options[] = [
-            'vehicle_service_id' => 5,
-            'delivery_variant' => 'motocarro',
-            'label' => $isEs ? 'Motocarro' : 'Motocarro',
-            'service_icon' => $iconBase . '/motocarro.png?v=' . $v,
-        ];
-        $options[] = [
-            'vehicle_service_id' => 3,
-            'delivery_variant' => 'bicycle',
-            'label' => $isEs ? 'Bicicleta' : 'Bicycle',
-            'service_icon' => $iconBase . '/bicycle.png?v=' . $v,
-        ];
-
-        return $options;
-    }
-
-    /** Motocarro solo en envíos; id 5 en viajes usa el PNG de Motoratón en BD (p. ej. 27531520260705.png). */
     private static function deliveryIconFileName(int $serviceId, string $dbIcon): string
     {
-        return match ($serviceId) {
-            5 => 'motocarro.png',
-            default => $dbIcon,
-        };
+        if ($serviceId === 5) {
+            $icon = trim($dbIcon);
+            if ($icon === '' || $icon === 'motocarro.png') {
+                return '27531520260705.png';
+            }
+
+            return $icon;
+        }
+
+        return $dbIcon;
     }
 }

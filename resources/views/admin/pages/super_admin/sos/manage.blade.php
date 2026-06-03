@@ -47,6 +47,8 @@
                             <!-- Add SOS -->
                             <div class="card-header">
                                 <h5>SOS List</h5>
+                                <a href="{{ route('get:admin:sos_trigger_logs') }}"
+                                   class="btn btn-outline-danger m-b-0 btn-right render_link" style="margin-right: 8px;">Ver SOS Log</a>
                                 <a href="{{ route('get:admin:add_sos') }}"
                                    class="btn btn-primary m-b-0 btn-right render_link">Add SOS</a>
                             </div>

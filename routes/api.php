@@ -104,6 +104,7 @@ Route::group(['middleware' => 'setLocaleLang'], function () {
             Route::post('/decline-request', [UserController::class,'postDeclineRequest'])->name('post:customer:decline:request');
             Route::post('/get-ride-status', [UserController::class,'postGetRideStatus'])->name('post:driver:get:ride:status');
             Route::post('/cancel-ride', [UserController::class,'postCancelRide'])->name('post:customer:cancel:ride');
+            Route::post('/log-sos-trigger', [UserController::class,'postLogSosTrigger'])->name('post:customer:log_sos_trigger');
             Route::post('/accept-ride', [UserController::class,'postAcceptRide'])->name('post:customer:accept:ride');
 
             Route::post('/get-driver-running-service', [UserController::class,'postDriverGetRunningService'])->name('post:driver:get_running_service');

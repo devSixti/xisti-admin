@@ -17,6 +17,7 @@ use App\Models\RestrictedArea;
 use App\Models\SearchRadius;
 use App\Models\ServiceSettings;
 use App\Models\Sos;
+use App\Models\SosTriggerLog;
 use App\Models\TransportCourierDetails;
 use App\Models\TransportDriverDetails;
 use App\Models\TransportVehicleType;
@@ -902,7 +903,7 @@ class UserController extends Controller
             "accept_delivery" => "nullable|in:0,1",
             "accept_encomiendas" => "nullable|in:0,1",
             "also_transport_passengers" => "nullable|in:0,1",
-            "delivery_variant" => "nullable|string|in:motoraton,motocarro,bicycle",
+            "delivery_variant" => "nullable|string|in:motoraton",
         ]);
         if ($validator->fails()) {
             if ($validator->errors()->has('vehicle_plat_no')) {
@@ -1029,7 +1030,7 @@ class UserController extends Controller
         if ($vehicleServiceId === 4
             || \App\Helpers\DriverVehicleHelper::isDeliveryOnlyRegistration($deliveryVariant, $vehicleServiceId)) {
             $add_driver_vehicle_details->accept_delivery = 1;
-            $add_driver_vehicle_details->accept_encomiendas = $deliveryVariant === 'bicycle' ? 0 : $acceptEncomiendas;
+            $add_driver_vehicle_details->accept_encomiendas = $acceptEncomiendas;
             $add_driver_vehicle_details->accept_transport = 0;
             $add_driver_vehicle_details->also_transport_passengers = 0;
         } elseif (\App\Helpers\DeliveryVehicleHelper::serviceSupportsPassengerToggle($vehicleServiceId)) {
@@ -4806,6 +4807,58 @@ class UserController extends Controller
                 "message_code" => 26,
             ]);
         }
+    }
+
+    /**
+     * MVP Core — audit trail when a user initiates an SOS call during an active ride.
+     */
+    public function postLogSosTrigger(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|integer',
+            'access_token' => 'required',
+            'ride_id' => 'nullable|integer',
+            'user_role' => 'nullable|string|in:passenger,driver',
+            'contact_name' => 'nullable|string|max:191',
+            'country_code' => 'nullable|string|max:16',
+            'contact_number' => 'nullable|string|max:32',
+            'current_lat' => 'nullable',
+            'current_long' => 'nullable',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 0,
+                'message' => $validator->errors()->first(),
+                'message_code' => 0,
+            ]);
+        }
+
+        $user_check = $this->userClassapi->checkUserAllow($request->get('user_id'), $request->get('access_token'));
+        if ($failed = $this->returnJsonIfAuthFailed($user_check)) {
+            return $failed;
+        }
+
+        if (Schema::hasTable('sos_trigger_logs')) {
+            SosTriggerLog::query()->create([
+                'user_id' => (int) $request->get('user_id'),
+                'ride_id' => $request->filled('ride_id') ? (int) $request->get('ride_id') : null,
+                'user_role' => (string) $request->get('user_role', 'passenger'),
+                'contact_name' => $request->get('contact_name'),
+                'country_code' => $request->get('country_code'),
+                'contact_number' => $request->get('contact_number'),
+                'latitude' => $request->filled('current_lat') ? (float) $request->get('current_lat') : null,
+                'longitude' => $request->filled('current_long') ? (float) $request->get('current_long') : null,
+                'product' => 'XISTI',
+                'triggered_at' => now(),
+            ]);
+        }
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'OK',
+            'message_code' => 1,
+        ]);
     }
 
     private function storeDriverVehiclePhoto(Request $request, string $field, ?string $existingFile = null): ?string
