@@ -1,0 +1,90 @@
+name: Apply Wompi settings (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      wompi_mode:
+        description: "0=sandbox, 1=production"
+        required: true
+        default: "1"
+      wompi_sandbox_public_key:
+        required: true
+        type: string
+      wompi_sandbox_private_key:
+        required: true
+        type: string
+      wompi_sandbox_event_key:
+        required: true
+        type: string
+      wompi_sandbox_integrity_key:
+        required: true
+        type: string
+      wompi_production_public_key:
+        required: true
+        type: string
+      wompi_production_private_key:
+        required: true
+        type: string
+      wompi_production_event_key:
+        required: true
+        type: string
+      wompi_production_integrity_key:
+        required: true
+        type: string
+
+jobs:
+  apply-wompi:
+    name: Update general_settings on EC2
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Apply Wompi credentials on EC2
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          WOMPI_MODE: ${{ inputs.wompi_mode }}
+          WOMPI_SANDBOX_PUBLIC_KEY: ${{ inputs.wompi_sandbox_public_key }}
+          WOMPI_SANDBOX_PRIVATE_KEY: ${{ inputs.wompi_sandbox_private_key }}
+          WOMPI_SANDBOX_EVENT_KEY: ${{ inputs.wompi_sandbox_event_key }}
+          WOMPI_SANDBOX_INTEGRITY_KEY: ${{ inputs.wompi_sandbox_integrity_key }}
+          WOMPI_PRODUCTION_PUBLIC_KEY: ${{ inputs.wompi_production_public_key }}
+          WOMPI_PRODUCTION_PRIVATE_KEY: ${{ inputs.wompi_production_private_key }}
+          WOMPI_PRODUCTION_EVENT_KEY: ${{ inputs.wompi_production_event_key }}
+          WOMPI_PRODUCTION_INTEGRITY_KEY: ${{ inputs.wompi_production_integrity_key }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_SSH_USER }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT }}
+          envs: WOMPI_MODE,WOMPI_SANDBOX_PUBLIC_KEY,WOMPI_SANDBOX_PRIVATE_KEY,WOMPI_SANDBOX_EVENT_KEY,WOMPI_SANDBOX_INTEGRITY_KEY,WOMPI_PRODUCTION_PUBLIC_KEY,WOMPI_PRODUCTION_PRIVATE_KEY,WOMPI_PRODUCTION_EVENT_KEY,WOMPI_PRODUCTION_INTEGRITY_KEY
+          script: |
+            set -euo pipefail
+            APP_DIR="/var/www/xisti-admin"
+            cd "${APP_DIR}"
+            read_env() { grep -E "^${1}=" .env | cut -d= -f2- | tr -d '"' | tr -d "'"; }
+            DB_HOST="$(read_env DB_HOST)"
+            DB_PORT="$(read_env DB_PORT)"
+            DB_DATABASE="$(read_env DB_DATABASE)"
+            DB_USERNAME="$(read_env DB_USERNAME)"
+            DB_PASSWORD="$(read_env DB_PASSWORD)"
+            DB_PORT="${DB_PORT:-3306}"
+            esc() { printf '%s' "$1" | sed "s/'/''/g"; }
+            mysql -h"${DB_HOST}" -P"${DB_PORT}" -u"${DB_USERNAME}" -p"${DB_PASSWORD}" "${DB_DATABASE}" <<SQL
+            UPDATE general_settings SET
+              wompi_mode = ${WOMPI_MODE},
+              wompi_sandbox_public_key = '$(esc "${WOMPI_SANDBOX_PUBLIC_KEY}")',
+              wompi_sandbox_private_key = '$(esc "${WOMPI_SANDBOX_PRIVATE_KEY}")',
+              wompi_sandbox_event_key = '$(esc "${WOMPI_SANDBOX_EVENT_KEY}")',
+              wompi_sandbox_integrity_key = '$(esc "${WOMPI_SANDBOX_INTEGRITY_KEY}")',
+              wompi_sandbox_base_url = 'https://sandbox.wompi.co/v1',
+              wompi_production_public_key = '$(esc "${WOMPI_PRODUCTION_PUBLIC_KEY}")',
+              wompi_production_private_key = '$(esc "${WOMPI_PRODUCTION_PRIVATE_KEY}")',
+              wompi_production_event_key = '$(esc "${WOMPI_PRODUCTION_EVENT_KEY}")',
+              wompi_production_integrity_key = '$(esc "${WOMPI_PRODUCTION_INTEGRITY_KEY}")',
+              wompi_production_base_url = 'https://production.wompi.co/v1'
+            WHERE id = 1;
+            SQL
+            mysql -h"${DB_HOST}" -P"${DB_PORT}" -u"${DB_USERNAME}" -p"${DB_PASSWORD}" "${DB_DATABASE}" -e "
+            SELECT id, wompi_mode,
+              IF(COALESCE(wompi_sandbox_public_key,'')='','VACIA','OK') AS sandbox_pub,
+              IF(COALESCE(wompi_production_public_key,'')='','VACIA','OK') AS prod_pub
+            FROM general_settings LIMIT 1;"
