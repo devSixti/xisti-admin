@@ -51,4 +51,8 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI', env('APP_URL').'/auth_account_delete/google/callback'),
     ],
+
+    'wompi' => [
+        'forward_secret' => env('WOMPI_WEBHOOK_FORWARD_SECRET'),
+    ],
 ];

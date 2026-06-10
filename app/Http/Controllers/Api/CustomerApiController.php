@@ -83,6 +83,19 @@ class CustomerApiController extends Controller
 
     public function postWompiWebhook(Request $request)
     {
+        $forwardSecret = trim((string) config('services.wompi.forward_secret', ''));
+        if ($forwardSecret !== '' && !hash_equals($forwardSecret, (string) $request->header('X-Wompi-Forward-Secret', ''))) {
+            \Log::warning('wompi_webhook_rejected_unauthorized_forward', [
+                'reference' => data_get($request->all(), 'data.transaction.reference'),
+            ]);
+
+            return response()->json([
+                'status' => 0,
+                'message' => 'Unauthorized',
+                'message_code' => 401,
+            ], 401);
+        }
+
         $payload = $request->all();
         if (empty($payload)) {
             $raw = (string)$request->getContent();
