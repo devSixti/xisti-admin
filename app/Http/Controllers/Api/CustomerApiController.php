@@ -624,7 +624,7 @@ class CustomerApiController extends Controller
     public function postFirebaseSecurityRules(Request $request)
     {
         $general_settings = request()->get("general_settings");
-        if ($general_settings == Null || $general_settings->map_key == Null) {
+        if ($general_settings == Null || $general_settings->server_map_key == Null) {
             return "";
         }
 
@@ -634,7 +634,12 @@ class CustomerApiController extends Controller
             return "";
         }
 
-        $fcmUrl = $url . $server_key;
+        if (str_ends_with($url, '&key=') || str_ends_with($url, '?key=')) {
+            $fcmUrl = $url . $server_key;
+        } else {
+            $sep = str_contains($url, '?') ? '&' : '?';
+            $fcmUrl = $url . $sep . 'key=' . urlencode($server_key);
+        }
         $final_url = str_replace(' ', '%20', $fcmUrl);
         $fcmData = [];
         $headers = [

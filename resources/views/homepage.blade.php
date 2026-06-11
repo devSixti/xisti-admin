@@ -17,231 +17,421 @@
     $facebook = $gs->facebook_link ?? 'https://www.facebook.com/';
     $linkedin = $gs->linkedin_link ?? 'https://www.linkedin.com/company/xistiapp/';
     $img = fn (string $path) => asset('assets/front/img/'.$path);
+    $storeDir = public_path('assets/front/img/store');
+    $storeShots = [];
+    $storeLabels = [
+        '01-rider-home.png' => 'Home pasajero',
+        '02-rider-service-modes.png' => 'Moto y Carro',
+        '03-rider-searching.png' => 'Buscando conductor',
+        '04-rider-tracking.png' => 'Viaje en curso',
+        '05-rider-history.png' => 'Historial',
+        '06-driver-home.png' => 'Conductor online',
+        '07-driver-request.png' => 'Nueva solicitud',
+        '08-driver-detail.png' => 'Detalle del viaje',
+        '09-driver-active.png' => 'Viaje activo',
+        '10-rider-wallet.png' => 'Billetera',
+    ];
+    if (is_dir($storeDir)) {
+        foreach (glob($storeDir.'/*.png') ?: [] as $file) {
+            $storeShots[basename($file)] = asset('assets/front/img/store/'.basename($file));
+        }
+        ksort($storeShots);
+    }
+    $heroPhone = ($storeShots['01-rider-home.png'] ?? null) ?: ($storeShots[array_key_first($storeShots) ?? ''] ?? $img('Customer-App-Features.png'));
+    $driverPhone = ($storeShots['06-driver-home.png'] ?? null) ?: ($storeShots[array_key_first($storeShots) ?? ''] ?? $img('Driver-App-Features.png'));
 @endphp
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="XISTI — movilidad urbana en Medellín. Negocia tu tarifa, recarga wallet y viaja fácil y seguro.">
+    <meta name="description" content="XISTI transforma tu manera de moverte por Medellín. Seguridad, economía y facilidad en cada viaje. Descarga la app en Google Play y App Store.">
+    <meta name="theme-color" content="#070707">
     <title>{{ $siteName }} — Fácil y Seguro</title>
     <link rel="icon" href="{{ $favicon }}" type="image/x-icon">
     <link rel="apple-touch-icon" href="{{ $favicon }}">
-    <link href="{{ asset('assets/front/css/bootstrap_version_5.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/front/css/xisti-homepage.css') }}?v=1.0.0" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ asset('assets/front/css/xisti-homepage.css') }}?v=2.2.0" rel="stylesheet">
 </head>
 <body class="xisti-home">
-<div class="x-wrap">
+<div class="x-shell">
 
-    <header class="x-nav">
-        <div class="x-nav__inner">
-            <a class="x-nav__brand" href="#hero">
+    <header class="x-top" id="x-top">
+        <div class="x-top__bar">
+            <a class="x-top__logo" href="#inicio" aria-label="{{ $siteName }} inicio">
                 <img src="{{ $logo }}" alt="{{ $siteName }}">
             </a>
-            <div class="x-nav__panel" id="x-nav-panel">
-            <ul class="x-nav__links">
-                <li><a href="#hero">Inicio</a></li>
-                <li><a href="#about">Nosotros</a></li>
-                <li><a href="#how">Cómo funciona</a></li>
-                <li><a href="#features">Características</a></li>
-                <li><a href="#download">Descargar</a></li>
-                <li><a href="#contact">Contacto</a></li>
-            </ul>
+            <nav class="x-top__nav" id="x-nav" aria-label="Principal">
+                <a href="#inicio">Inicio</a>
+                <a href="#pilares">Pilares</a>
+                <a href="#servicios">Servicios</a>
+                <a href="#como">Cómo funciona</a>
+                <a href="#app">App</a>
+                <a href="#descargar">Descargar</a>
+            </nav>
+            <div class="x-top__actions">
+                <a class="x-top__admin" href="{{ url('/admin/login') }}">Panel admin</a>
+                <a class="x-top__cta" href="#descargar">Obtener app</a>
+                <button class="x-top__burger" type="button" id="x-burger" aria-expanded="false" aria-controls="x-nav">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
-            <button class="x-nav__toggle" type="button" aria-expanded="false" aria-controls="x-nav-panel" id="x-nav-toggle">Menú</button>
         </div>
     </header>
 
-    <section class="x-hero" id="hero">
-        <div class="x-hero__grid" aria-hidden="true"></div>
-        <div class="x-hero__lines" aria-hidden="true"></div>
-        <div class="x-hero__content">
-            <div>
-                <span class="x-badge">Fácil y Seguro</span>
-                <h1><span>{{ $siteName }}</span> te mueve por Medellín.</h1>
-                <p class="x-hero__lead">
-                    Viajes urbanos, envíos y wallet prepago en una sola app. Negocia tu tarifa en pasos de $500 COP
-                    y conéctate con conductores verificados en tiempo real.
-                </p>
-                <div class="x-hero__actions">
-                    <a href="#download" class="x-btn x-btn--primary">Descargar app</a>
-                    <a href="#contact" class="x-btn x-btn--ghost">Contáctanos</a>
+    <main>
+        <section class="x-hero" id="inicio">
+            <div class="x-hero__sky" aria-hidden="true">
+                <img src="{{ $img('xisti-hero-medellin.png') }}" alt="">
+            </div>
+            <div class="x-hero__mesh" aria-hidden="true"></div>
+            <div class="x-hero__inner">
+                <div class="x-hero__copy x-reveal">
+                    <p class="x-kicker"><span class="x-kicker__dot"></span> Medellín · Movilidad urbana</p>
+                    <h1 class="x-hero__title">
+                        <span class="x-hero__title-line">Muévete con</span>
+                        <span class="x-hero__title-brand">{{ $siteName }}</span>
+                    </h1>
+                    <p class="x-hero__text">
+                        Transformamos tu manera de moverte por Medellín: viaje seguro, cómodo y eficiente en cada trayecto.
+                        Negocia tu tarifa en pasos de <strong>$500 COP</strong> y conecta con conductores verificados en tiempo real.
+                    </p>
+                    <div class="x-hero__chips">
+                        <span>Moto</span>
+                        <span>Carro</span>
+                        <span>Encomiendas</span>
+                    </div>
+                    <div class="x-hero__btns">
+                        <a class="x-btn x-btn--lime" href="#descargar">Descargar gratis</a>
+                        <a class="x-btn x-btn--line" href="#como">Ver cómo funciona</a>
+                    </div>
+                </div>
+                <div class="x-hero__device x-reveal x-reveal--delay">
+                    <div class="x-device">
+                        <div class="x-device__ring x-device__ring--1"></div>
+                        <div class="x-device__ring x-device__ring--2"></div>
+                        <div class="x-device__frame">
+                            <img src="{{ $heroPhone }}" alt="App {{ $siteName }} pasajero">
+                        </div>
+                        <div class="x-device__float x-device__float--fare">
+                            <span class="x-device__float-label">Tarifa acordada</span>
+                            <strong>$12.500</strong>
+                        </div>
+                        <div class="x-device__float x-device__float--live">
+                            <span class="x-device__float-dot"></span> En vivo
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="x-hero__visual">
-                <div class="x-hero__orb" aria-hidden="true"></div>
-                <img src="{{ $img('hero-section-image-1.png') }}" alt="Aplicación móvil {{ $siteName }}">
-            </div>
-        </div>
-        <div class="x-stats">
-            <div class="x-stat">
-                <strong>Negociación</strong>
-                <span>Tarifas flexibles por pasos de $500</span>
-            </div>
-            <div class="x-stat">
-                <strong>Wallet</strong>
-                <span>Recarga segura con Wompi</span>
-            </div>
-            <div class="x-stat">
-                <strong>Seguridad</strong>
-                <span>OTP, SOS y seguimiento en vivo</span>
-            </div>
-        </div>
-    </section>
-
-    <section class="x-section" id="about">
-        <div class="x-container x-about">
-            <div class="x-about__img">
-                <img src="{{ $img('about-us-image-1.png') }}" alt="Sobre {{ $siteName }}">
-            </div>
-            <div class="x-about__copy">
-                <div class="x-section__eyebrow">Sobre nosotros</div>
-                <h2 style="font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 1rem;">Movilidad urbana hecha para la ciudad</h2>
-                <p>{{ $siteName }} conecta pasajeros y conductores independientes con una experiencia moderna: solicita viajes o envíos, revisa opciones cercanas y acuerda tarifas antes de confirmar.</p>
-                <p>La plataforma facilita la conexión tecnológica; los servicios de transporte son acordados directamente entre usuarios y conductores bajo nuestros términos de uso.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="x-section x-section--alt" id="how">
-        <div class="x-container">
-            <div class="x-section__head">
-                <div class="x-section__eyebrow">Flujo simple</div>
-                <h2>¿Cómo funciona {{ $siteName }}?</h2>
-                <p>De la descarga al viaje en seis pasos claros.</p>
-            </div>
-            <div class="x-steps">
-                @foreach([
-                    ['01', 'user_registration_profile_setup.png', 'Descarga la app', 'Disponible en Google Play y App Store. Crea tu cuenta en minutos.'],
-                    ['02', 'booking_a_ride_or_sending_a_parcel.png', 'Regístrate', 'Completa tu perfil como pasajero o conductor verificado.'],
-                    ['03', 'fare_bidding.png', 'Solicita servicio', 'Elige origen, destino y tipo: viaje o envío urbano.'],
-                    ['04', 'driver_selection.png', 'Negocia tarifa', 'Propón tu precio y revisa conductores cercanos.'],
-                    ['05', 'real_time_tracking.png', 'Sigue en vivo', 'Monitorea el recorrido desde la aplicación.'],
-                    ['06', 'payments_and_rating.png', 'Paga y califica', 'Wallet prepago, Wompi y valoración al finalizar.'],
-                ] as [$num, $icon, $title, $desc])
-                <article class="x-step">
-                    <div class="x-step__num">{{ $num }}</div>
-                    <div class="x-step__icon"><img src="{{ $img($icon) }}" alt=""></div>
-                    <h3>{{ $title }}</h3>
-                    <p>{{ $desc }}</p>
+            <div class="x-metrics x-reveal">
+                <article class="x-metric">
+                    <strong>8%</strong>
+                    <span>Comisión plataforma</span>
                 </article>
-                @endforeach
+                <article class="x-metric">
+                    <strong>$500</strong>
+                    <span>Paso de negociación</span>
+                </article>
+                <article class="x-metric">
+                    <strong>$13.000</strong>
+                    <span>Recarga mínima wallet</span>
+                </article>
+                <article class="x-metric">
+                    <strong>SOS</strong>
+                    <span>Seguimiento + alerta</span>
+                </article>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="x-section" id="features">
-        <div class="x-container">
-            <div class="x-section__head">
-                <div class="x-section__eyebrow">Por qué elegirnos</div>
-                <h2>Todo lo que necesitas en una app</h2>
-                <p>Pasajeros y conductores comparten la misma plataforma con herramientas diseñadas para Medellín.</p>
+        <section class="x-pillars" id="pilares">
+            <div class="x-wrap">
+                <header class="x-head x-reveal">
+                    <p class="x-eyebrow">Quiénes somos</p>
+                    <h2>Seguridad, economía y facilidad en cada viaje</h2>
+                    <p>Los tres pilares que guían {{ $siteName }} — alineados con la promesa de movilidad urbana en Medellín.</p>
+                </header>
+                <div class="x-pillars__grid">
+                    @foreach([
+                        ['Economía', 'Tarifas justas y negociables. Calidad y accesibilidad en cada servicio, con recargas wallet desde $13.000 COP.'],
+                        ['Seguridad', 'Monitoreo GPS en tiempo real, verificación de identidad y botón SOS integrado para viajar con tranquilidad.'],
+                        ['Facilidad', 'Reserva en segundos, una sola app para pasajero y conductor, y soporte operativo en español.'],
+                    ] as [$title, $desc])
+                    <article class="x-pillar x-reveal">
+                        <h3>{{ $title }}</h3>
+                        <p>{{ $desc }}</p>
+                    </article>
+                    @endforeach
+                </div>
             </div>
-            <div class="x-bento">
-                <div class="x-bento__card x-bento__card--hero">
-                    <img class="phone" src="{{ $img('Customer-App-Features.png?v=2.0') }}" alt="Vista pasajero">
-                </div>
-                @foreach([
-                    ['Book_ride_with_own_fare.png', 'Tarifa negociable', 'Acuerda el precio antes de confirmar cada servicio.'],
-                    ['Price_negotiations.png', 'Viajes y envíos', 'Moto y carro para mover personas o paquetes urbanos.'],
-                    ['Real-Time-Tracking.png', 'Tiempo real', 'Ubicación del conductor visible durante el trayecto.'],
-                    ['In-app-payments.png', 'Wallet + Wompi', 'Recarga mínima $13.000 COP y pagos digitales seguros.'],
-                    ['check_drivers_details.png', 'Conductores verificados', 'Documentación y validación dentro de la plataforma.'],
-                ] as [$icon, $title, $desc])
-                <div class="x-bento__card x-bento__card--wide">
-                    <h3><img src="{{ $img($icon) }}" alt="">{{ $title }}</h3>
-                    <p>{{ $desc }}</p>
-                </div>
-                @endforeach
-                <div class="x-bento__card x-bento__card--hero">
-                    <img class="phone" src="{{ $img('Driver-App-Features.png?v=2.0') }}" alt="Vista conductor">
-                </div>
-                @foreach([
-                    ['Set_availability.png', 'Modo conductor', 'Activa disponibilidad y recibe solicitudes cercanas.'],
-                    ['Bid_with_your_fare.png', 'Oferta tu tarifa', 'Responde con tu precio a cada solicitud.'],
-                    ['in_app_wallet.png', 'Gana con flexibilidad', 'Gestiona servicios desde la misma aplicación.'],
-                ] as [$icon, $title, $desc])
-                <div class="x-bento__card">
-                    <h3><img src="{{ $img($icon) }}" alt="">{{ $title }}</h3>
-                    <p>{{ $desc }}</p>
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="x-section x-section--alt" id="download">
-        <div class="x-cta">
-            <div>
-                <h3>Únete a {{ $siteName }}</h3>
-                <p style="color: var(--x-muted); margin: 0 0 1.5rem;">
-                    Descarga la app, regístrate y empieza a moverte. Aplican términos y condiciones.
-                    {{ $siteName }} se reserva el derecho de admisión y validación de usuarios.
-                </p>
-                <div class="x-store-btns">
-                    <a href="{{ $playStore }}" class="x-store-btn" rel="noopener">
-                        <img src="{{ $img('google-play-icon.png') }}" alt="Google Play">
-                        <span><small>Disponible en</small><strong>Google Play</strong></span>
-                    </a>
-                    <a href="{{ $appStore }}" class="x-store-btn" rel="noopener">
-                        <img src="{{ $img('app-store-icon.png') }}" alt="App Store">
-                        <span><small>Disponible en</small><strong>App Store</strong></span>
-                    </a>
+        <section class="x-band" id="servicios">
+            <div class="x-wrap x-band__grid">
+                <div class="x-band__visual x-reveal">
+                    <div class="x-band__img-stack">
+                        <img class="x-band__img-main" src="{{ $img('about-us-image-1.png') }}" alt="Ciudad {{ $siteName }}">
+                        <img class="x-band__img-accent" src="{{ $img('xisti-hero-medellin.png') }}" alt="">
+                    </div>
+                </div>
+                <div class="x-band__text x-reveal">
+                    <p class="x-eyebrow">Sobre {{ $siteName }}</p>
+                    <h2>Movilidad hecha para la ciudad, no para plantillas</h2>
+                    <p>
+                        {{ $siteName }} conecta pasajeros y conductores independientes con una experiencia oscura, rápida y clara:
+                        solicita viajes o envíos, revisa opciones cercanas y acuerda tarifas antes de confirmar.
+                    </p>
+                    <p class="x-band__legal">
+                        La plataforma facilita la conexión tecnológica. Los servicios se acuerdan entre usuarios y conductores bajo nuestros términos.
+                    </p>
+                    <ul class="x-checklist">
+                        <li>Pasajero y conductor en la misma app</li>
+                        <li>Wallet prepago con Wompi</li>
+                        <li>OTP, documentos y validación</li>
+                    </ul>
                 </div>
             </div>
-            <div>
-                <img src="{{ $img('Be-The-Part-of-XISTI.png?v=2.0') }}" alt="Comunidad {{ $siteName }}" style="width:100%; border-radius: var(--radius-lg);">
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <footer class="x-footer" id="contact">
-        <div class="x-container x-footer__grid">
-            <div class="x-footer__brand">
+        <section class="x-flow" id="como">
+            <div class="x-wrap">
+                <header class="x-head x-reveal">
+                    <p class="x-eyebrow">Flujo simple</p>
+                    <h2>De la descarga al viaje en seis pasos</h2>
+                    <p>Sin fricción. Diseñado para Medellín y su ritmo urbano.</p>
+                </header>
+                <ol class="x-timeline">
+                    @foreach([
+                        ['Descarga', 'Google Play o App Store. Cuenta en minutos.'],
+                        ['Regístrate', 'Perfil pasajero o conductor verificado.'],
+                        ['Solicita', 'Origen, destino y tipo de servicio.'],
+                        ['Negocia', 'Propón tarifa y revisa conductores.'],
+                        ['Sigue', 'Ubicación en tiempo real en el mapa.'],
+                        ['Cierra', 'Paga con wallet y califica el viaje.'],
+                    ] as $i => [$title, $desc])
+                    <li class="x-timeline__item x-reveal" style="--i: {{ $i }}">
+                        <span class="x-timeline__idx">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                        <h3>{{ $title }}</h3>
+                        <p>{{ $desc }}</p>
+                    </li>
+                    @endforeach
+                </ol>
+            </div>
+        </section>
+
+        <section class="x-modes">
+            <div class="x-wrap">
+                <header class="x-head x-reveal">
+                    <p class="x-eyebrow">Dos roles, una plataforma</p>
+                    <h2>Pasajero y conductor, mismo ADN</h2>
+                </header>
+                <div class="x-modes__grid">
+                    <article class="x-mode x-mode--rider x-reveal">
+                        <div class="x-mode__shot">
+                            <img src="{{ $heroPhone }}" alt="Modo pasajero">
+                        </div>
+                        <div class="x-mode__body">
+                            <h3>Modo pasajero</h3>
+                            <ul>
+                                <li>Tarifa negociable antes de confirmar</li>
+                                <li>Envíos urbanos: Moto y Carro</li>
+                                <li>Encomiendas activas en lanzamiento</li>
+                                <li>Wallet + Wompi desde $13.000</li>
+                            </ul>
+                        </div>
+                    </article>
+                    <article class="x-mode x-mode--driver x-reveal x-reveal--delay">
+                        <div class="x-mode__shot">
+                            <img src="{{ $driverPhone }}" alt="Modo conductor">
+                        </div>
+                        <div class="x-mode__body">
+                            <h3>Modo conductor</h3>
+                            <ul>
+                                <li>Activa disponibilidad cuando quieras</li>
+                                <li>Oferta tu tarifa a cada solicitud</li>
+                                <li>Documentación validada en admin</li>
+                                <li>Gestión de ganancias en app</li>
+                            </ul>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="x-features">
+            <div class="x-wrap">
+                <header class="x-head x-reveal">
+                    <p class="x-eyebrow">Por qué {{ $siteName }}</p>
+                    <h2>Todo lo esencial, nada de ruido</h2>
+                </header>
+                <div class="x-features__grid">
+                    @foreach([
+                        ['Tarifa negociable', 'Acuerda el precio en pasos de $500 COP antes de cada servicio.'],
+                        ['Tiempo real', 'Sigue el recorrido desde la app con mapa en vivo.'],
+                        ['Conductores verificados', 'Documentos y validación desde el panel administrativo.'],
+                        ['Wallet seguro', 'Recargas con Wompi y saldo prepago para viajes.'],
+                        ['SOS integrado', 'Alerta y registro de eventos para soporte operativo.'],
+                        ['Una sola app', 'Cambia entre pasajero y conductor sin instalar otra cosa.'],
+                    ] as [$title, $desc])
+                    <article class="x-feat x-reveal">
+                        <h3>{{ $title }}</h3>
+                        <p>{{ $desc }}</p>
+                    </article>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+
+        <section class="x-screens" id="app">
+            <div class="x-wrap">
+                <header class="x-head x-reveal">
+                    <p class="x-eyebrow">La app en acción</p>
+                    <h2>Pantallas listas para tiendas</h2>
+                    <p>Capturas de producción — pasajero y conductor en Medellín.</p>
+                </header>
+                @if(count($storeShots) > 0)
+                <div class="x-screens__track x-reveal">
+                    @foreach($storeShots as $file => $shot)
+                    <figure class="x-screens__card">
+                        <div class="x-screens__frame">
+                            <img src="{{ $shot }}" alt="{{ $storeLabels[$file] ?? $siteName }}" loading="lazy">
+                        </div>
+                        <figcaption>{{ $storeLabels[$file] ?? pathinfo($file, PATHINFO_FILENAME) }}</figcaption>
+                    </figure>
+                    @endforeach
+                </div>
+                @else
+                <div class="x-screens__duo x-reveal">
+                    <figure class="x-screens__card x-screens__card--large">
+                        <img src="{{ $img('Customer-App-Features.png') }}" alt="Vista pasajero">
+                    </figure>
+                    <figure class="x-screens__card x-screens__card--large">
+                        <img src="{{ $img('Driver-App-Features.png') }}" alt="Vista conductor">
+                    </figure>
+                </div>
+                @endif
+            </div>
+        </section>
+
+        <section class="x-download" id="descargar">
+            <div class="x-wrap x-download__inner x-reveal">
+                <div class="x-download__copy">
+                    <p class="x-eyebrow x-eyebrow--lime">Únete hoy</p>
+                    <h2>Empieza a moverte con {{ $siteName }}</h2>
+                    <p>
+                        Descarga, regístrate y solicita tu primer viaje o envío.
+                        Aplican términos y condiciones; {{ $siteName }} valida usuarios y conductores.
+                    </p>
+                    <div class="x-stores">
+                        <a href="{{ $playStore }}" class="x-store" rel="noopener noreferrer">
+                            <img src="{{ $img('google-play-icon.png') }}" alt="">
+                            <span><small>Disponible en</small><strong>Google Play</strong></span>
+                        </a>
+                        <a href="{{ $appStore }}" class="x-store" rel="noopener noreferrer">
+                            <img src="{{ $img('app-store-icon.png') }}" alt="">
+                            <span><small>Disponible en</small><strong>App Store</strong></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="x-download__art">
+                    <img src="{{ $img('Be-The-Part-of-XISTI.png') }}" alt="Comunidad {{ $siteName }}">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="x-foot" id="contacto">
+        <div class="x-wrap x-foot__grid">
+            <div class="x-foot__brand">
                 <img src="{{ $logo }}" alt="{{ $siteName }}">
-                <p>Nuestro equipo está disponible para brindar información y soporte relacionado con {{ $siteName }} APP.</p>
-                <h4 style="font-family: var(--font-display); font-size: 1rem; margin: 1.5rem 0 1rem;">Contáctenos</h4>
-                <div class="x-contact-item">
+                <p>Soporte operativo y consultas sobre {{ $siteName }} APP en Medellín.</p>
+                <div class="x-foot__social">
+                    <a href="{{ $instagram }}" rel="noopener" aria-label="Instagram">
+                        <img src="{{ $img('instagram.svg') }}" alt="">
+                    </a>
+                    <a href="{{ $facebook }}" rel="noopener" aria-label="Facebook">
+                        <img src="{{ $img('facebook.svg') }}" alt="">
+                    </a>
+                    <a href="{{ $linkedin }}" rel="noopener" aria-label="LinkedIn">
+                        <img src="{{ $img('linkedin.svg') }}" alt="">
+                    </a>
+                </div>
+            </div>
+            <div class="x-foot__links">
+                <h4>Enlaces</h4>
+                <a href="#inicio">Inicio</a>
+                <a href="#servicios">Servicios</a>
+                <a href="#como">Cómo funciona</a>
+                <a href="{{ url('/privacy-policy') }}">Privacidad</a>
+                <a href="{{ url('/terms-and-conditions') }}">Términos</a>
+                <a href="{{ url('/admin/login') }}">Panel admin</a>
+            </div>
+            <div class="x-foot__contact">
+                <h4>Contacto</h4>
+                <p class="x-foot__row">
                     <img src="{{ $img('location.svg') }}" alt="">
                     <span>{{ $address }}</span>
-                </div>
-                <div class="x-contact-item">
+                </p>
+                <p class="x-foot__row">
                     <img src="{{ $img('mail.svg') }}" alt="">
-                    <a href="mailto:{{ $email }}" style="color: inherit; text-decoration: none;">{{ $email }}</a>
-                </div>
-                <div class="x-contact-item">
+                    <a href="mailto:{{ $email }}">{{ $email }}</a>
+                </p>
+                <p class="x-foot__row">
                     <img src="{{ $img('call.svg') }}" alt="">
                     <span>{{ $phone }}</span>
-                </div>
-                <div class="x-social">
-                    <a href="{{ $instagram }}" rel="noopener" aria-label="Instagram"><img src="{{ $img('instagram.svg') }}" alt=""></a>
-                    <a href="{{ $facebook }}" rel="noopener" aria-label="Facebook"><img src="{{ $img('facebook.svg') }}" alt=""></a>
-                    <a href="{{ $linkedin }}" rel="noopener" aria-label="LinkedIn"><img src="{{ $img('linkedin.svg') }}" alt=""></a>
-                </div>
+                </p>
             </div>
-            <div class="x-footer__map">
-                <img src="{{ $img('Footer-map-image.png?v=2.0') }}" alt="Mapa Medellín">
+            <div class="x-foot__map">
+                <img src="{{ $img('Footer-map-image.png') }}" alt="Mapa Medellín">
             </div>
         </div>
-        <p class="x-footer__copy">{{ $copyright }}</p>
+        <p class="x-foot__copy">{{ $copyright }}</p>
     </footer>
 
 </div>
 <script>
 (function () {
-    var toggle = document.getElementById('x-nav-toggle');
-    var panel = document.getElementById('x-nav-panel');
-    if (!toggle || !panel) return;
-    toggle.addEventListener('click', function () {
-        var open = panel.classList.toggle('is-open');
-        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-    panel.querySelectorAll('a').forEach(function (link) {
-        link.addEventListener('click', function () {
-            panel.classList.remove('is-open');
-            toggle.setAttribute('aria-expanded', 'false');
+    var top = document.getElementById('x-top');
+    var burger = document.getElementById('x-burger');
+    var nav = document.getElementById('x-nav');
+
+    function onScroll() {
+        if (!top) return;
+        top.classList.toggle('is-scrolled', window.scrollY > 24);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    if (burger && nav) {
+        burger.addEventListener('click', function () {
+            var open = nav.classList.toggle('is-open');
+            burger.classList.toggle('is-open', open);
+            burger.setAttribute('aria-expanded', open ? 'true' : 'false');
         });
-    });
+        nav.querySelectorAll('a').forEach(function (a) {
+            a.addEventListener('click', function () {
+                nav.classList.remove('is-open');
+                burger.classList.remove('is-open');
+                burger.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
+
+    var reveals = document.querySelectorAll('.x-reveal');
+    if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (e.isIntersecting) {
+                    e.target.classList.add('is-in');
+                    io.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+        reveals.forEach(function (el) { io.observe(el); });
+    } else {
+        reveals.forEach(function (el) { el.classList.add('is-in'); });
+    }
 })();
 </script>
 </body>
