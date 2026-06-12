@@ -18,6 +18,7 @@ class VehicleServicesSeederTest extends TestCase
         foreach ($rows as $row) {
             $this->assertNotNull($row->min_fare, "vehicle_services.id={$row->id} missing min_fare");
             $this->assertNotNull($row->time_fare, "vehicle_services.id={$row->id} missing time_fare");
+            $this->assertNotNull($row->max_offer_percent, "vehicle_services.id={$row->id} missing max_offer_percent");
         }
     }
 }
