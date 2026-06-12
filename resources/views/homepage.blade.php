@@ -1,12 +1,15 @@
 @php
     $gs = request()->get('general_settings');
     $siteName = $gs->website_name ?? 'XISTI';
-    $logo = $gs->website_logo
-        ? asset('assets/images/website-logo-icon/'.$gs->website_logo)
-        : asset('assets/images/website-logo-icon/xisti-logo.png');
-    $favicon = $gs->website_favicon
-        ? asset('assets/images/website-logo-icon/'.$gs->website_favicon)
-        : $logo;
+    $logoVer = '2.9';
+    $logoFile = 'assets/images/website-logo-icon/xisti-logo-header.png';
+    if (!is_file(public_path($logoFile))) {
+        $logoFile = 'assets/images/website-logo-icon/xisti-logo-web.png';
+    }
+    $logo = asset($logoFile).'?v='.$logoVer;
+    $faviconVer = '2.6';
+    $favicon = asset('favicon.ico').'?v='.$faviconVer;
+    $faviconPng = asset('assets/images/website-logo-icon/xisti-favicon.png').'?v='.$faviconVer;
     $playStore = $gs->user_playstore_link ?? '#';
     $appStore = $gs->user_appstore_link ?? '#';
     $address = $gs->address ?? 'Medellín, Colombia';
@@ -19,26 +22,42 @@
     $img = fn (string $path) => asset('assets/front/img/'.$path);
     $storeDir = public_path('assets/front/img/store');
     $storeShots = [];
+    $storeGalleryOrder = [
+        '01-splash.png',
+        '02-rider-services.png',
+        '04-rider-radar.png',
+        '05-driver-incoming.png',
+        '06-driver-detail.png',
+        '08-rider-active.png',
+    ];
     $storeLabels = [
-        '01-rider-home.png' => 'Home pasajero',
-        '02-rider-service-modes.png' => 'Moto y Carro',
-        '03-rider-searching.png' => 'Buscando conductor',
-        '04-rider-tracking.png' => 'Viaje en curso',
-        '05-rider-history.png' => 'Historial',
-        '06-driver-home.png' => 'Conductor online',
-        '07-driver-request.png' => 'Nueva solicitud',
-        '08-driver-detail.png' => 'Detalle del viaje',
-        '09-driver-active.png' => 'Viaje activo',
-        '10-rider-wallet.png' => 'Billetera',
+        '01-splash.png' => 'Splash XISTI',
+        '02-rider-services.png' => 'Servicios pasajero',
+        '04-rider-radar.png' => 'Buscando conductor',
+        '05-driver-incoming.png' => 'Solicitud conductor',
+        '06-driver-detail.png' => 'Detalle del viaje',
+        '08-rider-active.png' => 'Viaje en curso',
+    ];
+    $storeDesc = [
+        '01-splash.png' => 'Identidad Fácil y Seguro — movilidad urbana en Medellín desde el primer segundo.',
+        '02-rider-services.png' => 'Moto, Carro y Envío en un solo mapa. Elige el servicio y ofrece tu valor.',
+        '04-rider-radar.png' => 'Radar en vivo mientras llegan conductores. Ajusta el valor en pasos de $500 COP.',
+        '05-driver-incoming.png' => 'El conductor ve origen, destino, valor y perfil del pasajero al instante.',
+        '06-driver-detail.png' => 'Mapa, ruta, método de pago y contraofertas antes de aceptar el servicio.',
+        '08-rider-active.png' => 'Sigue a Carlos en el mapa con datos del vehículo y código de verificación.',
     ];
     if (is_dir($storeDir)) {
-        foreach (glob($storeDir.'/*.png') ?: [] as $file) {
-            $storeShots[basename($file)] = asset('assets/front/img/store/'.basename($file));
+        foreach ($storeGalleryOrder as $name) {
+            $path = $storeDir.'/'.$name;
+            if (is_file($path)) {
+                $storeShots[$name] = asset('assets/front/img/store/'.$name).'?v='.filemtime($path);
+            }
         }
-        ksort($storeShots);
     }
-    $heroPhone = ($storeShots['01-rider-home.png'] ?? null) ?: ($storeShots[array_key_first($storeShots) ?? ''] ?? $img('Customer-App-Features.png'));
-    $driverPhone = ($storeShots['06-driver-home.png'] ?? null) ?: ($storeShots[array_key_first($storeShots) ?? ''] ?? $img('Driver-App-Features.png'));
+    $shot = fn (string $name) => $storeShots[$name] ?? null;
+    $heroPhone = $shot('02-rider-services.png') ?? $shot('08-rider-active.png') ?? $img('xisti-hero-medellin.png');
+    $driverPhone = $shot('06-driver-detail.png') ?? $shot('05-driver-incoming.png') ?? $heroPhone;
+    $splashPhone = $shot('01-splash.png') ?? $heroPhone;
 @endphp
 <!DOCTYPE html>
 <html lang="es">
@@ -48,12 +67,14 @@
     <meta name="description" content="XISTI transforma tu manera de moverte por Medellín. Seguridad, economía y facilidad en cada viaje. Descarga la app en Google Play y App Store.">
     <meta name="theme-color" content="#070707">
     <title>{{ $siteName }} — Fácil y Seguro</title>
-    <link rel="icon" href="{{ $favicon }}" type="image/x-icon">
-    <link rel="apple-touch-icon" href="{{ $favicon }}">
+    <link rel="icon" href="{{ $favicon }}" sizes="any">
+    <link rel="icon" href="{{ $faviconPng }}" type="image/png" sizes="48x48">
+    <link rel="apple-touch-icon" href="{{ asset('assets/images/website-logo-icon/xisti-favicon-180.png') }}?v={{ $faviconVer }}">
+    <link rel="apple-touch-icon" sizes="192x192" href="{{ asset('assets/images/website-logo-icon/xisti-favicon-192.png') }}?v={{ $faviconVer }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="{{ asset('assets/front/css/xisti-homepage.css') }}?v=2.2.0" rel="stylesheet">
+    <link href="{{ asset('assets/front/css/xisti-homepage.css') }}?v=2.5.0" rel="stylesheet">
 </head>
 <body class="xisti-home">
 <div class="x-shell">
@@ -96,12 +117,12 @@
                     </h1>
                     <p class="x-hero__text">
                         Transformamos tu manera de moverte por Medellín: viaje seguro, cómodo y eficiente en cada trayecto.
-                        Negocia tu tarifa en pasos de <strong>$500 COP</strong> y conecta con conductores verificados en tiempo real.
+                        Negocia tu valor en pasos de <strong>$500 COP</strong> y conecta con conductores verificados en tiempo real.
                     </p>
                     <div class="x-hero__chips">
                         <span>Moto</span>
                         <span>Carro</span>
-                        <span>Encomiendas</span>
+                        <span>Envíos</span>
                     </div>
                     <div class="x-hero__btns">
                         <a class="x-btn x-btn--lime" href="#descargar">Descargar gratis</a>
@@ -116,7 +137,7 @@
                             <img src="{{ $heroPhone }}" alt="App {{ $siteName }} pasajero">
                         </div>
                         <div class="x-device__float x-device__float--fare">
-                            <span class="x-device__float-label">Tarifa acordada</span>
+                            <span class="x-device__float-label">Valor acordado</span>
                             <strong>$12.500</strong>
                         </div>
                         <div class="x-device__float x-device__float--live">
@@ -154,7 +175,7 @@
                 </header>
                 <div class="x-pillars__grid">
                     @foreach([
-                        ['Economía', 'Tarifas justas y negociables. Calidad y accesibilidad en cada servicio, con recargas wallet desde $13.000 COP.'],
+                        ['Economía', 'Valores justos y negociables. Calidad y accesibilidad en cada servicio, con recargas wallet desde $13.000 COP.'],
                         ['Seguridad', 'Monitoreo GPS en tiempo real, verificación de identidad y botón SOS integrado para viajar con tranquilidad.'],
                         ['Facilidad', 'Reserva en segundos, una sola app para pasajero y conductor, y soporte operativo en español.'],
                     ] as [$title, $desc])
@@ -170,9 +191,13 @@
         <section class="x-band" id="servicios">
             <div class="x-wrap x-band__grid">
                 <div class="x-band__visual x-reveal">
-                    <div class="x-band__img-stack">
-                        <img class="x-band__img-main" src="{{ $img('about-us-image-1.png') }}" alt="Ciudad {{ $siteName }}">
-                        <img class="x-band__img-accent" src="{{ $img('xisti-hero-medellin.png') }}" alt="">
+                    <div class="x-band__phones">
+                        <div class="x-band__phone x-band__phone--back">
+                            <img src="{{ $splashPhone }}" alt="Splash {{ $siteName }}">
+                        </div>
+                        <div class="x-band__phone x-band__phone--front">
+                            <img src="{{ $heroPhone }}" alt="App {{ $siteName }} pasajero">
+                        </div>
                     </div>
                 </div>
                 <div class="x-band__text x-reveal">
@@ -180,7 +205,7 @@
                     <h2>Movilidad hecha para la ciudad, no para plantillas</h2>
                     <p>
                         {{ $siteName }} conecta pasajeros y conductores independientes con una experiencia oscura, rápida y clara:
-                        solicita viajes o envíos, revisa opciones cercanas y acuerda tarifas antes de confirmar.
+                        solicita viajes o envíos, revisa opciones cercanas y acuerda valores antes de confirmar.
                     </p>
                     <p class="x-band__legal">
                         La plataforma facilita la conexión tecnológica. Los servicios se acuerdan entre usuarios y conductores bajo nuestros términos.
@@ -206,7 +231,7 @@
                         ['Descarga', 'Google Play o App Store. Cuenta en minutos.'],
                         ['Regístrate', 'Perfil pasajero o conductor verificado.'],
                         ['Solicita', 'Origen, destino y tipo de servicio.'],
-                        ['Negocia', 'Propón tarifa y revisa conductores.'],
+                        ['Negocia', 'Propón valor y revisa conductores.'],
                         ['Sigue', 'Ubicación en tiempo real en el mapa.'],
                         ['Cierra', 'Paga con wallet y califica el viaje.'],
                     ] as $i => [$title, $desc])
@@ -234,9 +259,8 @@
                         <div class="x-mode__body">
                             <h3>Modo pasajero</h3>
                             <ul>
-                                <li>Tarifa negociable antes de confirmar</li>
-                                <li>Envíos urbanos: Moto y Carro</li>
-                                <li>Encomiendas activas en lanzamiento</li>
+                                <li>Valor negociable antes de confirmar</li>
+                                <li>Envíos urbanos con Moto y Carro</li>
                                 <li>Wallet + Wompi desde $13.000</li>
                             </ul>
                         </div>
@@ -249,7 +273,7 @@
                             <h3>Modo conductor</h3>
                             <ul>
                                 <li>Activa disponibilidad cuando quieras</li>
-                                <li>Oferta tu tarifa a cada solicitud</li>
+                                <li>Oferta tu valor a cada solicitud</li>
                                 <li>Documentación validada en admin</li>
                                 <li>Gestión de ganancias en app</li>
                             </ul>
@@ -267,7 +291,7 @@
                 </header>
                 <div class="x-features__grid">
                     @foreach([
-                        ['Tarifa negociable', 'Acuerda el precio en pasos de $500 COP antes de cada servicio.'],
+                        ['Valor negociable', 'Acuerda el precio en pasos de $500 COP antes de cada servicio.'],
                         ['Tiempo real', 'Sigue el recorrido desde la app con mapa en vivo.'],
                         ['Conductores verificados', 'Documentos y validación desde el panel administrativo.'],
                         ['Wallet seguro', 'Recargas con Wompi y saldo prepago para viajes.'],
@@ -288,29 +312,23 @@
                 <header class="x-head x-reveal">
                     <p class="x-eyebrow">La app en acción</p>
                     <h2>Pantallas listas para tiendas</h2>
-                    <p>Capturas de producción — pasajero y conductor en Medellín.</p>
+                    <p>Capturas reales del flujo pasajero ↔ conductor en Medellín.</p>
                 </header>
-                @if(count($storeShots) > 0)
                 <div class="x-screens__track x-reveal">
-                    @foreach($storeShots as $file => $shot)
+                    @foreach($storeShots as $file => $shotUrl)
                     <figure class="x-screens__card">
                         <div class="x-screens__frame">
-                            <img src="{{ $shot }}" alt="{{ $storeLabels[$file] ?? $siteName }}" loading="lazy">
+                            <img src="{{ $shotUrl }}" alt="{{ $storeLabels[$file] ?? $siteName }}" loading="lazy" decoding="async">
                         </div>
-                        <figcaption>{{ $storeLabels[$file] ?? pathinfo($file, PATHINFO_FILENAME) }}</figcaption>
+                        <figcaption>
+                            <strong>{{ $storeLabels[$file] ?? pathinfo($file, PATHINFO_FILENAME) }}</strong>
+                            @if(!empty($storeDesc[$file]))
+                            <span class="x-screens__desc">{{ $storeDesc[$file] }}</span>
+                            @endif
+                        </figcaption>
                     </figure>
                     @endforeach
                 </div>
-                @else
-                <div class="x-screens__duo x-reveal">
-                    <figure class="x-screens__card x-screens__card--large">
-                        <img src="{{ $img('Customer-App-Features.png') }}" alt="Vista pasajero">
-                    </figure>
-                    <figure class="x-screens__card x-screens__card--large">
-                        <img src="{{ $img('Driver-App-Features.png') }}" alt="Vista conductor">
-                    </figure>
-                </div>
-                @endif
             </div>
         </section>
 
@@ -335,7 +353,7 @@
                     </div>
                 </div>
                 <div class="x-download__art">
-                    <img src="{{ $img('Be-The-Part-of-XISTI.png') }}" alt="Comunidad {{ $siteName }}">
+                    <img src="{{ $img('Be-The-Part-of-XISTI.png') }}?v=2.4" alt="Comunidad {{ $siteName }}">
                 </div>
             </div>
         </section>
@@ -383,7 +401,7 @@
                 </p>
             </div>
             <div class="x-foot__map">
-                <img src="{{ $img('Footer-map-image.png') }}" alt="Mapa Medellín">
+                <img src="{{ $img('xisti-hero-medellin.png') }}?v=2.4" alt="Medellín {{ $siteName }}">
             </div>
         </div>
         <p class="x-foot__copy">{{ $copyright }}</p>

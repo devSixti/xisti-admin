@@ -2222,7 +2222,7 @@ class UserController extends Controller
                         }
 
                         //deleting chat from firebase
-                        (new FirebaseService())->deleteOrderChat($ride->ride_no,$ride->id);
+                        (new FirebaseService())->safeDeleteOrderChat($ride->ride_no, $ride->id);
 
                         //ProviderUserRunningService::query()->where('provider_id', $driver_id)->where('user_id', $ride->user_id)->where('service_cat_id', $service_category_id)->where('booking_id', $ride->id)->delete();
                         return response()->json([
@@ -2409,9 +2409,7 @@ class UserController extends Controller
                                 $ride->save();
 
                                 //deleting chat from firebase
-                                if((new FirebaseService())->deleteOrderChat($ride->ride_no,$ride->id)){
-                                    info('success');
-                                }
+                                (new FirebaseService())->safeDeleteOrderChat($ride->ride_no, $ride->id);
 
                                 $update_driver_status->driver_current_status = 1;
                                 $update_driver_status->save();
@@ -2434,27 +2432,28 @@ class UserController extends Controller
                                 //refer history code
                                 if($ride_status >= 0 && $ride_status <= 9 ){
                                     if ($ride->refer_discount > 0) {
-                                        $user = User::query()->select('id','pending_refer_discount')->where('id', $ride->user_id)->whereNull('deleted_at')->first();
-                                        if ($user != Null) {
+                                        $refer_user = User::query()->select('id','pending_refer_discount')->where('id', $ride->user_id)->whereNull('deleted_at')->first();
+                                        if ($refer_user != Null) {
                                             $user_refer_history = UserReferHistory::query()->where('id',$ride->user_refer_history_id)->where('user_id', $ride->user_id)->where('user_status', 1)->first();
                                             if ($user_refer_history != Null) {
                                                 $user_refer_history->user_status = 0;
                                                 $user_refer_history->save();
-                                                $user->pending_refer_discount = $user->pending_refer_discount + 1;
-                                                $user->save();
+                                                $refer_user->pending_refer_discount = $refer_user->pending_refer_discount + 1;
+                                                $refer_user->save();
                                             } else {
                                                 $user_refer_history = UserReferHistory::query()->where('id',$ride->user_refer_history_id)->where('refer_id', $ride->user_id)->where('refer_status', 1)->first();
                                                 if ($user_refer_history != Null) {
                                                     $user_refer_history->refer_status = 0;
                                                     $user_refer_history->save();
-                                                    $user->pending_refer_discount = $user->pending_refer_discount + 1;
-                                                    $user->save();
+                                                    $refer_user->pending_refer_discount = $refer_user->pending_refer_discount + 1;
+                                                    $refer_user->save();
                                                 }
                                             }
                                         }
                                     }
                                 }
                                 //refer history code
+                                $cancel_message = __('driver_messages.20');
                                 $this->notificationClass->userTransportNotification($ride->id, $user->device_token, $request_status, $user->login_device, $user->language);
                                 ProviderUserRunningService::query()->where('provider_id', $driver_id)->where('user_id', $ride->user_id)->where('booking_id', $ride->id)->delete();
                                 UserRunningRide::query()->where('user_id', $ride->user_id)->where('booking_id', $ride->id)->delete();
@@ -2483,7 +2482,7 @@ class UserController extends Controller
                                     "ride_id" => $ride->id,
                                     "ride_status" => $request_status - 0,
                                     "ride_completed_status" => 0,
-                                    "ride_cancelled_status" => 0,
+                                    "ride_cancelled_status" => 1,
                                     "driver_current_status" => $update_driver_status->driver_current_status,
                                     "cancel_by" => $cancel_message,
                                     "way_point_status" => $way_point_status - 0,
@@ -2885,9 +2884,7 @@ class UserController extends Controller
                                 info($ride->id);
 
                                 //deleting chat from firebase
-                                if((new FirebaseService())->deleteOrderChat($ride->ride_no,$ride->id)){
-                                    info('success');
-                                }
+                                (new FirebaseService())->safeDeleteOrderChat($ride->ride_no, $ride->id);
 
                                 if($ride->is_hail != 1) {
                                     $general_settings = request()->get("general_settings");

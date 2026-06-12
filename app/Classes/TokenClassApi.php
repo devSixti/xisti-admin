@@ -12,6 +12,7 @@ namespace App\Classes;
 
 use App\Models\User;
 use App\Models\UserVerification;
+use App\Support\LocalOtpBypass;
 use Illuminate\Support\Facades\Log;
 use Twilio\Rest\Client;
 
@@ -34,6 +35,16 @@ class TokenClassApi
                 "message" => "something went to wrong!",
                 "message_code" => 9,
             ]);
+        }
+        if (LocalOtpBypass::isEnabled()) {
+            UserVerification::query()->where('user_id', $user_details->id)->delete();
+            $localOtp = new UserVerification();
+            $localOtp->user_id = $user_details->id;
+            $localOtp->token = 'local-bypass';
+            $localOtp->save();
+            Log::info('XISTI local OTP bypass: code issued without Twilio.', ['user_id' => $user_details->id]);
+
+            return 'success';
         }
         if ($settings->is_otp_verification != Null && $settings->is_otp_verification == 1 && $user_details->is_default_user == 0) {
             if (isset($settings->otp_method)) {

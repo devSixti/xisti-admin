@@ -76,10 +76,26 @@ body.xisti-home::after {
     gap: 1.5rem;
 }
 
+.x-top__logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
 .x-top__logo img {
-    height: 2.35rem;
+    height: 2.6rem;
     width: auto;
     display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.22));
+    transition: filter 0.25s ease, transform 0.25s ease;
+}
+
+.x-top__logo:hover img,
+.x-top__logo:focus-visible img {
+    filter: drop-shadow(0 0 16px rgba(57, 255, 20, 0.42));
+    transform: translateY(-1px);
 }
 
 .x-top__nav {
@@ -412,7 +428,7 @@ body.xisti-home::after {
     border-radius: 1.45rem;
     aspect-ratio: 9 / 19.5;
     object-fit: cover;
-    object-position: top center;
+    object-position: center 2%;
 }
 
 .x-device__float {
@@ -583,26 +599,45 @@ body.xisti-home::after {
     align-items: center;
 }
 
-.x-band__img-stack {
+.x-band__phones {
     position: relative;
+    min-height: 28rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.x-band__img-main {
+.x-band__phone {
+    width: min(240px, 42vw);
+    padding: 0.5rem;
+    border-radius: 1.75rem;
+    background: linear-gradient(160deg, #222, #0a0a0a);
+    border: 1px solid rgba(57, 255, 20, 0.35);
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.5);
+}
+
+.x-band__phone img {
     width: 100%;
-    border-radius: var(--x-radius-lg);
-    border: 1px solid var(--x-line);
     display: block;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    border-radius: 1.35rem;
+    aspect-ratio: 9 / 19.5;
+    object-fit: cover;
+    object-position: center 2%;
 }
 
-.x-band__img-accent {
+.x-band__phone--back {
     position: absolute;
-    width: 42%;
-    bottom: -8%;
-    right: -6%;
-    border-radius: var(--x-radius);
-    border: 2px solid var(--x-lime);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    left: 4%;
+    top: 8%;
+    transform: rotate(-8deg) scale(0.92);
+    opacity: 0.88;
+    z-index: 1;
+}
+
+.x-band__phone--front {
+    position: relative;
+    z-index: 2;
+    transform: rotate(4deg);
 }
 
 .x-band__text h2 {
@@ -738,9 +773,9 @@ body.xisti-home::after {
     width: 100%;
     border-radius: 1.2rem 1.2rem 0 0;
     box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.25);
-    aspect-ratio: 9 / 16;
+    aspect-ratio: 9 / 19.5;
     object-fit: cover;
-    object-position: top center;
+    object-position: center 2%;
 }
 
 .x-mode__body {
@@ -869,13 +904,29 @@ body.xisti-home::after {
 
 .x-screens__card figcaption {
     padding: 0.85rem 1rem 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.x-screens__card figcaption strong {
     font-family: var(--x-font-display);
     font-size: 0.82rem;
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--x-lime);
-    text-align: center;
+}
+
+.x-screens__desc {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 400;
+    line-height: 1.45;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--x-muted);
 }
 
 .x-screens__card:hover {
@@ -889,7 +940,7 @@ body.xisti-home::after {
     display: block;
     aspect-ratio: 9 / 19.5;
     object-fit: cover;
-    object-position: top center;
+    object-position: center 2%;
 }
 
 .x-screens__card--large { flex: none; }
@@ -978,7 +1029,10 @@ body.xisti-home::after {
 
 .x-foot__brand img {
     height: 2.75rem;
+    width: auto;
     margin-bottom: 1rem;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(57, 255, 20, 0.18));
 }
 
 .x-foot__brand p {
@@ -1138,6 +1192,10 @@ body.xisti-home::after {
     .x-timeline { grid-template-columns: 1fr; }
     .x-features__grid { grid-template-columns: 1fr; }
     .x-metrics { grid-template-columns: 1fr 1fr; }
+
+    .x-band__phones { min-height: 22rem; }
+    .x-band__phone { width: min(200px, 46vw); }
+    .x-band__phone--back { left: 0; top: 12%; }
 
     .x-band__img-accent {
         width: 35%;

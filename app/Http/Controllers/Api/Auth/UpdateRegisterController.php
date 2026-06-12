@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Rules\ColombianMobileNumber;
 use App\Support\ColombiaFormValidation;
+use App\Support\LocalOtpBypass;
 use Intervention\Image\Laravel\Facades\Image;
 use Twilio\Rest\Client;
 
@@ -279,7 +280,19 @@ class UpdateRegisterController extends Controller
                     "message_code" => 9,
                 ]);
             }
-            if ($settings->is_otp_verification > 0 && $user_details->is_default_user == 0 && $user_details->fix_user_show == 0) {
+            if (LocalOtpBypass::isEnabled()) {
+                if (! LocalOtpBypass::acceptsOtp($request->get('otp'))) {
+                    return response()->json([
+                        'status' => 0,
+                        'message' => __('user_messages.89'),
+                        'message_code' => 89,
+                    ]);
+                }
+                UserVerification::query()->where('user_id', $user_details->id)->delete();
+                $user_details->verified_at = date('Y-m-d H:i:s');
+                $user_details->device_token = $request->device_token ?? null;
+                $user_details->save();
+            } elseif ($settings->is_otp_verification > 0 && $user_details->is_default_user == 0 && $user_details->fix_user_show == 0) {
                 if (isset($settings->otp_method)) {
                     if ($settings->otp_method == 1){
                         info($user_details->id);

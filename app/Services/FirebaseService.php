@@ -40,6 +40,20 @@ class FirebaseService
         return 1;
     }
 
+    /** Best-effort chat cleanup; never blocks ride status transitions. */
+    public function safeDeleteOrderChat($order_no, $order_id, $chat_type = 'order_chat'): void
+    {
+        try {
+            $this->deleteOrderChat($order_no, $order_id, $chat_type);
+        } catch (\Throwable $e) {
+            \Log::warning('safeDeleteOrderChat: firebase chat delete failed', [
+                'order_no' => $order_no,
+                'order_id' => $order_id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
     //creating order number for the chat
     public function CreateOrderNumberForChat($value1,$value2){
         return $value1.'-'.$value2;
