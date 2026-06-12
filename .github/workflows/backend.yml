@@ -61,6 +61,9 @@ jobs:
       - name: Migrar base de datos (SQLite)
         run: php artisan migrate --force
 
+      - name: Validar seeders idempotentes (vehicle_services)
+        run: php artisan db:seed --class=VehicleServicesSeeder --force
+
       - name: Validar rutas y autoload
         run: |
           php artisan route:list --except-vendor --no-ansi
