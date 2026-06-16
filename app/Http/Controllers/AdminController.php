@@ -923,6 +923,7 @@ class AdminController extends Controller
         $general_settings->enable_expreso_mobile = $request->has('enable_expreso_mobile') ? 1 : 0;
         $general_settings->enable_encomiendas_mobile = $request->has('enable_encomiendas_mobile') ? 1 : 0;
         $general_settings->require_courier_package_dimensions_mobile = $request->has('require_courier_package_dimensions_mobile') ? 1 : 0;
+        $general_settings->enable_xisti_new_home_layout = $request->has('enable_xisti_new_home_layout') ? 1 : 0;
         $paymentCodes = $request->input('destination_payment_code', []);
         if (is_array($paymentCodes) && count($paymentCodes) > 0) {
             $catalog = \App\Helpers\DestinationPaymentHelper::buildCatalogFromAdminRows(

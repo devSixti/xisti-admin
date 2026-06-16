@@ -28,6 +28,11 @@ class MobileFeatureFlagsHelper
         return (int) (self::settings($general)->require_courier_package_dimensions_mobile ?? 0) === 1;
     }
 
+    public static function isXistiNewHomeLayoutEnabled(?GeneralSettings $general = null): bool
+    {
+        return (int) (self::settings($general)->enable_xisti_new_home_layout ?? 1) === 1;
+    }
+
     /**
      * @return array<string, int>
      */
@@ -37,6 +42,7 @@ class MobileFeatureFlagsHelper
             'enable_expreso_mobile' => self::isExpresoEnabled($general) ? 1 : 0,
             'enable_encomiendas_mobile' => self::isEncomiendasEnabled($general) ? 1 : 0,
             'require_courier_package_dimensions' => self::requireCourierPackageDimensions($general) ? 1 : 0,
+            'enable_xisti_new_home_layout' => self::isXistiNewHomeLayoutEnabled($general) ? 1 : 0,
         ];
     }
 

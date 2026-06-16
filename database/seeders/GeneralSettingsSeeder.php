@@ -97,6 +97,7 @@ class GeneralSettingsSeeder extends Seeder
             'driver_cancel_until_status' => 3,
             'enable_expreso_mobile' => 0,
             'enable_encomiendas_mobile' => 1,
+            'enable_xisti_new_home_layout' => 1,
         ];
         $patch = [];
         foreach ($xistiColumns as $column => $value) {

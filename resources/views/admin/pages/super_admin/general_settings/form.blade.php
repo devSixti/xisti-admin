@@ -858,6 +858,16 @@
                                                 </label>
                                             </div>
                                         </div>
+                                        <div class="col-sm-4">
+                                            <div class="checkbox-fade fade-in-primary">
+                                                <label>
+                                                    <input type="checkbox" name="enable_xisti_new_home_layout" value="1"
+                                                        @checked(($general_settings->enable_xisti_new_home_layout ?? 1) == 1)>
+                                                    <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                                    <span>New passenger home layout (map + sheet)</span>
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
