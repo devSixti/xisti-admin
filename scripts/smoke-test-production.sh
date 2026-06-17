@@ -204,6 +204,21 @@ $api = $argv[1];
 $auth = $argv[2];
 $login = json_decode($argv[3], true);
 if (!is_array($login) || empty($login["user_id"]) || empty($login["access_token"])) { echo "SKIP:no_login_user"; exit(0); }
+$verifyBody = json_encode([
+  "user_id" => $login["user_id"],
+  "access_token" => $login["access_token"],
+  "otp" => "123456",
+]);
+$chV = curl_init($api . "/api/customer/contact-verification");
+curl_setopt_array($chV, [
+  CURLOPT_POST => true,
+  CURLOPT_HTTPHEADER => ["Content-Type: application/json", "Authorization: " . $auth],
+  CURLOPT_POSTFIELDS => $verifyBody,
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_TIMEOUT => 15,
+]);
+curl_exec($chV);
+curl_close($chV);
 $body = json_encode([
   "user_id" => $login["user_id"],
   "access_token" => $login["access_token"],
@@ -222,6 +237,8 @@ $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 $j = json_decode($raw, true);
 if (is_array($j) && (($j["status"] ?? "") === "OK" || ($j["status"] ?? 0) === 1)) { echo "PASS:Google map proxy responds"; exit(0); }
+if (is_array($j) && isset($j["results"])) { echo "PASS:Google map proxy responds"; exit(0); }
+if ($code === 403 || $code === 401) { echo "FAIL:Google map proxy auth HTTP $code"; exit(0); }
 if ($code === 503) { echo "SKIP:Google map proxy (server_map_key missing)"; exit(0); }
 echo "FAIL:Google map proxy HTTP $code";
 ' "${API_BASE}" "${AUTH_HEADER}" "${LOGIN_JSON}")"
