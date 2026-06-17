@@ -1389,7 +1389,7 @@ class UserController extends Controller
 //                                            DB::raw("TIMESTAMPDIFF(SECOND, user_ride_booking.created_at, NOW()) AS order_time"),
                     DB::raw("SUBSTRING_INDEX(user_ride_booking.destination_latlong,',',1) as destination_lat"),
                     DB::raw("SUBSTRING_INDEX(user_ride_booking.destination_latlong,',',-1) as destination_long"),
-                    DB::raw("(CASE WHEN users.avatar != '' THEN (concat('$avatar','/',users.avatar,'?v=0.4')) ELSE '' END) as profile_image"),
+                    DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN users.avatar LIKE 'http%' THEN users.avatar ELSE concat('$avatar','/',users.avatar,'?v=0.4') END) ELSE '' END) as profile_image"),
                     DB::raw("
                                                 CASE WHEN (MINUTE(TIMEDIFF(user_ride_booking.created_at, NOW())) >= 1)
                                                 THEN
@@ -1666,7 +1666,7 @@ class UserController extends Controller
             "status" => 1,
             "message" => __('driver_messages.1'),
             "message_code" => 1,
-            "timeout" =>$service_setting->driver_timeout != Null ? $service_setting->driver_timeout : '',
+            "timeout" => $service_setting?->driver_timeout ?? 30,
             "user_profile" => $passenger_details->avatar != Null ? url('/assets/images/profile-images/customer/'.$passenger_details->avatar) : '',
         ]);
     }
@@ -1737,7 +1737,7 @@ class UserController extends Controller
                 'vehicle_services.id as service_id',
                 'user_ride_booking.ride_type',
                 DB::raw("COUNT(transport_driver_rating.id) as total_ratings "),
-                DB::raw("(CASE WHEN users.avatar != '' THEN (concat('$avatar','/',users.avatar,'?v=0.4')) ELSE '' END) as profile_image"),
+                DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN users.avatar LIKE 'http%' THEN users.avatar ELSE concat('$avatar','/',users.avatar,'?v=0.4') END) ELSE '' END) as profile_image"),
                 DB::raw("(CASE WHEN vehicle_services.vehicle_service_icon != '' THEN (concat('$vehicle_service_icon','/',vehicle_services.vehicle_service_icon)) ELSE '' END) as vehicle_service_icon"),'driver_ride_bid_amount.bidding_time',
                 DB::raw("ROUND((6371 * acos( cos( radians(" . $pickup_lat . ") ) * cos( radians(current_lat) )  * cos( radians( transport_driver_details.current_long ) - radians(" . $pickup_long . ") ) + sin( radians(current_lat) ) * sin(radians( " . $pickup_lat . " ) ) ) ), 2) as distance"),
                 DB::raw("ROUND((((6371 * acos( cos( radians(" . $pickup_lat . ") ) * cos( radians(current_lat) )  * cos( radians( transport_driver_details.current_long ) - radians(" . $pickup_long . ") ) + sin( radians(current_lat) ) * sin(radians(" . $pickup_lat . ") ) ) ) / 40 ) * 60 ), 2) as time")
@@ -3015,7 +3015,7 @@ class UserController extends Controller
                 'user_ride_booking.ride_no as booking_no',
                 'user_ride_booking.vehicle_service_id',
                 'user_ride_booking.ride_type as ride_type',
-                DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN CHAR_LENGTH(users.avatar) >= 25 THEN users.avatar ELSE concat('$user_profile_url','/',users.avatar) END) ELSE '' END) as user_profile_image"),
+                DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN users.avatar LIKE 'http%' THEN users.avatar ELSE concat('$user_profile_url','/',users.avatar,'?v=0.4') END) ELSE '' END) as user_profile_image"),
                 DB::raw("(concat(users.first_name,'')) as user_name"),
                 DB::raw("(concat(users.country_code,users.contact_number)) as user_contact_number"),
                 'users.id as user_id',
@@ -3707,7 +3707,7 @@ class UserController extends Controller
             $user_profile_url = url('/assets/images/profile-images/customer');
             $ride_ratings = TransportRatings::query()->select('transport_driver_rating.id as rating_id',
                 'transport_driver_rating.ride_id as ride_id', DB::raw("concat(users.first_name,'')as user_name"),
-                DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN CHAR_LENGTH(users.avatar) >= 25 THEN users.avatar ELSE concat('$user_profile_url','/',users.avatar) END) ELSE '' END) as user_profile_image"),
+                DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN users.avatar LIKE 'http%' THEN users.avatar ELSE concat('$user_profile_url','/',users.avatar,'?v=0.4') END) ELSE '' END) as user_profile_image"),
                 'transport_driver_rating.rating', DB::raw("(CASE WHEN transport_driver_rating.comment != '' THEN transport_driver_rating.comment ELSE '' END) as comment"),
                 (DB::raw('transport_driver_rating.created_at as datetime')),
             )
@@ -3829,7 +3829,7 @@ class UserController extends Controller
 //                                            DB::raw("TIMESTAMPDIFF(SECOND, user_ride_booking.created_at, NOW()) AS order_time"),
                 DB::raw("SUBSTRING_INDEX(user_ride_booking.destination_latlong,',',1) as destination_lat"),
                 DB::raw("SUBSTRING_INDEX(user_ride_booking.destination_latlong,',',-1) as destination_long"),
-                DB::raw("(CASE WHEN users.avatar != '' THEN (concat('$avatar','/',users.avatar,'?v=0.4')) ELSE '' END) as profile_image"),
+                DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN users.avatar LIKE 'http%' THEN users.avatar ELSE concat('$avatar','/',users.avatar,'?v=0.4') END) ELSE '' END) as profile_image"),
                 DB::raw("
                                                 CASE WHEN (MINUTE(TIMEDIFF(user_ride_booking.created_at, NOW())) >= 1)
                                                 THEN
@@ -4661,7 +4661,7 @@ class UserController extends Controller
                         $user_profile_url = url('/assets/images/profile-images/customer');
                         $ride_details = TransportRideBook::query()->select('user_ride_booking.id as ride_id',
                             'user_ride_booking.ride_no as booking_no',
-                            DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN CHAR_LENGTH(users.avatar) >= 25 THEN users.avatar ELSE concat('$user_profile_url','/',users.avatar) END) ELSE '' END) as user_profile_image"),
+                            DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN users.avatar LIKE 'http%' THEN users.avatar ELSE concat('$user_profile_url','/',users.avatar,'?v=0.4') END) ELSE '' END) as user_profile_image"),
                             DB::raw("(concat(users.first_name,' ',users.last_name)) as user_name"),
                             'users.contact_number',
                             'user_ride_booking.pickup_address as pickup_address',
