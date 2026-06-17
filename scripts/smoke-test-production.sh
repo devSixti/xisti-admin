@@ -192,17 +192,46 @@ echo "PASS:home delivery_vehicle_options Moto+Carro (ids 1,3)";
     esac
 fi
 
-# 8. Google map proxy (needs server key in DB — may fail with placeholder)
-MAP_JSON="$(curl -fsS --connect-timeout 15 -X POST "${API_BASE}/api/google-map" \
-  -H "Content-Type: application/json" \
-  -d '{"url":"https://maps.googleapis.com/maps/api/geocode/json?latlng=6.2442,-75.5812&key="}' 2>/dev/null || echo '{}')"
-MAP_STATUS="$(php -r '$j=json_decode(file_get_contents("php://stdin"),true); echo is_array($j)?($j["status"]??"x"):"x";' <<<"${MAP_JSON}")"
-if [[ "${MAP_STATUS}" == "1" || "${MAP_STATUS}" == "OK" ]]; then
-  pass "Google map proxy responds"
-elif [[ "${MAP_STATUS}" == "0" || "${MAP_STATUS}" == "x" ]]; then
-  fail "Google map proxy — configure server_map_key in Site Settings"
+# 8. Google map proxy (authenticated mobile API)
+if [[ -n "${APP_KEY}" && "${APP_KEY}" != *"CHANGE_ME"* ]]; then
+    AUTH_HEADER="$(build_auth_header "${APP_KEY}")"
+    LOGIN_JSON="$(curl -fsS --connect-timeout 15 -X POST "${API_BASE}/api/customer/login" \
+      -H "Content-Type: application/json" \
+      -H "Authorization: ${AUTH_HEADER}" \
+      -d '{"login_type":"email","contact_number":"3001234567","select_country_code":"+57","select_currency":"COP","select_language":"es","device_token":"smoke","login_device":"1"}' 2>/dev/null || echo '{}')"
+    MAP_RESULT="$(php -r '
+$api = $argv[1];
+$auth = $argv[2];
+$login = json_decode($argv[3], true);
+if (!is_array($login) || empty($login["user_id"]) || empty($login["access_token"])) { echo "SKIP:no_login_user"; exit(0); }
+$body = json_encode([
+  "user_id" => $login["user_id"],
+  "access_token" => $login["access_token"],
+  "url" => "https://maps.googleapis.com/maps/api/geocode/json?latlng=6.2442,-75.5812&key=",
+]);
+$ch = curl_init($api . "/api/google-map");
+curl_setopt_array($ch, [
+  CURLOPT_POST => true,
+  CURLOPT_HTTPHEADER => ["Content-Type: application/json", "Authorization: " . $auth],
+  CURLOPT_POSTFIELDS => $body,
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_TIMEOUT => 15,
+]);
+$raw = curl_exec($ch);
+$code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+$j = json_decode($raw, true);
+if (is_array($j) && (($j["status"] ?? "") === "OK" || ($j["status"] ?? 0) === 1)) { echo "PASS:Google map proxy responds"; exit(0); }
+if ($code === 503) { echo "SKIP:Google map proxy (server_map_key missing)"; exit(0); }
+echo "FAIL:Google map proxy HTTP $code";
+' "${API_BASE}" "${AUTH_HEADER}" "${LOGIN_JSON}")"
+    case "${MAP_RESULT}" in
+      PASS:*) pass "${MAP_RESULT#PASS:}" ;;
+      FAIL:*) fail "${MAP_RESULT#FAIL:}" ;;
+      SKIP:*) skip "${MAP_RESULT#SKIP:}" ;;
+    esac
 else
-  skip "Google map proxy (status=${MAP_STATUS})"
+    skip "Google map proxy (no app_key for auth)"
 fi
 
 echo ""

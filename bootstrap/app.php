@@ -31,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'setAdminLocale' => \App\Http\Middleware\SetAdminLocale::class,
             'mobile.app' => \App\Http\Middleware\EnsureMobileAppAuthorization::class,
             'mobile.user' => \App\Http\Middleware\EnsureMobileApiUser::class,
+            'mobile.credentials' => \App\Http\Middleware\EnsureMobileApiCredentials::class,
         ]);
         $middleware->validateCsrfTokens(except: [
             '/webhook/wompi',
