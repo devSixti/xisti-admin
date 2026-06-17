@@ -44,6 +44,23 @@ class User extends Authenticatable
         return $this->access_token;
     }
 
+    /**
+     * Keep the existing mobile token when the same device signs in again.
+     * Prevents invalidating a stored session after inactivity.
+     */
+    public function refreshAccessTokenForDevice(?string $incomingDeviceToken): void
+    {
+        $incoming = trim((string) $incomingDeviceToken);
+        $existingDevice = trim((string) ($this->device_token ?? ''));
+        $hasToken = $this->access_token !== null && $this->access_token !== '';
+
+        if ($hasToken && $incoming !== '' && $existingDevice !== '' && hash_equals($existingDevice, $incoming)) {
+            return;
+        }
+
+        $this->generateAccessToken($this->id);
+    }
+
     public function InviteCode($id, $name)
     {
         $this->invite_code = $this->random_strings(7);

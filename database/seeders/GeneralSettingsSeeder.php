@@ -64,7 +64,7 @@ class GeneralSettingsSeeder extends Seeder
             'ride_otp' => '1',
             'address_lat' => '6.2442',
             'address_long' => '-75.5812',
-            'login_timeout_time' => 10080,
+            'login_timeout_time' => 525600,
             'fcm_bearer_token' => NULL,
             'fcm_bearer_token_expiry_date' => NULL,
             'fcm_bearer_token_expiry_mins' => 55,

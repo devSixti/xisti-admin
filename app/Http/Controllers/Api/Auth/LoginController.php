@@ -283,7 +283,7 @@ class LoginController extends Controller
         $user_details->login_device = $request->get('login_device') != Null ? $request->get('login_device') : 0;
         $user_details->save();
 
-        $user_details->generateAccessToken($user_details->id);
+        $user_details->refreshAccessTokenForDevice($request->get('device_token'));
         return $this->userClassApi->userLoginRegisterUpdateDetails($user_details);
     }
 
