@@ -557,14 +557,11 @@ class CustomerApiController extends Controller
     {
         $country_list = LanguageLists::query()->select('id as country_id', 'language_name as country_name', 'language_code as country_code')->where('status', 1)->orderBy('id', 'asc')->get();
         $currency_list = WorldCurrency::query()->select('id as currency_id', 'currency_code as currency_name', 'symbol as currency_symbol')->where('status', 1)->get();
-        $general_settings = request()->get("general_settings");
-        $app_key =  ($general_settings->app_key != NUll)?$general_settings->app_key:"";
         return response()->json([
             "status" => 1,
             //"message" => "success!",
             "message" => __('user_messages.1'),
             "message_code" => 1,
-            "app_key" => $app_key,
             "country_list" => $country_list,
             "currency_list" => $currency_list
         ]);
@@ -623,40 +620,41 @@ class CustomerApiController extends Controller
     }
     public function postFirebaseSecurityRules(Request $request)
     {
-        $general_settings = request()->get("general_settings");
-        if ($general_settings == Null || $general_settings->server_map_key == Null) {
-            return "";
+        $general_settings = request()->get('general_settings');
+        if ($general_settings == null || $general_settings->server_map_key == null) {
+            return response()->json([
+                'status' => 0,
+                'message' => __('user_messages.9'),
+                'message_code' => 9,
+            ], 503);
         }
 
-        $server_key = $general_settings->server_map_key;
-        $url = $request->get('url');
-        if ($url == Null) {
-            return "";
+        $url = trim((string) $request->get('url', ''));
+        if ($url === '' || ! \App\Helpers\GoogleMapsProxyHelper::isAllowedUrl($url)) {
+            return response()->json([
+                'status' => 0,
+                'message' => __('user_messages.9'),
+                'message_code' => 9,
+            ], 400);
         }
 
-        if (str_ends_with($url, '&key=') || str_ends_with($url, '?key=')) {
-            $fcmUrl = $url . $server_key;
-        } else {
-            $sep = str_contains($url, '?') ? '&' : '?';
-            $fcmUrl = $url . $sep . 'key=' . urlencode($server_key);
-        }
-        $final_url = str_replace(' ', '%20', $fcmUrl);
-        $fcmData = [];
-        $headers = [
-//            'Authorization: key=' . $server_key,
-            'Content-Type: application/json'
-        ];
+        $server_key = (string) $general_settings->server_map_key;
+        $final_url = str_replace(' ', '%20', \App\Helpers\GoogleMapsProxyHelper::appendServerKey($url, $server_key));
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $final_url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmData));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         $result = curl_exec($ch);
+        $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        $response = json_decode($result, true);
-        return $response;
+
+        $response = json_decode((string) $result, true);
+
+        return response()->json(is_array($response) ? $response : [], $httpCode > 0 ? $httpCode : 200);
     }
     public function postFacebookUserDataDeletion(Request $request)
     {
@@ -951,7 +949,6 @@ class CustomerApiController extends Controller
         $app_type = $request->get('app_type');;
         $login_device = $request->get('login_device');
         $general_settings = request()->get("general_settings");
-        $app_key =  ($general_settings->app_key != NUll)?$general_settings->app_key:"";
 
         $is_google_login = ($general_settings != Null && $general_settings->is_google_login != Null) ? $general_settings->is_google_login : 0;
         $is_facebook_login = ($general_settings != Null && $general_settings->is_facebook_login != Null) ? $general_settings->is_facebook_login : 0;
@@ -977,7 +974,6 @@ class CustomerApiController extends Controller
                 "status" => 1,
                 'message' => __('user_messages.1'),
                 "message_code" => 1,
-                "app_key" => $app_key,
                 "app_version" => $version_name . "",
                 "is_forcefully_update" => $is_forcefully_update,
                 "is_google_login" => $is_google_login,
@@ -988,15 +984,31 @@ class CustomerApiController extends Controller
         } else {
             return response()->json([
                 "status" => 1,
-//                "message" => "success!",
                 'message' => __('user_messages.1'),
                 "message_code" => 1,
-                "app_key" => $app_key,
                 "app_version" => "",
                 "is_forcefully_update" => 0,
             ]);
         }
 
+    }
+
+    /**
+     * Regional market catalog (countries, cities, currency, min fares).
+     * Optional: current_lat, current_lng OR country_id + city_id.
+     */
+    public function postMarketConfig(Request $request)
+    {
+        $lat = $request->filled('current_lat') ? (float) $request->get('current_lat') : null;
+        $lng = $request->filled('current_lng') ? (float) $request->get('current_lng') : null;
+        $countryId = $request->get('country_id');
+        $cityId = $request->get('city_id');
+
+        return response()->json(array_merge([
+            'status' => 1,
+            'message' => __('user_messages.1'),
+            'message_code' => 1,
+        ], \App\Helpers\MarketConfigHelper::apiPayload($lat, $lng, $countryId, $cityId)));
     }
 
     //remove provider account(softdelete)

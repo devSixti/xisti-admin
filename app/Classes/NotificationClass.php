@@ -739,6 +739,8 @@ class NotificationClass
             'destination_address' => $destination_address."",
             'offered_price' => $offered_price."",
             "click_action" => "FLUTTER_NOTIFICATION_CLICK",
+            'dispatch_action' => 'refresh_available_rides',
+            'dispatch_ts' => (string) time(),
         ];
 
         if ($title !== '' || $message !== '') {
@@ -822,6 +824,8 @@ class NotificationClass
                 'item_description' => isset($ride_details->item_description) ? (string) $ride_details->item_description : '',
                 'estimate_price' => isset($ride_details->estimate_price) ? (string) $ride_details->estimate_price : '0',
                 'ride_type' => (string) $ride_details->ride_type,
+                'dispatch_action' => 'refresh_driver_bids',
+                'dispatch_ts' => (string) time(),
             ]
         );
     }
@@ -863,6 +867,8 @@ class NotificationClass
                 'ride_status' => (string) ($ride->status ?? 0),
                 'ride_type' => (string) ($ride->ride_type ?? 0),
                 'customer_name' => (string) $ride->user_name,
+                'dispatch_action' => 'refresh_available_rides',
+                'dispatch_ts' => (string) time(),
             ]
         );
     }
@@ -1411,6 +1417,8 @@ class NotificationClass
             'body' => $event['message'],
             'message_code' => (string) $event['message_code'],
             'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+            'dispatch_action' => $this->dispatchActionForEventKey($eventKey),
+            'dispatch_ts' => (string) time(),
         ], $extraData);
 
         return FcmPushHelper::sendToToken($token, $event['title'], $event['message'], $payload, $event['sound']);
@@ -1451,9 +1459,24 @@ class NotificationClass
             'body' => $event['message'],
             'message_code' => (string) $event['message_code'],
             'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+            'dispatch_action' => $this->dispatchActionForEventKey($eventKey),
+            'dispatch_ts' => (string) time(),
         ], $extraData);
 
         FcmPushHelper::sendToTokens($tokens, $event['title'], $event['message'], $payload, $event['sound']);
+    }
+
+    private function dispatchActionForEventKey(string $eventKey): string
+    {
+        return match ($eventKey) {
+            'driver_new_request' => 'refresh_available_rides',
+            'passenger_driver_bid' => 'refresh_driver_bids',
+            'driver_fare_changed_by_user' => 'refresh_available_rides',
+            'driver_passenger_cancelled', 'passenger_ride_cancelled' => 'refresh_ride_status',
+            'passenger_ride_accepted', 'driver_ride_completed', 'passenger_ride_started',
+            'passenger_driver_at_pickup', 'passenger_ride_at_destination', 'passenger_ride_completed' => 'refresh_ride_status',
+            default => 'refresh_ride_status',
+        };
     }
 
 }

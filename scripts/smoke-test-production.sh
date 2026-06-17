@@ -82,9 +82,7 @@ done < <(php -r '
 $json = $argv[1];
 $j = json_decode($json, true);
 if (!is_array($j) || ($j["status"] ?? 0) != 1) { echo "FAIL: app-version-check status\n"; exit(0); }
-$key = (string)($j["app_key"] ?? "");
-if ($key === "" || str_contains($key, "CHANGE_ME")) { echo "FAIL: app_key still placeholder\n"; exit(0); }
-echo "PASS: app-version-check + app_key set\n";
+echo "PASS: app-version-check OK (app_key no longer exposed in API)\n";
 if ((int)($j["enable_encomiendas_mobile"] ?? -1) !== 1) echo "FAIL: enable_encomiendas_mobile != 1\n";
 else echo "PASS: enable_encomiendas_mobile=1\n";
 if ((int)($j["enable_expreso_mobile"] ?? -1) !== 0) echo "FAIL: enable_expreso_mobile != 0\n";
@@ -110,8 +108,8 @@ done
 # 6. Authorization header
 APP_KEY="$(read_local_app_key)"
 if [[ -z "${APP_KEY}" || "${APP_KEY}" == *"CHANGE_ME"* ]]; then
-  # Try app_key from live API response
-  APP_KEY="$(php -r '$j=json_decode($argv[1],true); echo $j["app_key"]??"";' "${VERSION_JSON}")"
+  APP_KEY="$(ssh -o BatchMode=yes -o ConnectTimeout=10 "${XISTI_SSH_HOST:-xisti-ec2}" \
+    "sudo -u ubuntu bash -lc 'cd /var/www/xisti-admin && php artisan tinker --execute=\"echo trim((string)(\\\\App\\\\Models\\\\GeneralSettings::query()->value(\\\"app_key\\\") ?? config(\\\"xisti.app_key\\\")));\"'" 2>/dev/null | tail -1 | tr -d '\r' || true)"
 fi
 
 if [[ -z "${APP_KEY}" || "${APP_KEY}" == *"CHANGE_ME"* ]]; then

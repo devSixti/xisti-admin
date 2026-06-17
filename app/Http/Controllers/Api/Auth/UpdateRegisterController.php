@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Rules\ColombianMobileNumber;
 use App\Support\ColombiaFormValidation;
-use App\Support\LocalOtpBypass;
+use App\Support\QaTestUserHelper;
 use Intervention\Image\Laravel\Facades\Image;
 use Twilio\Rest\Client;
 
@@ -263,10 +263,11 @@ class UpdateRegisterController extends Controller
 
         $user_details = User::query()->where('id', $request->get('user_id'))->whereNull('deleted_at')->first();
         if ($user_details != Null) {
-            if ($user_details->access_token != $request->get('access_token')) {
+            $storedToken = (string) ($user_details->access_token ?? '');
+            $providedToken = (string) ($request->get('access_token') ?? '');
+            if ($storedToken === '' || ! hash_equals($storedToken, $providedToken)) {
                 return response()->json([
                     'status' => 4,
-                    //'message' => "Access Token Not Match!",
                     'message' => __('user_messages.4'),
                     'message_code' => 4,
                 ]);
@@ -280,14 +281,7 @@ class UpdateRegisterController extends Controller
                     "message_code" => 9,
                 ]);
             }
-            if (LocalOtpBypass::isEnabled()) {
-                if (! LocalOtpBypass::acceptsOtp($request->get('otp'))) {
-                    return response()->json([
-                        'status' => 0,
-                        'message' => __('user_messages.89'),
-                        'message_code' => 89,
-                    ]);
-                }
+            if (QaTestUserHelper::acceptsFixedOtp($user_details, $request->get('otp'))) {
                 UserVerification::query()->where('user_id', $user_details->id)->delete();
                 $user_details->verified_at = date('Y-m-d H:i:s');
                 $user_details->device_token = $request->device_token ?? null;
@@ -368,17 +362,11 @@ class UpdateRegisterController extends Controller
                     ]);
                 }
             } else {
-                if ($request->get('otp') == "123456") {
-                    $user_details->verified_at = date('Y-m-d H:i:s');
-                    $user_details->save();
-                } else {
-                    return response()->json([
-                        "status" => 0,
-                        //"message" => "Invalid Otp!",
-                        "message" => __('user_messages.89'),
-                        "message_code" => 89,
-                    ]);
-                }
+                return response()->json([
+                    'status' => 0,
+                    'message' => __('user_messages.89'),
+                    'message_code' => 89,
+                ]);
             }
             return $this->userClassApi->userLoginRegisterUpdateDetails($user_details);
         } else {

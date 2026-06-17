@@ -4,8 +4,8 @@ return [
     'product_name' => env('XISTI_PRODUCT_NAME', 'XISTI'),
     'tagline' => env('XISTI_TAGLINE', 'Fácil y Seguro'),
     'app_key' => env('XISTI_APP_KEY'),
-    /** When true, all mobile OTP flows accept 123456 without Twilio (QA emulators). */
-    'otp_bypass' => filter_var(env('XISTI_OTP_BYPASS', false), FILTER_VALIDATE_BOOLEAN),
+    /** @deprecated QA OTP is limited to seeded test users via QaTestUserHelper. */
+    'otp_bypass' => false,
     'allowed_admin_host' => env('XISTI_ALLOWED_ADMIN_HOST', 'admin.xistiapp.com'),
     'public_site_url' => env('XISTI_PUBLIC_SITE_URL', 'https://www.xistiapp.com'),
     'default_commission_percent' => (float) env('XISTI_DEFAULT_COMMISSION_PERCENT', 8),

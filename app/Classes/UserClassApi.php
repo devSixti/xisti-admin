@@ -72,7 +72,9 @@ class UserClassApi
                     'message_code' => 3,
                 ]);
             }
-            if ($user_details->access_token != $access_token) {
+            $storedToken = (string) ($user_details->access_token ?? '');
+            $providedToken = (string) ($access_token ?? '');
+            if ($storedToken === '' || ! hash_equals($storedToken, $providedToken)) {
                 return response()->json([
                     'status' => 4,
                     'message' => __('user_messages.4'),
@@ -1446,7 +1448,11 @@ class UserClassApi
         $event_key = $is_sandbox ? ($general_settings->wompi_sandbox_event_key ?? '') : ($general_settings->wompi_production_event_key ?? '');
         $event_key = trim((string)$event_key);
         if ($event_key === '') {
-            return (int) ($general_settings->wompi_mode ?? 0) === 0;
+            Log::warning('wompi.webhook.missing_event_key', [
+                'sandbox' => $is_sandbox,
+            ]);
+
+            return false;
         }
 
         $signature = (array)($payload['signature'] ?? []);

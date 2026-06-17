@@ -12,7 +12,7 @@ namespace App\Classes;
 
 use App\Models\User;
 use App\Models\UserVerification;
-use App\Support\LocalOtpBypass;
+use App\Support\QaTestUserHelper;
 use Illuminate\Support\Facades\Log;
 use Twilio\Rest\Client;
 
@@ -36,13 +36,13 @@ class TokenClassApi
                 "message_code" => 9,
             ]);
         }
-        if (LocalOtpBypass::isEnabled()) {
+        if (QaTestUserHelper::isQaUser($user_details)) {
             UserVerification::query()->where('user_id', $user_details->id)->delete();
             $localOtp = new UserVerification();
             $localOtp->user_id = $user_details->id;
-            $localOtp->token = 'local-bypass';
+            $localOtp->token = 'qa-test-bypass';
             $localOtp->save();
-            Log::info('XISTI local OTP bypass: code issued without Twilio.', ['user_id' => $user_details->id]);
+            Log::info('XISTI QA OTP bypass: code issued without Twilio.', ['user_id' => $user_details->id]);
 
             return 'success';
         }

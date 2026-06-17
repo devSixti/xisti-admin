@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Transport;
 
 use App\Classes\AdminClass;
 use App\Helpers\DestinationPaymentHelper;
+use App\Helpers\RideAccessHelper;
 use App\Helpers\RideKindHelper;
 use App\Classes\NotificationClass;
 use App\Classes\UserClassApi;
@@ -118,6 +119,20 @@ class UserController extends Controller
         $user_check = $this->userClassapi->checkUserAllow($request->get('user_id'), $request->get('access_token'));
         if ($failed = $this->userClassapi->authJsonResponse($user_check)) {
             return $failed;
+        }
+
+        $rideId = (int) $request->get('ride_id');
+        $userId = (int) $request->get('user_id');
+        $ride = RideAccessHelper::findRideOrNull($rideId);
+        if ($ride === null) {
+            return response()->json([
+                'status' => 0,
+                'message' => __('user_messages.26'),
+                'message_code' => 26,
+            ]);
+        }
+        if ((int) $ride->user_id !== $userId && (int) $ride->driver_id !== $userId) {
+            return RideAccessHelper::denyForbidden();
         }
 
         return $this->userClassapi->transportRideBookingCancel(
@@ -1787,6 +1802,10 @@ class UserController extends Controller
             return $failed;
         }
 
+        if ($denied = RideAccessHelper::assertPassengerOwnsRide((int) $request->get('user_id'), (int) $request->get('ride_id'))) {
+            return $denied;
+        }
+
         $user_details = User::query()->where('id',$request->get('user_id'))->where('status',1)->whereNull('deleted_at')->first();
         if($user_details == Null){
             return response()->json([
@@ -1821,6 +1840,7 @@ class UserController extends Controller
             $ride_details->ride_time_out = $date->format('Y-m-d H:i:s');
             $ride_details->save();
             DriverBid::query()->where('ride_id',$request->get('ride_id'))->update(['status' => 2]);
+            $this->notificationClass->userFareChangeNotification($request->get('ride_id'));
         }
 
         return response()->json([
@@ -1992,6 +2012,11 @@ class UserController extends Controller
         if ($failed = $this->userClassapi->authJsonResponse($user_check)) {
             return $failed;
         }
+
+        if ($denied = RideAccessHelper::assertPassengerOwnsRide((int) $request->get('user_id'), (int) $request->get('ride_id'))) {
+            return $denied;
+        }
+
         $driver_id = $request->get('driver_id');
         $ride = TransportRideBook::query()->where('id', $request->get('ride_id'))->first();
         if ($ride != Null) {
@@ -2987,6 +3012,21 @@ class UserController extends Controller
         $user_check = $this->userClassapi->checkUserAllow($request->get('user_id'), $request->get('access_token'));
         if ($failed = $this->userClassapi->authJsonResponse($user_check)) {
             return $failed;
+        }
+
+        $driverUserId = (int) $request->get('user_id');
+        $rideId = (int) $request->get('ride_id');
+        $ride = RideAccessHelper::findRideOrNull($rideId);
+        if ($ride === null) {
+            return response()->json([
+                'status' => 0,
+                'message' => __('driver_messages.26'),
+                'message_code' => 26,
+            ]);
+        }
+        $assignedDriver = (int) $ride->driver_id;
+        if ($assignedDriver > 0 && $assignedDriver !== $driverUserId) {
+            return RideAccessHelper::denyForbidden();
         }
 
         $driver_check = $this->userClassapi->checkDriverRegisterAllow($request->get('user_id'));
@@ -4844,6 +4884,12 @@ class UserController extends Controller
         $user_check = $this->userClassapi->checkUserAllow($request->get('user_id'), $request->get('access_token'));
         if ($failed = $this->returnJsonIfAuthFailed($user_check)) {
             return $failed;
+        }
+
+        if ($request->filled('ride_id')) {
+            if ($denied = RideAccessHelper::assertRideParticipant((int) $request->get('user_id'), (int) $request->get('ride_id'))) {
+                return $denied;
+            }
         }
 
         if (Schema::hasTable('sos_trigger_logs')) {
