@@ -16,7 +16,7 @@ SSH_OPTS=(-i "${EC2_KEY}" -p "${EC2_PORT}" -o IdentitiesOnly=yes)
 
 if [[ -f "${HOME}/.ssh/config" ]] && grep -q '^Host xisti-ec2' "${HOME}/.ssh/config" 2>/dev/null; then
   SSH_CMD=(ssh -o BatchMode=yes xisti-ec2)
-  SCP_CMD=(scp -o BatchMode=yes -o IdentitiesOnly=yes -P "${EC2_PORT}" -i "${HOME}/.ssh/xisti-app-key")
+  SCP_CMD=(scp -o BatchMode=yes xisti-ec2)
 else
   SSH_CMD=(ssh "${SSH_OPTS[@]}" "${SSH_TARGET}")
   SCP_CMD=(scp "${SSH_OPTS[@]}")
@@ -40,7 +40,11 @@ tar czf "${RELEASE_TAR}" \
   .
 
 echo "==> Uploading to EC2..."
-"${SCP_CMD[@]}" "${RELEASE_TAR}" "${SSH_TARGET}:/tmp/xisti-release.tar.gz"
+if [[ -f "${HOME}/.ssh/config" ]] && grep -q '^Host xisti-ec2' "${HOME}/.ssh/config" 2>/dev/null; then
+  cat "${RELEASE_TAR}" | ssh -o BatchMode=yes xisti-ec2 'cat > /tmp/xisti-release.tar.gz'
+else
+  "${SCP_CMD[@]}" "${RELEASE_TAR}" "${SSH_TARGET}:/tmp/xisti-release.tar.gz"
+fi
 
 echo "==> Installing on EC2..."
 "${SSH_CMD[@]}" 'bash -s' <<'DEPLOY_EOF'
