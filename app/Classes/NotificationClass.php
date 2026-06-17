@@ -120,6 +120,14 @@ class NotificationClass
                 ->join('users','users.id','=','transport_driver_details.user_id')
                 ->where('transport_driver_details.user_id',$driver_id)->first();
 
+            if ($get_driver_id == Null) {
+                return response()->json([
+                    "status" => 0,
+                    "message" => __('driver_messages.9'),
+                    "message_code" => 9,
+                ]);
+            }
+
             $get_vehicle_type = TransportVehicleType::query()->where('id',$get_driver_id->vehicle_type_id)->first();
             if($get_vehicle_type == NULL){
                 return response()->json([
@@ -1107,6 +1115,14 @@ class NotificationClass
                 ->select('transport_driver_details.*','users.first_name as driver_name','users.device_token','users.login_device','users.language','users.id as user_id')
                 ->join('users','users.id','=','transport_driver_details.user_id')
                 ->where('transport_driver_details.user_id',$driver_id)->first();
+
+            if ($driver_detail == Null) {
+                return response()->json([
+                    "status" => 0,
+                    "message" => __('driver_messages.9'),
+                    "message_code" => 9,
+                ]);
+            }
 
             $get_vehicle_type = TransportVehicleType::query()->where('id',$driver_detail->vehicle_type_id)->first();
             if($get_vehicle_type == NULL){

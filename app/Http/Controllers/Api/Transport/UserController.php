@@ -1605,7 +1605,7 @@ class UserController extends Controller
             }
         }
 
-        $passenger_details = User::query()->where('id',$ride_details->user_id,'currency')->where('status',1)->whereNull('deleted_at')->first();
+        $passenger_details = User::query()->where('id', $ride_details->user_id)->where('status', 1)->whereNull('deleted_at')->first();
         if($passenger_details == Null){
             return response()->json([
                 'status' => 5,
@@ -1613,7 +1613,7 @@ class UserController extends Controller
                 'message_code' => 5,
             ]);
         }
-      $general_settings=request()->get('general_settings');
+      $general_settings = request()->get('general_settings');
         $user_currency = WorldCurrency::query()->where('symbol', $user_check->currency)->first();
         if ($user_currency == Null) {
             $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
@@ -1622,7 +1622,7 @@ class UserController extends Controller
 
         $driver_bid_accepted = DriverBid::query()->where('ride_id',$request->get('ride_id'))->where('status',1)->first();
         $service_setting = ServiceSettings::query()->select('admin_commission','driver_timeout')->first();
-        if($general_settings->auto_settle_wallet == 1){
+        if ($general_settings != Null && (int) ($general_settings->auto_settle_wallet ?? 0) === 1) {
             //get wallet balance
             $last_amount = $this->notificationClass->getWalletBalance($request->get('user_id'));
             $commissionRate = ((float) ($service_setting->admin_commission ?? 8)) / 100;
@@ -4537,14 +4537,14 @@ class UserController extends Controller
         $ride = TransportRideBook::query()->where('id', $request->get('ride_id'))->first();
 
         if ($ride != Null) {
-            $general_settings=request()->get('general_settings');
+            $general_settings = request()->get('general_settings');
             $user_currency = WorldCurrency::query()->where('symbol', $user_check->currency)->first();
             if ($user_currency == Null) {
                 $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
             }
             $currency = $user_currency != Null ? $user_currency->ratio : 1;
             $service_setting = ServiceSettings::query()->select('admin_commission','driver_timeout')->first();
-            if($general_settings->auto_settle_wallet == 1){
+            if ($general_settings != Null && (int) ($general_settings->auto_settle_wallet ?? 0) === 1) {
                 //get wallet balance
                 $last_amount = $this->notificationClass->getWalletBalance($request->get('user_id'));
                 // admin commission of user offered price
