@@ -15,8 +15,8 @@ SSH_TARGET="${EC2_USER}@${EC2_HOST}"
 SSH_OPTS=(-i "${EC2_KEY}" -p "${EC2_PORT}" -o IdentitiesOnly=yes)
 
 if [[ -f "${HOME}/.ssh/config" ]] && grep -q '^Host xisti-ec2' "${HOME}/.ssh/config" 2>/dev/null; then
-  SSH_CMD=(ssh xisti-ec2)
-  SCP_CMD=(scp -P "${EC2_PORT}" -o IdentitiesOnly=yes -i "${EC2_KEY}")
+  SSH_CMD=(ssh -o BatchMode=yes xisti-ec2)
+  SCP_CMD=(scp -o BatchMode=yes -o IdentitiesOnly=yes -P "${EC2_PORT}" -i "${HOME}/.ssh/xisti-app-key")
 else
   SSH_CMD=(ssh "${SSH_OPTS[@]}" "${SSH_TARGET}")
   SCP_CMD=(scp "${SSH_OPTS[@]}")
