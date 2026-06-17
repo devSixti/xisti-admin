@@ -1332,6 +1332,13 @@ class UserController extends Controller
             ]);
         }
 
+        if ($request->filled('current_lat') && $request->filled('current_long')) {
+            $driver_details->current_lat = $request->get('current_lat');
+            $driver_details->current_long = $request->get('current_long');
+            $driver_details->last_online_date_time = date('Y-m-d H:i:s');
+            $driver_details->save();
+        }
+
         $current_lat = $driver_details->current_lat;
         $current_long = $driver_details->current_long;
 
@@ -4153,6 +4160,9 @@ class UserController extends Controller
         $current_long = $request->get("current_long");
         $area_id = 0;
         if ($current_lat != Null && $current_long != Null) {
+            $transport_details->current_lat = $current_lat;
+            $transport_details->current_long = $current_long;
+            $transport_details->last_online_date_time = date('Y-m-d H:i:s');
             $get_admin_area_list = AdminAreaList::query()->where('status', 1)->get();
             $this->notificationClass->ApiLogDetail(2, 0, "get_admin_area_list", $get_admin_area_list);
             if ($get_admin_area_list->isNotEmpty()) {

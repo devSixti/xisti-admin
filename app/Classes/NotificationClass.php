@@ -690,7 +690,7 @@ class NotificationClass
             })
             ->whereNotIn('users.id', $not_multi_delivery_provider_id)
             ->whereNull('users.deleted_at')
-            ->havingRaw('distance <= transport_driver_details.search_distance_filter')
+            ->havingRaw('(transport_driver_details.search_distance_filter = 0 OR distance <= transport_driver_details.search_distance_filter)')
             ->get()
             ->toArray();
 
