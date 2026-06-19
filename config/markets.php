@@ -17,7 +17,7 @@ return [
             'currency_symbol' => 'COL$',
             'dial_code' => '+57',
             'default_language_code' => 'es',
-            'min_fare' => 6000,
+            'min_fare' => 5000,
             'fare_negotiation_step' => 500,
             'bounds' => ['min_lat' => -4.5, 'max_lat' => 13.5, 'min_lng' => -79.5, 'max_lng' => -66.5],
             'cities' => [

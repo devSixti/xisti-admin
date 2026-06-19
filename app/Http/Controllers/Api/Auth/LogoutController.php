@@ -14,7 +14,7 @@ class LogoutController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric"
+            "access_token" => "nullable|numeric",
         ]);
 
         if ($validator->fails()) {
@@ -34,7 +34,6 @@ class LogoutController extends Controller
         }
         return response()->json([
             "status" => 1,
-//            "message" => "success!",
             'message' => __('user_messages.1'),
             "message_code" => 1,
         ]);

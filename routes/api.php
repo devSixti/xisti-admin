@@ -62,11 +62,13 @@ Route::group(['middleware' => 'setLocaleLang'], function () {
                     Route::post('/resend-otp-verification', [UpdateRegisterController::class,'postCustomerResendOtpVerification'])->name('post:customer:resend_otp_verification');
                 });
 
+                // Logout must work with expired/mismatched tokens (idempotent session clear).
+                Route::post('/logout', [LogoutController::class,'postCustomerLogout'])->name('post:customer:logout');
+
                 Route::middleware('mobile.user')->group(function () {
                     Route::post('/edit-profile', [UpdateRegisterController::class,'postUpdateCustomerDetails'])->name('post:customer:update_details');
                     Route::post('/change-password', [ResetPasswordController::class,'postCustomerChangePassword'])->name('post:customer:change_password');
                     Route::post('/update-country-and-currency', [UpdateRegisterController::class,'postCustomerUpdateCountryAndCurrency'])->name('post:customer:update-country-and-currency');
-                    Route::post('/logout', [LogoutController::class,'postCustomerLogout'])->name('post:customer:logout');
 
                     Route::post('/mass-notification-list', [CustomerApiController::class,'postCustomerMassNotificationList'])->name('post:customer:get_mass_notification_list');
 

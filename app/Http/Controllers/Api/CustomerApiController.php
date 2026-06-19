@@ -1485,6 +1485,9 @@ class CustomerApiController extends Controller
         $bargainAmount = ($recommendedFare * $maxBargainPercent) / 100;
         $minPrice = max($recommendedFare - $bargainAmount, $minFare);
         $maxPrice = $recommendedFare + (($recommendedFare * $maxOfferPercent) / 100);
+        if ($maxPrice < $minPrice) {
+            $maxPrice = $minPrice + max(($minPrice * $maxOfferPercent) / 100, 500);
+        }
 
 
         $general = request()->get('general_settings');
