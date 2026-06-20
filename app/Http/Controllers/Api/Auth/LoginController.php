@@ -61,6 +61,7 @@ class LoginController extends Controller
             ]);
         }
         $login_type = $request->get('login_type');
+        $requiresSignupPhoneOtp = false;
 
         if ($login_type != "facebook" && $login_type != "google" && $login_type != "apple") {
             $validator = Validator::make($request->all(), [
@@ -135,6 +136,10 @@ class LoginController extends Controller
             $login_id = $request->get('login_id');
             $requiresSignupPhoneOtp = SignupPhoneOtpHelper::clientRequiresSignupPhoneOtp($request);
             $user_details = User::query()->where('login_type','=', $login_type)->where('login_id', '=', $login_id)->whereNull('deleted_at')->first();
+            // Returning social accounts already registered must not be forced through phone OTP again.
+            if ($user_details !== null && (int) $user_details->is_register === 1) {
+                $requiresSignupPhoneOtp = false;
+            }
             if ($user_details == Null) {
                 $contact_number = $request->get("contact_number");
                 $is_update = 0;
@@ -268,20 +273,34 @@ class LoginController extends Controller
                         'message_code' => 3,
                     ]);
                 }
-                if (!$requiresSignupPhoneOtp) {
+                if ((int) $user_details->is_register === 1) {
+                    if ($user_details->verified_at === null) {
+                        $user_details->verified_at = date('Y-m-d H:i:s');
+                        $user_details->save();
+                    }
+                } elseif (!$requiresSignupPhoneOtp) {
                     $user_details->verified_at = date('Y-m-d H:i:s');
                     $user_details->save();
                 }
             }
         }
         if ($request->get('select_country_code') != NULL){
-            $user_details->country_code = $request->get('select_country_code');
+            $user_details->country_code = ColombiaFormValidation::normalizeCountryDialCode($request->get('select_country_code'));
         }
         $user_details->currency = $request->get('select_currency');
         $user_details->language = $request->get('select_language');
         $user_details->device_token = $request->get('device_token');
         $user_details->login_device = $request->get('login_device') != Null ? $request->get('login_device') : 0;
         $user_details->save();
+
+        if (
+            in_array($login_type, ['google', 'facebook', 'apple'], true)
+            && $requiresSignupPhoneOtp
+            && $user_details->verified_at === null
+            && ! empty($user_details->contact_number)
+        ) {
+            $this->tokenClassApi->sendUserSmsVerification($user_details->id);
+        }
 
         $user_details->refreshAccessTokenForDevice($request->get('device_token'));
         return $this->userClassApi->userLoginRegisterUpdateDetails($user_details);

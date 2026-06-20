@@ -214,7 +214,9 @@ class UpdateRegisterController extends Controller
                 'message_code' => 5,
             ]);
         }
-        if ($user->access_token != $request->get("access_token")) {
+        $storedToken = (string) ($user->access_token ?? '');
+        $providedToken = (string) ($request->get('access_token') ?? '');
+        if ($storedToken === '' || ! hash_equals($storedToken, $providedToken)) {
             return response()->json([
                 'status' => 4,
                 //'message' => "Access Token Not Match!",

@@ -27,6 +27,15 @@ class LogoutController extends Controller
 
         $user = User::where('id', $request->get('user_id'))->first();
         if ($user != Null) {
+            $storedToken = (string) ($user->access_token ?? '');
+            $providedToken = (string) ($request->get('access_token') ?? '');
+            if ($storedToken !== '' && $providedToken !== '' && ! hash_equals($storedToken, $providedToken)) {
+                return response()->json([
+                    "status" => 1,
+                    'message' => __('user_messages.1'),
+                    "message_code" => 1,
+                ]);
+            }
             $user->access_token = Null;
             $user->device_token = Null;
             $user->driver_current_status = 0;

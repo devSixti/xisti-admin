@@ -622,11 +622,7 @@ class CustomerApiController extends Controller
     {
         $general_settings = request()->get('general_settings');
         if ($general_settings == null || $general_settings->server_map_key == null) {
-            return response()->json([
-                'status' => 0,
-                'message' => __('user_messages.9'),
-                'message_code' => 9,
-            ], 503);
+            return \App\Helpers\GoogleMapsApiResponse::missingMapKey();
         }
 
         $url = trim((string) $request->get('url', ''));
@@ -649,12 +645,17 @@ class CustomerApiController extends Controller
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         $result = curl_exec($ch);
+        $curlError = curl_error($ch);
         $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
+        if ($curlError !== '') {
+            return \App\Helpers\GoogleMapsApiResponse::curlFailure($curlError);
+        }
+
         $response = json_decode((string) $result, true);
 
-        return response()->json(is_array($response) ? $response : [], $httpCode > 0 ? $httpCode : 200);
+        return \App\Helpers\GoogleMapsApiResponse::proxyJson(is_array($response) ? $response : null, $httpCode > 0 ? $httpCode : 200);
     }
     public function postFacebookUserDataDeletion(Request $request)
     {
@@ -700,11 +701,7 @@ class CustomerApiController extends Controller
 
         // general settings null or mapKey null then return Please try again
         if ($general_settings == Null || $general_settings->server_map_key == Null) {
-            return response()->json([
-                "status" => 0,
-                "message" => __('user_messages.9'), // Please try again
-                "message_code" => 9,
-            ]);
+            return \App\Helpers\GoogleMapsApiResponse::missingMapKey();
         }
 
         // Google Places Autocomplete API URL for cURL call
@@ -740,7 +737,8 @@ class CustomerApiController extends Controller
         curl_setopt($ch, CURLOPT_POST, true); // post request
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers); // headers
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload)); // payload
 
         $result = curl_exec($ch);
@@ -749,10 +747,7 @@ class CustomerApiController extends Controller
         $curl_error = curl_error($ch);
         if (!empty($curl_error)) {
             curl_close($ch);
-            return response()->json([
-                "status" => 0,
-                "message" => $curl_error,
-            ]);
+            return \App\Helpers\GoogleMapsApiResponse::curlFailure($curl_error);
         }
 
         $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -762,7 +757,7 @@ class CustomerApiController extends Controller
         $decodedResult = json_decode($result, true);
 
         // Return the response from Google Places API
-        return response()->json($decodedResult, $httpStatus);
+        return \App\Helpers\GoogleMapsApiResponse::proxyJson(is_array($decodedResult) ? $decodedResult : null, $httpStatus);
     }
 
     /* This function retrieves place details from the Google Places API based on a provided place_id */
@@ -773,11 +768,7 @@ class CustomerApiController extends Controller
         $general_settings = GeneralSettings::query()->select('id', 'server_map_key')->first();
         // if general_settings Null or mapKey null
         if ($general_settings == Null || $general_settings->server_map_key == Null) {
-            return response()->json([
-                "status" => 0,
-                "message" => __('user_messages.9'), // Sorry, something went wrong
-                "message_code" => 9,
-            ]);
+            return \App\Helpers\GoogleMapsApiResponse::missingMapKey();
         }
 
         // Google Places API URL for cURL call
@@ -797,7 +788,8 @@ class CustomerApiController extends Controller
         curl_setopt($ch, CURLOPT_HTTPGET, true); // This API supports GET request
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
         $result = curl_exec($ch);
 
@@ -805,10 +797,7 @@ class CustomerApiController extends Controller
         $curl_error = curl_error($ch);
         if (!empty($curl_error)) {
             curl_close($ch);
-            return response()->json([
-                "status" => 0,
-                "message" => $curl_error,
-            ]);
+            return \App\Helpers\GoogleMapsApiResponse::curlFailure($curl_error);
         }
 
         $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -818,7 +807,7 @@ class CustomerApiController extends Controller
         $decodedResult = json_decode($result, true);
 
         // Return the response from Google Places API
-        return response()->json($decodedResult, $httpStatus);
+        return \App\Helpers\GoogleMapsApiResponse::proxyJson(is_array($decodedResult) ? $decodedResult : null, $httpStatus);
     }
 
     /* This function requests route details from the Google Routes API, including origin, destination, waypoints, and traffic information. */
@@ -828,11 +817,7 @@ class CustomerApiController extends Controller
         $general_settings = GeneralSettings::query()->select('id', 'server_map_key')->first();
         // if general_settings Null or mapKey Null
         if ($general_settings == Null || $general_settings->server_map_key == Null) {
-            return response()->json([
-                "status" => 0,
-                "message" => __('user_messages.9'), // Sorry, something went wrong
-                "message_code" => 9,
-            ]);
+            return \App\Helpers\GoogleMapsApiResponse::missingMapKey();
         }
 
         // Google Places API URL
@@ -907,7 +892,8 @@ class CustomerApiController extends Controller
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 
         $result = curl_exec($ch);
@@ -916,10 +902,7 @@ class CustomerApiController extends Controller
         $curl_error = curl_error($ch);
         if (!empty($curl_error)) {
             curl_close($ch);
-            return response()->json([
-                "status" => 0,
-                "message" => $curl_error,
-            ]);
+            return \App\Helpers\GoogleMapsApiResponse::curlFailure($curl_error);
         }
 
         $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -929,7 +912,7 @@ class CustomerApiController extends Controller
         $decodedResult = json_decode($result, true);
 
         // Return the response from Google Places API
-        return response()->json($decodedResult, $httpStatus);
+        return \App\Helpers\GoogleMapsApiResponse::proxyJson(is_array($decodedResult) ? $decodedResult : null, $httpStatus);
     }
 
    //code check api splash screen data

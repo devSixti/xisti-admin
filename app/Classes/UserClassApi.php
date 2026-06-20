@@ -190,6 +190,17 @@ class UserClassApi
         if (!empty($user_details['emergency_contact_name'])) {
             $final_response_array['emergency_contact_name'] = trim((string) $user_details['emergency_contact_name']);
         }
+        if (in_array($user_details['login_type'], ['google', 'facebook', 'apple'], true)) {
+            if (!empty($user_details['email'])) {
+                $final_response_array['email'] = $user_details['email'];
+            }
+            if (!empty($user_details['first_name'])) {
+                $final_response_array['user_name'] = $user_details['first_name'];
+            }
+            if ($avatar !== null) {
+                $final_response_array['profile_image'] = $avatar;
+            }
+        }
         if ($user_details['verified_at'] != Null){
             if ($is_register == 1){
 

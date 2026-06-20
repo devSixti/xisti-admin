@@ -29,7 +29,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['middleware' => 'setLocaleLang'], function () {
     Route::middleware('api')->group(function () {
 
-        Route::post('/test-email-templates', [CustomerApiController::class,'postTestEmailTemplates'])->name('post:customer:test_email_templates');
+        if (! app()->environment('production')) {
+            Route::post('/test-email-templates', [CustomerApiController::class,'postTestEmailTemplates'])->name('post:customer:test_email_templates');
+        }
         Route::post('/wompi/webhook', [CustomerApiController::class,'postWompiWebhook'])->name('post:wompi:webhook');
 
         // Bootstrap endpoints (no app Authorization header — client uses --dart-define=XISTI_APP_KEY)
@@ -42,7 +44,8 @@ Route::group(['middleware' => 'setLocaleLang'], function () {
 
         Route::middleware(['mobile.app'])->group(function () {
 
-            Route::middleware(['mobile.user'])->group(function () {
+            // Maps during signup/OTP: credentials only (no verified_at). Rate-limited per user/session.
+            Route::middleware(['mobile.credentials', 'throttle:60,1', 'throttle:daily-map-call-limit'])->group(function () {
                 Route::post('/google-map', [CustomerApiController::class,'postFirebaseSecurityRules'])->name('post:customer:firebase_security_rules');
                 Route::post('/google-autocomplete-places', [CustomerApiController::class, 'postAutocompleteGooglePlaces']);
                 Route::post('/google-place-detail', [CustomerApiController::class, 'postGooglePlaceDetails']);
@@ -62,7 +65,7 @@ Route::group(['middleware' => 'setLocaleLang'], function () {
                     Route::post('/resend-otp-verification', [UpdateRegisterController::class,'postCustomerResendOtpVerification'])->name('post:customer:resend_otp_verification');
                 });
 
-                // Logout must work with expired/mismatched tokens (idempotent session clear).
+                // Logout: idempotent; only clears session when access_token matches.
                 Route::post('/logout', [LogoutController::class,'postCustomerLogout'])->name('post:customer:logout');
 
                 Route::middleware('mobile.user')->group(function () {

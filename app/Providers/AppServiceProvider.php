@@ -25,7 +25,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-//        URL::forceScheme('https');
+        if (app()->environment('production')) {
+            URL::forceScheme('https');
+        }
 
         Paginator::useBootstrap();
         view()->composer('*',function ($view){
@@ -92,25 +94,20 @@ class AppServiceProvider extends ServiceProvider
             'chat_replace_domain' => $this->chat_replace_domain,
         ]);
 
-//        $this->rateLimit('daily-map-call-limit', 30);
+        $this->rateLimit('daily-map-call-limit', 500);
     }
     private function rateLimit($key,$count): void
     {
         RateLimiter::for($key, function (Request $request) use ($count) {
-            // Hard validation
-            if (! $request->header('session-id')) {
-                return response()->json([
-                    'status'  => 0,
-                    'message' => 'Session ID is required.'
-                ], 400);
-            }
+            $bucket = $request->header('session-id')
+                ?: ('uid:' . ($request->get('user_id') ?? $request->ip()));
 
-            // per day limit for uniqueid + session combination (session_id = 'uid:' . $uniqueId . '|sess:' . $session)
             return Limit::perDay($count)
-                ->by($request->header('session-id'))
+                ->by($bucket)
                 ->response(fn () => response()->json([
                     'status'  => 0,
-                    'message' => 'You’ve reached your daily Google Maps usage limit. Please try again tomorrow.'
+                    'message' => 'You’ve reached your daily Google Maps usage limit. Please try again tomorrow.',
+                    'message_code' => 429,
                 ], 429));
         });
     }
