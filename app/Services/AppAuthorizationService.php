@@ -24,12 +24,12 @@ class AppAuthorizationService
         if ($appKey === '') {
             Log::warning('xisti.auth.missing_app_key');
 
-            return $this->deny(__('user_messages.0'), 0);
+            return $this->deny(__('user_messages.401'), 401);
         }
 
         $authorization = trim((string) $request->header('Authorization', ''));
         if ($authorization === '') {
-            return $this->deny(__('user_messages.0'), 0);
+            return $this->deny(__('user_messages.401'), 401);
         }
 
         $expectedDigest = $this->buildExpectedDigest($appKey);
@@ -41,7 +41,7 @@ class AppAuthorizationService
                 'length' => strlen($authorization),
             ]);
 
-            return $this->deny(__('user_messages.0'), 0);
+            return $this->deny(__('user_messages.401'), 401);
         }
 
         $allowedHost = trim((string) config('xisti.allowed_admin_host', ''));
@@ -51,7 +51,7 @@ class AppAuthorizationService
                 'allowed' => $allowedHost,
             ]);
 
-            return $this->deny(__('user_messages.0'), 0);
+            return $this->deny(__('user_messages.401'), 401);
         }
 
         return response()->json([
@@ -90,7 +90,10 @@ class AppAuthorizationService
         return $prefix.$digest.$suffix;
     }
 
-    private function resolveAppKey(): string
+    /**
+     * Shared secret for mobile Authorization header (bootstrap + validation).
+     */
+    public function resolveAppKey(): string
     {
         $fromEnv = trim((string) config('xisti.app_key', ''));
         if ($fromEnv !== '') {

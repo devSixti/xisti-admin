@@ -1,5 +1,6 @@
 <?php
 return [
+    '401' => 'We could not verify the app. Update XISTI from the store or reinstall.',
     '0' => 'Data Not Found',
     '1' => 'Success',
     '2' => 'Email Address or Mobile Number Verification Pending',

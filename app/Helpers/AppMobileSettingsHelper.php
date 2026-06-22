@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\GeneralSettings;
 use App\Models\ServiceSettings;
+use App\Services\AppAuthorizationService;
 
 class AppMobileSettingsHelper
 {
@@ -77,5 +78,20 @@ class AppMobileSettingsHelper
         $until = (int) ($general->driver_cancel_until_status ?? 3);
 
         return $rideStatus <= $until ? 1 : 0;
+    }
+
+    /**
+     * Mobile bootstrap: app_key for Authorization header (public endpoints only).
+     *
+     * @return array{app_key?: string}
+     */
+    public static function mobileBootstrapAppKeyPayload(): array
+    {
+        $appKey = app(AppAuthorizationService::class)->resolveAppKey();
+        if ($appKey === '') {
+            return [];
+        }
+
+        return ['app_key' => $appKey];
     }
 }

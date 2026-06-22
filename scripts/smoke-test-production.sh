@@ -82,7 +82,12 @@ done < <(php -r '
 $json = $argv[1];
 $j = json_decode($json, true);
 if (!is_array($j) || ($j["status"] ?? 0) != 1) { echo "FAIL: app-version-check status\n"; exit(0); }
-echo "PASS: app-version-check OK (app_key no longer exposed in API)\n";
+$key = (string)($j["app_key"] ?? "");
+if ($key === "" || str_contains($key, "CHANGE_ME") || str_contains($key, "ChangeThis")) {
+  echo "FAIL: app-version-check missing valid app_key\n";
+} else {
+  echo "PASS: app-version-check OK (app_key present for mobile bootstrap)\n";
+}
 if ((int)($j["enable_encomiendas_mobile"] ?? -1) !== 1) echo "FAIL: enable_encomiendas_mobile != 1\n";
 else echo "PASS: enable_encomiendas_mobile=1\n";
 if ((int)($j["enable_expreso_mobile"] ?? -1) !== 0) echo "FAIL: enable_expreso_mobile != 0\n";

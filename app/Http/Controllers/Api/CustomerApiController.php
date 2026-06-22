@@ -557,14 +557,14 @@ class CustomerApiController extends Controller
     {
         $country_list = LanguageLists::query()->select('id as country_id', 'language_name as country_name', 'language_code as country_code')->where('status', 1)->orderBy('id', 'asc')->get();
         $currency_list = WorldCurrency::query()->select('id as currency_id', 'currency_code as currency_name', 'symbol as currency_symbol')->where('status', 1)->get();
-        return response()->json([
+        return response()->json(array_merge([
             "status" => 1,
             //"message" => "success!",
             "message" => __('user_messages.1'),
             "message_code" => 1,
             "country_list" => $country_list,
             "currency_list" => $currency_list
-        ]);
+        ], \App\Helpers\AppMobileSettingsHelper::mobileBootstrapAppKeyPayload()));
     }
     public function postMyCheckoutSupportPages(Request $request)
     {
@@ -963,7 +963,7 @@ class CustomerApiController extends Controller
                 "is_facebook_login" => $is_facebook_login,
                 "is_apple_login" => $is_apple_login,
                 "is_finger_login" => $is_finger_login,
-            ], \App\Helpers\AppMobileSettingsHelper::pricingAndCommissionPayload($general_settings)));
+            ], \App\Helpers\AppMobileSettingsHelper::pricingAndCommissionPayload($general_settings), \App\Helpers\AppMobileSettingsHelper::mobileBootstrapAppKeyPayload()));
         } else {
             return response()->json([
                 "status" => 1,

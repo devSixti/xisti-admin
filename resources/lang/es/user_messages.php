@@ -1,5 +1,6 @@
 <?php
 return [
+    '401' => 'No pudimos verificar la aplicación. Actualiza XISTI desde la tienda o reinstala la app.',
     '0' => 'Datos no encontrados',
     '1' => 'Éxito',
     '2' => 'Verificación de correo o número de teléfono pendiente',
