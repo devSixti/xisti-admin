@@ -13,6 +13,8 @@ class XistiQaTestUserSeeder extends Seeder
 {
     public const QA_PHONE_LOCAL = '3001234567';
 
+    public const QA_DRIVER_PHONE_LOCAL = '3009876543';
+
     public const QA_COUNTRY_CODE = '+57';
 
     public const QA_OTP = '123456';

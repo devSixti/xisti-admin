@@ -10,6 +10,15 @@ use Database\Seeders\XistiQaTestUserSeeder;
  */
 class QaTestUserHelper
 {
+    /** @return list<string> */
+    public static function qaPhoneLocals(): array
+    {
+        return [
+            XistiQaTestUserSeeder::QA_PHONE_LOCAL,
+            XistiQaTestUserSeeder::QA_DRIVER_PHONE_LOCAL,
+        ];
+    }
+
     public static function isQaUser(?User $user): bool
     {
         if ($user === null) {
@@ -22,11 +31,13 @@ class QaTestUserHelper
 
         $phone = preg_replace('/\D+/', '', (string) $user->contact_number);
         $country = trim((string) $user->country_code);
-        $qaPhone = XistiQaTestUserSeeder::QA_PHONE_LOCAL;
         $qaCountry = ltrim(XistiQaTestUserSeeder::QA_COUNTRY_CODE, '+');
 
-        return $phone === $qaPhone
-            && in_array($country, [XistiQaTestUserSeeder::QA_COUNTRY_CODE, '+'.$qaCountry, $qaCountry], true);
+        if (! in_array($phone, self::qaPhoneLocals(), true)) {
+            return false;
+        }
+
+        return in_array($country, [XistiQaTestUserSeeder::QA_COUNTRY_CODE, '+'.$qaCountry, $qaCountry], true);
     }
 
     public static function acceptsFixedOtp(?User $user, ?string $otp): bool
