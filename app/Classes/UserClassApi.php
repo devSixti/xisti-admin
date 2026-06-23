@@ -147,7 +147,7 @@ class UserClassApi
         $cash_payment = 0;
         $card_payment = 0;
         $wallet_payment = 0;
-        $general_settings = request()->get("general_settings");
+        $general_settings = \App\Support\RequestSettingsHelper::generalSettings();
         if ($general_settings != Null){
             $cash_payment = $general_settings->cash_payment;
             $card_payment = $general_settings->card_payment;
@@ -201,27 +201,24 @@ class UserClassApi
                 $final_response_array['profile_image'] = $avatar;
             }
         }
-        if ($user_details['verified_at'] != Null){
-            if ($is_register == 1){
-
-                $final_response_array['user_name'] = $user_details['first_name'].'';
-                $final_response_array['email'] = $user_details['email'].'';
-                $final_response_array['referral_code'] = $user_details['invite_code'].'';
-                $final_response_array['gender'] = $user_details['gender'];
-                $final_response_array['profile_image'] = $avatar;
-                $final_response_array['select_currency'] = $user_details['currency'].'';
-                $final_response_array['select_language'] = $user_details['language'].'';
-                $final_response_array['emergency_contact'] = $user_details['emergency_contact'].'';
-                $final_response_array['emergency_country_code'] = $user_details['emergency_country_code'] != Null ? $user_details['emergency_country_code'] : $user_details['country_code'];
-                if (!empty($user_details['emergency_contact_name'])) {
-                    $final_response_array['emergency_contact_name'] = trim((string) $user_details['emergency_contact_name']);
-                }
-                $final_response_array['server_time_zone'] = config('app.timezone');
-                $final_response_array['is_driver_type'] = $user_details['is_driver_type'];
-                $final_response_array['is_driver_status'] = $user_details['is_driver_status'];
-                $final_response_array['driver_doc_status'] = $user_details['driver_doc_status'];
-                $final_response_array['driver_vehicle_status'] = $user_details['driver_vehicle_status'];
+        if ($is_register == 1) {
+            $final_response_array['user_name'] = $user_details['first_name'].'';
+            $final_response_array['email'] = $user_details['email'].'';
+            $final_response_array['referral_code'] = $user_details['invite_code'].'';
+            $final_response_array['gender'] = $user_details['gender'];
+            $final_response_array['profile_image'] = $avatar;
+            $final_response_array['select_currency'] = $user_details['currency'].'';
+            $final_response_array['select_language'] = $user_details['language'].'';
+            $final_response_array['emergency_contact'] = $user_details['emergency_contact'].'';
+            $final_response_array['emergency_country_code'] = $user_details['emergency_country_code'] != Null ? $user_details['emergency_country_code'] : $user_details['country_code'];
+            if (!empty($user_details['emergency_contact_name'])) {
+                $final_response_array['emergency_contact_name'] = trim((string) $user_details['emergency_contact_name']);
             }
+            $final_response_array['server_time_zone'] = config('app.timezone');
+            $final_response_array['is_driver_type'] = $user_details['is_driver_type'];
+            $final_response_array['is_driver_status'] = $user_details['is_driver_status'];
+            $final_response_array['driver_doc_status'] = $user_details['driver_doc_status'];
+            $final_response_array['driver_vehicle_status'] = $user_details['driver_vehicle_status'];
         }
         return response()->json($final_response_array);
     }

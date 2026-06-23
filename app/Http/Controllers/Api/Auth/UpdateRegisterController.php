@@ -274,7 +274,7 @@ class UpdateRegisterController extends Controller
                     'message_code' => 4,
                 ]);
             }
-            $settings = request()->get('general_settings');
+            $settings = \App\Support\RequestSettingsHelper::generalSettings();
             if ($settings == Null) {
                 return response()->json([
                     "status" => 0,

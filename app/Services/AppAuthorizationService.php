@@ -100,7 +100,7 @@ class AppAuthorizationService
             return $fromEnv;
         }
 
-        $generalSettings = request()->get('general_settings');
+        $generalSettings = \App\Support\RequestSettingsHelper::generalSettings();
         if ($generalSettings !== null && ! empty($generalSettings->app_key)) {
             return (string) $generalSettings->app_key;
         }

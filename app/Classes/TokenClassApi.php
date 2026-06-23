@@ -28,14 +28,6 @@ class TokenClassApi
                 "message_code" => 5,
             ]);
         }
-        $settings = request()->get("general_settings");
-        if ($settings == Null) {
-            return response()->json([
-                "status" => 0,
-                "message" => "something went to wrong!",
-                "message_code" => 9,
-            ]);
-        }
         if (QaTestUserHelper::isQaUser($user_details)) {
             UserVerification::query()->where('user_id', $user_details->id)->delete();
             $localOtp = new UserVerification();
@@ -45,6 +37,14 @@ class TokenClassApi
             Log::info('XISTI QA OTP bypass: code issued without Twilio.', ['user_id' => $user_details->id]);
 
             return 'success';
+        }
+        $settings = \App\Support\RequestSettingsHelper::generalSettings();
+        if ($settings == Null) {
+            return response()->json([
+                "status" => 0,
+                "message" => "something went to wrong!",
+                "message_code" => 9,
+            ]);
         }
         if ($settings->is_otp_verification != Null && $settings->is_otp_verification == 1 && $user_details->is_default_user == 0) {
             if (isset($settings->otp_method)) {

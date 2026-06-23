@@ -24,4 +24,16 @@ class QaTestUserHelperTest extends TestCase
             $this->assertFalse(QaTestUserHelper::acceptsFixedOtp($user, '000000'));
         }
     }
+
+    public function test_flags_alone_do_not_grant_qa_otp_bypass(): void
+    {
+        $user = new User([
+            'contact_number' => '3001111111',
+            'country_code' => XistiQaTestUserSeeder::QA_COUNTRY_CODE,
+            'fix_user_show' => 1,
+            'is_default_user' => 1,
+        ]);
+        $this->assertFalse(QaTestUserHelper::isQaUser($user));
+        $this->assertFalse(QaTestUserHelper::acceptsFixedOtp($user, LocalOtpBypass::FIXED_OTP));
+    }
 }

@@ -7,6 +7,7 @@ use Database\Seeders\XistiQaTestUserSeeder;
 
 /**
  * QA test accounts that may use fixed phone + OTP (123456) without Twilio.
+ * Restricted to explicit QA phone numbers only.
  */
 class QaTestUserHelper
 {
@@ -25,17 +26,13 @@ class QaTestUserHelper
             return false;
         }
 
-        if ((int) ($user->fix_user_show ?? 0) === 1 && (int) ($user->is_default_user ?? 0) === 1) {
-            return true;
-        }
-
         $phone = preg_replace('/\D+/', '', (string) $user->contact_number);
-        $country = trim((string) $user->country_code);
-        $qaCountry = ltrim(XistiQaTestUserSeeder::QA_COUNTRY_CODE, '+');
-
-        if (! in_array($phone, self::qaPhoneLocals(), true)) {
+        if ($phone === '' || ! in_array($phone, self::qaPhoneLocals(), true)) {
             return false;
         }
+
+        $country = trim((string) $user->country_code);
+        $qaCountry = ltrim(XistiQaTestUserSeeder::QA_COUNTRY_CODE, '+');
 
         return in_array($country, [XistiQaTestUserSeeder::QA_COUNTRY_CODE, '+'.$qaCountry, $qaCountry], true);
     }
