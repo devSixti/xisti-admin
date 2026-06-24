@@ -135,7 +135,7 @@ echo "yes";
     if [[ "${AUTH_OK}" == "yes" ]]; then pass "Authorization header accepted on /login"; else fail "Authorization header rejected on /login"; fi
 fi
 
-# 7. Home API — delivery_vehicle_options (Moto + Carro)
+# 7. Home API — delivery_vehicle_options (Moto + Carro + Bicicleta)
 if [[ -n "${APP_KEY}" && "${APP_KEY}" != *"CHANGE_ME"* ]]; then
     AUTH_HEADER="$(build_auth_header "${APP_KEY}")"
     LOGIN_JSON="$(curl -fsS --connect-timeout 15 -X POST "${API_BASE}/api/customer/login" \
@@ -184,11 +184,11 @@ $j = json_decode($raw, true);
 if (!is_array($j) || ($j["status"] ?? 0) != 1) { echo "FAIL:home status=" . ($j["status"] ?? "?"); exit(0); }
 $opts = $j["delivery_vehicle_options"] ?? [];
 $n = count($opts);
-if ($n !== 2) { echo "FAIL:delivery_vehicle_options count=$n (expected 2)"; exit(0); }
+if ($n !== 3) { echo "FAIL:delivery_vehicle_options count=$n (expected 3)"; exit(0); }
 $ids = array_map(fn($o) => (int)($o["vehicle_service_id"] ?? 0), $opts);
 sort($ids);
-if ($ids !== [1, 3]) { echo "FAIL:delivery ids=" . implode(",", $ids) . " (expected 1,3)"; exit(0); }
-echo "PASS:home delivery_vehicle_options Moto+Carro (ids 1,3)";
+if ($ids !== [1, 3, 4]) { echo "FAIL:delivery ids=" . implode(",", $ids) . " (expected 1,3,4)"; exit(0); }
+echo "PASS:home delivery_vehicle_options Moto+Carro+Bicicleta (ids 1,3,4)";
 ' "${API_BASE}" "${AUTH_HEADER}" "${LOGIN_JSON}")"
     case "${HOME_RESULT}" in
       PASS:*) pass "${HOME_RESULT#PASS:}" ;;
