@@ -1022,6 +1022,10 @@ class UserController extends Controller
             $add_driver_vehicle_details->current_long = $request->get('current_long');
         }
         $add_driver_vehicle_details->vehicle_type_id = $request->get('vehicle_type_id');
+        if (\Illuminate\Support\Facades\Schema::hasColumn('transport_driver_details', 'delivery_variant')) {
+            $driverVariant = \App\Helpers\XistiVehicleVariantHelper::normalize($deliveryVariant);
+            $add_driver_vehicle_details->delivery_variant = $driverVariant !== '' ? $driverVariant : null;
+        }
         $add_driver_vehicle_details->vehicle_company = $request->get('manufacture_name');
         $add_driver_vehicle_details->plat_no = ColombiaFormValidation::normalizePlate($request->get('vehicle_plat_no'));
         $add_driver_vehicle_details->model_name = $request->get('model_name');
@@ -1510,6 +1514,7 @@ class UserController extends Controller
             );
             $available_ride_requests[$key]['is_delivery'] = RideKindHelper::isDeliveryFlag($value);
             $available_ride_requests[$key]['is_encomienda'] = \App\Helpers\EncomiendaHelper::isEncomiendaFlag($value);
+            $available_ride_requests[$key] = \App\Helpers\XistiVehicleVariantHelper::enrichRideRow($available_ride_requests[$key]);
             $address_list = [];
         }
 
@@ -3860,9 +3865,15 @@ class UserController extends Controller
         $current_lat = $driver_details->current_lat;
         $current_long = $driver_details->current_long;
 
+        $newRequestSelect = [
+            'user_ride_booking.id as ride_id','user_ride_booking.ride_no','user_ride_booking.pickup_address','user_ride_booking.destination_address','users.rating','user_ride_booking.pickup_datetime',
+            'user_ride_booking.user_name','user_ride_booking.pickup_lat','user_ride_booking.pickup_long','user_ride_booking.user_id','user_ride_booking.vehicle_service_id as service_id','user_ride_booking.payment_type','user_ride_booking.ride_type','user_ride_booking.is_auto_accept','user_ride_booking.destination_payment_method',
+        ];
+        if (Schema::hasColumn('user_ride_booking', 'delivery_variant')) {
+            $newRequestSelect[] = 'user_ride_booking.delivery_variant';
+        }
         $available_ride = TransportRideBook::query()
-            ->select('user_ride_booking.id as ride_id','user_ride_booking.ride_no','user_ride_booking.pickup_address','user_ride_booking.destination_address','users.rating','user_ride_booking.pickup_datetime',
-                'user_ride_booking.user_name','user_ride_booking.pickup_lat','user_ride_booking.pickup_long','user_ride_booking.user_id','user_ride_booking.vehicle_service_id as service_id','user_ride_booking.payment_type','user_ride_booking.ride_type','user_ride_booking.is_auto_accept','user_ride_booking.destination_payment_method',
+            ->select(array_merge($newRequestSelect, [
                 'user_courier_service_details.recipient_name','user_courier_service_details.recipient_contact_number','user_courier_service_details.item_description','user_courier_service_details.estimate_price','user_courier_service_details.package_weight_kg','user_courier_service_details.package_height_cm','user_courier_service_details.package_width_cm','user_courier_service_details.package_length_cm',
                 DB::raw('user_ride_booking.total_pay * '.$currency.' as offered_price'),
                 DB::raw("COUNT(user_rating.id) as total_ratings "),'user_ride_booking.additional_request as additional_remarks',
@@ -3880,7 +3891,7 @@ class UserController extends Controller
                                                 AS order_time"),
                 DB::raw("ROUND((6371 * acos( cos( radians(pickup_lat) ) * cos( radians(" .$current_lat. ") )  * cos( radians( " .$current_long. " ) - radians(pickup_long) ) + sin( radians(pickup_lat) ) * sin(radians( " .$current_lat. " ) ) ) ), 2) as distance" ),
                 DB::raw("ROUND((((6371 * acos( cos( radians(pickup_lat) ) * cos( radians(" .$current_lat. ") )  * cos( radians( " .$current_long. " ) - radians(pickup_long) ) + sin( radians(pickup_lat) ) * sin(radians( " .$current_lat. " ) ) ) ) / 40 ) * 60 ), 2) as time" )
-            )
+            ]))
             ->join('users','users.id','=','user_ride_booking.user_id')
             ->leftjoin('user_courier_service_details','user_courier_service_details.ride_id','=','user_ride_booking.id')
             ->leftJoin('user_rating','user_rating.user_id','=','users.id')
@@ -3966,7 +3977,7 @@ class UserController extends Controller
             ]);
         }
 
-        return response()->json([
+        return response()->json(\App\Helpers\XistiVehicleVariantHelper::enrichRideRow([
             "status" => 1,
             "message" => __('driver_messages.1'),
             "message_code" => 1,
@@ -4001,7 +4012,8 @@ class UserController extends Controller
             "package_width_cm" => $available_ride->package_width_cm ?? null,
             "package_length_cm" => $available_ride->package_length_cm ?? null,
             "is_delivery" => RideKindHelper::isDeliveryFlag($available_ride),
-        ]);
+            "delivery_variant" => $available_ride->delivery_variant ?? '',
+        ], $service->service_name ?? null));
 
     }
 

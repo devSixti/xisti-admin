@@ -30,32 +30,7 @@ class DeliveryVehicleHelper
 
     public static function deliveryOptionsForApi(string $langPrefix = ''): array
     {
-        if (! Schema::hasTable('vehicle_services')) {
-            return [];
-        }
-
-        $iconBase = url('/assets/images/vehicle-service/');
-        $rows = DB::table('vehicle_services')
-            ->whereIn('id', self::PASSENGER_ACTIVE_VEHICLE_SERVICE_IDS)
-            ->where('status', 1)
-            ->orderByRaw('CASE id WHEN 3 THEN 1 WHEN 1 THEN 2 ELSE 99 END')
-            ->get(['id', 'name', 'es_name', 'icon_name', 'service_mode']);
-
-        $options = [];
-        foreach ($rows as $row) {
-            $serviceId = (int) $row->id;
-            $label = self::colombiaDeliveryLabel($serviceId, $langPrefix, $row);
-            $iconName = (string) ($row->icon_name ?? '');
-            $options[] = [
-                'vehicle_service_id' => $serviceId,
-                'label' => $label,
-                'service_icon' => $iconName !== ''
-                    ? $iconBase . '/' . $iconName . '?v=' . self::ICON_CACHE_VERSION
-                    : '',
-            ];
-        }
-
-        return $options;
+        return XistiVehicleVariantHelper::deliveryOptionsForApi($langPrefix);
     }
 
     /**
@@ -82,7 +57,11 @@ class DeliveryVehicleHelper
 
     public static function isValidRequestedVehicleServiceId(?int $id): bool
     {
-        return self::isPassengerActiveVehicleServiceId($id);
+        if ($id === null || $id <= 0) {
+            return false;
+        }
+
+        return in_array($id, [1, 3, 4], true);
     }
 
     /**

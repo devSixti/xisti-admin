@@ -281,7 +281,8 @@ class UserClassApi
             "child_seat" => "required",
             "payment_type" => "required",
             "destination_payment_method" => DestinationPaymentHelper::validationRule(),
-            "requested_vehicle_service_id" => "nullable|integer|in:1,3",
+            "requested_vehicle_service_id" => "nullable|integer|in:1,3,4",
+            "delivery_variant" => "nullable|string|max:64",
             "errand_type" => "nullable|in:delivery,encomienda",
         ], AppMobileSettingsHelper::courierPackageDimensionValidationRules()));
 
@@ -452,6 +453,10 @@ class UserClassApi
         $ride->user_id = $request['user_id'];
         $ride->area_id = $area_id;
         $ride->vehicle_service_id = $get_vehicle_service->id;
+        if (\Illuminate\Support\Facades\Schema::hasColumn('user_ride_booking', 'delivery_variant')) {
+            $variant = \App\Helpers\XistiVehicleVariantHelper::normalize($request->get('delivery_variant'));
+            $ride->delivery_variant = $variant !== '' ? $variant : null;
+        }
         $ride->vehicle_cost_for_km = $get_vehicle_service->cost_for_km;
         $ride->ride_no = $ride->generateRideNo();
         $ride->otp = $ride->generateOtp(4);
