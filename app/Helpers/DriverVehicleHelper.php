@@ -49,7 +49,46 @@ class DriverVehicleHelper
             $list[] = self::mapServiceRow($row, $langPrefix, $serviceIconUrl, $vehicleIconUrl, null);
         }
 
-        return self::sortRegistrationList($list);
+        return self::expandTransportVariants(self::sortRegistrationList($list));
+    }
+
+    /**
+     * Expand car/moto rows into XISTI matrix variants for driver registration.
+     */
+    private static function expandTransportVariants(array $list): array
+    {
+        $expanded = [];
+        foreach ($list as $item) {
+            $serviceId = (int) ($item['service_id'] ?? 0);
+            if ($serviceId === 1) {
+                foreach ([
+                    XistiVehicleVariantHelper::CARRO_ECO,
+                    XistiVehicleVariantHelper::CARRO_COMODO,
+                    XistiVehicleVariantHelper::CARRO_ECONOMICO,
+                ] as $variant) {
+                    $row = $item;
+                    $row['delivery_variant'] = $variant;
+                    $row['service_name'] = XistiVehicleVariantHelper::labelFor($variant);
+                    $expanded[] = $row;
+                }
+                continue;
+            }
+            if ($serviceId === 3) {
+                foreach ([
+                    XistiVehicleVariantHelper::MOTO_ALTO,
+                    XistiVehicleVariantHelper::MOTO_BAJO,
+                ] as $variant) {
+                    $row = $item;
+                    $row['delivery_variant'] = $variant;
+                    $row['service_name'] = XistiVehicleVariantHelper::labelFor($variant);
+                    $expanded[] = $row;
+                }
+                continue;
+            }
+            $expanded[] = $item;
+        }
+
+        return $expanded;
     }
 
     public static function isDeliveryOnlyRegistration(?string $deliveryVariant, int $serviceId): bool
