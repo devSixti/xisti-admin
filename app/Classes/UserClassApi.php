@@ -32,6 +32,7 @@ use App\Rules\ColombianMobileNumber;
 use App\Rules\ColombianNationalId;
 use App\Support\ColombiaFormValidation;
 use App\Models\User;
+use App\Models\UserVerification;
 use App\Models\UserAddress;
 use App\Models\UserCardDetails;
 use App\Models\UserReferHistory;
@@ -154,6 +155,11 @@ class UserClassApi
             $wallet_payment = $general_settings->wallet_payment;
         }
 
+        $hasPendingOtp = UserVerification::query()
+            ->where('user_id', (int) $user_details['id'])
+            ->exists();
+        $userVerified = ($user_details['verified_at'] != null && ! $hasPendingOtp) ? 1 : 0;
+
         $is_register = $user_details['is_register'] - 0;
         $final_response_array = array_merge([
             'status' => 1,
@@ -165,8 +171,8 @@ class UserClassApi
             'contact_number' => $user_details['contact_number'] != Null ? $user_details['contact_number'] : "",
             'select_country_code' => $user_details['country_code'] != Null ? $user_details['country_code'] : "",
             'login_type' => $user_details['login_type'],
-            'user_verified' => ($user_details['verified_at'] != Null ? 1 : 0),
-            'otp_delivery_channel' => ($user_details['verified_at'] != Null
+            'user_verified' => $userVerified,
+            'otp_delivery_channel' => ($userVerified === 1
                 ? TokenClassApi::CHANNEL_SMS
                 : TokenClassApi::lastChannelForUser((int) $user_details['id'])),
             "cash_payment" => $cash_payment - 0,

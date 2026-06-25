@@ -654,6 +654,11 @@ class NotificationClass
             ]);
         }
 
+        $ride = TransportRideBook::query()->where('id', $ride_id)->first();
+        $rideVariant = $ride != null
+            ? \App\Helpers\XistiVehicleVariantHelper::normalize($ride->delivery_variant ?? '')
+            : '';
+
         $isDeliveryRide = \App\Helpers\RideKindHelper::isDeliveryRide([
             'service_id' => $service_id,
             'item_description' => '',
@@ -684,6 +689,7 @@ class NotificationClass
             }
         } else {
             $get_drivers = $get_drivers->where('vehicle_services.id', $service_id);
+            \App\Helpers\XistiVehicleVariantHelper::applyTransportVariantDriverFilter($get_drivers, $rideVariant);
         }
         $get_drivers = $get_drivers
             ->where('users.driver_current_status',1)

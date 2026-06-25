@@ -1045,6 +1045,10 @@ class UserController extends Controller
         $alsoTransportPassengers = (int) $request->get('also_transport_passengers', 0);
         $acceptDelivery = (int) $request->get('accept_delivery', 1);
         $acceptEncomiendas = (int) $request->get('accept_encomiendas', 1);
+        $variantSlug = \App\Helpers\XistiVehicleVariantHelper::normalize($deliveryVariant ?? '');
+        $isTransportMatrixRegistration = $variantSlug !== ''
+            && ! \App\Helpers\DriverVehicleHelper::isDeliveryOnlyRegistration($variantSlug, $vehicleServiceId);
+        $taxiEligibleVariant = \App\Helpers\XistiVehicleVariantHelper::isTaxiEligibleVariant($variantSlug);
 
         if ($vehicleServiceId === 4
             || \App\Helpers\DriverVehicleHelper::isDeliveryOnlyRegistration($deliveryVariant, $vehicleServiceId)) {
@@ -1058,7 +1062,7 @@ class UserController extends Controller
             $add_driver_vehicle_details->also_transport_passengers = $alsoTransportPassengers;
             // Carro / moto / motoratón must receive transport requests; toggle only affects extras (taxi, seats).
             $add_driver_vehicle_details->accept_transport = 1;
-            if (!$alsoTransportPassengers) {
+            if (! $alsoTransportPassengers && ! $isTransportMatrixRegistration) {
                 $add_driver_vehicle_details->child_seat = 0;
                 $add_driver_vehicle_details->handicap = 0;
                 $add_driver_vehicle_details->is_taxi = 0;
@@ -1075,7 +1079,7 @@ class UserController extends Controller
             $add_driver_vehicle_details->accept_encomiendas = 0;
         }
 
-        $add_driver_vehicle_details->is_taxi = ($vehicleServiceId === 1 && (int) ($add_driver_vehicle_details->also_transport_passengers ?? 0) === 1)
+        $add_driver_vehicle_details->is_taxi = ($vehicleServiceId === 1 && $taxiEligibleVariant)
             ? (int) $request->get('is_taxi', 0)
             : 0;
 

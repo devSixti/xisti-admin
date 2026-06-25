@@ -59,6 +59,38 @@ class XistiVehicleVariantHelper
     }
 
     /**
+     * Match drivers to a transport ride's vehicle matrix slug (eco, económico, moto alto, etc.).
+     */
+    public static function applyTransportVariantDriverFilter($query, ?string $rideVariant, string $driverTable = 'transport_driver_details'): void
+    {
+        $variant = self::normalize($rideVariant);
+        if ($variant === '' || ! \Illuminate\Support\Facades\Schema::hasColumn($driverTable, 'delivery_variant')) {
+            return;
+        }
+        $query->where(function ($q) use ($variant, $driverTable) {
+            $q->where("{$driverTable}.delivery_variant", $variant)
+                ->orWhereNull("{$driverTable}.delivery_variant")
+                ->orWhere("{$driverTable}.delivery_variant", '');
+        });
+    }
+
+    /**
+     * Match available rides to a driver's registered matrix slug.
+     */
+    public static function applyTransportVariantRideFilter($query, ?string $driverVariant, string $rideTable = 'user_ride_booking'): void
+    {
+        $variant = self::normalize($driverVariant);
+        if ($variant === '' || ! \Illuminate\Support\Facades\Schema::hasColumn($rideTable, 'delivery_variant')) {
+            return;
+        }
+        $query->where(function ($q) use ($variant, $rideTable) {
+            $q->where("{$rideTable}.delivery_variant", $variant)
+                ->orWhereNull("{$rideTable}.delivery_variant")
+                ->orWhere("{$rideTable}.delivery_variant", '');
+        });
+    }
+
+    /**
      * @param  array<string, mixed>  $row
      * @return array<string, mixed>
      */

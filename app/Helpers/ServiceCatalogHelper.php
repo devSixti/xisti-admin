@@ -135,12 +135,14 @@ class ServiceCatalogHelper
         $canReceiveEncomiendas = $deliveryCapable && $acceptEncomiendas;
 
         $hasErrandType = Schema::hasColumn('user_courier_service_details', 'errand_type');
+        $driverVariant = \App\Helpers\XistiVehicleVariantHelper::normalize($driverDetails->delivery_variant ?? '');
 
-        return $query->where(function ($outer) use ($transportIds, $canReceiveDelivery, $canReceiveEncomiendas, $driverTransportServiceId, $hasErrandType) {
+        return $query->where(function ($outer) use ($transportIds, $canReceiveDelivery, $canReceiveEncomiendas, $driverTransportServiceId, $hasErrandType, $driverVariant) {
             if ($transportIds !== []) {
-                $outer->where(function ($transportQuery) use ($transportIds, $hasErrandType) {
+                $outer->where(function ($transportQuery) use ($transportIds, $hasErrandType, $driverVariant) {
                     $transportQuery->where('user_ride_booking.vehicle_service_id', '!=', 4)
                         ->whereIn('user_ride_booking.vehicle_service_id', $transportIds);
+                    \App\Helpers\XistiVehicleVariantHelper::applyTransportVariantRideFilter($transportQuery, $driverVariant);
                     if ($hasErrandType) {
                         $transportQuery->where(function ($excludeEncomienda) {
                             $excludeEncomienda->whereNull('user_courier_service_details.errand_type')
