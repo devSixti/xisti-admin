@@ -166,6 +166,9 @@ class UserClassApi
             'select_country_code' => $user_details['country_code'] != Null ? $user_details['country_code'] : "",
             'login_type' => $user_details['login_type'],
             'user_verified' => ($user_details['verified_at'] != Null ? 1 : 0),
+            'otp_delivery_channel' => ($user_details['verified_at'] != Null
+                ? TokenClassApi::CHANNEL_SMS
+                : TokenClassApi::lastChannelForUser((int) $user_details['id'])),
             "cash_payment" => $cash_payment - 0,
             "online_payment" => $card_payment - 0,
             "wallet_payment" => $wallet_payment - 0,

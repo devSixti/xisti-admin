@@ -113,7 +113,7 @@ class LoginController extends Controller
             if ($user_details->contact_number === null || $user_details->contact_number === '') {
                 $user_details->contact_number = $normalizedContact;
             }
-            $user_details->verified_at = Null;
+            $user_details->verified_at = null;
             $user_details->save();
             $this->tokenClassApi->sendUserSmsVerification($user_details->id);
         }

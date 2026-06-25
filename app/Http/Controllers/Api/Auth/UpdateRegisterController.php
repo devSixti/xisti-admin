@@ -225,13 +225,16 @@ class UpdateRegisterController extends Controller
             ]);
         }
         if ($user->verified_at == Null) {
-            $this->tokenClassApi->sendUserSmsVerification($user->id);
+            $sendResult = $this->tokenClassApi->sendUserSmsVerification($user->id);
+            if ($sendResult instanceof \Illuminate\Http\JsonResponse) {
+                return $sendResult;
+            }
         }
         return response()->json([
             "status" => 1,
-            //"message" => "success",
             "message" => __('user_messages.1'),
             "message_code" => 1,
+            'otp_delivery_channel' => TokenClassApi::lastChannelForUser((int) $user->id),
         ]);
     }
 
