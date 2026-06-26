@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
           PushNotificationSeeder::class,
           RequiredDocumentsSeeder::class,
           ServiceSettingsSeeder::class,
+          VehicleCommissionRateSeeder::class,
           SuperAdminSeeder::class,
           TopupWalletSeeder::class,
           TransportVehicleTypeSeeder::class,

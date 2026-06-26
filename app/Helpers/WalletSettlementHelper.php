@@ -41,7 +41,7 @@ class WalletSettlementHelper
             $amount = round($storedCommission + ($storedCommission * ($vatRate / 100)), 2);
         } else {
             $tripValue = (float) ($ride->total_pay > 0 ? $ride->total_pay : $ride->offered_price);
-            $breakdown = RideInvoiceHelper::breakdown($tripValue, $generalSettings);
+            $breakdown = RideInvoiceHelper::breakdownForRide($ride, $generalSettings);
             $amount = (float) ($breakdown['total_deduction'] ?? 0);
         }
         $subject = 'Admin Debited commission + VAT - # ' . $ride->ride_no;

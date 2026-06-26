@@ -69,6 +69,8 @@
                                                            id="admin_commission"
                                                            placeholder="Admin Commission"
                                                            value="{{ (isset($service_settings)) ? $service_settings->admin_commission : old('admin_commission') }}">
+                                                    <small class="text-muted">Comisión global por defecto. Para tarifas por vehículo (moto, carro eco, etc.) use
+                                                        <a href="{{ route('get:admin:vehicle_commission_rates') }}">Comisiones por vehículo</a>.</small>
                                                     <span class="error">{{ $errors->first('admin_commission') }}</span>
                                                 </div>
                                             </div>

@@ -1401,6 +1401,51 @@ class TransportController extends Controller
 
     }
 
+    public function getVehicleCommissionRates(Request $request)
+    {
+        (new \Database\Seeders\VehicleCommissionRateSeeder())->run();
+        $rates = \App\Models\VehicleCommissionRate::query()->orderBy('sort_order')->get();
+        $service = ServiceSettings::query()->first();
+        $general = \App\Models\GeneralSettings::query()->first();
+        $view = view('admin.pages.transport_services.vehicle_commission.manage', [
+            'rates' => $rates,
+            'global_commission' => (float) ($service->admin_commission ?? config('xisti.default_commission_percent', 8)),
+            'vat_rate' => (float) ($general->vat_rate_on_commission ?? 19),
+        ]);
+        if ($request->ajax()) {
+            $view = $view->renderSections();
+            return $this->adminClass->renderingResponce($view);
+        }
+        return $view;
+    }
+
+    public function postUpdateVehicleCommissionRates(Request $request)
+    {
+        if ($this->is_restricted == 1) {
+            Session::flash('error', 'Add / Edit / Delete Property has been disabled in the Demo Admin Panel. We will provide the enabled features in the main clone script.');
+            return redirect()->back();
+        }
+
+        $validated = $request->validate([
+            'rates' => 'required|array',
+            'rates.*.id' => 'required|integer|exists:vehicle_commission_rates,id',
+            'rates.*.commission_percent' => 'required|numeric|min:0|max:100',
+            'rates.*.status' => 'required|in:0,1',
+        ]);
+
+        foreach ($validated['rates'] as $row) {
+            \App\Models\VehicleCommissionRate::query()
+                ->where('id', $row['id'])
+                ->update([
+                    'commission_percent' => round((float) $row['commission_percent'], 2),
+                    'status' => (int) $row['status'],
+                ]);
+        }
+
+        Session::flash('success', 'Comisiones por vehículo actualizadas correctamente.');
+        return redirect()->route('get:admin:vehicle_commission_rates');
+    }
+
 
     public function getTransportEarningReport(Request $request) {
         if (Auth::guard("admin")->check()) {

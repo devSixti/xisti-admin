@@ -81,4 +81,7 @@ sudo -u "${DEPLOY_USER}" \
     php artisan db:seed --class=PageSettingsSeeder --force
     php artisan db:seed --class=EmailTemplatesSeeder --force
     php artisan db:seed --class=VehicleServicesSeeder --force
+    php artisan db:seed --class=VehicleCommissionRateSeeder --force
+    php artisan db:seed --class=AdminModuleSeeder --force
+    php artisan db:seed --class=BrandedEmailTemplatesSeeder --force
   "

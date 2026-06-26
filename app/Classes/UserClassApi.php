@@ -976,7 +976,10 @@ class UserClassApi
                 ];
                 $invoiceBreakdown = \App\Helpers\RideInvoiceHelper::breakdownForCurrency(
                     (float) $ride->offered_price,
-                    (float) $currency
+                    (float) $currency,
+                    null,
+                    (int) $ride->vehicle_service_id,
+                    $ride->delivery_variant ?? null
                 );
                 $other_details = array_merge($other_details, [
                     'commission_percent' => $invoiceBreakdown['commission_percent'],

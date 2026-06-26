@@ -46,6 +46,7 @@ use App\Rules\ColombianVehiclePlate;
 use App\Support\ColombiaFormValidation;
 use App\Helpers\AppMobileSettingsHelper;
 use App\Helpers\RideInvoiceHelper;
+use App\Helpers\VehicleCommissionHelper;
 use App\Rules\ColombianNationalId;
 
 class UserController extends Controller
@@ -1649,7 +1650,11 @@ class UserController extends Controller
         if ($general_settings != Null && (int) ($general_settings->auto_settle_wallet ?? 0) === 1) {
             //get wallet balance
             $last_amount = $this->notificationClass->getWalletBalance($request->get('user_id'));
-            $commissionRate = ((float) ($service_setting->admin_commission ?? 8)) / 100;
+            $commissionPercent = VehicleCommissionHelper::resolvePercent(
+                (int) $ride_details->vehicle_service_id,
+                $ride_details->delivery_variant ?? null
+            );
+            $commissionRate = $commissionPercent / 100;
             $vatRate = ((float) ($general_settings->vat_rate_on_commission ?? 19)) / 100;
             $commissionFactor = $commissionRate * (1 + $vatRate);
             $admin_commission_driver_offered = (($request->get('offered_price') / $currency) * $commissionFactor);
@@ -3060,7 +3065,8 @@ class UserController extends Controller
             $user_lang = "";
         }
 
-        $ride_details = TransportRideBook::query()->select('user_ride_booking.id as ride_id',
+        $rideSelect = [
+                'user_ride_booking.id as ride_id',
                 'user_ride_booking.ride_no as booking_no',
                 'user_ride_booking.vehicle_service_id',
                 'user_ride_booking.ride_type as ride_type',
@@ -3094,7 +3100,11 @@ class UserController extends Controller
                 'user_ride_booking.offered_price',
                 'user_ride_booking.is_way_point',
                 'user_ride_booking.way_point_status',
-            )
+        ];
+        if (Schema::hasColumn('user_ride_booking', 'delivery_variant')) {
+            $rideSelect[] = 'user_ride_booking.delivery_variant';
+        }
+        $ride_details = TransportRideBook::query()->select($rideSelect)
                 ->leftJoin('users', 'users.id', '=', 'user_ride_booking.user_id')
 //                ->whereNull('users.deleted_at')
                 ->where('user_ride_booking.id', $request->get('ride_id'))->first();
@@ -3236,7 +3246,13 @@ class UserController extends Controller
                 if (in_array((int) $ride_details->ride_status, [4, 9, 10], true)) {
                     $ride_details_arr = array_merge(
                         $ride_details_arr,
-                        RideInvoiceHelper::breakdownForCurrency((float) $ride_details->offered_price, (float) $currency)
+                        RideInvoiceHelper::breakdownForCurrency(
+                            (float) $ride_details->offered_price,
+                            (float) $currency,
+                            null,
+                            (int) $ride_details->vehicle_service_id,
+                            $ride_details->delivery_variant ?? null
+                        )
                     );
                 }
                 return response()->json([
@@ -4604,7 +4620,11 @@ class UserController extends Controller
                 //get wallet balance
                 $last_amount = $this->notificationClass->getWalletBalance($request->get('user_id'));
                 // admin commission of user offered price
-                $commissionRate = ((float) ($service_setting->admin_commission ?? 8)) / 100;
+                $commissionPercent = VehicleCommissionHelper::resolvePercent(
+                    (int) $ride->vehicle_service_id,
+                    $ride->delivery_variant ?? null
+                );
+                $commissionRate = $commissionPercent / 100;
                 $vatRate = ((float) ($general_settings->vat_rate_on_commission ?? 19)) / 100;
                 $admin_commission_user_offered = ($ride->offered_price * $commissionRate * (1 + $vatRate));
                 if ($last_amount < $admin_commission_user_offered) {

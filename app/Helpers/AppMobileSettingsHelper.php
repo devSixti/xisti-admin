@@ -67,6 +67,7 @@ class AppMobileSettingsHelper
             'fare_negotiation_step' => (int) ($general->fare_negotiation_step ?? config('xisti.fare_negotiation_step_cop', 500)),
             'vat_rate_on_commission' => (float) ($general->vat_rate_on_commission ?? 19),
             'admin_commission_percent' => (float) ($service->admin_commission ?? config('xisti.default_commission_percent', 8)),
+            'commission_rates_by_variant' => VehicleCommissionHelper::ratesMapForMobile(),
             'driver_can_cancel_until_status' => (int) ($general->driver_cancel_until_status ?? 3),
             'destination_payment_methods' => DestinationPaymentHelper::catalogForMobileApi($general),
         ], MobileFeatureFlagsHelper::apiPayload($general));

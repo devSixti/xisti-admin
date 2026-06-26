@@ -196,7 +196,8 @@ class UpdateRegisterController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required"
+            "access_token" => "required",
+            "channel" => "nullable|in:sms,whatsapp",
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -225,7 +226,8 @@ class UpdateRegisterController extends Controller
             ]);
         }
         if ($user->verified_at == Null) {
-            $sendResult = $this->tokenClassApi->sendUserSmsVerification($user->id);
+            $channel = $request->get('channel', 'sms');
+            $sendResult = $this->tokenClassApi->sendUserSmsVerification($user->id, $channel);
             if ($sendResult instanceof \Illuminate\Http\JsonResponse) {
                 return $sendResult;
             }

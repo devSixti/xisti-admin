@@ -10,6 +10,7 @@ namespace App\Classes;
 
 use App\Helpers\FcmPushHelper;
 use App\Helpers\PushEventTemplateHelper;
+use App\Helpers\VehicleCommissionHelper;
 use App\Jobs\AutoMail;
 use App\Jobs\FavDriverSendNotification;
 use App\Jobs\NearestAlgoSendDriverNotification;
@@ -100,11 +101,10 @@ class NotificationClass
             }
 
             $service_settings = ServiceSettings::query()->first();
-            if ($service_settings != Null) {
-                $admin_commission = $service_settings->admin_commission;
-            } else {
-                $admin_commission = 0;
-            }
+            $commissionPercent = VehicleCommissionHelper::resolvePercent(
+                (int) $ride->vehicle_service_id,
+                $ride->delivery_variant ?? null
+            );
 
             $user_details = User::query()->where('id',$ride->user_id)->where('status',1)->whereNull('deleted_at')->first();
             if($user_details == Null){
@@ -173,8 +173,8 @@ class NotificationClass
                     $ride->driver_id = $driver_id;
                     $ride->offered_price = $driver_bid->offered_price;
                     $ride->total_pay = $driver_bid->offered_price;
-                    $ride->admin_commission = round((($driver_bid->offered_price * $admin_commission) / 100), 2);
-                    $ride->driver_amount = $driver_bid->offered_price - round((($driver_bid->offered_price * $admin_commission) / 100), 2);
+                    $ride->admin_commission = round((($driver_bid->offered_price * $commissionPercent) / 100), 2);
+                    $ride->driver_amount = $driver_bid->offered_price - round((($driver_bid->offered_price * $commissionPercent) / 100), 2);
                     $ride->save();
 
                 if ($user_details->pending_refer_discount > 0) {
@@ -1117,11 +1117,10 @@ class NotificationClass
             }
 
             $service_settings = ServiceSettings::query()->first();
-            if ($service_settings != Null) {
-                $admin_commission = $service_settings->admin_commission;
-            } else {
-                $admin_commission = 0;
-            }
+            $commissionPercent = VehicleCommissionHelper::resolvePercent(
+                (int) $ride->vehicle_service_id,
+                $ride->delivery_variant ?? null
+            );
 
             $driver_detail = TransportDriverDetails::query()
                 ->select('transport_driver_details.*','users.first_name as driver_name','users.device_token','users.login_device','users.language','users.id as user_id')
@@ -1158,8 +1157,8 @@ class NotificationClass
                 $ride->vehicle_type_id = $driver_detail->vehicle_type_id;
                 $ride->driver_name = $driver_detail->driver_name;
                 $ride->driver_id = $driver_id;
-                $ride->admin_commission = round(($ride->total_pay * $admin_commission) / 100, 2);
-                $ride->driver_amount = $ride->total_pay - round(($ride->total_pay * $admin_commission) / 100, 2);
+                $ride->admin_commission = round(($ride->total_pay * $commissionPercent) / 100, 2);
+                $ride->driver_amount = $ride->total_pay - round(($ride->total_pay * $commissionPercent) / 100, 2);
                 $ride->save();
 
                 if ($user->pending_refer_discount > 0) {

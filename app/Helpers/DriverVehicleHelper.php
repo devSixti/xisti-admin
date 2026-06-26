@@ -62,9 +62,9 @@ class DriverVehicleHelper
             $serviceId = (int) ($item['service_id'] ?? 0);
             if ($serviceId === 1) {
                 foreach ([
+                    XistiVehicleVariantHelper::CARRO_ECONOMICO,
                     XistiVehicleVariantHelper::CARRO_ECO,
                     XistiVehicleVariantHelper::CARRO_COMODO,
-                    XistiVehicleVariantHelper::CARRO_ECONOMICO,
                 ] as $variant) {
                     $row = $item;
                     $row['delivery_variant'] = $variant;
@@ -75,8 +75,8 @@ class DriverVehicleHelper
             }
             if ($serviceId === 3) {
                 foreach ([
-                    XistiVehicleVariantHelper::MOTO_ALTO,
                     XistiVehicleVariantHelper::MOTO_BAJO,
+                    XistiVehicleVariantHelper::MOTO_ALTO,
                 ] as $variant) {
                     $row = $item;
                     $row['delivery_variant'] = $variant;

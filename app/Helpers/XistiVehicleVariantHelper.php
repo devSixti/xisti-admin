@@ -37,7 +37,7 @@ class XistiVehicleVariantHelper
     {
         $v = self::normalize($variant);
         $labels = [
-            self::CARRO_ECO => 'Carro eco',
+            self::CARRO_ECO => 'Carro eléctrico',
             self::CARRO_COMODO => 'Carro cómodo',
             self::CARRO_ECONOMICO => 'Carro económico',
             self::MOTO_ALTO => 'Moto alto cilindraje',

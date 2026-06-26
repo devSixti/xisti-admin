@@ -25,26 +25,32 @@
     $storeGalleryOrder = [
         '01-splash.png',
         '02-rider-services.png',
+        '03-rider-offer.png',
         '04-rider-radar.png',
         '05-driver-incoming.png',
         '06-driver-detail.png',
+        '07-driver-active.png',
         '08-rider-active.png',
     ];
     $storeLabels = [
         '01-splash.png' => 'Splash XISTI',
         '02-rider-services.png' => 'Servicios pasajero',
-        '04-rider-radar.png' => 'Buscando conductor',
+        '03-rider-offer.png' => 'Proponer valor',
+        '04-rider-radar.png' => 'Radar en vivo',
         '05-driver-incoming.png' => 'Solicitud conductor',
         '06-driver-detail.png' => 'Detalle del viaje',
+        '07-driver-active.png' => 'Conductor en ruta',
         '08-rider-active.png' => 'Viaje en curso',
     ];
     $storeDesc = [
-        '01-splash.png' => 'Identidad Fácil y Seguro — movilidad urbana en Medellín desde el primer segundo.',
-        '02-rider-services.png' => 'Moto, Carro y Envío en un solo mapa. Elige el servicio y ofrece tu valor.',
-        '04-rider-radar.png' => 'Radar en vivo mientras llegan conductores. Ajusta el valor en pasos de $500 COP.',
-        '05-driver-incoming.png' => 'El conductor ve origen, destino, valor y perfil del pasajero al instante.',
-        '06-driver-detail.png' => 'Mapa, ruta, método de pago y contraofertas antes de aceptar el servicio.',
-        '08-rider-active.png' => 'Sigue a Carlos en el mapa con datos del vehículo y código de verificación.',
+        '01-splash.png' => 'Fácil y Seguro — la promesa de XISTI desde el primer segundo en Medellín.',
+        '02-rider-services.png' => 'Moto, Carro, Viajes y Envío en un mapa oscuro. Tú eliges el servicio.',
+        '03-rider-offer.png' => 'Define el monto a ofrecer, método de pago y detalles del envío antes de confirmar.',
+        '04-rider-radar.png' => 'Negocia en pasos de $500 COP mientras conductores cercanos responden a tu oferta.',
+        '05-driver-incoming.png' => 'El conductor en línea recibe origen, destino, valor y perfil del pasajero al instante.',
+        '06-driver-detail.png' => 'Ruta en mapa, método de pago y contraofertas antes de aceptar el servicio.',
+        '07-driver-active.png' => 'Gestiona recogida, llegada y estados del viaje con controles claros en pantalla.',
+        '08-rider-active.png' => 'Sigue a tu conductor en el mapa con ETA, vehículo y código de verificación.',
     ];
     if (is_dir($storeDir)) {
         foreach ($storeGalleryOrder as $name) {
@@ -56,7 +62,7 @@
     }
     $shot = fn (string $name) => $storeShots[$name] ?? null;
     $heroPhone = $shot('02-rider-services.png') ?? $shot('08-rider-active.png') ?? $img('xisti-hero-medellin.png');
-    $driverPhone = $shot('06-driver-detail.png') ?? $shot('05-driver-incoming.png') ?? $heroPhone;
+    $driverPhone = $shot('07-driver-active.png') ?? $shot('06-driver-detail.png') ?? $shot('05-driver-incoming.png') ?? $heroPhone;
     $splashPhone = $shot('01-splash.png') ?? $heroPhone;
 @endphp
 <!DOCTYPE html>
@@ -74,7 +80,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="{{ asset('assets/front/css/xisti-homepage.css') }}?v=2.5.0" rel="stylesheet">
+    <link href="{{ asset('assets/front/css/xisti-homepage.css') }}?v=2.6.0" rel="stylesheet">
 </head>
 <body class="xisti-home">
 <div class="x-shell">

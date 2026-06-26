@@ -192,6 +192,8 @@ Route::prefix('admin')->group(function () {
 
                 Route::get('/service-setting', [TransportController::class,'getTransportServiceSetting'])->name('get:admin:service_setting');
                 Route::post('/update-service-setting', [TransportController::class,'postUpdateTransportServiceSetting'])->name('post:admin:update_service_setting');
+                Route::get('/vehicle-commission-rates', [TransportController::class,'getVehicleCommissionRates'])->name('get:admin:vehicle_commission_rates');
+                Route::post('/update-vehicle-commission-rates', [TransportController::class,'postUpdateVehicleCommissionRates'])->name('post:admin:update_vehicle_commission_rates');
 
                 Route::get('/ride-list/{status}', [TransportController::class,'getTransportServiceRideList'])->name('get:admin:ride_list');
                 Route::get('/ride-lists-new', [TransportController::class,'getTransportRideList'])->name('get:admin:ride_list_new');

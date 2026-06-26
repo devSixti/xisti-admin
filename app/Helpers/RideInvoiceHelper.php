@@ -9,15 +9,15 @@ class RideInvoiceHelper
     /**
      * Desglose comisión plataforma + IVA sobre comisión (valores en moneda base del viaje).
      */
-    public static function breakdown(float $tripValue, ?object $generalSettings = null): array
-    {
+    public static function breakdown(
+        float $tripValue,
+        ?object $generalSettings = null,
+        ?int $vehicleServiceId = null,
+        ?string $deliveryVariant = null
+    ): array {
         $general = $generalSettings ?? request()->get('general_settings');
-        $service = ServiceSettings::query()->first();
 
-        $commissionPercent = (float) config('xisti.default_commission_percent', 8);
-        if ($service && $service->admin_commission > 0) {
-            $commissionPercent = (float) $service->admin_commission;
-        }
+        $commissionPercent = VehicleCommissionHelper::resolvePercent($vehicleServiceId, $deliveryVariant);
 
         $vatRate = (float) ($general->vat_rate_on_commission ?? 19);
 
@@ -37,9 +37,23 @@ class RideInvoiceHelper
         ];
     }
 
-    public static function breakdownForCurrency(float $tripValueBase, float $currencyRatio, ?object $generalSettings = null): array
+    public static function breakdownForRide(object $ride, ?object $generalSettings = null): array
     {
-        $base = self::breakdown($tripValueBase, $generalSettings);
+        $tripValue = (float) ($ride->offered_price ?? $ride->total_pay ?? 0);
+        $vehicleServiceId = isset($ride->vehicle_service_id) ? (int) $ride->vehicle_service_id : null;
+        $deliveryVariant = $ride->delivery_variant ?? null;
+
+        return self::breakdown($tripValue, $generalSettings, $vehicleServiceId, $deliveryVariant);
+    }
+
+    public static function breakdownForCurrency(
+        float $tripValueBase,
+        float $currencyRatio,
+        ?object $generalSettings = null,
+        ?int $vehicleServiceId = null,
+        ?string $deliveryVariant = null
+    ): array {
+        $base = self::breakdown($tripValueBase, $generalSettings, $vehicleServiceId, $deliveryVariant);
         $ratio = $currencyRatio > 0 ? $currencyRatio : 1;
 
         return [

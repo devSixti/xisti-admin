@@ -1007,6 +1007,21 @@ class AdminModuleSeeder extends Seeder
                 'is_access' => 1,
                 'module_category_type' => null
             ],
+            [
+                'id' => 68,
+                'parent_id' => 45,
+                'name' => 'Comisiones por vehículo',
+                'module_name' => 'service settings',
+                'match_url' => 'admin/vehicle-commission-rates',
+                'route_path' => 'get:admin:vehicle_commission_rates',
+                'route_path_arr' => '',
+                'image' => 'fa-percent',
+                'module_action' => 1,
+                'seq' => 12,
+                'status' => 1,
+                'is_access' => 1,
+                'module_category_type' => null
+            ],
         ];
         /*
         | upsert

@@ -434,7 +434,7 @@ class HomeController extends Controller
 
             $trip_value = (isset($ride_details->offered_price) && $ride_details->offered_price > 0) ? $ride_details->offered_price : 0;
             $settings = request()->get("general_settings");
-            $invoice = \App\Helpers\RideInvoiceHelper::breakdown((float) $trip_value, $settings);
+            $invoice = \App\Helpers\RideInvoiceHelper::breakdownForRide($ride_details, $settings);
             $commission_amount = $invoice['commission_amount'];
             $vat_on_commission = $invoice['vat_on_commission'];
             $total_deduction = $invoice['total_deduction'];

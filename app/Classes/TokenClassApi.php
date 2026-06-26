@@ -13,8 +13,11 @@ class TokenClassApi
     public const CHANNEL_SMS = 'sms';
     public const CHANNEL_WHATSAPP = 'whatsapp';
 
-    public function sendUserSmsVerification($user_id)
+    public function sendUserSmsVerification($user_id, string $channel = 'sms')
     {
+        $channel = in_array($channel, [self::CHANNEL_SMS, self::CHANNEL_WHATSAPP], true)
+            ? $channel
+            : self::CHANNEL_SMS;
         $user_details = User::query()->where('id', $user_id)->whereNull('deleted_at')->first();
         if ($user_details == Null) {
             return response()->json([
@@ -54,7 +57,11 @@ class TokenClassApi
                     ]);
                 }
 
-                return $this->dispatchTwilioVerify($user_details, $settings);
+                $channels = $channel === self::CHANNEL_WHATSAPP
+                    ? [self::CHANNEL_WHATSAPP]
+                    : [self::CHANNEL_SMS, self::CHANNEL_WHATSAPP];
+
+                return $this->dispatchTwilioVerify($user_details, $settings, $channels);
             }
         }
 
@@ -72,10 +79,9 @@ class TokenClassApi
             : self::CHANNEL_SMS;
     }
 
-    private function dispatchTwilioVerify(User $user_details, $settings)
+    private function dispatchTwilioVerify(User $user_details, $settings, array $channels)
     {
         $phone = $user_details->country_code.$user_details->contact_number;
-        $channels = [self::CHANNEL_SMS, self::CHANNEL_WHATSAPP];
         $lastException = null;
 
         foreach ($channels as $index => $channel) {
@@ -105,7 +111,7 @@ class TokenClassApi
                     'channel' => $channel,
                     'error' => $e->getMessage(),
                 ]);
-                if ($index === 0 && $this->shouldFallbackSmsToWhatsapp($e)) {
+                if ($index === 0 && count($channels) > 1 && $this->shouldFallbackSmsToWhatsapp($e)) {
                     continue;
                 }
                 break;
