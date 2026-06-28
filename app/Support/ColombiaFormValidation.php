@@ -139,6 +139,31 @@ class ColombiaFormValidation
         return (bool) preg_match('/^[0-9]{10}$/', $digits);
     }
 
+    /**
+     * E.164 destination for Twilio Verify (+573001234567 for Colombia).
+     */
+    public static function formatSmsDestination(?string $countryCode, ?string $contactNumber): ?string
+    {
+        if (self::isColombiaCountryCode($countryCode)) {
+            $mobile = self::normalizeColombianMobile($contactNumber, $countryCode);
+            if (! self::isValidColombianMobile($mobile, $countryCode)) {
+                return null;
+            }
+
+            return '+57'.$mobile;
+        }
+
+        $dial = self::normalizeCountryDialCode($countryCode);
+        $digits = self::normalizePhone($contactNumber);
+        if ($digits === '') {
+            return null;
+        }
+
+        $dialDigits = self::normalizePhone($dial);
+
+        return '+'.$dialDigits.$digits;
+    }
+
     public static function isValidColombianCarPlate(?string $plate): bool
     {
         $normalized = self::normalizePlate($plate);

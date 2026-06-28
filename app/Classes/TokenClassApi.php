@@ -4,13 +4,16 @@ namespace App\Classes;
 
 use App\Models\User;
 use App\Models\UserVerification;
+use App\Support\ColombiaFormValidation;
 use App\Support\QaTestUserHelper;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Twilio\Rest\Client;
 
 class TokenClassApi
 {
     public const CHANNEL_SMS = 'sms';
+
     public const CHANNEL_WHATSAPP = 'whatsapp';
 
     public function sendUserSmsVerification($user_id, string $channel = 'sms')
@@ -31,7 +34,7 @@ class TokenClassApi
             $localOtp = new UserVerification();
             $localOtp->user_id = $user_details->id;
             $localOtp->token = 'qa-test-bypass';
-            $localOtp->verification_channel = self::CHANNEL_SMS;
+            $this->assignVerificationChannel($localOtp, self::CHANNEL_SMS);
             $localOtp->save();
             Log::info('XISTI QA OTP bypass: code issued without Twilio.', ['user_id' => $user_details->id]);
 
@@ -70,6 +73,10 @@ class TokenClassApi
 
     public static function lastChannelForUser(int $userId): string
     {
+        if (! Schema::hasColumn('user_verification', 'verification_channel')) {
+            return self::CHANNEL_SMS;
+        }
+
         $channel = UserVerification::query()
             ->where('user_id', $userId)
             ->value('verification_channel');
@@ -81,21 +88,37 @@ class TokenClassApi
 
     private function dispatchTwilioVerify(User $user_details, $settings, array $channels)
     {
-        $phone = $user_details->country_code.$user_details->contact_number;
+        $phone = ColombiaFormValidation::formatSmsDestination(
+            $user_details->country_code,
+            $user_details->contact_number
+        );
+        if ($phone === null) {
+            Log::warning('Invalid SMS destination for user OTP.', [
+                'user_id' => $user_details->id,
+                'country_code' => $user_details->country_code,
+                'contact_number' => $user_details->contact_number,
+            ]);
+
+            return response()->json([
+                'status' => 0,
+                'message' => __('user_messages.385'),
+                'message_code' => 385,
+            ]);
+        }
+
+        $twilio = new Client($settings->twilio_service_key, $settings->twilio_auth_token);
+        $serviceSid = $settings->twilio_verify_service_key;
         $lastException = null;
 
         foreach ($channels as $index => $channel) {
             try {
-                $twilio = new Client($settings->twilio_service_key, $settings->twilio_auth_token);
-                $verification = $twilio->verify->v2->services($settings->twilio_verify_service_key)
+                $this->cancelStoredPendingVerification($twilio, $serviceSid, (int) $user_details->id);
+
+                $verification = $twilio->verify->v2->services($serviceSid)
                     ->verifications
                     ->create($phone, $channel, ['locale' => 'es']);
-                UserVerification::query()->where('user_id', $user_details->id)->delete();
-                $new_otp = new UserVerification();
-                $new_otp->user_id = $user_details->id;
-                $new_otp->token = $verification->sid;
-                $new_otp->verification_channel = $channel;
-                $new_otp->save();
+
+                $this->persistVerificationRecord((int) $user_details->id, $verification->sid, $channel);
 
                 if ($index > 0) {
                     Log::info('XISTI OTP delivered via WhatsApp after SMS fallback.', [
@@ -111,6 +134,9 @@ class TokenClassApi
                     'channel' => $channel,
                     'error' => $e->getMessage(),
                 ]);
+                if ($this->isTwilioVerifyRateLimit($e)) {
+                    break;
+                }
                 if ($index === 0 && count($channels) > 1 && $this->shouldFallbackSmsToWhatsapp($e)) {
                     continue;
                 }
@@ -121,6 +147,7 @@ class TokenClassApi
         Log::error('Twilio Verify sendUserSmsVerification failed.', [
             'user_id' => $user_details->id,
             'error' => $lastException?->getMessage(),
+            'rate_limited' => $lastException !== null && $this->isTwilioVerifyRateLimit($lastException),
         ]);
 
         return response()->json([
@@ -128,6 +155,65 @@ class TokenClassApi
             'message' => __('user_messages.9'),
             'message_code' => 9,
         ]);
+    }
+
+    private function cancelStoredPendingVerification(Client $twilio, string $serviceSid, int $userId): void
+    {
+        $stored = UserVerification::query()->where('user_id', $userId)->first();
+        if ($stored === null || trim((string) $stored->token) === '') {
+            return;
+        }
+
+        $verificationSid = trim((string) $stored->token);
+        try {
+            $current = $twilio->verify->v2->services($serviceSid)
+                ->verifications($verificationSid)
+                ->fetch();
+
+            if (($current->status ?? '') === 'pending') {
+                $twilio->verify->v2->services($serviceSid)
+                    ->verifications($verificationSid)
+                    ->update('canceled');
+
+                Log::info('Canceled pending Twilio verification before sending a new OTP.', [
+                    'user_id' => $userId,
+                    'verification_sid' => $verificationSid,
+                    'channel' => $current->channel ?? null,
+                ]);
+            }
+        } catch (\Throwable $e) {
+            Log::info('No active Twilio verification to cancel before OTP resend.', [
+                'user_id' => $userId,
+                'verification_sid' => $verificationSid,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    private function persistVerificationRecord(int $userId, string $verificationSid, string $channel): void
+    {
+        UserVerification::query()->where('user_id', $userId)->delete();
+        $record = new UserVerification();
+        $record->user_id = $userId;
+        $record->token = $verificationSid;
+        $this->assignVerificationChannel($record, $channel);
+        $record->save();
+    }
+
+    private function assignVerificationChannel(UserVerification $record, string $channel): void
+    {
+        if (Schema::hasColumn('user_verification', 'verification_channel')) {
+            $record->verification_channel = $channel;
+        }
+    }
+
+    private function isTwilioVerifyRateLimit(\Exception $e): bool
+    {
+        $message = strtolower($e->getMessage());
+
+        return str_contains($message, '60203')
+            || str_contains($message, 'max send attempts')
+            || str_contains($message, 'too many requests');
     }
 
     private function shouldFallbackSmsToWhatsapp(\Exception $e): bool

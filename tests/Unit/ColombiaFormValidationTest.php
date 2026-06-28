@@ -17,4 +17,12 @@ class ColombiaFormValidationTest extends TestCase
     {
         $this->assertFalse(ColombiaFormValidation::isValidColombianMobile('12345', '+57'));
     }
+
+    public function test_format_sms_destination_returns_e164_for_colombia(): void
+    {
+        $this->assertSame(
+            '+573001234567',
+            ColombiaFormValidation::formatSmsDestination('+57', '3001234567')
+        );
+    }
 }
