@@ -139,6 +139,17 @@ class ColombiaFormValidation
         return (bool) preg_match('/^[0-9]{10}$/', $digits);
     }
 
+    public static function isValidInternationalMobile(?string $phone, ?string $countryCode = null): bool
+    {
+        if (self::isColombiaCountryCode($countryCode)) {
+            return self::isValidColombianMobile($phone, $countryCode);
+        }
+
+        $digits = self::normalizeColombianMobile($phone, $countryCode);
+
+        return $digits !== '' && strlen($digits) >= 6 && strlen($digits) <= 15;
+    }
+
     /**
      * E.164 destination for Twilio Verify (+573001234567 for Colombia).
      */

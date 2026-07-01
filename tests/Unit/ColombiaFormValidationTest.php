@@ -25,4 +25,18 @@ class ColombiaFormValidationTest extends TestCase
             ColombiaFormValidation::formatSmsDestination('+57', '3001234567')
         );
     }
+
+    public function test_format_sms_destination_returns_e164_for_united_states(): void
+    {
+        $this->assertSame(
+            '+15551234567',
+            ColombiaFormValidation::formatSmsDestination('+1', '5551234567')
+        );
+    }
+
+    public function test_validates_international_mobile_numbers(): void
+    {
+        $this->assertTrue(ColombiaFormValidation::isValidInternationalMobile('5551234567', '+1'));
+        $this->assertFalse(ColombiaFormValidation::isValidInternationalMobile('123', '+1'));
+    }
 }

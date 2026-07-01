@@ -14,11 +14,7 @@ class ColombianMobileNumber implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if ($this->countryCode !== null && !ColombiaFormValidation::isColombiaCountryCode($this->countryCode)) {
-            return;
-        }
-
-        if (!ColombiaFormValidation::isValidColombianMobile($value, $this->countryCode)) {
+        if (!ColombiaFormValidation::isValidInternationalMobile($value, $this->countryCode)) {
             $fail(__('user_messages.385'));
         }
     }
