@@ -11,15 +11,22 @@ class SosContactListHelper
 {
     public static function forUser(?User $user, string $userLangPrefix = ''): Collection
     {
+        $localizedNameColumn = $userLangPrefix . 'name';
         $adminContacts = Sos::query()
             ->select(
                 'id',
-                $userLangPrefix . 'name as name',
+                'name',
+                DB::raw("COALESCE(NULLIF(TRIM({$localizedNameColumn}), ''), name) as name"),
                 'country_code',
                 DB::raw("CONCAT('',contact_number) as contact_number")
             )
             ->where('status', 1)
-            ->get();
+            ->get()
+            ->map(function ($contact) use ($userLangPrefix) {
+                $contact->name = self::translateKnownSosName((string) ($contact->name ?? ''), $userLangPrefix);
+
+                return $contact;
+            });
 
         if ($user === null) {
             return $adminContacts;
@@ -52,6 +59,23 @@ class SosContactListHelper
         })->values();
 
         return collect([$emergencyEntry])->concat($filtered);
+    }
+
+    private static function translateKnownSosName(string $name, string $userLangPrefix): string
+    {
+        if ($userLangPrefix !== 'es_') {
+            return $name;
+        }
+
+        $key = strtolower(trim($name));
+
+        return match ($key) {
+            'health', 'helth' => 'Salud',
+            'police' => 'Policía',
+            'fire', 'fire department' => 'Bomberos',
+            'emergency' => 'Emergencia',
+            default => $name,
+        };
     }
 
     private static function normalizePhoneKey(string $countryCode, string $contactNumber): string

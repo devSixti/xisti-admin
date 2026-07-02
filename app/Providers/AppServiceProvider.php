@@ -94,7 +94,7 @@ class AppServiceProvider extends ServiceProvider
             'chat_replace_domain' => $this->chat_replace_domain,
         ]);
 
-        $this->rateLimit('daily-map-call-limit', 500);
+        $this->rateLimit('daily-map-call-limit', 2000);
     }
     private function rateLimit($key,$count): void
     {

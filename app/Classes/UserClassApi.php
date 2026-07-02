@@ -878,6 +878,8 @@ class UserClassApi
                 "other_user_contact_number" => $ride->other_user_contact_number,
                 "sos_contact_list" => $sos,
                 "order_chat_number" => (new FirebaseService())->CreateOrderNumberForChat($ride->ride_no,$ride->id) ,//for fire base chat
+                "destination_payment_method" => $ride->destination_payment_method ?? '',
+                "destination_payment_label" => DestinationPaymentHelper::label($ride->destination_payment_method ?? null, $user_language),
             ];
 
             if ($forTAD == true) {
@@ -1987,7 +1989,13 @@ class UserClassApi
     {
         $required_documents = RequiredDocuments::query()->where('status', 1)->get();
         $document_list = [];
-        if ($required_documents != Null) {
+        if ($required_documents->isEmpty()) {
+            User::query()
+                ->where('id', $user_id)
+                ->where('driver_doc_status', '!=', 1)
+                ->update(['driver_doc_status' => 1]);
+            $doc_status = 1;
+        } elseif ($required_documents != Null) {
             foreach ($required_documents as $document) {
                 $get_driver_document = ProviderDocuments::query()->where('user_id', $user_id)->where('req_document_id', $document->id)->first();
                 $document_list[] = [

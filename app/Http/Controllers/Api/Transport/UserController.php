@@ -3064,6 +3064,9 @@ class UserController extends Controller
         }else{
             $user_lang = "";
         }
+        $driver_language = (isset($user_check->language) && $user_check->language != null && $user_check->language != '')
+            ? $user_check->language
+            : 'en';
 
         $rideSelect = [
                 'user_ride_booking.id as ride_id',
@@ -3103,6 +3106,9 @@ class UserController extends Controller
         ];
         if (Schema::hasColumn('user_ride_booking', 'delivery_variant')) {
             $rideSelect[] = 'user_ride_booking.delivery_variant';
+        }
+        if (Schema::hasColumn('user_ride_booking', 'destination_payment_method')) {
+            $rideSelect[] = 'user_ride_booking.destination_payment_method';
         }
         $ride_details = TransportRideBook::query()->select($rideSelect)
                 ->leftJoin('users', 'users.id', '=', 'user_ride_booking.user_id')
@@ -3241,6 +3247,8 @@ class UserController extends Controller
                     "estimate_price" => isset($estimate_price) ? $estimate_price : 0,
                     "vehicle_image" => url('/assets/images/provider-vehicle-image/'.$driver_details->vehicle_image),
                     "order_chat_number" => (new FirebaseService())->CreateOrderNumberForChat($ride_details->booking_no,$ride_details->ride_id) ,//for fire base chat
+                    "destination_payment_method" => $ride_details->destination_payment_method ?? '',
+                    "destination_payment_label" => DestinationPaymentHelper::label($ride_details->destination_payment_method ?? null, $driver_language),
                     "driver_can_cancel" => AppMobileSettingsHelper::driverCanCancelRide((int) $ride_details->ride_status),
                 ];
                 if (in_array((int) $ride_details->ride_status, [4, 9, 10], true)) {

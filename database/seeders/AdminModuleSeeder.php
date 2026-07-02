@@ -191,7 +191,7 @@ class AdminModuleSeeder extends Seeder
                 'image' => 'icon-home',
                 'module_action' => 1,
                 'seq' => 14,
-                'status' => 1,
+                'status' => 0,
                 'is_access' => 1,
                 'module_category_type' => null
             ],
@@ -206,7 +206,7 @@ class AdminModuleSeeder extends Seeder
                 'image' => 'icon-home',
                 'module_action' => 1,
                 'seq' => 15,
-                'status' => 1,
+                'status' => 0,
                 'is_access' => 1,
                 'module_category_type' => null
             ],
@@ -221,7 +221,7 @@ class AdminModuleSeeder extends Seeder
                 'image' => 'icon-home',
                 'module_action' => 1,
                 'seq' => 16,
-                'status' => 1,
+                'status' => 0,
                 'is_access' => 1,
                 'module_category_type' => null
             ],
@@ -236,7 +236,7 @@ class AdminModuleSeeder extends Seeder
                 'image' => 'icon-home',
                 'module_action' => 1,
                 'seq' => 17,
-                'status' => 1,
+                'status' => 0,
                 'is_access' => 1,
                 'module_category_type' => null
             ],
@@ -266,7 +266,7 @@ class AdminModuleSeeder extends Seeder
                 'image' => 'icon-home',
                 'module_action' => 1,
                 'seq' => 18,
-                'status' => 1,
+                'status' => 0,
                 'is_access' => 1,
                 'module_category_type' => null
             ],
@@ -281,7 +281,7 @@ class AdminModuleSeeder extends Seeder
                 'image' => 'icon-home',
                 'module_action' => 1,
                 'seq' => 19,
-                'status' => 1,
+                'status' => 0,
                 'is_access' => 1,
                 'module_category_type' => null
             ],
@@ -296,7 +296,7 @@ class AdminModuleSeeder extends Seeder
                 'image' => 'icon-home',
                 'module_action' => 1,
                 'seq' => 20,
-                'status' => 1,
+                'status' => 0,
                 'is_access' => 1,
                 'module_category_type' => null
             ],
@@ -311,7 +311,7 @@ class AdminModuleSeeder extends Seeder
                 'image' => 'icon-home',
                 'module_action' => 1,
                 'seq' => 21,
-                'status' => 1,
+                'status' => 0,
                 'is_access' => 1,
                 'module_category_type' => null
             ],
@@ -401,7 +401,7 @@ class AdminModuleSeeder extends Seeder
                 'image' => 'icon-home',
                 'module_action' => 1,
                 'seq' => 22,
-                'status' => 1,
+                'status' => 0,
                 'is_access' => 0,
                 'module_category_type' => null
             ],
@@ -416,7 +416,7 @@ class AdminModuleSeeder extends Seeder
                 'image' => 'icon-home',
                 'module_action' => 1,
                 'seq' => 28,
-                'status' => 1,
+                'status' => 0,
                 'is_access' => 0,
                 'module_category_type' => null
             ],
@@ -431,7 +431,7 @@ class AdminModuleSeeder extends Seeder
                 'image' => 'icon-home',
                 'module_action' => 1,
                 'seq' => 29,
-                'status' => 1,
+                'status' => 0,
                 'is_access' => 0,
                 'module_category_type' => null
             ],
@@ -461,7 +461,7 @@ class AdminModuleSeeder extends Seeder
                 'image' => 'icon-home',
                 'module_action' => 1,
                 'seq' => 31,
-                'status' => 1,
+                'status' => 0,
                 'is_access' => 0,
                 'module_category_type' => null
             ],
@@ -611,7 +611,7 @@ class AdminModuleSeeder extends Seeder
                 'image' => 'icon-home',
                 'module_action' => 1,
                 'seq' => 22,
-                'status' => 1,
+                'status' => 0,
                 'is_access' => 0,
                 'module_category_type' => null
             ],

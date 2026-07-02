@@ -465,7 +465,7 @@ class NotificationClass
                 "click_action" => "FLUTTER_NOTIFICATION_CLICK"
             ];
         if ($title !== '' || $message !== '') {
-            FcmPushHelper::sendToToken($device_token, $title, $message, $extraNotificationData, $event['sound']);
+            FcmPushHelper::sendToTokenForLoginDevice($device_token, $title, $message, $extraNotificationData, $event['sound'], (int) $login_device);
         }
 
         return response()->json(['status' => 1, 'message' => __('user_messages.1'), 'message_code' => 1]);
@@ -524,7 +524,7 @@ class NotificationClass
                 "click_action" => "FLUTTER_NOTIFICATION_CLICK"
             ];
         if ($title !== '' || $message !== '') {
-            FcmPushHelper::sendToToken($device_token, $title, $message, $extraNotificationData, $event['sound']);
+            FcmPushHelper::sendToTokenForLoginDevice($device_token, $title, $message, $extraNotificationData, $event['sound'], (int) $login_device);
         }
 
         return response()->json(['status' => 1, 'message' => __('user_messages.1'), 'message_code' => 1]);
@@ -750,7 +750,7 @@ class NotificationClass
         ];
 
         if ($title !== '' || $message !== '') {
-            FcmPushHelper::sendToTokens($provider_token, $title, $message, $extraNotificationData, $iosSound);
+            FcmPushHelper::sendToTokens($provider_token, $title, $message, $extraNotificationData, $iosSound, true);
         }
 
         return response()->json(['status' => 1, 'message' => __('user_messages.1'), 'message_code' => 1]);
@@ -789,7 +789,7 @@ class NotificationClass
                 if ($ride_way_point->way_point_2 != Null && $ride_way_point->lat_long_2 != Null) {
                     $lat_long_2 = explode(",", $ride_way_point->lat_long_2);
                     $way_points[] = [
-                        "address" => $ride_way_point->way_point_1,
+                        "address" => $ride_way_point->way_point_2,
                         "address_lat" => trim($lat_long_2[0]),
                         "address_long" => trim($lat_long_2[1])
                     ];
@@ -1073,8 +1073,23 @@ class NotificationClass
         return $user_time_zone;
     }
 
-    public function sendExpiryNotification($device_token,$warning_days = 0)
+    public function sendExpiryNotification($device_token, $warning_days = 0)
     {
+        if (is_array($device_token)) {
+            $tokens = array_values(array_filter($device_token, static fn ($token) => trim((string) $token) !== ''));
+            if ($tokens === []) {
+                return null;
+            }
+            $this->sendEventPushToTokens(
+                'driver_document_expiry',
+                $tokens,
+                'es',
+                ['days' => (string) $warning_days]
+            );
+
+            return response()->json(['status' => 1, 'message' => __('user_messages.1'), 'message_code' => 1]);
+        }
+
         return $this->sendEventPushToToken(
             'driver_document_expiry',
             $device_token,
@@ -1397,7 +1412,7 @@ class NotificationClass
      * @param  array<string, string|int|float>  $vars
      * @param  array<string, string>  $extraData
      */
-    private function sendEventPushToToken(string $eventKey, ?string $token, ?string $lang = 'es', array $vars = [], array $extraData = []): mixed
+    private function sendEventPushToToken(string $eventKey, ?string $token, ?string $lang = 'es', array $vars = [], array $extraData = [], ?int $loginDevice = null): mixed
     {
         if ($token === null || trim($token) === '') {
             return null;
@@ -1426,7 +1441,7 @@ class NotificationClass
             'dispatch_ts' => (string) time(),
         ], $extraData);
 
-        return FcmPushHelper::sendToToken($token, $event['title'], $event['message'], $payload, $event['sound']);
+        return FcmPushHelper::sendToTokenForLoginDevice($token, $event['title'], $event['message'], $payload, $event['sound'], $loginDevice);
     }
 
     /**
@@ -1468,7 +1483,7 @@ class NotificationClass
             'dispatch_ts' => (string) time(),
         ], $extraData);
 
-        FcmPushHelper::sendToTokens($tokens, $event['title'], $event['message'], $payload, $event['sound']);
+        FcmPushHelper::sendToTokens($tokens, $event['title'], $event['message'], $payload, $event['sound'], true);
     }
 
     private function dispatchActionForEventKey(string $eventKey): string
