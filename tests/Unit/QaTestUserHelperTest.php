@@ -10,15 +10,21 @@ use Tests\TestCase;
 
 class QaTestUserHelperTest extends TestCase
 {
+    private function makeUser(string $phone, int $fixUserShow = 1, int $isDefaultUser = 1): User
+    {
+        $user = new User();
+        $user->contact_number = $phone;
+        $user->country_code = XistiQaTestUserSeeder::QA_COUNTRY_CODE;
+        $user->fix_user_show = $fixUserShow;
+        $user->is_default_user = $isDefaultUser;
+
+        return $user;
+    }
+
     public function test_accepts_fixed_otp_for_rider_and_driver_qa_phones(): void
     {
         foreach (QaTestUserHelper::qaPhoneLocals() as $phone) {
-            $user = new User([
-                'contact_number' => $phone,
-                'country_code' => XistiQaTestUserSeeder::QA_COUNTRY_CODE,
-                'fix_user_show' => 1,
-                'is_default_user' => 1,
-            ]);
+            $user = $this->makeUser($phone);
             $this->assertTrue(QaTestUserHelper::isQaUser($user), "Expected QA user for {$phone}");
             $this->assertTrue(QaTestUserHelper::acceptsFixedOtp($user, LocalOtpBypass::FIXED_OTP));
             $this->assertFalse(QaTestUserHelper::acceptsFixedOtp($user, '000000'));
@@ -27,12 +33,7 @@ class QaTestUserHelperTest extends TestCase
 
     public function test_flags_alone_do_not_grant_qa_otp_bypass(): void
     {
-        $user = new User([
-            'contact_number' => '3001111111',
-            'country_code' => XistiQaTestUserSeeder::QA_COUNTRY_CODE,
-            'fix_user_show' => 1,
-            'is_default_user' => 1,
-        ]);
+        $user = $this->makeUser('3001111111');
         $this->assertFalse(QaTestUserHelper::isQaUser($user));
         $this->assertFalse(QaTestUserHelper::acceptsFixedOtp($user, LocalOtpBypass::FIXED_OTP));
     }
