@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-use App\Support\MobileAuthRateLimit;
+use App\Models\GeneralSettings;
 use App\Models\LanguageConstant;
+use App\Support\MobileAuthRateLimit;
 use App\Models\WorldCurrency;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
