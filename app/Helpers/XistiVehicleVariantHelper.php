@@ -36,7 +36,18 @@ class XistiVehicleVariantHelper
     public static function labelFor(?string $variant, ?string $fallback = null): string
     {
         $v = self::normalize($variant);
-        $labels = [
+        $labels = self::matrixLabels();
+        if ($v !== '' && isset($labels[$v])) {
+            return $labels[$v];
+        }
+
+        return trim((string) $fallback) !== '' ? trim((string) $fallback) : 'Viaje';
+    }
+
+    /** @return array<string, string> slug => admin label */
+    public static function matrixLabels(): array
+    {
+        return [
             self::CARRO_ECO => 'Carro eléctrico',
             self::CARRO_COMODO => 'Carro cómodo',
             self::CARRO_ECONOMICO => 'Carro económico',
@@ -45,11 +56,13 @@ class XistiVehicleVariantHelper
             self::MOTO_MEDIO => 'Moto',
             self::BICICLETA => 'Bicicleta',
         ];
-        if ($v !== '' && isset($labels[$v])) {
-            return $labels[$v];
-        }
+    }
 
-        return trim((string) $fallback) !== '' ? trim((string) $fallback) : 'Viaje';
+    public static function isKnownVariant(?string $variant): bool
+    {
+        $v = self::normalize($variant);
+
+        return $v !== '' && isset(self::matrixLabels()[$v]);
     }
 
     /** API flag: ride was booked as taxi-class car (eco / económico). */

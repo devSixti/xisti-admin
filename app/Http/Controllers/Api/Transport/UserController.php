@@ -1086,9 +1086,17 @@ class UserController extends Controller
 
         if ((int) ($add_driver_vehicle_details->accept_delivery ?? 0) === 1
             && \Illuminate\Support\Facades\Schema::hasTable('vehicle_type_service_eligibility')) {
+            $vehicleTypeId = (int) $request->get('vehicle_type_id');
             \Illuminate\Support\Facades\DB::table('vehicle_type_service_eligibility')->updateOrInsert(
                 [
-                    'vehicle_type_id' => (int) $request->get('vehicle_type_id'),
+                    'vehicle_type_id' => $vehicleTypeId,
+                    'service_id' => $vehicleServiceId,
+                ],
+                ['updated_at' => now(), 'created_at' => now()]
+            );
+            \Illuminate\Support\Facades\DB::table('vehicle_type_service_eligibility')->updateOrInsert(
+                [
+                    'vehicle_type_id' => $vehicleTypeId,
                     'service_id' => 4,
                 ],
                 ['updated_at' => now(), 'created_at' => now()]
@@ -1225,41 +1233,9 @@ class UserController extends Controller
         $currency = $user_currency != Null ? $user_currency->ratio : 1;
 
         if($request->get('update_status') == 1){
-            if($general_settings != Null && $general_settings->auto_approve == 0){
-                $driver_document = ProviderDocuments::query()
-                    ->join('required_documents','required_documents.id','=','provider_documents.req_document_id')
-                    ->where('required_documents.status', 1)
-                    ->where('provider_documents.user_id', $request->get('user_id'));
-
-                $driver_pending_document = (clone $driver_document)->where('provider_documents.status',0)->first();
-                $driver_rejected_document = (clone $driver_document)->where('provider_documents.status',2)->first();
-                $driver_expired_document = (clone $driver_document)->where('provider_documents.status',3)->first();
-                if($driver_pending_document != Null){
-                    return response()->json([
-                        "status" => 0,
-                        "message" => __('driver_messages.370'),
-                        "message_code" => 370,
-                        "is_document_pending" => 1
-                    ]);
-                }
-                if($driver_rejected_document != Null){
-                    return response()->json([
-                        "status" => 0,
-                        "message" => __('driver_messages.368'),
-                        "message_code" => 370,
-                        "is_document_pending" => 1
-                    ]);
-                }
-                if($driver_expired_document != Null){
-                    return response()->json([
-                        "status" => 0,
-                        "message" => __('driver_messages.342'),
-                        "message_code" => 342,
-                        "is_document_expired" => 1
-                    ]);
-                }
+            if ($blocked = \App\Helpers\DriverDocumentGateHelper::onlineBlockResponse((int) $request->get('user_id'))) {
+                return $blocked;
             }
-
         }
         $user_details = User::query()->where('id',$request->get('user_id'))->where('status',1)->whereNull('deleted_at')->first();
         if($user_details == Null){
@@ -1402,7 +1378,8 @@ class UserController extends Controller
         $allowedServiceModes = array_values(array_unique($allowedServiceModes));
 
         $avatar = url('/assets/images/profile-images/customer/');
-        $expire_date_time = date('Y-m-d H:i:s', strtotime("-".$ride_expiry." minutes"));
+        \App\Helpers\RideLifecycleHelper::expireStalePendingRides();
+        $now = date('Y-m-d H:i:s');
 
             $available_ride_requests = TransportRideBook::query()
                 ->select('user_ride_booking.id as ride_id','user_ride_booking.ride_no','user_ride_booking.pickup_address','user_ride_booking.destination_address','users.rating','user_ride_booking.pickup_datetime as schedule_date',
@@ -1456,7 +1433,7 @@ class UserController extends Controller
         }
 
         $available_ride_requests = $available_ride_requests
-                ->where('user_ride_booking.ride_time_out', '>=', $expire_date_time)
+                ->where('user_ride_booking.ride_time_out', '>=', $now)
                 ->whereNull('users.deleted_at')
                 ->when($driver_details->child_seat != 1, function ($q) {
                     $q->where('user_ride_booking.child_seat', 0);
@@ -1851,7 +1828,7 @@ class UserController extends Controller
         if($ride_details->offered_price != $request->get('offered_price')){
             $ride_details->total_pay = $amount;
             $ride_details->offered_price = $amount;
-            $ride_details->ride_time_out = $date->format('Y-m-d H:i:s');
+            $ride_details->ride_time_out = \App\Helpers\RideLifecycleHelper::rideTimeoutFromNow();
             $ride_details->save();
             DriverBid::query()->where('ride_id',$request->get('ride_id'))->update(['status' => 2]);
             $this->notificationClass->userFareChangeNotification($request->get('ride_id'));

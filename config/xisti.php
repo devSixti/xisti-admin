@@ -12,6 +12,8 @@ return [
     'default_city' => env('XISTI_DEFAULT_CITY', 'Medellín'),
     'default_country' => env('XISTI_DEFAULT_COUNTRY', 'Colombia'),
     'fare_negotiation_step_cop' => (int) env('XISTI_FARE_NEGOTIATION_STEP', 500),
+    /** Max Google Maps proxy calls per device/session per day (autocomplete, geocode, routes). */
+    'maps_daily_limit' => (int) env('XISTI_MAPS_DAILY_LIMIT', 10000),
     'firebase_database_url' => env('FIREBASE_DATABASE_URL'),
     'fcm_user_topic' => env('FIREBASE_FCM_USER_TOPIC', 'XistiUser'),
     'fcm_driver_topic' => env('FIREBASE_FCM_DRIVER_TOPIC', 'XistiDriver'),

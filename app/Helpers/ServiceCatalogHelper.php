@@ -70,22 +70,23 @@ class ServiceCatalogHelper
 
     public static function eligibleServiceIdsForVehicleType(int $vehicleTypeId, int $fallbackServiceId): array
     {
-        if (!Schema::hasTable('vehicle_type_service_eligibility')) {
-            return array_values(array_filter([$fallbackServiceId], fn ($id) => $id > 0));
+        $ids = [];
+        if (Schema::hasTable('vehicle_type_service_eligibility')) {
+            $ids = DB::table('vehicle_type_service_eligibility')
+                ->where('vehicle_type_id', $vehicleTypeId)
+                ->pluck('service_id')
+                ->map(fn ($id) => (int) $id)
+                ->unique()
+                ->values()
+                ->all();
         }
 
-        $ids = DB::table('vehicle_type_service_eligibility')
-            ->where('vehicle_type_id', $vehicleTypeId)
-            ->pluck('service_id')
-            ->map(fn ($id) => (int) $id)
-            ->unique()
-            ->values()
-            ->all();
-        if (count($ids) === 0) {
-            return [$fallbackServiceId];
-        }
+        $merged = array_values(array_unique(array_filter(
+            array_merge($ids, [$fallbackServiceId]),
+            static fn ($id) => $id > 0
+        )));
 
-        return $ids;
+        return $merged !== [] ? $merged : [$fallbackServiceId];
     }
 
     /** Transport services (moto, carro) may receive envíos by default. */

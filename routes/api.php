@@ -54,7 +54,7 @@ Route::group(['middleware' => 'setLocaleLang'], function () {
 
             Route::prefix('customer')->group(function () {
 
-                Route::middleware('throttle:15,1')->group(function () {
+                Route::middleware('throttle:30,1')->group(function () {
                     Route::post('/login', [LoginController::class,'postCustomerLogin'])->name('post:customer:login');
                     Route::post('/register', [RegisterController::class,'postCustomerRegister'])->name('post:customer:register');
                 });

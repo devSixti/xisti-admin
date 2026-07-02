@@ -1349,6 +1349,17 @@ class TransportController extends Controller
         $transport_driver_details->plat_no = $request->get('plat_no');
         $transport_driver_details->model_year = $request->get('model_year');
         $transport_driver_details->vehicle_color = $request->get('vehicle_color');
+        if (\Illuminate\Support\Facades\Schema::hasColumn('transport_driver_details', 'delivery_variant')) {
+            $variant = \App\Helpers\XistiVehicleVariantHelper::normalize($request->get('delivery_variant'));
+            $transport_driver_details->delivery_variant = $variant !== '' && \App\Helpers\XistiVehicleVariantHelper::isKnownVariant($variant)
+                ? $variant
+                : null;
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('transport_driver_details', 'is_taxi')) {
+            $transport_driver_details->is_taxi = \App\Helpers\XistiVehicleVariantHelper::isTaxiEligibleVariant(
+                $transport_driver_details->delivery_variant ?? null
+            ) ? 1 : 0;
+        }
         $transport_driver_details->save();
 
         $provider_list_check = TransportDriverDetails::query()->select('users.is_driver_status as status')
@@ -2399,6 +2410,17 @@ class TransportController extends Controller
         $transport_driver->model_year = $request->get('model_year');
         $transport_driver->model_name = $request->get('model_name');
         $transport_driver->vehicle_color = $request->get('vehicle_color');
+        if (\Illuminate\Support\Facades\Schema::hasColumn('transport_driver_details', 'delivery_variant')) {
+            $variant = \App\Helpers\XistiVehicleVariantHelper::normalize($request->get('delivery_variant'));
+            $transport_driver->delivery_variant = $variant !== '' && \App\Helpers\XistiVehicleVariantHelper::isKnownVariant($variant)
+                ? $variant
+                : null;
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('transport_driver_details', 'is_taxi')) {
+            $transport_driver->is_taxi = \App\Helpers\XistiVehicleVariantHelper::isTaxiEligibleVariant(
+                $transport_driver->delivery_variant ?? null
+            ) ? 1 : 0;
+        }
 
         if ($request->get("service_id") == 1){
             $transport_driver->child_seat = ($request->get("child_seat") == "on")? 1 : 0;

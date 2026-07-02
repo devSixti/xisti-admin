@@ -28,6 +28,7 @@ use App\Helpers\EncomiendaHelper;
 use App\Helpers\RideKindHelper;
 use App\Helpers\AppMobileSettingsHelper;
 use App\Helpers\DestinationPaymentHelper;
+use App\Helpers\RideLifecycleHelper;
 use App\Rules\ColombianMobileNumber;
 use App\Rules\ColombianNationalId;
 use App\Support\ColombiaFormValidation;
@@ -503,9 +504,9 @@ class UserClassApi
         $ride->additional_request = ($request->get('additional_remarks') != "") ? $request->get('additional_remarks') : "";
         $ride->status = 0;
         $ride->driver_algorithm = $driver_algorithm;
-        $date = new \DateTime("now", new \DateTimeZone(config('app.timezone')) );
+        $date = new \DateTime('now', new \DateTimeZone(config('app.timezone')));
         $ride->retry_time = $date->format('Y-m-d H:i:s');
-        $ride->ride_time_out = $date->format('Y-m-d H:i:s');
+        $ride->ride_time_out = RideLifecycleHelper::rideTimeoutFromNow();
         $ride->is_auto_accept = $request['is_auto_accept'];
 
         if($request['ride_for_other'] == 1){

@@ -94,13 +94,44 @@ class AppServiceProvider extends ServiceProvider
             'chat_replace_domain' => $this->chat_replace_domain,
         ]);
 
-        $this->rateLimit('daily-map-call-limit', 2000);
+        $this->configureMapsDailyRateLimit();
     }
-    private function rateLimit($key,$count): void
+
+    private function configureMapsDailyRateLimit(): void
+    {
+        $dailyLimit = max(500, (int) config('xisti.maps_daily_limit', 10000));
+        RateLimiter::for('daily-map-call-limit', function (Request $request) use ($dailyLimit) {
+            $sessionId = trim((string) $request->header('session-id', ''));
+            $userId = $request->get('user_id');
+            $deviceIp = trim((string) $request->header('ip-address', ''));
+
+            $bucket = $sessionId !== ''
+                ? 'sess:'.$sessionId
+                : ($userId ? 'uid:'.$userId : ($deviceIp !== '' ? 'dev:'.$deviceIp : 'ip:'.$request->ip()));
+
+            return Limit::perDay($dailyLimit)
+                ->by($bucket)
+                ->response(function () use ($request) {
+                    $lang = strtolower((string) $request->header('select-language', 'es'));
+                    $message = str_starts_with($lang, 'es')
+                        ? 'Alcanzaste el límite diario de uso de mapas. Inténtalo mañana.'
+                        : 'You’ve reached your daily Google Maps usage limit. Please try again tomorrow.';
+
+                    return response()->json([
+                        'status' => 0,
+                        'message' => $message,
+                        'message_code' => 429,
+                    ], 429);
+                });
+        });
+    }
+
+    /** @deprecated use configureMapsDailyRateLimit */
+    private function rateLimit($key, $count): void
     {
         RateLimiter::for($key, function (Request $request) use ($count) {
             $bucket = $request->header('session-id')
-                ?: ('uid:' . ($request->get('user_id') ?? $request->ip()));
+                ?: ('uid:'.($request->get('user_id') ?? $request->ip()));
 
             return Limit::perDay($count)
                 ->by($bucket)

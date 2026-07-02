@@ -426,6 +426,18 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
+                                                        <label class="col-sm-4 col-form-label">Matriz XISTI (variante):<sup class="error">*</sup></label>
+                                                        <div class="col-sm-8">
+                                                            <select name="delivery_variant" id="delivery_variant" class="form-control" required>
+                                                                <option value="" disabled {{ empty($driver_detials->delivery_variant ?? '') ? 'selected' : '' }}>Seleccionar variante</option>
+                                                                @foreach(\App\Helpers\XistiVehicleVariantHelper::matrixLabels() as $slug => $label)
+                                                                    <option value="{{ $slug }}" {{ (isset($driver_detials) && ($driver_detials->delivery_variant ?? '') === $slug) ? 'selected' : '' }}>{{ $label }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                            <span class="error">{{ $errors->first('delivery_variant') }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
                                                         <label class="col-sm-4 col-form-label">Vehicle Company:<sup class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <input type="text" class="form-control" name="vehicle_company" required id="vehicle_company" placeholder="Vehicle Company Name" value="{{ (isset($driver_detials)) ? $driver_detials->vehicle_company : old('vehicle_company') }}">
