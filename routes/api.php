@@ -54,14 +54,16 @@ Route::group(['middleware' => 'setLocaleLang'], function () {
 
             Route::prefix('customer')->group(function () {
 
-                Route::middleware('throttle:30,1')->group(function () {
+                Route::middleware('throttle:customer-login')->group(function () {
                     Route::post('/login', [LoginController::class,'postCustomerLogin'])->name('post:customer:login');
                     Route::post('/register', [RegisterController::class,'postCustomerRegister'])->name('post:customer:register');
                 });
                 Route::post('/finger-login', [LoginController::class,'postCustomerFingerLogin'])->middleware('throttle:60,60')->name('post:customer:finger-login');
 
-                Route::middleware(['mobile.credentials', 'throttle:30,1'])->group(function () {
+                Route::middleware(['mobile.credentials', 'throttle:customer-otp'])->group(function () {
                     Route::post('/contact-verification', [UpdateRegisterController::class,'postCustomerContactVerification'])->name('post:customer:contact_verification');
+                });
+                Route::middleware(['mobile.credentials', 'throttle:customer-resend-otp'])->group(function () {
                     Route::post('/resend-otp-verification', [UpdateRegisterController::class,'postCustomerResendOtpVerification'])->name('post:customer:resend_otp_verification');
                 });
 

@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\GeneralSettings;
+use App\Support\MobileAuthRateLimit;
 use App\Models\LanguageConstant;
 use App\Models\WorldCurrency;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -95,6 +95,7 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         $this->configureMapsDailyRateLimit();
+        MobileAuthRateLimit::register();
     }
 
     private function configureMapsDailyRateLimit(): void
