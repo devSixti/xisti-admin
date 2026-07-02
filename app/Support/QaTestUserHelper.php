@@ -14,10 +14,7 @@ class QaTestUserHelper
     /** @return list<string> */
     public static function qaPhoneLocals(): array
     {
-        return [
-            XistiQaTestUserSeeder::QA_PHONE_LOCAL,
-            XistiQaTestUserSeeder::QA_DRIVER_PHONE_LOCAL,
-        ];
+        return XistiQaTestUserSeeder::qaPhoneLocals();
     }
 
     public static function isQaUser(?User $user): bool
