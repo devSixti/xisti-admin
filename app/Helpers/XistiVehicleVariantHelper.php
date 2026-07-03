@@ -21,6 +21,12 @@ class XistiVehicleVariantHelper
 
     public const BICICLETA = 'bicicleta';
 
+    public const MOTOCARGUERO = 'motocarguero';
+
+    public const CAMION_ACARREO = 'camion_acarreo';
+
+    public const JAULA_ACARREO = 'jaula_acarreo';
+
     public static function normalize(?string $variant): string
     {
         return trim((string) $variant);
@@ -55,6 +61,9 @@ class XistiVehicleVariantHelper
             self::MOTO_BAJO => 'Moto bajo cilindraje',
             self::MOTO_MEDIO => 'Moto',
             self::BICICLETA => 'Bicicleta',
+            self::MOTOCARGUERO => 'Motocarguero',
+            self::CAMION_ACARREO => 'Camión',
+            self::JAULA_ACARREO => 'Jaula',
         ];
     }
 

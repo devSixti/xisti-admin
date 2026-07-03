@@ -14,7 +14,7 @@ class DriverVehicleHelper
     /** vehicle_services.id excluidos del registro (envíos dedicados, motoratón deshabilitado). */
     public const EXCLUDED_SERVICE_IDS = [4, 5];
 
-    public const EXCLUDED_SERVICE_MODES = ['delivery', 'encomiendas'];
+    public const EXCLUDED_SERVICE_MODES = ['delivery', 'encomiendas', 'acarreos'];
 
     public static function registrationServiceList(
         string $langPrefix,
@@ -52,11 +52,11 @@ class DriverVehicleHelper
 
         $expanded = self::expandTransportVariants(self::sortRegistrationList($list), $vehicleIconUrl);
 
-        return self::sortRegistrationList(array_merge($expanded, self::bicicletaRegistrationRows(
-            $langPrefix,
-            $serviceIconUrl,
-            $vehicleIconUrl
-        )));
+        return self::sortRegistrationList(array_merge(
+            $expanded,
+            self::bicicletaRegistrationRows($langPrefix, $serviceIconUrl, $vehicleIconUrl),
+            self::acarreoRegistrationRows($langPrefix, $serviceIconUrl, $vehicleIconUrl)
+        ));
     }
 
     /**
@@ -167,7 +167,12 @@ class DriverVehicleHelper
 
     public static function isDeliveryOnlyRegistration(?string $deliveryVariant, int $serviceId): bool
     {
-        return $serviceId === 4;
+        if ($serviceId === 4) {
+            return true;
+        }
+        $acarreoId = AcarreoVehicleHelper::acarreosServiceId();
+
+        return $acarreoId > 0 && $acarreoId === $serviceId;
     }
 
     /**
@@ -247,6 +252,71 @@ class DriverVehicleHelper
     private static function requiresVehiclePhotos(int $serviceId, ?string $deliveryVariant): bool
     {
         return self::requiresPlate($serviceId, $deliveryVariant);
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private static function acarreoRegistrationRows(
+        string $langPrefix,
+        string $serviceIconUrl,
+        string $vehicleIconUrl
+    ): array {
+        $acarreoServiceId = AcarreoVehicleHelper::acarreosServiceId();
+        if ($acarreoServiceId <= 0) {
+            return [];
+        }
+
+        $allTypes = self::vehicleTypesForService($acarreoServiceId, $vehicleIconUrl);
+        $v = DeliveryVehicleHelper::ICON_CACHE_VERSION;
+
+        $variants = [
+            [
+                'variant' => XistiVehicleVariantHelper::MOTOCARGUERO,
+                'label' => XistiVehicleVariantHelper::labelFor(XistiVehicleVariantHelper::MOTOCARGUERO),
+                'icon' => $serviceIconUrl . '/motocarguero.png?v=' . $v,
+                'type_match' => 'motocarg',
+            ],
+            [
+                'variant' => XistiVehicleVariantHelper::CAMION_ACARREO,
+                'label' => XistiVehicleVariantHelper::labelFor(XistiVehicleVariantHelper::CAMION_ACARREO),
+                'icon' => $serviceIconUrl . '/camion_acarreo.png?v=' . $v,
+                'type_match' => 'cami',
+            ],
+            [
+                'variant' => XistiVehicleVariantHelper::JAULA_ACARREO,
+                'label' => XistiVehicleVariantHelper::labelFor(XistiVehicleVariantHelper::JAULA_ACARREO),
+                'icon' => $serviceIconUrl . '/jaula_acarreo.png?v=' . $v,
+                'type_match' => 'jaula',
+            ],
+        ];
+
+        $rows = [];
+        foreach ($variants as $def) {
+            $filtered = array_values(array_filter(
+                $allTypes,
+                static fn (array $t) => stripos((string) ($t['vehicle_type_name'] ?? ''), $def['type_match']) !== false
+            ));
+            $types = $filtered !== [] ? $filtered : $allTypes;
+
+            $rows[] = [
+                'service_id' => $acarreoServiceId,
+                'registration_key' => 'carga',
+                'service_name' => $def['label'],
+                'service_icon' => $def['icon'],
+                'service_description' => '',
+                'vehicle_type_list' => $types,
+                'delivery_variant' => $def['variant'],
+                'supports_passenger_transport_toggle' => false,
+                'is_delivery_only_service' => 1,
+                'requires_technical_inspection' => 0,
+                'requires_plate' => 1,
+                'requires_vehicle_photos' => 1,
+                '_sort_key' => '00070',
+            ];
+        }
+
+        return $rows;
     }
 
     private static function vehicleTypesForService(int $serviceId, string $vehicleIconUrl): array

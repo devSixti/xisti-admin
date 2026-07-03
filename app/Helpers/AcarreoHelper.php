@@ -26,8 +26,14 @@ class AcarreoHelper
     public static function normalizeVariant(?string $variant): ?string
     {
         $key = strtolower(trim((string) $variant));
-        if ($key === 'motocarro') {
-            $key = self::VARIANT_MOTOCARGUERO;
+
+        $aliases = [
+            'motocarro' => self::VARIANT_MOTOCARGUERO,
+            'camion_acarreo' => self::VARIANT_CAMION,
+            'jaula_acarreo' => self::VARIANT_JAULA,
+        ];
+        if (isset($aliases[$key])) {
+            $key = $aliases[$key];
         }
 
         return in_array($key, self::allowedVariants(), true) ? $key : null;
