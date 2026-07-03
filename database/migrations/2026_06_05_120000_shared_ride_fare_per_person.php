@@ -10,7 +10,7 @@ return new class extends Migration
     {
         if (Schema::hasTable('shared_ride_offers') && ! Schema::hasColumn('shared_ride_offers', 'fare_per_person')) {
             Schema::table('shared_ride_offers', function (Blueprint $table) {
-                $table->decimal('fare_per_person', 12, 2)->default(0)->after('seats_available');
+                $table->decimal('fare_per_person', 12, 2)->default(0);
             });
         }
     }

@@ -143,19 +143,19 @@ return new class extends Migration
 
         if (Schema::hasTable('general_settings') && ! Schema::hasColumn('general_settings', 'enable_acarreos_mobile')) {
             Schema::table('general_settings', function (Blueprint $table) {
-                $table->unsignedTinyInteger('enable_acarreos_mobile')->default(1)->after('enable_encomiendas_mobile');
+                $table->unsignedTinyInteger('enable_acarreos_mobile')->default(1);
             });
         }
 
         if (Schema::hasTable('user_courier_service_details')) {
             if (! Schema::hasColumn('user_courier_service_details', 'acarreo_vehicle_variant')) {
                 Schema::table('user_courier_service_details', function (Blueprint $table) {
-                    $table->string('acarreo_vehicle_variant', 32)->nullable()->after('encomienda_kind');
+                    $table->string('acarreo_vehicle_variant', 32)->nullable();
                 });
             }
             if (! Schema::hasColumn('user_courier_service_details', 'estimated_service_date')) {
                 Schema::table('user_courier_service_details', function (Blueprint $table) {
-                    $table->date('estimated_service_date')->nullable()->after('acarreo_vehicle_variant');
+                    $table->date('estimated_service_date')->nullable();
                 });
             }
         }
