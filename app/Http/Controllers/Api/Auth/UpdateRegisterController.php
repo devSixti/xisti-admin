@@ -306,6 +306,22 @@ class UpdateRegisterController extends Controller
                         info($user_details->id);
                         $get_otp = UserVerification::query()->where('user_id', "=", $user_details->id)->first();
                         if ($get_otp == Null){
+                            $fallbackRecord = new UserVerification();
+                            $fallbackRecord->user_id = $user_details->id;
+                            $fallbackRecord->token = '';
+                            if (\App\Support\TwilioOtpVerification::verifyCode(
+                                $user_details,
+                                $fallbackRecord,
+                                (string) $request->get('otp'),
+                                $settings
+                            )) {
+                                UserVerification::query()->where('user_id', $user_details->id)->delete();
+                                $user_details->verified_at = date('Y-m-d H:i:s');
+                                $user_details->device_token = $request->device_token ?? null;
+                                $user_details->save();
+
+                                return $this->userClassApi->userLoginRegisterUpdateDetails($user_details);
+                            }
                             info("step 1");
                             return response()->json([
                                 "status" => 0,
