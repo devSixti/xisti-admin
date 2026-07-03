@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Schema;
 class DeliveryVehicleHelper
 {
     /** Bump when vehicle-service/*.png assets change (cache bust for mobile). */
-    public const ICON_CACHE_VERSION = '1.3';
+    public const ICON_CACHE_VERSION = '1.4';
 
     /** vehicle_services.id — únicos medios habilitados (viajes, envíos, encomiendas). */
     public const PASSENGER_ACTIVE_VEHICLE_SERVICE_IDS = [1, 3];
