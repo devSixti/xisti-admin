@@ -20,7 +20,7 @@ class MobileFeatureFlagsHelper
 
     public static function isEncomiendasEnabled(?GeneralSettings $general = null): bool
     {
-        return (int) (self::settings($general)->enable_encomiendas_mobile ?? 0) === 1;
+        return false;
     }
 
     public static function requireCourierPackageDimensions(?GeneralSettings $general = null): bool

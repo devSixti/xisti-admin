@@ -36,12 +36,15 @@ class ServiceCatalogHelper
         $grouped = [];
         foreach ($services as $row) {
             $mode = $row['service_mode'] ?? 'transport';
+            if ($mode === 'encomiendas') {
+                continue;
+            }
             if (!isset($grouped[$mode])) {
                 $grouped[$mode] = [];
             }
             $grouped[$mode][] = $row;
         }
-        $modeOrder = ['transport', 'delivery', 'expreso', 'viajes_compartidos', 'encomiendas', 'acarreos', 'carga'];
+        $modeOrder = ['transport', 'delivery', 'expreso', 'viajes_compartidos', 'acarreos', 'carga'];
         $modes = [];
         $order = 1;
         foreach ($modeOrder as $mode) {

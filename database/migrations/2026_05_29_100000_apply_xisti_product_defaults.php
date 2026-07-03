@@ -41,7 +41,7 @@ return new class extends Migration
                 $general['enable_expreso_mobile'] = 0;
             }
             if (Schema::hasColumn('general_settings', 'enable_encomiendas_mobile')) {
-                $general['enable_encomiendas_mobile'] = 1;
+                $general['enable_encomiendas_mobile'] = 0;
             }
 
             DB::table('general_settings')->update($general);

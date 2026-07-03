@@ -50,7 +50,13 @@ class DriverVehicleHelper
             $list[] = self::mapServiceRow($row, $langPrefix, $serviceIconUrl, $vehicleIconUrl, null);
         }
 
-        return self::expandTransportVariants(self::sortRegistrationList($list));
+        $expanded = self::expandTransportVariants(self::sortRegistrationList($list));
+
+        return self::sortRegistrationList(array_merge($expanded, self::bicicletaRegistrationRows(
+            $langPrefix,
+            $serviceIconUrl,
+            $vehicleIconUrl
+        )));
     }
 
     /**
@@ -70,6 +76,7 @@ class DriverVehicleHelper
                     $row = $item;
                     $row['delivery_variant'] = $variant;
                     $row['service_name'] = XistiVehicleVariantHelper::labelFor($variant);
+                    $row['vehicle_type_list'] = self::vehicleTypesForVariant($variant, $serviceId, $vehicleIconUrl);
                     $expanded[] = $row;
                 }
                 continue;
@@ -82,6 +89,7 @@ class DriverVehicleHelper
                     $row = $item;
                     $row['delivery_variant'] = $variant;
                     $row['service_name'] = XistiVehicleVariantHelper::labelFor($variant);
+                    $row['vehicle_type_list'] = self::vehicleTypesForVariant($variant, $serviceId, $vehicleIconUrl);
                     $expanded[] = $row;
                 }
                 continue;
@@ -90,6 +98,71 @@ class DriverVehicleHelper
         }
 
         return $expanded;
+    }
+
+    /**
+     * Bicicleta is registered as courier variant (service 4) but listed in driver onboarding.
+     *
+     * @return list<array<string, mixed>>
+     */
+    private static function bicicletaRegistrationRows(
+        string $langPrefix,
+        string $serviceIconUrl,
+        string $vehicleIconUrl
+    ): array {
+        if (! Schema::hasTable('vehicle_services')) {
+            return [];
+        }
+
+        $courier = DB::table('vehicle_services')->where('id', 4)->where('status', 1)->first();
+        if ($courier === null) {
+            return [];
+        }
+
+        $row = self::mapServiceRow(
+            $courier,
+            $langPrefix,
+            $serviceIconUrl,
+            $vehicleIconUrl,
+            XistiVehicleVariantHelper::BICICLETA
+        );
+        $row['service_name'] = XistiVehicleVariantHelper::labelFor(XistiVehicleVariantHelper::BICICLETA);
+        $row['vehicle_type_list'] = self::vehicleTypesForVariant(
+            XistiVehicleVariantHelper::BICICLETA,
+            4,
+            $vehicleIconUrl
+        );
+        $row['_sort_key'] = '00030';
+
+        return [$row];
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private static function vehicleTypesForVariant(string $variant, int $serviceId, string $vehicleIconUrl): array
+    {
+        $types = self::vehicleTypesForService($serviceId, $vehicleIconUrl);
+        if ($variant === XistiVehicleVariantHelper::BICICLETA) {
+            $bike = array_values(array_filter(
+                $types,
+                static fn (array $t) => stripos((string) ($t['vehicle_type_name'] ?? ''), 'bicicleta') !== false
+            ));
+            if ($bike !== []) {
+                return $bike;
+            }
+
+            return self::vehicleTypesForService(3, $vehicleIconUrl);
+        }
+
+        if ($serviceId === 3) {
+            return array_values(array_filter(
+                $types,
+                static fn (array $t) => stripos((string) ($t['vehicle_type_name'] ?? ''), 'bicicleta') === false
+            ));
+        }
+
+        return $types;
     }
 
     public static function isDeliveryOnlyRegistration(?string $deliveryVariant, int $serviceId): bool
@@ -123,7 +196,11 @@ class DriverVehicleHelper
             ? $serviceIconUrl . '/' . $iconName . '?v=' . DeliveryVehicleHelper::ICON_CACHE_VERSION
             : '';
 
-        $vehicleTypes = self::vehicleTypesForService($serviceId, $vehicleIconUrl);
+        $vehicleTypes = self::vehicleTypesForVariant(
+            (string) ($deliveryVariant ?? ''),
+            $serviceId,
+            $vehicleIconUrl
+        );
 
         $isDeliveryOnly = self::isDeliveryOnlyRegistration($deliveryVariant, $serviceId);
         $mode = (string) ($row->service_mode ?? 'transport');
@@ -149,7 +226,8 @@ class DriverVehicleHelper
 
     private static function registrationKeyFor(int $serviceId, ?string $deliveryVariant): string
     {
-        if ($deliveryVariant === 'bicycle' || $serviceId === 4) {
+        $variant = strtolower(trim((string) $deliveryVariant));
+        if ($variant === 'bicicleta' || $variant === 'bicycle' || $serviceId === 4) {
             return 'bicycle';
         }
 

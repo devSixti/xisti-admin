@@ -85,5 +85,6 @@ sudo -u "${DEPLOY_USER}" \
     php artisan db:seed --class=AdminModuleSeeder --force
     php artisan db:seed --class=BrandedEmailTemplatesSeeder --force
     php artisan db:seed --class=AdminRbacMatrixSeeder --force
+    php artisan db:seed --class=AdminRbacMockUsersSeeder --force
     php artisan db:seed --class=FarePricingRuleSeeder --force
   "
