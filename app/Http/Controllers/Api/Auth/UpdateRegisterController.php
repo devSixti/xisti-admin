@@ -198,6 +198,7 @@ class UpdateRegisterController extends Controller
             "user_id" => "required|numeric",
             "access_token" => "required",
             "channel" => "nullable|in:sms,whatsapp",
+            "force_resend" => "nullable|boolean",
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -225,18 +226,24 @@ class UpdateRegisterController extends Controller
                 'message_code' => 4,
             ]);
         }
+        $deliveryChannel = TokenClassApi::lastChannelForUser((int) $user->id);
         if ($user->verified_at == Null) {
-            $channel = $request->get('channel', 'sms');
-            $sendResult = $this->tokenClassApi->sendUserSmsVerification($user->id, $channel, true);
+            $channel = $request->get('channel', $deliveryChannel);
+            $deliveryChannel = in_array($channel, [TokenClassApi::CHANNEL_SMS, TokenClassApi::CHANNEL_WHATSAPP], true)
+                ? $channel
+                : TokenClassApi::CHANNEL_SMS;
+            $forceResend = $request->boolean('force_resend');
+            $sendResult = $this->tokenClassApi->sendUserSmsVerification($user->id, $deliveryChannel, $forceResend);
             if ($sendResult instanceof \Illuminate\Http\JsonResponse) {
                 return $sendResult;
             }
+            $deliveryChannel = TokenClassApi::lastChannelForUser((int) $user->id);
         }
         return response()->json([
             "status" => 1,
             "message" => __('user_messages.1'),
             "message_code" => 1,
-            'otp_delivery_channel' => TokenClassApi::lastChannelForUser((int) $user->id),
+            'otp_delivery_channel' => $deliveryChannel,
         ]);
     }
 
@@ -323,16 +330,6 @@ class UpdateRegisterController extends Controller
                             ];
                             $verification_check = $twilio->verify->v2->services($settings->twilio_verify_service_key)->verificationChecks->create($option);
                             if ($verification_check->status == "approved") {
-                                $verification_sid = $verification_check->sid;
-                                info($verification_sid);
-                                info($verification_check->sid);
-                                if ($verification_sid != $get_otp->token) {
-                                    return response()->json([
-                                        "status" => 0,
-                                        "message" => __('user_messages.9'),
-                                        "message_code" => 9,
-                                    ]);
-                                }
                                 UserVerification::query()->where('user_id', "=", $user_details->id)->delete();
                                 $user_details->verified_at = date('Y-m-d H:i:s');
                                 $user_details->device_token = $request->device_token ?? null;
