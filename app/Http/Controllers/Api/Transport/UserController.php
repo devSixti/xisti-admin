@@ -147,7 +147,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
                 "user_id" => "required|numeric",
-                "access_token" => "required|numeric",
+                "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
                 "filter_type" => "nullable|in:0,1,2,3,4,5",
                 "order_status" => "nullable",
                 "timezone" => "required"
@@ -338,7 +338,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
                 "user_id" => "required|numeric",
-                "access_token" => "required|numeric",
+                "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
                 "ride_id" => "required|numeric"
             ]
         );
@@ -363,7 +363,7 @@ class UserController extends Controller
         $this->notificationClass->ApiLogDetail($logger_type =0, $request->get('user_id'), "postTransportRideReceiptDetails", $request->all());
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "ride_id" => "required|numeric"
         ]);
         if ($validator->fails()) {
@@ -386,7 +386,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "ride_id" => "required|numeric",
             "driver_id" => "required",
             "rating" => "required",
@@ -472,7 +472,7 @@ class UserController extends Controller
         //payment_method 1 = omise, 0= paypal
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "ride_id" => "required|numeric",
             "payment_type" => "required|numeric|in:1,2,3",
         ]);
@@ -895,7 +895,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "vehicle_type_id" => "required|numeric",
             "manufacture_name" => "required",
             "model_name" => "required",

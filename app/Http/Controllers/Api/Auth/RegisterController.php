@@ -53,7 +53,7 @@ class RegisterController extends Controller
 
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "profile_image" => "required",
             "select_country_code" => "required",
             "contact_number" => [

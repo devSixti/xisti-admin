@@ -14,7 +14,7 @@ class LogoutController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "nullable|numeric",
+            "access_token" => "nullable|string|min:16",
         ]);
 
         if ($validator->fails()) {

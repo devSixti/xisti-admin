@@ -255,7 +255,7 @@ class UpdateRegisterController extends Controller
 
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "otp" => "required|numeric|digits:6"
         ]);
         if ($validator->fails()) {
@@ -322,14 +322,7 @@ class UpdateRegisterController extends Controller
                                     "message_code" => 9,
                                 ]);
                             }
-                            $twilio = new Client($settings->twilio_service_key, $settings->twilio_auth_token);
-                            $option = [
-                                'To' => $user_details->country_code.$user_details->contact_number,
-                                'VerificationSid' => $get_otp->token,
-                                'Code' => $request->get('otp'),
-                            ];
-                            $verification_check = $twilio->verify->v2->services($settings->twilio_verify_service_key)->verificationChecks->create($option);
-                            if ($verification_check->status == "approved") {
+                            if (\App\Support\TwilioOtpVerification::verifyCode($user_details, $get_otp, (string) $request->get('otp'), $settings)) {
                                 UserVerification::query()->where('user_id', "=", $user_details->id)->delete();
                                 $user_details->verified_at = date('Y-m-d H:i:s');
                                 $user_details->device_token = $request->device_token ?? null;

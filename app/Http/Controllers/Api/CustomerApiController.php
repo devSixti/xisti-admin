@@ -120,7 +120,7 @@ class CustomerApiController extends Controller
 
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "app_version" => "required",
             "current_lat" => "nullable",
             "current_long" => "nullable",
@@ -367,7 +367,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "holder_name" => "nullable",
             "card_number" => "required",
             "month" => "required|numeric",
@@ -393,7 +393,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "card_id" => "required",
         ]);
         if ($validator->fails()) {
@@ -416,7 +416,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -436,7 +436,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "amount" => "required|numeric",
             "payment_method_type" => "nullable|in:1,0",
             "card_id" => "nullable|numeric",
@@ -461,7 +461,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "order_by" => "required|numeric|in:0,1,2",
             "date_filter" => "required|numeric|in:0,1,2,3,4,5",
         ]);
@@ -493,7 +493,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric"
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -514,7 +514,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "search" => "required"
         ]);
         if ($validator->fails()) {
@@ -535,7 +535,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "amount" => "required|numeric",
             "transfer_id" => "required|numeric",
             "wallet_provider_type" => "required|in:" . $this->user_type . "," . $this->driver_type . "," ,
@@ -570,7 +570,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
                 "user_id" => "required|numeric",
-                "access_token" => "required|numeric",
+                "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             ]
         );
         if ($validator->fails()) {
@@ -999,7 +999,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -1071,7 +1071,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "page" => "nullable|numeric",
             "per_page" => "nullable|numeric"
         ]);
@@ -1124,7 +1124,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "active_mode" => "required|numeric",
         ]);
         if ($validator->fails()) {
@@ -1166,7 +1166,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric"
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -1205,7 +1205,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -1245,7 +1245,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
         ]);
 
         if ($validator->fails()) {
@@ -1416,7 +1416,7 @@ class CustomerApiController extends Controller
         info($request);
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "service_category_id" => "required|numeric",
             "distance" => "required|numeric",
             "estimate_time" => "required|numeric",
@@ -1450,8 +1450,9 @@ class CustomerApiController extends Controller
             ]);
         }
 
-        $distance = $request->get('distance');
-        $estimateTime = $request->get('estimate_time');
+        $distance = (float) $request->get('distance');
+        $estimateTime = (float) $request->get('estimate_time');
+        [$distance, $estimateTime] = \App\Support\TripMetricsSanitizer::sanitize($distance, $estimateTime);
         $costPerKm = $vehicle_service->cost_for_km;
         $timeFare = $vehicle_service->time_fare;
         $minFare = $vehicle_service->min_fare;
@@ -1500,7 +1501,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
                 "user_id" => "required|numeric",
-                "access_token" => "required|numeric"
+                "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN
             ]
         );
         if ($validator->fails()) {
@@ -1522,7 +1523,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
                 "user_id" => "required|numeric",
-                "access_token" => "required|numeric"
+                "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN
             ]
         );
         if ($validator->fails()) {
@@ -1544,7 +1545,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
                 "user_id" => "required|numeric",
-                "access_token" => "required|numeric"
+                "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN
             ]
         );
         if ($validator->fails()) {
@@ -1566,7 +1567,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
                 "user_id" => "required|numeric",
-                "access_token" => "required|numeric"
+                "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN
             ]
         );
         if ($validator->fails()) {

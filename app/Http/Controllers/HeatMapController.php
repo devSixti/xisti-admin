@@ -24,7 +24,7 @@ class HeatMapController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required|numeric",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
         ]);
         if ($validator->fails()) {
             return response()->json([

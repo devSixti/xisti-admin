@@ -61,7 +61,7 @@ class ReportIssueController extends Controller
             // Validate request input
             $validator = Validator::make($request->all(), [
                 "provider_id" => "required|numeric",
-                "access_token" => "required|numeric",
+                "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
                 "provider_type" => "required|numeric|in:1,2", // 1 = user, 2 = provider
             ]);
 
@@ -134,7 +134,7 @@ class ReportIssueController extends Controller
             //Validation rules
             $validator = Validator::make($request->all(), [
                 "provider_id" => "required|numeric", // Validate provider id
-                "access_token" => "required|numeric", // Validate access token
+                "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN, // Validate access token
                 "provider_type" => "required|numeric|in:1,2", // 1 = user, 2 = driver
                 "ride_id" => "required|numeric", // Validate order id
             ]);
@@ -213,7 +213,7 @@ class ReportIssueController extends Controller
             // Validation rules
             $validator = Validator::make($request->all(), [
                 "provider_id" => "required|numeric", // Validate provider id
-                "access_token" => "required|numeric", // Validate access token
+                "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN, // Validate access token
                 "provider_type" => "required|numeric|in:1,2", // 1 = user, 2 = driver
                 "ride_id" => "required|numeric", // Validate order id
                 "description" => "required|max:200", // Validate description
@@ -340,7 +340,7 @@ class ReportIssueController extends Controller
             // Validate the request
             $validator = Validator::make($request->all(), [
                 "provider_id" => "required|numeric", // Validate provider id
-                "access_token" => "required|numeric", // Validate access token
+                "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN, // Validate access token
                 "provider_type" => "required|numeric|in:1,2", // 1 = user, 2 = driver
                 "report_id" => "required|numeric", // Validate report id
                 "image" => "required|file|mimes:jpg,jpeg,png,webp|dimensions:ratio=1/1", // Validate image file types
@@ -441,7 +441,7 @@ class ReportIssueController extends Controller
             // Validate request parameters
             $validator = Validator::make($request->all(), [
                 "provider_id" => "required|numeric",
-                "access_token" => "required|numeric",
+                "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
                 "provider_type" => "required|numeric|in:1,2", // 1 = user, 2 = driver
                 "image_id" => "required|numeric",
             ]);
@@ -520,7 +520,7 @@ class ReportIssueController extends Controller
             // Validate the request with validation rules
             $validator = Validator::make($request->all(), [
                 "provider_id" => "required|numeric", // Validate provider id
-                "access_token" => "required|numeric", // Validate access token
+                "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN, // Validate access token
                 "provider_type" => "required|numeric|in:1,2", // 1 = user, 2 = driver
                 "report_id" => "required|numeric" // Validate report id
             ]);
