@@ -169,7 +169,7 @@ class UserClassApi
             'message_code' => 1,
             'is_register' => $is_register,
             'user_id' => $user_details['id'],
-            'access_token' => $user_details['access_token'] . '',
+            'access_token' => (string) ($user_details['access_token'] ?? ''),
             'contact_number' => $user_details['contact_number'] != Null ? $user_details['contact_number'] : "",
             'select_country_code' => $user_details['country_code'] != Null ? $user_details['country_code'] : "",
             'login_type' => $user_details['login_type'],

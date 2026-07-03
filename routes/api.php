@@ -109,6 +109,7 @@ Route::group(['middleware' => 'setLocaleLang'], function () {
                     Route::post('/shared-ride-search', [SharedRideController::class, 'postPassengerSearch'])->name('post:customer:shared_ride_search');
                     Route::post('/shared-ride-join', [SharedRideController::class, 'postJoinOffer'])->name('post:customer:shared_ride_join');
                     Route::post('/shared-ride-my-offers', [SharedRideController::class, 'postMyOffers'])->name('post:driver:shared_ride_my_offers');
+                    Route::post('/shared-ride-fare-estimate', [SharedRideController::class, 'postFareEstimate'])->name('post:driver:shared_ride_fare_estimate');
                     Route::post('/available-ride-request', [UserController::class,'postAvailableRideRequest'])->name('post:driver:available_ride_request');
                     Route::post('/update-current-lat-long', [UserController::class,'postDriverUpdateCurrentLatLong'])->name('post:driver:update_current_lat_long');
                     Route::post('/update-current-status', [UserController::class,'postDriverUpdateCurrentStatus'])->name('post:driver:update_current_status');

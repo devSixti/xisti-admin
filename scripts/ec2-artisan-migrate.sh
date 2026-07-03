@@ -72,7 +72,9 @@ sudo -u "${DEPLOY_USER}" \
     set -euo pipefail
     cd '${APP_DIR}'
     rm -f bootstrap/cache/config.php 2>/dev/null || true
+    rm -f bootstrap/cache/packages.php bootstrap/cache/services.php 2>/dev/null || true
     php artisan config:clear
+    php artisan package:discover --ansi 2>/dev/null || true
     php artisan migrate --force
     php artisan db:seed --class=WorldCurrencySeeder --force
     php artisan db:seed --class=LanguageListsSeeder --force

@@ -55,7 +55,8 @@ class SharedRideHelper
         string $tripKind,
         string $originTown,
         string $destinationTown,
-        string $tripDate
+        string $tripDate,
+        ?string $vehicleVariant = null
     ): array {
         if (! Schema::hasTable('shared_ride_offers')) {
             return [];
@@ -72,6 +73,13 @@ class SharedRideHelper
             ->whereRaw('LOWER(TRIM(destination_town)) = ?', [strtolower(trim($destinationTown))])
             ->whereBetween('trip_date', [$from, $to])
             ->where('seats_available', '>', 0)
+            ->when(
+                Schema::hasColumn('shared_ride_offers', 'vehicle_variant')
+                    && trim((string) $vehicleVariant) !== '',
+                function ($q) use ($vehicleVariant) {
+                    $q->where('vehicle_variant', XistiVehicleVariantHelper::normalize($vehicleVariant));
+                }
+            )
             ->orderByRaw('ABS(DATEDIFF(trip_date, ?))', [$date->toDateString()])
             ->limit(30)
             ->get();
@@ -91,6 +99,8 @@ class SharedRideHelper
                 'seats_available' => (int) $row->seats_available,
                 'seats_total' => (int) $row->seats_total,
                 'fare_per_person' => (float) ($row->fare_per_person ?? 0),
+                'vehicle_variant' => (string) ($row->vehicle_variant ?? ''),
+                'vehicle_label' => XistiVehicleVariantHelper::labelFor($row->vehicle_variant ?? ''),
             ];
         }
 

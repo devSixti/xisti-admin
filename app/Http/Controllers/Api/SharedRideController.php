@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\SharedRideFareHelper;
 use App\Helpers\SharedRideHelper;
+use App\Helpers\XistiVehicleVariantHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -42,7 +44,14 @@ class SharedRideController extends Controller
         }
 
         $seats = (int) $request->get('seats_total');
-        $id = DB::table('shared_ride_offers')->insertGetId([
+        $driverVariant = '';
+        if (\Illuminate\Support\Facades\Schema::hasColumn('transport_driver_details', 'delivery_variant')) {
+            $driverVariant = XistiVehicleVariantHelper::normalize(
+                (string) DB::table('transport_driver_details')->where('user_id', $driverId)->value('delivery_variant')
+            );
+        }
+
+        $offerRow = [
             'driver_id' => $driverId,
             'driver_vehicle_type_id' => (int) $driverDetails->vehicle_type_id,
             'trip_kind' => SharedRideHelper::normalizeTripKind($request->get('trip_kind')),
@@ -55,7 +64,11 @@ class SharedRideController extends Controller
             'status' => 'open',
             'created_at' => now(),
             'updated_at' => now(),
-        ]);
+        ];
+        if (\Illuminate\Support\Facades\Schema::hasColumn('shared_ride_offers', 'vehicle_variant') && $driverVariant !== '') {
+            $offerRow['vehicle_variant'] = $driverVariant;
+        }
+        $id = DB::table('shared_ride_offers')->insertGetId($offerRow);
 
         return response()->json([
             'status' => 1,
@@ -71,6 +84,7 @@ class SharedRideController extends Controller
             'origin_town' => 'required|string|max:120',
             'destination_town' => 'required|string|max:120',
             'trip_date' => 'required|date',
+            'vehicle_variant' => 'nullable|string|max:64',
         ]);
 
         if (! Schema::hasTable('shared_ride_passenger_searches')) {
@@ -82,8 +96,9 @@ class SharedRideController extends Controller
         $origin = trim($request->get('origin_town'));
         $destination = trim($request->get('destination_town'));
         $tripDate = $request->get('trip_date');
+        $vehicleVariant = XistiVehicleVariantHelper::normalize($request->get('vehicle_variant'));
 
-        $searchId = DB::table('shared_ride_passenger_searches')->insertGetId([
+        $searchRow = [
             'user_id' => $userId,
             'trip_kind' => $tripKind,
             'origin_town' => $origin,
@@ -92,9 +107,19 @@ class SharedRideController extends Controller
             'status' => 'searching',
             'created_at' => now(),
             'updated_at' => now(),
-        ]);
+        ];
+        if (Schema::hasColumn('shared_ride_passenger_searches', 'vehicle_variant') && $vehicleVariant !== '') {
+            $searchRow['vehicle_variant'] = $vehicleVariant;
+        }
+        $searchId = DB::table('shared_ride_passenger_searches')->insertGetId($searchRow);
 
-        $matches = SharedRideHelper::matchOffersForSearch($tripKind, $origin, $destination, $tripDate);
+        $matches = SharedRideHelper::matchOffersForSearch(
+            $tripKind,
+            $origin,
+            $destination,
+            $tripDate,
+            $vehicleVariant !== '' ? $vehicleVariant : null
+        );
 
         return response()->json([
             'status' => 1,
@@ -137,5 +162,40 @@ class SharedRideController extends Controller
             ->get();
 
         return response()->json(['status' => 1, 'offers' => $offers]);
+    }
+
+    public function postFareEstimate(Request $request): JsonResponse
+    {
+        $request->validate([
+            'origin_town' => 'required|string|max:120',
+            'destination_town' => 'required|string|max:120',
+            'seats_total' => 'required|integer|min:1|max:8',
+            'vehicle_variant' => 'nullable|string|max:64',
+            'is_weekend' => 'nullable|boolean',
+        ]);
+
+        $driverId = (int) $request->get('user_id');
+        $variant = XistiVehicleVariantHelper::normalize($request->get('vehicle_variant'));
+        if ($variant === '' && Schema::hasColumn('transport_driver_details', 'delivery_variant')) {
+            $variant = XistiVehicleVariantHelper::normalize(
+                (string) DB::table('transport_driver_details')->where('user_id', $driverId)->value('delivery_variant')
+            );
+        }
+
+        $estimate = SharedRideFareHelper::recommendPerPerson(
+            trim($request->get('origin_town')),
+            trim($request->get('destination_town')),
+            $variant,
+            (int) $request->get('seats_total'),
+            (bool) $request->boolean('is_weekend')
+        );
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Tarifa sugerida calculada.',
+            'vehicle_variant' => $variant,
+            'vehicle_label' => XistiVehicleVariantHelper::labelFor($variant),
+            'estimate' => $estimate,
+        ]);
     }
 }

@@ -8,6 +8,7 @@ use App\Classes\NotificationClass;
 use App\Classes\TokenClassApi;
 use App\Classes\UserClassApi;
 use App\Models\User;
+use App\Models\UserVerification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -115,7 +116,8 @@ class LoginController extends Controller
             }
             $user_details->verified_at = null;
             $user_details->save();
-            $this->tokenClassApi->sendUserSmsVerification($user_details->id);
+            UserVerification::query()->where('user_id', $user_details->id)->delete();
+            $this->tokenClassApi->sendUserSmsVerification($user_details->id, 'sms', true);
         }
         else {
             // social login
@@ -139,6 +141,7 @@ class LoginController extends Controller
             // Returning social accounts already registered must not be forced through phone OTP again.
             if ($user_details !== null && (int) $user_details->is_register === 1) {
                 $requiresSignupPhoneOtp = false;
+                UserVerification::query()->where('user_id', $user_details->id)->delete();
             }
             if ($user_details == Null) {
                 $contact_number = $request->get("contact_number");
@@ -274,6 +277,7 @@ class LoginController extends Controller
                     ]);
                 }
                 if ((int) $user_details->is_register === 1) {
+                    UserVerification::query()->where('user_id', $user_details->id)->delete();
                     if ($user_details->verified_at === null) {
                         $user_details->verified_at = date('Y-m-d H:i:s');
                         $user_details->save();

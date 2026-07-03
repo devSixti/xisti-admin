@@ -50,7 +50,7 @@ class DriverVehicleHelper
             $list[] = self::mapServiceRow($row, $langPrefix, $serviceIconUrl, $vehicleIconUrl, null);
         }
 
-        $expanded = self::expandTransportVariants(self::sortRegistrationList($list));
+        $expanded = self::expandTransportVariants(self::sortRegistrationList($list), $vehicleIconUrl);
 
         return self::sortRegistrationList(array_merge($expanded, self::bicicletaRegistrationRows(
             $langPrefix,
@@ -62,7 +62,7 @@ class DriverVehicleHelper
     /**
      * Expand car/moto rows into XISTI matrix variants for driver registration.
      */
-    private static function expandTransportVariants(array $list): array
+    private static function expandTransportVariants(array $list, string $vehicleIconUrl): array
     {
         $expanded = [];
         foreach ($list as $item) {

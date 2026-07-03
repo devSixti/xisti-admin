@@ -92,12 +92,10 @@ class DeliveryVehicleHelper
     public static function passengerDisclaimer(string $language = 'es'): string
     {
         if ($language === 'es') {
-            return 'Los envíos son entregas de paquetes, no transporte de pasajeros. '
-                . 'El conductor elegido debe coincidir con el medio de transporte que selecciones.';
+            return 'Envíos de paquetes entre usuarios; elige el medio que coincida con tu envío.';
         }
 
-        return 'Deliveries are package shipments, not passenger transport. '
-            . 'Only drivers registered for your selected vehicle type will receive your request.';
+        return 'Package deliveries between users; pick the vehicle type that matches your shipment.';
     }
 
     private static function colombiaDeliveryLabel(int $serviceId, string $langPrefix, object $row): string
