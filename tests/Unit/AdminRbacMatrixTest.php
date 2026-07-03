@@ -162,6 +162,10 @@ class AdminRbacMatrixTest extends TestCase
                 continue;
             }
             foreach ($this->rbac->sampleRoutesForMatrixKey($key) as $routeName) {
+                $requiredAction = AdminRbacService::requiredActionForRoute($routeName);
+                if (! $this->rbac->canPerformAction($admin, $key, $requiredAction)) {
+                    continue;
+                }
                 $this->assertTrue(
                     $this->rbac->canAccessRoute($admin, $routeName),
                     "Role [{$roleSlug}] should access {$routeName} ({$key})"

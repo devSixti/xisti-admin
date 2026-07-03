@@ -453,10 +453,10 @@ class AdminRbacService
         if (preg_match('/add_|_add/i', $routeName)) {
             return self::ACTION_CREATE;
         }
-        if (preg_match('/approved_reject|approve/i', $routeName)) {
+        if (preg_match('/approved_reject|(?<![a-z])approve_|_approve\b/i', $routeName)) {
             return self::ACTION_APPROVE;
         }
-        if (preg_match('/update_general_setting|app_version_setting|service_setting|vehicle_commission/i', $routeName)) {
+        if (preg_match('/update_general_setting|app_version_setting|service_setting|update_.*vehicle_commission/i', $routeName)) {
             return self::ACTION_CONFIGURE;
         }
         if (preg_match('/update_|edit_|post:admin:/i', $routeName)) {
