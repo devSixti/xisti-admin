@@ -163,7 +163,7 @@ class ServiceCatalogHelper
                 $outer->{$method}(function ($deliveryQuery) use ($canReceiveDelivery, $canReceiveEncomiendas, $driverTransportServiceId, $hasErrandType) {
                     $addedAny = false;
                     if ($canReceiveDelivery) {
-                        $deliveryQuery->where(function ($legacyDelivery) use ($driverTransportServiceId, $hasErrandType) {
+                        $deliveryQuery->where(function ($legacyDelivery) use ($driverTransportServiceId, $hasErrandType, $driverVariant) {
                             $legacyDelivery->where('user_ride_booking.vehicle_service_id', 4)
                                 ->where(function ($matchQuery) use ($driverTransportServiceId) {
                                     if (Schema::hasColumn('user_courier_service_details', 'requested_vehicle_service_id')) {
@@ -177,12 +177,13 @@ class ServiceCatalogHelper
                                         ->orWhere('user_courier_service_details.errand_type', EncomiendaHelper::ERRAND_DELIVERY);
                                 });
                             }
+                            \App\Helpers\XistiVehicleVariantHelper::applyTransportVariantRideFilter($legacyDelivery, $driverVariant);
                         });
                         $addedAny = true;
                     }
                     if ($canReceiveEncomiendas && $hasErrandType) {
                         $method = $addedAny ? 'orWhere' : 'where';
-                        $deliveryQuery->{$method}(function ($encomiendaQuery) use ($driverTransportServiceId) {
+                        $deliveryQuery->{$method}(function ($encomiendaQuery) use ($driverTransportServiceId, $driverVariant) {
                             $encomiendaQuery->where('user_courier_service_details.errand_type', EncomiendaHelper::ERRAND_ENCOMIENDA)
                                 ->where(function ($matchQuery) use ($driverTransportServiceId) {
                                     if (Schema::hasColumn('user_courier_service_details', 'requested_vehicle_service_id')) {
@@ -190,6 +191,7 @@ class ServiceCatalogHelper
                                             ->orWhere('user_courier_service_details.requested_vehicle_service_id', $driverTransportServiceId);
                                     }
                                 });
+                            \App\Helpers\XistiVehicleVariantHelper::applyTransportVariantRideFilter($encomiendaQuery, $driverVariant);
                         });
                     }
                 });

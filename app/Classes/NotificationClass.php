@@ -687,6 +687,14 @@ class NotificationClass
             if (\App\Helpers\DeliveryVehicleHelper::isValidRequestedVehicleServiceId($requestedVehicleServiceId)) {
                 $get_drivers = $get_drivers->where('transport_vehicle_type.service_id', $requestedVehicleServiceId);
             }
+            if ($rideVariant !== '') {
+                \App\Helpers\XistiVehicleVariantHelper::applyTransportVariantDriverFilter(
+                    $get_drivers,
+                    $rideVariant,
+                    'transport_driver_details',
+                    true
+                );
+            }
         } else {
             $get_drivers = $get_drivers->where('vehicle_services.id', $service_id);
             \App\Helpers\XistiVehicleVariantHelper::applyTransportVariantDriverFilter($get_drivers, $rideVariant);

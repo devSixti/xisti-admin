@@ -74,10 +74,19 @@ class XistiVehicleVariantHelper
     /**
      * Match drivers to a transport ride's vehicle matrix slug (eco, económico, moto alto, etc.).
      */
-    public static function applyTransportVariantDriverFilter($query, ?string $rideVariant, string $driverTable = 'transport_driver_details'): void
-    {
+    public static function applyTransportVariantDriverFilter(
+        $query,
+        ?string $rideVariant,
+        string $driverTable = 'transport_driver_details',
+        bool $strict = false
+    ): void {
         $variant = self::normalize($rideVariant);
         if ($variant === '' || ! \Illuminate\Support\Facades\Schema::hasColumn($driverTable, 'delivery_variant')) {
+            return;
+        }
+        if ($strict) {
+            $query->where("{$driverTable}.delivery_variant", $variant);
+
             return;
         }
         $query->where(function ($q) use ($variant, $driverTable) {
