@@ -300,7 +300,7 @@ class UpdateRegisterController extends Controller
                 $user_details->verified_at = date('Y-m-d H:i:s');
                 $user_details->device_token = $request->device_token ?? null;
                 $user_details->save();
-            } elseif ($settings->is_otp_verification > 0 && $user_details->is_default_user == 0 && $user_details->fix_user_show == 0) {
+            } elseif ($settings->is_otp_verification > 0) {
                 if (isset($settings->otp_method)) {
                     if ($settings->otp_method == 1){
                         info($user_details->id);

@@ -275,10 +275,15 @@ class AdminRbacService
                 return true;
             }
             if ($matrixKey !== null) {
-                return $this->roleHasMatrixKey($role, $matrixKey);
+                return $this->roleCanPerformRoute($role, $matrixKey, $routeName);
             }
 
             return in_array($routeName, ['get:admin:dashboard', 'post:admin:dashboard'], true);
+        }
+
+        $matrixKey = $this->matrixKeyForModule($module) ?? self::routeToMatrixKey($routeName);
+        if ($matrixKey !== null && self::requiredActionForRoute($routeName) !== self::ACTION_VIEW) {
+            return $this->roleCanPerformRoute($role, $matrixKey, $routeName);
         }
 
         if (RoleModulePermission::query()
@@ -433,7 +438,128 @@ class AdminRbacService
             return null;
         }
 
-        return self::ROUTE_TO_MATRIX_KEY[$routeName] ?? null;
+        if (isset(self::ROUTE_TO_MATRIX_KEY[$routeName])) {
+            return self::ROUTE_TO_MATRIX_KEY[$routeName];
+        }
+
+        return self::inferRouteMatrixKey($routeName);
+    }
+
+    public static function requiredActionForRoute(string $routeName): string
+    {
+        if (preg_match('/delete_|_delete/i', $routeName)) {
+            return self::ACTION_DELETE;
+        }
+        if (preg_match('/add_|_add/i', $routeName)) {
+            return self::ACTION_CREATE;
+        }
+        if (preg_match('/approved_reject|approve/i', $routeName)) {
+            return self::ACTION_APPROVE;
+        }
+        if (preg_match('/update_general_setting|app_version_setting|service_setting|vehicle_commission/i', $routeName)) {
+            return self::ACTION_CONFIGURE;
+        }
+        if (preg_match('/update_|edit_|post:admin:/i', $routeName)) {
+            return self::ACTION_EDIT;
+        }
+
+        return self::ACTION_VIEW;
+    }
+
+  /**
+     * Map AJAX / mutation routes to RBAC matrix keys when not listed in admin_module.
+     */
+    private static function inferRouteMatrixKey(string $routeName): ?string
+    {
+        /** @var array<string, list<string>> */
+        static $fragments = [
+            'customer-list' => [
+                'user_list', 'add_user', 'edit_user', 'delete_user', 'update_user_status',
+                'update_customer_wallet', 'user_review', 'delete_user_review',
+            ],
+            'ride-list' => [
+                'ride_list', 'ride_details', 'transport_update_ride', 'single_provider_ride',
+            ],
+            'transport-providers-list' => [
+                'transport_service_provider', 'transport_service_driver', 'transport_provider',
+                'transport_update_provider', 'add_transport_service_driver', 'edit_transport_service_driver',
+                'transport_provider_document', 'edit_transport_provider_vehicle', 'delete_transport_provider',
+            ],
+            'pending-provider-list' => [
+                'transport_service_un_approved', 'pending_transport', 'pending_provider',
+                'update_approved_reject_provider_document',
+            ],
+            'earning-report' => ['earning_report'],
+            'heat-map' => ['transport_heat_map'],
+            'search-radius' => ['search_radius'],
+            'geo-fencing-list' => ['restricted_area'],
+            'cash-out-list' => ['transport_cash_out', 'cash_out'],
+            'world-currency-list' => ['world_currency'],
+            'vehicle-commission-rates' => ['vehicle_commission'],
+            'site-setting' => ['general_setting', 'update_general_setting'],
+            'app-version-setting' => ['app_version_setting', 'update_app_version'],
+            'push-notification' => ['push_notification', 'delete_push_notification'],
+            'support-page-list' => ['support_page', 'add_pages', 'edit_pages', 'delete_support_page'],
+            'referral-history' => ['referral_list'],
+            'report-issue' => ['report_issue', 'faqs'],
+            'sos-list' => [':admin:sos'],
+            'service-settings' => [
+                'service_setting', 'vehicle_type', 'vehicle_service', 'required_document',
+                'promocode', 'update_service_setting',
+            ],
+        ];
+
+        foreach ($fragments as $matrixKey => $needles) {
+            foreach ($needles as $needle) {
+                if (str_contains($routeName, $needle)) {
+                    return $matrixKey;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private function roleCanPerformRoute(AdminRole $role, string $matrixKey, string $routeName): bool
+    {
+        if ($role->slug === 'admin_total') {
+            return true;
+        }
+        if (! $this->roleHasMatrixKey($role, $matrixKey)) {
+            return false;
+        }
+
+        return $this->roleHasActionOnMatrixKey($role, $matrixKey, self::requiredActionForRoute($routeName));
+    }
+
+    private function roleHasActionOnMatrixKey(AdminRole $role, string $matrixKey, string $action): bool
+    {
+        if ($role->slug === 'admin_total') {
+            return true;
+        }
+
+        $moduleIds = $this->moduleIdsForMatrixKey($matrixKey);
+        if ($moduleIds === []) {
+            return $this->roleHasMatrixKey($role, $matrixKey);
+        }
+
+        return RoleModulePermission::query()
+            ->where('role_id', $role->id)
+            ->whereIn('module_id', $moduleIds)
+            ->where(function ($query) use ($action) {
+                $this->whereCsvContains($query, 'permissions', $action);
+            })
+            ->exists();
+    }
+
+    public function canPerformAction(Admin $admin, string $matrixKey, string $action): bool
+    {
+        $role = $this->resolveRole($admin);
+        if ($role === null) {
+            return (int) $admin->roles === 1;
+        }
+
+        return $this->roleHasActionOnMatrixKey($role, $matrixKey, $action);
     }
 
     /**

@@ -43,6 +43,13 @@ class adminRole
             $this->is_all_service = 1;
             $routeName = optional(request()->route())->getName();
             if ($routeName && ! $rbac->canAccessRoute($adminUser, $routeName)) {
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json([
+                        'status' => 0,
+                        'message' => "You don't have permission to access this module",
+                    ], 403);
+                }
+
                 return redirect('/admin/dashboard')->with('error', "You don't have permission to access this module");
             }
             $request->attributes->set('admin_role', $this->admin_role);

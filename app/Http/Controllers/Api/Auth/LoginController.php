@@ -124,7 +124,7 @@ class LoginController extends Controller
             $validator = Validator::make($request->all(), [
                 'login_id' => 'required',
                 'contact_number' => 'nullable',
-                'full_name' => 'required',
+                'full_name' => 'nullable|string|max:255',
                 'profile_image' => 'nullable',
             ]);
             if ($validator->fails()) {

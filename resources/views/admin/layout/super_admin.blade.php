@@ -29,7 +29,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/pages.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/extra.style.css?v=0.3')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/extra.style2.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/admin-xisti.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/admin-xisti.css?v=0.4')}}">
     @yield('page-css')
     <style>
         .currency:before {
@@ -88,13 +88,21 @@
 
                 {{--content start--}}
                 @if(Illuminate\Support\Facades\Auth::guard("admin")->check())
-                    @if(Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 1 || Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 4 )
-                        <div id="render-content">
-                            @yield('page-content')
-                        </div>
-                    @else
-                            <script>window.location = "{{route('get:admin:dashboard')}}";</script>
-                    @endif
+                    @php
+                    $panelAdmin = Illuminate\Support\Facades\Auth::guard('admin')->user();
+                    $panelRbac = app(\App\Services\AdminRbacService::class);
+                    $canRenderAdminPanel = $panelAdmin && (
+                        in_array((int) $panelAdmin->roles, [1, 4], true)
+                        || $panelRbac->usesRbac($panelAdmin)
+                    );
+                @endphp
+                @if($canRenderAdminPanel)
+                    <div id="render-content">
+                        @yield('page-content')
+                    </div>
+                @else
+                        <script>window.location = "{{route('get:admin:dashboard')}}";</script>
+                @endif
                 @endif
                 {{--content end--}}
             </div>
