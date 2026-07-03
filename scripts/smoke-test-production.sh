@@ -256,6 +256,18 @@ else
     skip "Google map proxy (no app_key for auth)"
 fi
 
+# 9. Shared ride API routes exist
+for path in /api/customer/shared-ride-search /api/customer/shared-ride-join; do
+  CODE="$(http_code --connect-timeout 15 -X POST "${API_BASE}${path}" -H "Content-Type: application/json" -d '{}')"
+  if [[ "${CODE}" == "401" || "${CODE}" == "200" || "${CODE}" == "302" || "${CODE}" == "422" || "${CODE}" == "403" ]]; then
+    pass "Shared ride ${path} (${CODE})"
+  elif [[ "${CODE}" == "404" ]]; then
+    fail "Shared ride ${path} (404 — route missing)"
+  else
+    fail "Shared ride ${path} (${CODE})"
+  fi
+done
+
 echo ""
 echo "================================"
 echo "Results: ${PASS} passed, ${FAIL} failed, ${SKIP} skipped"

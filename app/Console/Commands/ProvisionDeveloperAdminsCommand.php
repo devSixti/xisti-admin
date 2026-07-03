@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Admin;
+use App\Models\AdminRole;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 
@@ -30,16 +31,19 @@ class ProvisionDeveloperAdminsCommand extends Command
                 return self::FAILURE;
             }
 
+            $role = AdminRole::query()->where('slug', 'desarrollador')->first();
             $admin = Admin::query()->firstOrNew(['email' => $dev['email']]);
             $admin->name = $dev['name'];
             $admin->password = Hash::make((string) $dev['password']);
-            $admin->roles = 1;
+            $admin->roles = 4;
+            $admin->role_id = $role?->id;
             $admin->area_id = 0;
-            $admin->is_restrict_admin = 0;
+            $admin->is_restrict_admin = 1;
             $admin->admin_type = 's';
+            $admin->status = 1;
             $admin->save();
 
-            $this->info("OK: {$dev['email']} (super admin, id {$admin->id})");
+            $this->info("OK: {$dev['email']} (developer RBAC, id {$admin->id})");
         }
 
         return self::SUCCESS;

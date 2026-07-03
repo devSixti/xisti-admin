@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdateRegisterController;
 use App\Http\Controllers\Api\CustomerApiController;
 use App\Http\Controllers\Api\ReportIssueController;
+use App\Http\Controllers\Api\SharedRideController;
 use App\Http\Controllers\Api\Transport\UserController;
 use App\Http\Controllers\HeatMapController;
 use Illuminate\Http\Request;
@@ -104,6 +105,10 @@ Route::group(['middleware' => 'setLocaleLang'], function () {
                     Route::post('/get-vehicle-details', [UserController::class,'postDriverGetVehicleDetails'])->name('post:driver:get_vehicle_details');
 
                     Route::post('/ride-booking', [UserController::class,'postTransportRideBooking'])->name('post:customer:transport_ride_booking');
+                    Route::post('/shared-ride-create-offer', [SharedRideController::class, 'postCreateOffer'])->name('post:driver:shared_ride_create_offer');
+                    Route::post('/shared-ride-search', [SharedRideController::class, 'postPassengerSearch'])->name('post:customer:shared_ride_search');
+                    Route::post('/shared-ride-join', [SharedRideController::class, 'postJoinOffer'])->name('post:customer:shared_ride_join');
+                    Route::post('/shared-ride-my-offers', [SharedRideController::class, 'postMyOffers'])->name('post:driver:shared_ride_my_offers');
                     Route::post('/available-ride-request', [UserController::class,'postAvailableRideRequest'])->name('post:driver:available_ride_request');
                     Route::post('/update-current-lat-long', [UserController::class,'postDriverUpdateCurrentLatLong'])->name('post:driver:update_current_lat_long');
                     Route::post('/update-current-status', [UserController::class,'postDriverUpdateCurrentStatus'])->name('post:driver:update_current_status');

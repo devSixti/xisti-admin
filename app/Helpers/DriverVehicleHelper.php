@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Support\VehicleDocumentRules;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -129,6 +130,7 @@ class DriverVehicleHelper
 
         return [
             'service_id' => $serviceId,
+            'registration_key' => self::registrationKeyFor($serviceId, $deliveryVariant),
             'service_name' => $serviceName,
             'service_icon' => $serviceIcon,
             'service_description' => (string) ($row->vehicle_service_description ?? ''),
@@ -139,8 +141,34 @@ class DriverVehicleHelper
                 && $mode === 'transport',
             'is_delivery_only_service' => $isDeliveryOnly ? 1 : 0,
             'requires_technical_inspection' => ($serviceId === 1 && $mode === 'transport') ? 1 : 0,
+            'requires_plate' => self::requiresPlate($serviceId, $deliveryVariant) ? 1 : 0,
+            'requires_vehicle_photos' => self::requiresVehiclePhotos($serviceId, $deliveryVariant) ? 1 : 0,
             '_sort_key' => self::sortKeyFor($serviceId, $mode),
         ];
+    }
+
+    private static function registrationKeyFor(int $serviceId, ?string $deliveryVariant): string
+    {
+        if ($deliveryVariant === 'bicycle' || $serviceId === 4) {
+            return 'bicycle';
+        }
+
+        return match ($serviceId) {
+            3 => 'moto',
+            1 => 'carro',
+            default => 'vehicle',
+        };
+    }
+
+    private static function requiresPlate(int $serviceId, ?string $deliveryVariant): bool
+    {
+        return ! VehicleDocumentRules::isBicycleRegistration(null, $deliveryVariant)
+            && $serviceId !== 4;
+    }
+
+    private static function requiresVehiclePhotos(int $serviceId, ?string $deliveryVariant): bool
+    {
+        return self::requiresPlate($serviceId, $deliveryVariant);
     }
 
     private static function vehicleTypesForService(int $serviceId, string $vehicleIconUrl): array

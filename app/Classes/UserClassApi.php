@@ -32,6 +32,7 @@ use App\Helpers\RideLifecycleHelper;
 use App\Rules\ColombianMobileNumber;
 use App\Rules\ColombianNationalId;
 use App\Support\ColombiaFormValidation;
+use App\Support\VehicleDocumentRules;
 use App\Models\User;
 use App\Models\UserVerification;
 use App\Models\UserAddress;
@@ -293,7 +294,12 @@ class UserClassApi
             "destination_payment_method" => DestinationPaymentHelper::validationRule(),
             "requested_vehicle_service_id" => "nullable|integer|in:1,3,4",
             "delivery_variant" => "nullable|string|max:64",
-            "errand_type" => "nullable|in:delivery,encomienda",
+            "errand_type" => "nullable|in:delivery,encomienda,acarreo",
+            "acarreo_vehicle_variant" => "nullable|in:motocarguero,camion,jaula,motocarro",
+            "estimated_service_date" => "nullable|date",
+            "delivery_direction" => "nullable|in:send,receive",
+            "sender_name" => "nullable|max:80",
+            "sender_contact_number" => "nullable|numeric",
         ], AppMobileSettingsHelper::courierPackageDimensionValidationRules()));
 
         $errandType = EncomiendaHelper::normalizedErrandType(
@@ -301,6 +307,7 @@ class UserClassApi
             (int) $request->get('service_id')
         );
         $isEncomiendaBooking = $errandType === EncomiendaHelper::ERRAND_ENCOMIENDA;
+        $isAcarreoBooking = $errandType === EncomiendaHelper::ERRAND_ACARREO;
         if ($isEncomiendaBooking) {
             $validator->after(function ($v) use ($request) {
                 if (!DeliveryVehicleHelper::isValidRequestedVehicleServiceId((int) $request->get('requested_vehicle_service_id'))) {
@@ -311,6 +318,19 @@ class UserClassApi
                 }
                 if (trim((string) $request->get('estimate_price')) === '' && (float) $request->get('estimate_price') <= 0) {
                     $v->errors()->add('estimate_price', __('user_messages.9'));
+                }
+            });
+        }
+        if ($isAcarreoBooking) {
+            $validator->after(function ($v) use ($request) {
+                if (trim((string) $request->get('item_description')) === '') {
+                    $v->errors()->add('item_description', __('user_messages.9'));
+                }
+                if ((float) $request->get('offered_fare') <= 0) {
+                    $v->errors()->add('offered_fare', __('user_messages.9'));
+                }
+                if (\App\Helpers\AcarreoHelper::normalizeVariant($request->get('acarreo_vehicle_variant')) === null) {
+                    $v->errors()->add('acarreo_vehicle_variant', __('user_messages.9'));
                 }
             });
         }
@@ -509,6 +529,10 @@ class UserClassApi
         $ride->ride_time_out = RideLifecycleHelper::rideTimeoutFromNow();
         $ride->is_auto_accept = $request['is_auto_accept'];
 
+        if (Schema::hasColumn('user_ride_booking', 'delivery_direction')) {
+            $ride->delivery_direction = $request->get('delivery_direction');
+        }
+
         if($request['ride_for_other'] == 1){
             $ride->ride_for_other = $request['ride_for_other'];
             $ride->other_user_name = $request['other_user_name'];
@@ -516,20 +540,39 @@ class UserClassApi
         }
         $ride->save();
 
-        if (EncomiendaHelper::shouldPersistCourierRow((int) $get_vehicle_service->id, $errandType)) {
+        if (EncomiendaHelper::shouldPersistCourierRow((int) $get_vehicle_service->id, $errandType)
+            || \App\Helpers\AcarreoHelper::shouldPersistCourierRow($errandType)) {
             $courier_details = new TransportCourierDetails();
             $courier_details->ride_id = $ride->id;
             if (Schema::hasColumn('user_courier_service_details', 'errand_type')) {
                 $courier_details->errand_type = $errandType ?? EncomiendaHelper::ERRAND_DELIVERY;
+            }
+            if (Schema::hasColumn('user_courier_service_details', 'acarreo_vehicle_variant') && $isAcarreoBooking) {
+                $courier_details->acarreo_vehicle_variant = \App\Helpers\AcarreoHelper::normalizeVariant(
+                    $request->get('acarreo_vehicle_variant')
+                );
+            }
+            if (Schema::hasColumn('user_courier_service_details', 'estimated_service_date') && $isAcarreoBooking) {
+                $courier_details->estimated_service_date = $request->get('estimated_service_date');
             }
             $courier_details->recipient_name = $request['recipient_name'] ?? '';
             $courier_details->recipient_contact_number = ColombiaFormValidation::normalizeColombianMobile(
                 $request['recipient_contact_number'] ?? '',
                 $request->get('recipient_country_code', '+57')
             );
+            if (Schema::hasColumn('user_courier_service_details', 'delivery_direction')) {
+                $courier_details->delivery_direction = $request->get('delivery_direction');
+            }
+            if (Schema::hasColumn('user_courier_service_details', 'sender_name')) {
+                $courier_details->sender_name = $request->get('sender_name', '');
+                $courier_details->sender_contact_number = ColombiaFormValidation::normalizeColombianMobile(
+                    $request->get('sender_contact_number', ''),
+                    $request->get('recipient_country_code', '+57')
+                );
+            }
             $courier_details->item_description = $request['item_description'] ?? '';
             $courier_details->estimate_price = round((float) ($request['estimate_price'] ?? 0), 2);
-            if (!$isEncomiendaBooking) {
+            if (!$isEncomiendaBooking && !$isAcarreoBooking) {
                 AppMobileSettingsHelper::applyCourierPackageMetricsToModel($courier_details, $request);
             }
             $requestedVehicleServiceId = (int) $request->get('requested_vehicle_service_id');
@@ -1989,6 +2032,18 @@ class UserClassApi
     public function getDriverRequiredDocumentList($user_id , $doc_status , $driver_type)
     {
         $required_documents = RequiredDocuments::query()->where('status', 1)->get();
+        $driverDetails = TransportDriverDetails::query()->where('user_id', $user_id)->first();
+        $deliveryVariant = $driverDetails?->delivery_variant ?? null;
+        $registrationKey = null;
+        if ($driverDetails && Schema::hasTable('transport_vehicle_type')) {
+            $typeName = DB::table('transport_vehicle_type')
+                ->where('id', $driverDetails->vehicle_type_id)
+                ->value('name');
+            $registrationKey = strtolower((string) $typeName);
+        }
+        $required_documents = collect(
+            VehicleDocumentRules::filterForVehicle($required_documents, $registrationKey, $deliveryVariant)
+        );
         $document_list = [];
         if ($required_documents->isEmpty()) {
             User::query()
@@ -2005,7 +2060,8 @@ class UserClassApi
                     'document_file' => $get_driver_document != Null ? url('/assets/images/provider-documents/' . $get_driver_document->document_file) : '',
                     'contains_expiry' => ($document->contains_expiry == null) ? 0 : $document->contains_expiry,
                     'document_expire_date' => ($get_driver_document && $get_driver_document->expiry_date != null) ? Carbon::parse($get_driver_document->expiry_date)->format('Y-m-d') : "",
-                    'document_status' => $get_driver_document != Null ? $get_driver_document->status : 4
+                    'document_status' => $get_driver_document != Null ? $get_driver_document->status : 4,
+                    'supports_national_id_sides' => VehicleDocumentRules::supportsNationalIdSides((string) $document->name) ? 1 : 0,
                 ];
             }
             return response()->json([

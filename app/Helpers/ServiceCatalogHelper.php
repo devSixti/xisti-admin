@@ -26,9 +26,12 @@ class ServiceCatalogHelper
     {
         $labels = [
             'transport' => $language === 'es' ? 'Viajes' : 'Rides',
-            'delivery' => $language === 'es' ? 'Envío' : 'Delivery',
-            'expreso' => $language === 'es' ? 'Expreso' : 'Express',
+            'delivery' => $language === 'es' ? 'Entregas' : 'Deliveries',
+            'expreso' => $language === 'es' ? 'Compartido' : 'Shared',
+            'viajes_compartidos' => $language === 'es' ? 'Compartido' : 'Shared',
             'encomiendas' => $language === 'es' ? 'Encomiendas' : 'Errands',
+            'acarreos' => $language === 'es' ? 'Carga' : 'Freight',
+            'carga' => $language === 'es' ? 'Carga' : 'Freight',
         ];
         $grouped = [];
         foreach ($services as $row) {
@@ -38,7 +41,7 @@ class ServiceCatalogHelper
             }
             $grouped[$mode][] = $row;
         }
-        $modeOrder = ['transport', 'delivery', 'expreso', 'encomiendas'];
+        $modeOrder = ['transport', 'delivery', 'expreso', 'viajes_compartidos', 'encomiendas', 'acarreos', 'carga'];
         $modes = [];
         $order = 1;
         foreach ($modeOrder as $mode) {

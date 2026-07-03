@@ -6,6 +6,7 @@ class EncomiendaHelper
 {
     public const ERRAND_DELIVERY = 'delivery';
     public const ERRAND_ENCOMIENDA = 'encomienda';
+    public const ERRAND_ACARREO = 'acarreo';
 
     /**
      * @param  object|array<string, mixed>  $row
@@ -36,13 +37,16 @@ class EncomiendaHelper
             return true;
         }
 
-        return $errandType === self::ERRAND_ENCOMIENDA;
+        return in_array($errandType, [self::ERRAND_ENCOMIENDA, self::ERRAND_ACARREO], true);
     }
 
     public static function normalizedErrandType(?string $errandType, int $vehicleServiceId): ?string
     {
         if ($errandType === self::ERRAND_ENCOMIENDA) {
             return self::ERRAND_ENCOMIENDA;
+        }
+        if ($errandType === self::ERRAND_ACARREO) {
+            return self::ERRAND_ACARREO;
         }
         if ($vehicleServiceId === 4) {
             return self::ERRAND_DELIVERY;

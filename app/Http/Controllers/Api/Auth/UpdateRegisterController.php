@@ -227,7 +227,7 @@ class UpdateRegisterController extends Controller
         }
         if ($user->verified_at == Null) {
             $channel = $request->get('channel', 'sms');
-            $sendResult = $this->tokenClassApi->sendUserSmsVerification($user->id, $channel);
+            $sendResult = $this->tokenClassApi->sendUserSmsVerification($user->id, $channel, true);
             if ($sendResult instanceof \Illuminate\Http\JsonResponse) {
                 return $sendResult;
             }

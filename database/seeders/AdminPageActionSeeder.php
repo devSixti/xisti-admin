@@ -2,45 +2,35 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\AdminRole;
+use App\Services\AdminRbacService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class AdminPageActionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
-        $admin_pageaction_record =[
-            [
-                'id' => 1,
-                'constant' => 'module',
-                'name' => 'Module',
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s"),
-            ],
-            [
-                'id' => 2,
-                'constant' => 'add',
-                'name' => 'Add',
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s"),
-           ]
+        $actions = [
+            ['id' => 1, 'constant' => 'view', 'name' => 'View'],
+            ['id' => 2, 'constant' => 'create', 'name' => 'Create'],
+            ['id' => 3, 'constant' => 'edit', 'name' => 'Edit'],
+            ['id' => 4, 'constant' => 'delete', 'name' => 'Delete'],
+            ['id' => 5, 'constant' => 'approve', 'name' => 'Approve'],
+            ['id' => 6, 'constant' => 'export', 'name' => 'Export'],
+            ['id' => 7, 'constant' => 'configure', 'name' => 'Configure'],
         ];
-        /*
-        | upsert
-        |--------------------------------------------------------------------------
-        | We are using upsert here as it functions to either insert or update records efficiently.
-        | If a record already exists, it updates it; if not, it inserts a new record.
-        | This operation compares records using a unique key and supports handling multiple records in a single operation.
-        */
+        $now = now();
+        foreach ($actions as &$row) {
+            $row['created_at'] = $now;
+            $row['updated_at'] = $now;
+        }
+        unset($row);
+
         DB::table('admin_pageaction')->upsert(
-            $admin_pageaction_record,
-            ['id'], // Unique column to determine if a row exists
-            ['constant', 'name','created_at','updated_at']
+            $actions,
+            ['id'],
+            ['constant', 'name', 'updated_at']
         );
     }
 }

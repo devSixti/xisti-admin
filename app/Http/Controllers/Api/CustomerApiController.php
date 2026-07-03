@@ -1475,6 +1475,17 @@ class CustomerApiController extends Controller
 
         $general = request()->get('general_settings');
 
+        $pricingEngine = app(\App\Services\FarePricingEngine::class);
+        $priced = $pricingEngine->priceRange(
+            (float) $recommendedFare,
+            (float) $minPrice,
+            (float) $maxPrice,
+            ['datetime' => now()]
+        );
+        $recommendedFare = $priced['recommended'];
+        $minPrice = $priced['min'];
+        $maxPrice = $priced['max'];
+
         return response()->json(array_merge([
             "status" => 1,
             'message' => __('user_messages.1'),

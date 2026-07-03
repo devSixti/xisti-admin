@@ -6,6 +6,7 @@ use App\Models\AdminCategoryPermission;
 use App\Models\AdminModule;
 use App\Models\AdminPermission;
 use App\Models\ServiceCategory;
+use App\Services\AdminRbacService;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,6 +35,25 @@ class adminRole
         $this->admin_id = Auth::guard("admin")->user()->id;
         $this->is_restrict_admin = Auth::guard("admin")->user()->is_restrict_admin;
         $this->admin_city_id = Auth::guard("admin")->user()->area_id;
+
+        $rbac = app(AdminRbacService::class);
+        $adminUser = Auth::guard('admin')->user();
+        if ($rbac->usesRbac($adminUser)) {
+            $this->admin_main_menu_list = $rbac->buildMenuForAdmin($adminUser);
+            $this->is_all_service = 1;
+            $routeName = optional(request()->route())->getName();
+            if ($routeName && ! $rbac->canAccessRoute($adminUser, $routeName)) {
+                return redirect('/admin/dashboard')->with('error', "You don't have permission to access this module");
+            }
+            $request->attributes->set('admin_role', $this->admin_role);
+            $request->attributes->set('admin_main_menu_list', $this->admin_main_menu_list);
+            $request->attributes->set('admin_city_id', $this->admin_city_id);
+            $request->attributes->set('is_restrict_admin', $this->is_restrict_admin);
+            view()->share('admin_main_menu_list', $this->admin_main_menu_list);
+            view()->share('admin_role', $this->admin_role);
+
+            return $next($request);
+        }
 
         if($this->admin_role == 1 || $this->admin_role == 2 || $this->admin_role == 3 ) {
             $this->admin_menu_list =AdminModule::query()->select('admin_module.id','admin_module.parent_id','admin_module.name','admin_module.module_name','admin_module.route_path','admin_module.image')
