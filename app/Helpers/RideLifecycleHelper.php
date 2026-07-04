@@ -36,23 +36,60 @@ class RideLifecycleHelper
         $now = date('Y-m-d H:i:s');
         $fallbackCutoff = date('Y-m-d H:i:s', strtotime('-'.self::rideExpiryMinutes().' minutes'));
 
-        $query = DB::table('user_ride_booking')->where('status', 0);
+        $expiredIds = DB::table('user_ride_booking')
+            ->where('status', 0)
+            ->where(function ($q) use ($now, $fallbackCutoff) {
+                $q->where(function ($expired) use ($now) {
+                    $expired->whereNotNull('ride_time_out')->where('ride_time_out', '<', $now);
+                })->orWhere(function ($legacy) use ($fallbackCutoff) {
+                    $legacy->where(function ($nullTimeout) {
+                        $nullTimeout->whereNull('ride_time_out')->orWhere('ride_time_out', '');
+                    })->where('created_at', '<', $fallbackCutoff);
+                });
+            })
+            ->pluck('id')
+            ->all();
 
-        $query->where(function ($q) use ($now, $fallbackCutoff) {
-            $q->where(function ($expired) use ($now) {
-                $expired->whereNotNull('ride_time_out')->where('ride_time_out', '<', $now);
-            })->orWhere(function ($legacy) use ($fallbackCutoff) {
-                $legacy->where(function ($nullTimeout) {
-                    $nullTimeout->whereNull('ride_time_out')->orWhere('ride_time_out', '');
-                })->where('created_at', '<', $fallbackCutoff);
-            });
-        });
+        if (empty($expiredIds)) {
+            return 0;
+        }
 
-        return $query->update([
+        DB::table('user_ride_booking')->whereIn('id', $expiredIds)->update([
             'status' => 4,
             'cancel_by' => 'system',
             'cancel_reason' => 'expired',
             'updated_at' => $now,
         ]);
+
+        if (Schema::hasTable('user_running_ride')) {
+            DB::table('user_running_ride')->whereIn('booking_id', $expiredIds)->delete();
+        }
+        if (Schema::hasTable('running_service')) {
+            DB::table('running_service')->whereIn('booking_id', $expiredIds)->delete();
+        }
+
+        return count($expiredIds);
+    }
+
+    /**
+     * Remove orphan user_running_ride rows where the booking is already cancelled.
+     */
+    public static function purgeOrphanRunningRides(): int
+    {
+        if (! Schema::hasTable('user_running_ride') || ! Schema::hasTable('user_ride_booking')) {
+            return 0;
+        }
+
+        $orphanIds = DB::table('user_running_ride')
+            ->join('user_ride_booking', 'user_running_ride.booking_id', '=', 'user_ride_booking.id')
+            ->whereIn('user_ride_booking.status', [4, 6])
+            ->pluck('user_running_ride.id')
+            ->all();
+
+        if (empty($orphanIds)) {
+            return 0;
+        }
+
+        return DB::table('user_running_ride')->whereIn('id', $orphanIds)->delete();
     }
 }

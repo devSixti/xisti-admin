@@ -21,7 +21,7 @@ class DestinationPaymentHelper
     {
         return [
             ['code' => self::CASH, 'label_es' => 'Efectivo', 'label_en' => 'Cash'],
-            ['code' => self::BANCOLOMBIA, 'label_es' => 'Transferencia Bancolombia', 'label_en' => 'Bancolombia transfer'],
+            ['code' => self::BANCOLOMBIA, 'label_es' => 'Bancolombia', 'label_en' => 'Bancolombia'],
             ['code' => self::DAVIPLATA, 'label_es' => 'Daviplata', 'label_en' => 'Daviplata'],
             ['code' => self::NEQUI, 'label_es' => 'Nequi', 'label_en' => 'Nequi'],
         ];
@@ -141,13 +141,13 @@ class DestinationPaymentHelper
         $labels = [
             'en' => [
                 self::CASH => 'Cash',
-                self::BANCOLOMBIA => 'Bancolombia transfer',
+                self::BANCOLOMBIA => 'Bancolombia',
                 self::DAVIPLATA => 'Daviplata',
                 self::NEQUI => 'Nequi',
             ],
             'es' => [
                 self::CASH => 'Efectivo',
-                self::BANCOLOMBIA => 'Transferencia Bancolombia',
+                self::BANCOLOMBIA => 'Bancolombia',
                 self::DAVIPLATA => 'Daviplata',
                 self::NEQUI => 'Nequi',
             ],

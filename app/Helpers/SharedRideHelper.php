@@ -185,20 +185,20 @@ class SharedRideHelper
         $ride->user_id = $passenger->id;
         $ride->driver_id = $driver->id;
         $ride->user_name = trim($passenger->first_name . ' ' . ($passenger->last_name ?? ''));
-        $ride->pickup_location = $offer->origin_town;
-        $ride->drop_location = $offer->destination_town;
+        $ride->pickup_address = $offer->origin_town;
+        $ride->destination_address = $offer->destination_town;
         $ride->pickup_lat = $passenger->current_lat ?? 0;
         $ride->pickup_long = $passenger->current_long ?? 0;
-        $ride->drop_lat = $passenger->current_lat ?? 0;
-        $ride->drop_long = $passenger->current_long ?? 0;
+        $ride->destination_latlong = ($passenger->current_lat ?? 0) . ',' . ($passenger->current_long ?? 0);
         $ride->vehicle_service_id = 1;
         $ride->status = 2;
         $ride->ride_type = 0;
         $ride->payment_type = 1;
-        $ride->offered_fare = (float) ($offer->fare_per_person ?? 0);
-        $ride->estimated_time = 0;
+        $ride->offered_price = (float) ($offer->fare_per_person ?? 0);
+        $ride->total_pay = (float) ($offer->fare_per_person ?? 0);
+        $ride->eta = 0;
         $ride->total_distance = 0;
-        $ride->pickup_date_time = $offer->trip_date . ' 08:00:00';
+        $ride->pickup_datetime = $offer->trip_date . ' 08:00:00';
         $ride->save();
 
         return (int) $ride->id;

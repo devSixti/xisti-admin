@@ -489,7 +489,8 @@ class UserClassApi
         }
         $ride->vehicle_cost_for_km = $get_vehicle_service->cost_for_km;
         $ride->ride_no = $ride->generateRideNo();
-        $ride->otp = $ride->generateOtp(4);
+        $isCourierRide = $errandType !== null;
+        $ride->otp = $isCourierRide ? null : $ride->generateOtp(4);
         $ride->user_name = $user_details['first_name'];
         if ($request['pickup_date_time'] != Null) {
             $destination_datetime = date('Y-m-d H:i:s', strtotime('+'.$request['estimated_time'].' minute',strtotime(date('Y-m-d H:i:s', strtotime($request['pickup_date_time'])))));
