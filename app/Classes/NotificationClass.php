@@ -11,6 +11,7 @@ namespace App\Classes;
 use App\Helpers\FcmPushHelper;
 use App\Helpers\PushEventTemplateHelper;
 use App\Helpers\VehicleCommissionHelper;
+use App\Helpers\TransactionalMailHelper;
 use App\Jobs\AutoMail;
 use App\Jobs\FavDriverSendNotification;
 use App\Jobs\NearestAlgoSendDriverNotification;
@@ -576,7 +577,13 @@ class NotificationClass
                     $smtp_hostname = ($general_setting->smtp_hostname != Null) ? $general_setting->smtp_hostname : "";
                     $smtp_port = ($general_setting->smtp_port != Null) ? $general_setting->smtp_port : "";
                     $smtp_encryption = ($general_setting->smtp_encryption != Null) ? $general_setting->smtp_encryption : "";
-                    if ($smtp_user_name != "" && $smtp_password != "" && $smtp_hostname != "" && $smtp_port != "" && $smtp_encryption != "") {
+                    if (TransactionalMailHelper::transportConfigured(
+                        $smtp_user_name,
+                        $smtp_password,
+                        $smtp_hostname,
+                        $smtp_port,
+                        $smtp_encryption
+                    )) {
                         $site_logo = asset("/assets/images/email-temp-images/" . $general_setting->website_logo);
                         $mail_logo = asset("/assets/images/email-temp-images/e-temp-email.png");
                         $fb_logo = asset("/assets/images/email-temp-images/e-temp-facebook.png");

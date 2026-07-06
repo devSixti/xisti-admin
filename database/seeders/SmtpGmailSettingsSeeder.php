@@ -17,10 +17,10 @@ class SmtpGmailSettingsSeeder extends Seeder
         $appPassword = (string) env('GMAIL_APP_PASSWORD', '');
 
         $settings->send_mail = 1;
-        $settings->mail_site_name = 'XISTI App';
-        $settings->email = 'soportexisti@gmail.com';
-        $settings->send_receive_email = 'soportexisti@gmail.com';
-        $settings->smtp_user_name = 'soportexisti@gmail.com';
+        $settings->mail_site_name = 'XISTI';
+        $settings->email = (string) config('xisti.mail.support_address', 'soporte@xistiapp.com');
+        $settings->send_receive_email = (string) config('xisti.mail.support_address', 'soporte@xistiapp.com');
+        $settings->smtp_user_name = (string) config('xisti.mail.from_address', 'noreply@xistiapp.com');
         $settings->smtp_hostname = 'smtp.gmail.com';
         $settings->smtp_port = 465;
         $settings->smtp_encryption = 'ssl';

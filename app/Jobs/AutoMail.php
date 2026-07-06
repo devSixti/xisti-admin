@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Helpers\TransactionalMailHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -34,15 +35,10 @@ class AutoMail implements ShouldQueue
         $smtp_port = $data['smtp_port'];
         $smtp_encryption = $data['smtp_encryption'];
 
-        $resendKey = (string) env('RESEND_API_KEY', '');
-        $mailer = (string) env('MAIL_MAILER', 'smtp');
-        $useResend = $resendKey !== '' && in_array($mailer, ['resend', 'failover'], true);
-
-        if ($useResend) {
+        if (TransactionalMailHelper::resendEnabled()) {
+            $mailer = (string) env('MAIL_MAILER', 'resend');
             Config::set('mail.default', $mailer === 'failover' ? 'failover' : 'resend');
-            Config::set('services.resend.key', $resendKey);
-            $fromAddress = (string) env('MAIL_FROM_ADDRESS', $smtp_user_name);
-            $fromName = $mail_site_name;
+            Config::set('services.resend.key', (string) env('RESEND_API_KEY', ''));
         } else {
             Config::set('mail.default', 'smtp');
             Config::set('mail.mailers.smtp.username', $smtp_user_name);
@@ -50,9 +46,10 @@ class AutoMail implements ShouldQueue
             Config::set('mail.mailers.smtp.host', $smtp_hostname);
             Config::set('mail.mailers.smtp.port', $smtp_port);
             Config::set('mail.mailers.smtp.encryption', $smtp_encryption);
-            $fromAddress = $smtp_user_name;
-            $fromName = $mail_site_name;
         }
+
+        $fromAddress = TransactionalMailHelper::fromAddress($smtp_user_name);
+        $fromName = TransactionalMailHelper::fromName($mail_site_name);
 
         Mail::send($path, $data, function ($message) use ($email, $subject, $fromAddress, $fromName) {
             $message->from($fromAddress, $fromName);

@@ -25,4 +25,11 @@ return [
         'background' => '#0B0B0B',
         'surface' => '#141414',
     ],
+    'mail' => [
+        /** Outbound transactional sender (Resend / SMTP From). */
+        'from_address' => env('XISTI_MAIL_FROM_ADDRESS', env('MAIL_FROM_ADDRESS', 'noreply@xistiapp.com')),
+        'from_name' => env('XISTI_MAIL_FROM_NAME', env('MAIL_FROM_NAME', 'XISTI')),
+        /** Inbound support / admin notifications (Reply-To / site contact). */
+        'support_address' => env('XISTI_SUPPORT_EMAIL', 'soporte@xistiapp.com'),
+    ],
 ];
