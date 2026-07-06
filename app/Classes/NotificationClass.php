@@ -383,7 +383,8 @@ class NotificationClass
                 'ride_id' => (string) $request_id,
                 'ride_status' => (string) $ride->status,
                 'ride_type' => (string) $ride->ride_type,
-            ]
+            ],
+            (int) $login_device,
         );
     }
 
@@ -414,7 +415,8 @@ class NotificationClass
                 'ride_id' => (string) $ride_id,
                 'ride_status' => (string) $status,
                 'ride_type' => (string) ($ride->ride_type ?? 0),
-            ]
+            ],
+            (int) $login_device,
         );
     }
 
@@ -675,7 +677,7 @@ class NotificationClass
         $not_multi_delivery_provider_id = ProviderUserRunningService::query()->get()->pluck('provider_id');
 
         $get_drivers = User::query()
-            ->select('users.device_token','transport_driver_details.search_distance_filter','transport_driver_details.current_lat','transport_driver_details.current_long',
+            ->select('users.device_token','users.login_device','transport_driver_details.search_distance_filter','transport_driver_details.current_lat','transport_driver_details.current_long',
                 DB::raw("(CASE WHEN transport_driver_details.search_distance_filter != 0 THEN ROUND((6371 * acos( cos( radians(" .$current_lat. ") ) * cos( radians(current_lat) )  * cos( radians( current_long ) - radians(" .$current_long. ") ) + sin( radians(" .$current_lat. ") ) * sin(radians( current_lat ) ) ) ), 2) ELSE 0 END) as distance")
     )
             ->join('transport_driver_details','transport_driver_details.user_id','=','users.id')
@@ -723,10 +725,6 @@ class NotificationClass
             ->get()
             ->toArray();
 
-        $provider_token = array_values(array_filter(
-            array_column($get_drivers, 'device_token'),
-            static fn ($token) => $token !== null && trim((string) $token) !== ''
-        ));
         $ride = TransportRideBook::query()->where('id', $ride_id)->first();
         $rideType = $ride != null ? (string) $ride->ride_type : '0';
         $event = $this->applyEventTemplate('driver_new_request', 'es', [
@@ -765,7 +763,20 @@ class NotificationClass
         ];
 
         if ($title !== '' || $message !== '') {
-            FcmPushHelper::sendToTokens($provider_token, $title, $message, $extraNotificationData, $iosSound, true);
+            foreach ($get_drivers as $driver) {
+                $token = trim((string) ($driver['device_token'] ?? ''));
+                if ($token === '') {
+                    continue;
+                }
+                FcmPushHelper::sendToTokenForLoginDevice(
+                    $token,
+                    $title,
+                    $message,
+                    $extraNotificationData,
+                    $iosSound,
+                    (int) ($driver['login_device'] ?? 0),
+                );
+            }
         }
 
         return response()->json(['status' => 1, 'message' => __('user_messages.1'), 'message_code' => 1]);
@@ -1498,7 +1509,7 @@ class NotificationClass
             'dispatch_ts' => (string) time(),
         ], $extraData);
 
-        FcmPushHelper::sendToTokens($tokens, $event['title'], $event['message'], $payload, $event['sound'], true);
+        FcmPushHelper::sendToTokens($tokens, $event['title'], $event['message'], $payload, $event['sound'], false);
     }
 
     private function dispatchActionForEventKey(string $eventKey): string

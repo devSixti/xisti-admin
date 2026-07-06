@@ -38,16 +38,31 @@ class FcmPushHelper
      */
     public static function shouldUseAndroidDataOnly(?int $loginDevice, array $data): bool
     {
-        if ($loginDevice === 1) {
-            return true;
-        }
-        if ($loginDevice === 2) {
-            return false;
-        }
+        // Data-only delivery is an Android-specific strategy (Flutter shows local heads-up).
+        return $loginDevice === 1;
+    }
 
-        $notificationType = (string) ($data['notification_type'] ?? '');
-
-        return in_array($notificationType, ['1', '6', '7', '8', '14'], true);
+    /**
+     * @return array<string, mixed>
+     */
+    private static function buildApnsPayload(string $title, string $body, string $sound): array
+    {
+        return [
+            'headers' => [
+                'apns-priority' => '10',
+            ],
+            'payload' => [
+                'aps' => [
+                    'alert' => [
+                        'title' => $title,
+                        'body' => $body,
+                    ],
+                    'sound' => $sound,
+                    'badge' => 1,
+                    'content-available' => 1,
+                ],
+            ],
+        ];
     }
 
     /**
@@ -133,6 +148,7 @@ class FcmPushHelper
             $fcmMessage['android'] = [
                 'priority' => 'HIGH',
             ];
+            $fcmMessage['apns'] = self::buildApnsPayload($title, $body, $sound);
         } else {
             $fcmMessage['notification'] = [
                 'title' => $title,
@@ -146,22 +162,7 @@ class FcmPushHelper
                     'channel_id' => $androidChannelId,
                 ],
             ];
-            $fcmMessage['apns'] = [
-                'headers' => [
-                    'apns-priority' => '10',
-                ],
-                'payload' => [
-                    'aps' => [
-                        'alert' => [
-                            'title' => $title,
-                            'body' => $body,
-                        ],
-                        'sound' => $sound,
-                        'badge' => 1,
-                        'content-available' => 1,
-                    ],
-                ],
-            ];
+            $fcmMessage['apns'] = self::buildApnsPayload($title, $body, $sound);
         }
 
         $message = [
