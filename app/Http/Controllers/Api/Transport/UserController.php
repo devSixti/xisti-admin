@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Transport;
 use App\Classes\AdminClass;
 use App\Helpers\DestinationPaymentHelper;
 use App\Helpers\RideKindHelper;
+use App\Helpers\RideSessionHelper;
 use App\Helpers\WalletSettlementHelper;
 use App\Classes\NotificationClass;
 use App\Classes\UserClassApi;
@@ -2133,6 +2134,8 @@ class UserController extends Controller
             return $failed;
         }
 
+        RideSessionHelper::reconcileForUser((int) $driver_id, $this->notificationClass);
+
             $get_running_service = ProviderUserRunningService::query()->where('provider_id', $driver_id)->get();
             if ($get_running_service->isNotEmpty()) {
                 $running_ride = [];
@@ -2142,7 +2145,8 @@ class UserController extends Controller
                                     ->where('user_ride_booking.id', $running_services->booking_id)
                                     ->first();
                     if ($ride_details != Null) {
-                        if ($ride_details->ride_status >= 1 && $ride_details->ride_status <= 9) {
+                        $status = (int) $ride_details->ride_status;
+                        if (! in_array($status, RideSessionHelper::TERMINAL_STATUSES, true)) {
                             $running_ride[] = [
                                 "ride_id" => $ride_details->ride_id,
                                 "ride_status" => $ride_details->ride_status,

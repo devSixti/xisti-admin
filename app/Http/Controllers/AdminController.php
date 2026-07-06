@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\AdminClass;
+use App\Helpers\RideSessionHelper;
 use App\Classes\UserClassApi;
 use App\Classes\NotificationClass;
 use App\Http\Requests\CustomerStoreRequest;
@@ -317,21 +318,21 @@ class AdminController extends Controller
             $refer_count = UserReferHistory::query()->where('refer_id',$record->id)->count();
 
             $user_wallet_balance_html = '<span id="change_wallet_' . $record->id . '">' . $user_wallet_balance . '</span><a href="' . route('post:admin:customer_wallet_transaction', ['id' => $record->id]) . '" userid="' . $record->id . '" style="margin: 0 7px;">
-                            <img src="' . asset('/assets/images/template-images/wallet-history3.png') . '" style="width:25px; height: 25px;" title="Wallet Transaction">
+                            <img src="' . asset('/assets/images/template-images/wallet-history3.png') . '" style="width:25px; height: 25px;" title="' . e(__('admin.pages.wallet_transaction')) . '">
                         </a>
                         <a style="border: 1px solid Green; border-radius: 5px; font-size: 16px; font-weight: bolder; color: green; padding: 0 5px;cursor: pointer" class="md-trigger-1 text-c-orenge"
                               data-modal="modal-3" data-toggle="tooltip" userid="' . $record->id . '"> <i class="fa fa-plus" aria-hidden="true"></i> / <i class="fa fa-minus" aria-hidden="true"></i> </a>';
 
             $action = '<a  href="' . route('get:admin:edit_user', $record->id) . '" style="margin: 0 7px;">
-                            <img src="' . asset('/assets/images/template-images/writing-1.png') . '" style="width:20px; height: 20px;" title="Edit">
+                            <img src="' . asset('/assets/images/template-images/writing-1.png') . '" style="width:20px; height: 20px;" title="' . e(__('admin.common.edit')) . '">
                         </a>
-                        <a class="delete" userid="' . $record->id . '" style="margin: 0 7px;">
-                            <img src="' . asset('/assets/images/template-images/remove-1.png') . '" style="width:20px; height: 20px;" title="Delete">
+                        <a class="delete" userid="' . $record->id . '" style="margin: 0 7px; cursor: pointer;">
+                            <img src="' . asset('/assets/images/template-images/remove-1.png') . '" style="width:20px; height: 20px;" title="' . e(__('admin.common.delete')) . '">
                         </a>
 
                ';
             $checked = ($record->status == "1") ? "checked" : "";
-            $user_Status = ($record->status == "1") ? "Active" : "InActive";
+            $user_Status = \App\Helpers\AdminUi::activeStatusLabel($record->status);
             $status = '<span class="toggle">
                             <label>
                                 <input name="status"
@@ -347,8 +348,8 @@ class AdminController extends Controller
                             </label>
                         </span>';
 
-            $refer_stat = '<a href="'.route('get:admin:referred_list',['id'=>$record->id]) .'" class="url-link" title="Referred List">
-                            View ('.$refer_count.')</a>';
+            $refer_stat = '<a href="'.route('get:admin:referred_list',['id'=>$record->id]) .'" class="url-link" title="'.e(__('admin.pages.referred_list')).'">
+                            ' . e(__('admin.common.view')) . ' ('.$refer_count.')</a>';
 
             $data_arr[] = array(
                 "id" => $id,
@@ -484,19 +485,9 @@ class AdminController extends Controller
         }
 
 
-        $user_running_ride = TransportRideBook::query()->where('user_id', '=', $id)->whereNotIn('status', [4, 9, 10])->count();
-        if ($user->is_driver_type == 1){
-            $driver_running_ride = TransportRideBook::query()->where('driver_id', '=', $id)->whereNotIn('status', [4, 9, 10])->count();
+        RideSessionHelper::reconcileForUser((int) $id);
 
-            if ($user_running_ride > 0 || $driver_running_ride > 0) {
-                return response()->json([
-                    "success" => false,
-                    "message" => "Sorry, Currently the ride of this user is running or has a pending payment so you can't delete the account at the time. Try Later!"
-                ]);
-            }
-        }
-
-        if ($user_running_ride > 0) {
+        if (RideSessionHelper::hasBlockingRideActivity((int) $id)) {
             return response()->json([
                 "success" => false,
                 "message" => "Sorry, Currently the ride of this user is running or has a pending payment so you can't delete the account at the time. Try Later!"
@@ -510,12 +501,22 @@ class AdminController extends Controller
             ]);
         }
 
-        (new UserClassApi())->forfeitWalletBalanceOnAccountDeletion((int) $id);
+        try {
+            app(UserClassApi::class)->forfeitWalletBalanceOnAccountDeletion((int) $id);
 
-        if (\File::exists(public_path('/assets/images/profile-images/customer/' . $user->avatar))) {
-            \File::delete(public_path('/assets/images/profile-images/customer/' . $user->avatar));
+            if ($user->avatar && \File::exists(public_path('/assets/images/profile-images/customer/' . $user->avatar))) {
+                \File::delete(public_path('/assets/images/profile-images/customer/' . $user->avatar));
+            }
+            $user->delete();
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json([
+                'success' => false,
+                'message' => __('admin.errors.delete_customer_failed'),
+            ]);
         }
-        $user->delete();
+
         Session::flash('success', 'Customer remove successfully!');
         return response()->json([
             'success' => true

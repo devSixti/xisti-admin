@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\AdminUi;
 use App\Models\Admin;
 use App\Models\AdminModule;
 use App\Models\AdminRole;
@@ -875,7 +876,7 @@ class AdminRbacService
         return [
             'id' => $module->id,
             'parent_id' => $module->parent_id,
-            'name' => $module->name,
+            'name' => AdminUi::menuEntryLabel((string) $module->name, $module->module_name !== '' ? $module->module_name : null),
             'module_name' => $module->module_name,
             'route_path' => $module->route_path,
             'route_path_arr' => $module->route_path_arr,

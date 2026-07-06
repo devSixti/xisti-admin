@@ -271,7 +271,7 @@ class HomeController extends Controller
         $id=$request->get('id');
 
         if ($guard == "user") {
-            (new UserClassApi())->forfeitWalletBalanceOnAccountDeletion((int) $id);
+            app(UserClassApi::class)->forfeitWalletBalanceOnAccountDeletion((int) $id);
             User::query()->whereKey($id)->delete();
         }
         Auth::logout();

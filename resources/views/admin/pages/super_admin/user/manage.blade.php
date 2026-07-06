@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Customer List
-@endsection
+@section('title', __('admin.pages.customer_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -210,8 +208,8 @@
                             <div class="page-header-title ">
                                 <i class="feather icon-list bg-c-blue"></i>
                                 <div class="d-inline">
-                                    <h5> Customer List</h5>
-                                    <span>All Customer List</span>
+                                    <h5>{{ __('admin.pages.customer_list') }}</h5>
+                                    <span>{{ \App\Helpers\AdminUi::pageSubtitle('customer_list') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -231,9 +229,9 @@
                     <div class="page-body">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Customer List</h5>
+                                <h5>{{ __('admin.pages.customer_list') }}</h5>
                                 <a href="{{ route('get:admin:add_user') }}"
-                                   class="btn btn-primary m-b-0 btn-right render_link">Add Customer</a>
+                                   class="btn btn-primary m-b-0 btn-right render_link">{{ __('admin.forms.add_customer') }}</a>
                             </div>
                             <div class="card-block">
                                 <div class="dt-responsive table-responsive">
@@ -241,10 +239,10 @@
                                            style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th id="no">No</th>
-                                            <th>Customer Name</th>
-                                            <th>Email</th>
-                                            <th>Contact No.</th>
+                                            <th id="no">{{ __('admin.common.no') }}</th>
+                                            <th>{{ __('admin.columns.customer_name') }}</th>
+                                            <th>{{ __('admin.columns.email') }}</th>
+                                            <th>{{ __('admin.forms.contact_no_label') }}</th>
                                             <?php
                                             $wallet_payment = 0;
                                             $general_settings = request()->get("general_settings");
@@ -253,12 +251,12 @@
                                             }
                                             ?>
                                             @if($wallet_payment == 1)
-                                            <th>Wallet Balance</th>
+                                            <th>{{ __('admin.columns.wallet_balance') }}</th>
                                             @endif
-                                            <th>Refer Status</th>
-                                            <th>Status</th>
-                                            <th>App Version</th>
-                                            <th>Actions</th>
+                                            <th>{{ __('admin.columns.refer_status') }}</th>
+                                            <th>{{ __('admin.common.status') }}</th>
+                                            <th>{{ __('admin.columns.app_version') }}</th>
+                                            <th>{{ __('admin.common.actions') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -412,8 +410,9 @@
     <script src="{{asset('assets/js/datatablecommonfunction.js')}}"></script>
 
     <script>
+        var customerListTable;
         $(document).ready(function () {
-            var table = $('#users').DataTable({
+            customerListTable = $('#users').DataTable(window.adminDataTableOptions({
                 processing: true,
                 serverSide: true,
                 pageLength: 25,
@@ -445,27 +444,25 @@
                             page: 'all',
                         },
                     },
-                    text: 'Download Excel',
-                    "action": newexportaction,
+                    text: window.adminExcelButtonText,
+                    "action": window.newexportaction,
                 }],
-            });
+            }));
         });
     </script>
 
     <script type="text/javascript">
-        var table = $('#new-cons').DataTable();
         $(document).on('click', '.delete', function (e) {
             e.preventDefault();
             var id = $(this).attr('userid');
-            var RemovetableRow = table.row($(this).parents('tr'));
             swal({
-                    title: "Are you sure?",
-                    text: "You will not be able to recover this data!",
+                    title: window.adminSwal.confirmTitle,
+                    text: window.adminSwal.confirmText,
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonClass: "btn-danger",
-                    confirmButtonText: "Yes, delete it!",
-                    cancelButtonText: "No, cancel!",
+                    confirmButtonText: window.adminSwal.yesDelete,
+                    cancelButtonText: window.adminSwal.noCancel,
                     closeOnConfirm: false,
                     closeOnCancel: false
                 },
@@ -477,22 +474,19 @@
                             data: {id: id},
                             success: function (result) {
                                 if (result.success == true) {
-                                     //RemovetableRow.remove().draw();
-                                    // swal("Success", result.message, "success");
-                                    // location.reload();
-                                    var new_id = "#delete_customer_" + id;
-                                    swal("Success", "customer remove successfully", "success");
-                                    $('#users').DataTable().ajax.reload();
-                                   // console.log(new_id);
-                                    $(new_id).hide();
+                                    swal(window.adminSwal.success, window.adminSwal.customerRemoved, "success");
+                                    if (customerListTable) {
+                                        customerListTable.ajax.reload();
+                                    } else {
+                                        $('#users').DataTable().ajax.reload();
+                                    }
                                 }else {
-                                    swal("Warning", result.message, "warning");
-                                    console.log(result);
+                                    swal(window.adminSwal.warning, result.message, "warning");
                                 }
                             }
                         })
                     } else {
-                        swal("Cancelled", "Your Data is safe :)", "error");
+                        swal(window.adminSwal.cancelled, window.adminSwal.dataSafe, "error");
                     }
                 });
         });
@@ -502,11 +496,11 @@
             var status = $(this).attr('user_status');
             var txt, title;
             if (status == 1) {
-                title = "Disable user?";
-                txt = "if press yes then disable user!";
+                title = window.adminSwal.disableUserTitle;
+                txt = window.adminSwal.disableUserText;
             } else {
-                title = "Enable user?";
-                txt = "if press yes then enable user!";
+                title = window.adminSwal.enableUserTitle;
+                txt = window.adminSwal.enableUserText;
             }
             swal({
                     title: title,
@@ -514,8 +508,8 @@
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonClass: "btn-danger",
-                    confirmButtonText: "Yes",
-                    cancelButtonText: "No",
+                    confirmButtonText: window.adminSwal.yes,
+                    cancelButtonText: window.adminSwal.noCancel,
                     closeOnConfirm: false,
                     closeOnCancel: false
                 },
@@ -528,29 +522,25 @@
                             success: function (result) {
                                 if (result.success == true) {
                                     var user_id_ = '#user_id_' + id;
-                                    var title_status = '#title_status_' + id;
                                     if (result.status == 1) {
                                         $(user_id_).prop("checked", true);
                                         $(user_id_).attr("user_status", 1);
-                                        // $(title_status).attr("title", "Active");
-                                        swal("Success", "Enable User successfully", "success");
+                                        swal(window.adminSwal.success, window.adminSwal.enableUserSuccess, "success");
                                     } else {
                                         $(user_id_).prop("checked", false);
                                         $(user_id_).attr("user_status", 0);
-                                        // $(title_status).attr("title", "InActive");
-                                        swal("Success", "Disable User successfully", "success");
+                                        swal(window.adminSwal.success, window.adminSwal.disableUserSuccess, "success");
                                     }
                                 }else {
-                                    swal("Warning", result.message, "warning");
-                                    console.log(result);
+                                    swal(window.adminSwal.warning, result.message, "warning");
                                 }
                             }
                         })
                     } else {
                         if (status == 1) {
-                            swal("Cancelled", "User is Enable", "error");
+                            swal(window.adminSwal.cancelled, window.adminSwal.userStillEnabled, "error");
                         } else {
-                            swal("Cancelled", "User is Disable", "error");
+                            swal(window.adminSwal.cancelled, window.adminSwal.userStillDisabled, "error");
                         }
                     }
                 });
@@ -656,7 +646,11 @@
                                 var modal = document.querySelector('#modal-3');
                                 classie.remove(modal, 'md-show');
                                 $('#change_wallet_'+result.user_id).text(result.last_amount);
-                                table.ajax.reload();
+                                if (customerListTable) {
+                                    customerListTable.ajax.reload();
+                                } else {
+                                    $('#users').DataTable().ajax.reload();
+                                }
                                 // location.reload();
                             } else {
                                 $("#send_message_1").text("");

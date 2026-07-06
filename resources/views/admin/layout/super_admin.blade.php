@@ -119,6 +119,7 @@
 <script type="text/javascript" src="{{ asset('assets/js/waves.min.js')}}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/jquery.slimscroll.js')}}"></script>
 <script rel="stylesheet" src="{{ asset('assets/js/validation/jquery.validate.js')}}"></script>
+@include('admin.include.datatables_i18n')
 @yield('page-js')
 @include('admin.pages.report_issue.chat_script')
 <script type="text/javascript" src="{{ asset('assets/js/pcoded.min.js')}}"></script>

@@ -31,7 +31,7 @@ use App\Models\UserRideWayPoint;
 use Exception;
 use App\Models\UserAddress;
 use App\Models\UserCardDetails;
-use App\Models\UserReferHistory;
+use App\Helpers\RideSessionHelper;
 use App\Models\UserRunningRide;
 use App\Models\UserWalletTransaction;
 use App\Models\VehicleService;
@@ -243,17 +243,8 @@ class CustomerApiController extends Controller
         $item_description = '';
         $estimate_price = 0;
 
-        $get_running_service = UserRunningRide::query()->where('user_id', $user_details->id)->first();
-        if ($get_running_service != Null) {
-            $ride_details = TransportRideBook::query()->where('id', $get_running_service->booking_id)->first();
-            if ($ride_details == Null) {
-                return response()->json([
-                    "status" => 0,
-//                    "message" => 'service not running!',
-                    'message' => __('user_messages.1'),
-                    "message_code" => 1,
-                ]);
-            }
+        $ride_details = RideSessionHelper::activePassengerRide((int) $user_details->id, $this->notificationClass);
+        if ($ride_details !== null) {
 
             $destination_coordinates = explode(',', $ride_details->destination_latlong);
             $address_list = array();
@@ -1014,25 +1005,9 @@ class CustomerApiController extends Controller
             return $failed;
         }
 
-        $user_running_ride = TransportRideBook::query()->where('user_id', '=', $user_id)->whereNotIn('status', [4, 9, 10])->count();
-        $driver_running_ride = TransportRideBook::query()->where('driver_id', '=', $user_id)->whereNotIn('status', [4, 9, 10])->count();
+        RideSessionHelper::reconcileForUser((int) $user_id, $this->notificationClass);
 
-        if ($user_running_ride > 0 || $driver_running_ride > 0) {
-            return response()->json([
-                "status" => 0,
-                "message" => __('user_messages.301'),
-                "message_code" => 5,
-            ]);
-        }
-
-        $pending_payment_ride = TransportRideBook::query()
-            ->where(function ($query) use ($user_id) {
-                $query->where('user_id', $user_id)->orWhere('driver_id', $user_id);
-            })
-            ->where('status', 9)
-            ->where('driver_pay_settle_status', 0)
-            ->count();
-        if ($pending_payment_ride > 0) {
+        if (RideSessionHelper::hasBlockingRideActivity((int) $user_id)) {
             return response()->json([
                 "status" => 0,
                 "message" => __('user_messages.301'),
@@ -1048,6 +1023,22 @@ class CustomerApiController extends Controller
                 "message_code" => 5,
             ]);
         }
+
+        if ((int) $get_provider_details->is_driver_type === 1) {
+            $pending_payment_ride = TransportRideBook::query()
+                ->where('driver_id', $user_id)
+                ->where('status', 9)
+                ->where('driver_pay_settle_status', 0)
+                ->count();
+            if ($pending_payment_ride > 0) {
+                return response()->json([
+                    "status" => 0,
+                    "message" => __('user_messages.301'),
+                    "message_code" => 5,
+                ]);
+            }
+        }
+
         if ($get_provider_details->fix_user_show == 1) {
             return response()->json([
                 "status" => 0,
