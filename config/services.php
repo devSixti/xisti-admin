@@ -30,6 +30,10 @@ return [
         'secret' => env('SPARKPOST_SECRET'),
     ],
 
+    'resend' => [
+        'key' => env('RESEND_API_KEY'),
+    ],
+
     'stripe' => [
         'model' => App\User::class,
         'key' => env('STRIPE_KEY'),

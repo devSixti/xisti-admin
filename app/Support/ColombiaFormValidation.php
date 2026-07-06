@@ -120,9 +120,6 @@ class ColombiaFormValidation
         while (str_starts_with($digits, '0') && strlen($digits) > 10) {
             $digits = substr($digits, 1);
         }
-        if (strlen($digits) > 10) {
-            $digits = substr($digits, -10);
-        }
 
         return $digits;
     }
@@ -147,7 +144,7 @@ class ColombiaFormValidation
 
         $digits = self::normalizeColombianMobile($phone, $countryCode);
 
-        return $digits !== '' && strlen($digits) >= 6 && strlen($digits) <= 15;
+        return PhoneLengthRules::isValidLength($digits, $countryCode);
     }
 
     /**

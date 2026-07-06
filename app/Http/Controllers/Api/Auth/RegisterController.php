@@ -51,28 +51,62 @@ class RegisterController extends Controller
             'select_country_code' => $countryCode,
         ]);
 
-        $validator = Validator::make($request->all(), [
-            "user_id" => "required|numeric",
-            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
-            "profile_image" => "required",
-            "select_country_code" => "required",
-            "contact_number" => [
-                'required',
-                'numeric',
-                new ColombianMobileNumber($countryCode),
-            ],
-            "email" => [
+        $registerUser = User::query()
+            ->where('id', '=', $request->get('user_id'))
+            ->whereNull('deleted_at')
+            ->first();
+
+        $loginType = (string) ($registerUser?->login_type ?? '');
+        $isPhoneSignup = $loginType === '' || in_array($loginType, ['phone', 'biometric', 'fingerprint', 'sim'], true);
+        $isAppleSignup = $loginType === 'apple';
+
+        $emergencyCountryCode = ColombiaFormValidation::normalizeCountryDialCode(
+            $request->get('emergency_country_code') ?? $countryCode
+        );
+        $normalizedEmergency = $request->filled('emergency_contact')
+            ? ColombiaFormValidation::normalizeColombianMobile($request->get('emergency_contact'), $emergencyCountryCode)
+            : '';
+
+        $nameRule = $isAppleSignup ? 'nullable|string|max:255' : 'required|string|max:255';
+
+        $rules = [
+            'user_id' => 'required|numeric',
+            'access_token' => \App\Support\ApiValidationRules::ACCESS_TOKEN,
+            'profile_image' => 'nullable',
+            'select_country_code' => 'required',
+            'first_name' => $nameRule,
+            'last_name' => $nameRule,
+            'full_name' => 'nullable|string|max:255',
+            'refer_code' => 'nullable',
+            'emergency_contact' => ['nullable', 'numeric', new ColombianMobileNumber($emergencyCountryCode)],
+            'emergency_contact_name' => 'nullable|string|max:120',
+        ];
+
+        if ($isPhoneSignup) {
+            $rules['contact_number'] = ['required', 'numeric', new ColombianMobileNumber($countryCode)];
+            $rules['email'] = [
+                'nullable',
+                'email',
+                Rule::unique('users')->where(function ($query) use ($request) {
+                    $query->where('id', '!=', $request->get('user_id'));
+                    $query->where('email', '=', $request->get('email'));
+                    $query->where('deleted_at', '=', null);
+                }),
+            ];
+        } else {
+            $rules['contact_number'] = ['nullable', 'numeric', new ColombianMobileNumber($countryCode)];
+            $rules['email'] = [
                 'required',
                 'email',
                 Rule::unique('users')->where(function ($query) use ($request) {
                     $query->where('id', '!=', $request->get('user_id'));
                     $query->where('email', '=', $request->get('email'));
                     $query->where('deleted_at', '=', null);
-                })
-            ],
-            "full_name" => "required",
-            "refer_code" => 'nullable',
-        ]);
+                }),
+            ];
+        }
+
+        $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             $failedRules = $validator->failed();
             if (isset($failedRules['email']['Unique'])) {
@@ -98,7 +132,7 @@ class RegisterController extends Controller
 
         ColombiaFormValidation::releaseContactFromIncompleteAccounts($normalizedContact, $countryCode);
 
-        if (ColombiaFormValidation::contactTakenByOtherUser(
+        if ($normalizedContact !== '' && ColombiaFormValidation::contactTakenByOtherUser(
             $normalizedContact,
             $countryCode,
             (int) $request->get('user_id')
@@ -128,10 +162,28 @@ class RegisterController extends Controller
             ]);
         }
 
-        $user_details->first_name = ucwords(strtolower(trim($request->get('full_name'))));
-        $user_details->email = $request->get('email');
-        $user_details->contact_number = $normalizedContact;
-        $user_details->country_code = $countryCode;
+        $firstName = trim((string) ($request->get('first_name') ?: $request->get('full_name') ?: ''));
+        $lastName = trim((string) ($request->get('last_name') ?: ''));
+        if ($firstName !== '') {
+            $user_details->first_name = ucwords(strtolower($firstName));
+        }
+        if ($lastName !== '') {
+            $user_details->last_name = ucwords(strtolower($lastName));
+        }
+        $email = trim((string) $request->get('email'));
+        $user_details->email = $email !== '' ? $email : null;
+        if ($normalizedContact !== '') {
+            $user_details->contact_number = $normalizedContact;
+            $user_details->country_code = $countryCode;
+        }
+        if ($normalizedEmergency !== '') {
+            $user_details->emergency_contact = $normalizedEmergency;
+            $user_details->emergency_country_code = $emergencyCountryCode;
+        }
+        if ($request->filled('emergency_contact_name')) {
+            $emergencyName = trim((string) $request->get('emergency_contact_name'));
+            $user_details->emergency_contact_name = $emergencyName !== '' ? $emergencyName : null;
+        }
         $user_details->status = 1;
         $user_details->is_register = 1;
 

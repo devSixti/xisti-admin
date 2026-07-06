@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -16,21 +15,12 @@ class AutoMail implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $data;
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
+
     public function __construct($data)
     {
         $this->data = $data;
     }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
     public function handle()
     {
         $data = $this->data;
@@ -44,16 +34,28 @@ class AutoMail implements ShouldQueue
         $smtp_port = $data['smtp_port'];
         $smtp_encryption = $data['smtp_encryption'];
 
-        Config::set('mail.default','smtp');
-        Config::set('mail.mailers.smtp.username',$smtp_user_name);
-        Config::set('mail.mailers.smtp.password',$smtp_password);
-        Config::set('mail.mailers.smtp.host',$smtp_hostname);
-        Config::set('mail.mailers.smtp.port',$smtp_port);
-        Config::set('mail.mailers.smtp.encryption',$smtp_encryption);
+        $resendKey = (string) env('RESEND_API_KEY', '');
+        $mailer = (string) env('MAIL_MAILER', 'smtp');
+        $useResend = $resendKey !== '' && in_array($mailer, ['resend', 'failover'], true);
 
-        Mail::send($path, $data, function ($message) use ($email, $subject,$mail_site_name, $smtp_user_name) {
-            $message->from($smtp_user_name, $mail_site_name);
-            //$message->from('hello@app.com', $mail_site_name);
+        if ($useResend) {
+            Config::set('mail.default', $mailer === 'failover' ? 'failover' : 'resend');
+            Config::set('services.resend.key', $resendKey);
+            $fromAddress = (string) env('MAIL_FROM_ADDRESS', $smtp_user_name);
+            $fromName = $mail_site_name;
+        } else {
+            Config::set('mail.default', 'smtp');
+            Config::set('mail.mailers.smtp.username', $smtp_user_name);
+            Config::set('mail.mailers.smtp.password', $smtp_password);
+            Config::set('mail.mailers.smtp.host', $smtp_hostname);
+            Config::set('mail.mailers.smtp.port', $smtp_port);
+            Config::set('mail.mailers.smtp.encryption', $smtp_encryption);
+            $fromAddress = $smtp_user_name;
+            $fromName = $mail_site_name;
+        }
+
+        Mail::send($path, $data, function ($message) use ($email, $subject, $fromAddress, $fromName) {
+            $message->from($fromAddress, $fromName);
             $message->to($email);
             $message->subject($subject);
         });
