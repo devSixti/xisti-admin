@@ -68,15 +68,16 @@ class RegisterController extends Controller
             ? ColombiaFormValidation::normalizeColombianMobile($request->get('emergency_contact'), $emergencyCountryCode)
             : '';
 
-        $nameRule = $isAppleSignup ? 'nullable|string|max:255' : 'required|string|max:255';
+        $firstNameRule = $isAppleSignup ? 'nullable|string|max:255' : 'required|string|max:255';
+        $lastNameRule = $isPhoneSignup ? 'required|string|max:255' : 'nullable|string|max:255';
 
         $rules = [
             'user_id' => 'required|numeric',
             'access_token' => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             'profile_image' => 'nullable',
             'select_country_code' => 'required',
-            'first_name' => $nameRule,
-            'last_name' => $nameRule,
+            'first_name' => $firstNameRule,
+            'last_name' => $lastNameRule,
             'full_name' => 'nullable|string|max:255',
             'refer_code' => 'nullable',
             'emergency_contact' => ['nullable', 'numeric', new ColombianMobileNumber($emergencyCountryCode)],
@@ -154,13 +155,16 @@ class RegisterController extends Controller
                 'message_code' => 5,
             ]);
         }
-        if ($user_details->verified_at == Null){
-            return response()->json([
-                'status' => 2,
-                //'message' => "User Not Verified!",
-                'message' => __('user_messages.2'),
-                'message_code' => 2,
-            ]);
+        if ($user_details->verified_at == Null) {
+            if ($isPhoneSignup) {
+                return response()->json([
+                    'status' => 2,
+                    'message' => __('user_messages.2'),
+                    'message_code' => 2,
+                ]);
+            }
+            $user_details->verified_at = date('Y-m-d H:i:s');
+            $user_details->save();
         }
 
         $firstName = trim((string) ($request->get('first_name') ?: $request->get('full_name') ?: ''));

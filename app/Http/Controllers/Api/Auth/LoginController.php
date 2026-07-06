@@ -136,7 +136,8 @@ class LoginController extends Controller
             }
 
             $login_id = $request->get('login_id');
-            $requiresSignupPhoneOtp = SignupPhoneOtpHelper::clientRequiresSignupPhoneOtp($request);
+            // OAuth providers already verify identity; phone OTP applies only to email/phone login.
+            $requiresSignupPhoneOtp = false;
             $user_details = User::query()->where('login_type','=', $login_type)->where('login_id', '=', $login_id)->whereNull('deleted_at')->first();
             // Returning social accounts already registered must not be forced through phone OTP again.
             if ($user_details !== null && (int) $user_details->is_register === 1) {
@@ -184,15 +185,15 @@ class LoginController extends Controller
                     $user_details = new User();
                     $is_new_or_not = 1;
                 }
-                $user_details->is_register = $requiresSignupPhoneOtp ? 0 : 1;
+                $user_details->is_register = 0;
                 $user_details->login_type = $login_type;
                 $user_details->login_id = $login_id;
-                $user_details->verified_at = $requiresSignupPhoneOtp ? null : date('Y-m-d H:i:s');
+                $user_details->verified_at = date('Y-m-d H:i:s');
                 $user_details->save();
 
                 if ($is_new_or_not == 1) {
                     $user_details->status = 1;
-                    $user_details->is_register = $requiresSignupPhoneOtp ? 0 : 1;
+                    $user_details->is_register = 0;
 
                     if (filter_var($request->get('profile_image'), FILTER_VALIDATE_URL) == true) {
                         $user_details->avatar = $request->get('profile_image');
@@ -282,7 +283,7 @@ class LoginController extends Controller
                         $user_details->verified_at = date('Y-m-d H:i:s');
                         $user_details->save();
                     }
-                } elseif (!$requiresSignupPhoneOtp) {
+                } elseif ($user_details->verified_at === null) {
                     $user_details->verified_at = date('Y-m-d H:i:s');
                     $user_details->save();
                 }
