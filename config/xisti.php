@@ -7,7 +7,7 @@ return [
     /** @deprecated QA OTP is limited to seeded test users via QaTestUserHelper. */
     'otp_bypass' => false,
     'allowed_admin_host' => env('XISTI_ALLOWED_ADMIN_HOST', 'admin.xistiapp.com'),
-    'public_site_url' => env('XISTI_PUBLIC_SITE_URL', 'https://www.xistiapp.com'),
+    'public_site_url' => env('XISTI_PUBLIC_SITE_URL', 'https://admin.xistiapp.com'),
     'default_commission_percent' => (float) env('XISTI_DEFAULT_COMMISSION_PERCENT', 8),
     'default_city' => env('XISTI_DEFAULT_CITY', 'Medellín'),
     'default_country' => env('XISTI_DEFAULT_COUNTRY', 'Colombia'),
@@ -35,8 +35,9 @@ return [
         'logo_url' => env('XISTI_MAIL_LOGO_URL', ''),
     ],
     'legal' => [
-        'centro_legal_url' => env('XISTI_LEGAL_URL', 'https://www.xistiapp.com/terminos-y-condiciones'),
-        'terms_url' => env('XISTI_TERMS_URL', 'https://www.xistiapp.com/terminos-y-condiciones'),
-        'privacy_url' => env('XISTI_PRIVACY_URL', 'https://www.xistiapp.com/politica-de-privacidad'),
+        'centro_legal_url' => env('XISTI_LEGAL_URL', 'https://admin.xistiapp.com/terms-and-conditions'),
+        'terms_url' => env('XISTI_TERMS_URL', 'https://admin.xistiapp.com/terms-and-conditions'),
+        'privacy_url' => env('XISTI_PRIVACY_URL', 'https://admin.xistiapp.com/privacy-policy'),
+        'consent_version' => env('XISTI_LEGAL_CONSENT_VERSION', '2026-06-legal-v1'),
     ],
 ];

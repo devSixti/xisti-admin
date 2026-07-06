@@ -187,6 +187,9 @@ class RegisterController extends Controller
         }
         $user_details->status = 1;
         $user_details->is_register = 1;
+        $user_details->accepted_terms_at = now();
+        $user_details->accepted_data_processing_at = now();
+        $user_details->accepted_legal_version = (string) config('xisti.legal.consent_version', '2026-06-legal-v1');
 
         if ($request->file('profile_image') != Null) {
             if (\File::exists(public_path('/assets/images/profile-images/customer/' . $user_details->avatar))) {

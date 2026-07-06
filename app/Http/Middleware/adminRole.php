@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Helpers\AdminUi;
 use App\Models\AdminCategoryPermission;
 use App\Models\AdminModule;
 use App\Models\AdminPermission;
@@ -76,8 +77,8 @@ class adminRole
                         //->orderBy('admin_module.seq','asc')
                         ->get();
                     $this->admin_main_menu_list[] = [
-                        'parent_menu' => $single_parent,
-                        'child_menu' => $child_list,
+                        'parent_menu' => $this->translateMenuEntry($single_parent),
+                        'child_menu' => $child_list->map(fn ($child) => $this->translateMenuEntry($child))->all(),
                     ];
                 }
             }
@@ -107,16 +108,18 @@ class adminRole
             $this->admin_menu_list = array_merge($this->admin_menu_list, $admin_menu_list);
 
             foreach ($this->admin_menu_list as $single_parent) {
-                $child_list =AdminPermission::query()->select('admin_module.id','admin_module.parent_id','admin_module.name', 'admin_module.module_name','admin_module.route_path','admin_module.route_path_arr','admin_module.image')
+                $child_list = AdminPermission::query()->select('admin_module.id','admin_module.parent_id','admin_module.name', 'admin_module.module_name','admin_module.route_path','admin_module.route_path_arr','admin_module.image')
                     ->leftJoin('admin_module','admin_module.id','admin_permission.module_id')
                     ->where('admin_module.status','=',1)
                     ->whereRaw("find_in_set('1',admin_permission.permission)")
                     ->where('admin_module.parent_id','=',$single_parent['id'])
                     ->where('admin_permission.admin_id',$this->admin_id)
                     ->orderBy('admin_module.seq','asc')
-                    ->get();
+                    ->get()
+                    ->map(fn ($child) => $this->translateMenuEntry($child))
+                    ->all();
                 $this->admin_main_menu_list[]= [
-                    'parent_menu' => $single_parent,
+                    'parent_menu' => $this->translateMenuEntry($single_parent),
                     'child_menu' => $child_list,
                 ];
             }
@@ -226,6 +229,23 @@ class adminRole
             return redirect('/admin/dashboard')->with('error', "You don't have permission to access this module");
         }
         return $next($request);
+    }
+
+    private function translateMenuEntry(object|array $entry): object|array
+    {
+        $moduleName = is_array($entry) ? ($entry['module_name'] ?? '') : ($entry->module_name ?? '');
+        $name = is_array($entry) ? ($entry['name'] ?? '') : ($entry->name ?? '');
+        $label = AdminUi::menuEntryLabel((string) $name, $moduleName !== '' ? $moduleName : null);
+
+        if (is_array($entry)) {
+            $entry['name'] = $label;
+
+            return $entry;
+        }
+
+        $entry->name = $label;
+
+        return $entry;
     }
 }
 

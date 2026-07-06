@@ -4,26 +4,43 @@ namespace App\Helpers;
 
 class EmailBrandLayoutHelper
 {
+    public static function resolveAdminUrl(): string
+    {
+        $baseUrl = rtrim((string) config('app.url', 'https://admin.xistiapp.com'), '/');
+        if ($baseUrl === '' || str_contains($baseUrl, 'localhost')) {
+            $host = (string) config('xisti.allowed_admin_host', 'admin.xistiapp.com');
+            $baseUrl = str_starts_with($host, 'http') ? rtrim($host, '/') : 'https://'.$host;
+        }
+
+        return $baseUrl;
+    }
+
+    public static function downloadAppUrl(): string
+    {
+        return self::resolveAdminUrl();
+    }
+
     /**
      * @return array<string, string>
      */
     public static function brandConfig(): array
     {
         $brand = config('xisti.brand', []);
-        $baseUrl = rtrim((string) config('app.url', 'https://admin.xistiapp.com'), '/');
-        if ($baseUrl === '' || str_contains($baseUrl, 'localhost')) {
-            $baseUrl = 'https://admin.xistiapp.com';
-        }
-        $assetVersion = '11';
+        $baseUrl = self::resolveAdminUrl();
+        $assetVersion = '12';
         $defaultLogo = $baseUrl.'/assets/images/email/xisti-email-logo.png?v='.$assetVersion;
         $configuredLogo = config('xisti.mail.logo_url');
         $logoUrl = is_string($configuredLogo) && trim($configuredLogo) !== ''
             ? trim($configuredLogo)
             : $defaultLogo;
+        $termsUrl = (string) config('xisti.legal.terms_url', $baseUrl.'/terms-and-conditions');
+        $privacyUrl = (string) config('xisti.legal.privacy_url', $baseUrl.'/privacy-policy');
+        $legalUrl = (string) config('xisti.legal.centro_legal_url', $baseUrl.'/terms-and-conditions');
 
         return [
-            'admin_url' => (string) config('xisti.allowed_admin_host', 'admin.xistiapp.com'),
-            'public_url' => (string) config('xisti.public_site_url', 'https://www.xistiapp.com'),
+            'admin_url' => $baseUrl,
+            'public_url' => (string) config('xisti.public_site_url', $baseUrl),
+            'download_app_url' => self::downloadAppUrl(),
             'logo_url' => $logoUrl,
             'pattern_url' => $baseUrl.'/assets/images/email/xisti-email-header-pattern.png?v='.$assetVersion,
             'primary' => (string) ($brand['primary'] ?? '#80FF00'),
@@ -41,9 +58,10 @@ class EmailBrandLayoutHelper
             'canvas' => '#ECEEF1',
             'footer_band' => '#111827',
             'footer_text' => '#9CA3AF',
-            'terms_url' => (string) config('xisti.legal.terms_url', 'https://www.xistiapp.com/terminos-y-condiciones'),
-            'privacy_url' => (string) config('xisti.legal.privacy_url', 'https://www.xistiapp.com/politica-de-privacidad'),
-            'legal_url' => (string) config('xisti.legal.centro_legal_url', 'https://www.xistiapp.com/terminos-y-condiciones'),
+            'terms_url' => $termsUrl,
+            'privacy_url' => $privacyUrl,
+            'legal_url' => $legalUrl,
+            'support_url' => $baseUrl.'/faq',
             'copyright_year' => date('Y'),
             'mail_site_name' => (string) config('xisti.mail.from_name', 'XISTI'),
             'tagline' => (string) config('xisti.tagline', 'Fácil y Seguro'),
@@ -243,7 +261,7 @@ HTML;
         $siteName = htmlspecialchars($b['mail_site_name'], ENT_QUOTES, 'UTF-8');
         $tagline = htmlspecialchars($b['tagline'], ENT_QUOTES, 'UTF-8');
         $accent = $b['primary'];
-        $publicUrl = htmlspecialchars($b['public_url'], ENT_QUOTES, 'UTF-8');
+        $publicUrl = htmlspecialchars($b['admin_url'], ENT_QUOTES, 'UTF-8');
 
         return <<<HTML
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
@@ -276,7 +294,8 @@ HTML;
         $logo = htmlspecialchars($b['logo_url'], ENT_QUOTES, 'UTF-8');
         $siteName = htmlspecialchars($b['mail_site_name'], ENT_QUOTES, 'UTF-8');
         $accent = $b['primary'];
-        $publicUrl = htmlspecialchars($b['public_url'], ENT_QUOTES, 'UTF-8');
+        $publicUrl = htmlspecialchars($b['admin_url'], ENT_QUOTES, 'UTF-8');
+        $downloadUrl = htmlspecialchars($b['download_app_url'], ENT_QUOTES, 'UTF-8');
         $termsUrl = htmlspecialchars($b['terms_url'], ENT_QUOTES, 'UTF-8');
         $privacyUrl = htmlspecialchars($b['privacy_url'], ENT_QUOTES, 'UTF-8');
         $legalUrl = htmlspecialchars($b['legal_url'], ENT_QUOTES, 'UTF-8');
@@ -305,7 +324,7 @@ HTML;
         <span style="color:#4B5563;">|</span>
         <a href="{$legalUrl}" style="color:#E5E7EB;text-decoration:none;margin:0 8px;">Centro legal</a>
         <span style="color:#4B5563;">|</span>
-        <a href="{$publicUrl}" style="color:{$accent};text-decoration:none;margin:0 8px;font-weight:600;">Descargar app</a>
+        <a href="{$downloadUrl}" style="color:{$accent};text-decoration:none;margin:0 8px;font-weight:600;">Descargar app</a>
       </p>
       <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.7;color:{$muted};max-width:480px;margin-left:auto;margin-right:auto;">
         El uso de {$siteName} implica la aceptación de nuestros Términos y Condiciones y Política de Privacidad.
@@ -415,10 +434,11 @@ HTML;
      */
     public static function templateCatalog(): array
     {
-        $ctaApp = self::ctaButton('Abrir XISTI', 'https://www.xistiapp.com');
+        $b = self::brandConfig();
+        $ctaApp = self::ctaButton('Abrir XISTI', $b['admin_url']);
         $ctaInvoice = self::ctaButton('Descargar factura PDF', '##invoice_download_link##');
-        $ctaReset = self::ctaButton('Restablecer contraseña', '##reset_link##');
-        $ctaPromo = self::ctaButton('Usar promoción', 'https://www.xistiapp.com');
+        $ctaReset = self::ctaButton('Ver ayuda', $b['support_url']);
+        $ctaPromo = self::ctaButton('Usar promoción', $b['admin_url']);
         $invoice = self::invoiceTable();
         $promo = self::promoBanner('##promo_code##', '##promo_description##');
         $route = self::routeCard();
@@ -442,13 +462,12 @@ HTML;
                 'title' => 'Recuperación de contraseña',
                 'preheader' => 'Restablece tu contraseña de XISTI de forma segura.',
                 'greeting' => 'Hola ##user_name##,',
-                'body' => '<p>Recibimos una solicitud para restablecer la contraseña de tu cuenta XISTI.</p>'
+                'body' => '<p>Recibimos una solicitud para restablecer la contraseña de tu cuenta XISTI. El cambio se realiza desde la app móvil, en <strong>Perfil &gt; Seguridad</strong>.</p>'
                     .self::metaChipRow(
-                        self::metaChip('Validez', '60 minutos').self::metaChip('Seguridad', 'Enlace único')
+                        self::metaChip('Canal', 'App móvil').self::metaChip('Soporte', 'FAQ y contacto')
                     )
                     .self::alertBox('Si no solicitaste este cambio, ignora este correo. Tu contraseña actual seguirá activa.', 'warning')
-                    .$ctaReset
-                    .'<p style="font-size:13px;color:#71717A;margin-top:18px;">Enlace alternativo:<br><a href="##reset_link##" style="color:#681FFF;word-break:break-all;text-decoration:none;font-weight:700;">##reset_link##</a></p>',
+                    .$ctaReset,
             ],
             [
                 'type' => 'ride_invoice_email',
@@ -594,6 +613,8 @@ HTML;
      */
     public static function sampleMergeData(): array
     {
+        $b = self::brandConfig();
+
         return [
             '##user_name##' => 'Jerónimo',
             '##driver_name##' => 'Carlos M.',
@@ -609,9 +630,9 @@ HTML;
             '##resolved_on##' => '6 jul 2026',
             '##issue_category##' => 'Pago / billetera',
             '##issue_description##' => 'Consulta sobre recarga no reflejada.',
-            '##link##' => 'https://admin.xistiapp.com',
-            '##reset_link##' => 'https://admin.xistiapp.com/reset-password/sample-token',
-            '##invoice_download_link##' => 'https://admin.xistiapp.com/ride-invoice/sample',
+            '##link##' => $b['admin_url'],
+            '##reset_link##' => $b['support_url'],
+            '##invoice_download_link##' => $b['admin_url'].'/ride-invoice-download/1/1/1',
             '##ride_fare##' => '$ 24.500',
             '##promo_discount##' => '$ 4.000',
             '##platform_fee##' => '$ 1.960',
@@ -624,7 +645,7 @@ HTML;
             '##transaction_id##' => 'WMP-8849201',
             '##mail_site_name##' => 'XISTI',
             '##site_email##' => 'soporte@xistiapp.com',
-            '##site_url##' => 'https://www.xistiapp.com',
+            '##site_url##' => $b['admin_url'],
         ];
     }
 }
