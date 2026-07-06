@@ -34,4 +34,9 @@ return [
         /** Public URL for hosted email assets (logo, header pattern). */
         'logo_url' => env('XISTI_MAIL_LOGO_URL', ''),
     ],
+    'legal' => [
+        'centro_legal_url' => env('XISTI_LEGAL_URL', 'https://www.xistiapp.com/terminos-y-condiciones'),
+        'terms_url' => env('XISTI_TERMS_URL', 'https://www.xistiapp.com/terminos-y-condiciones'),
+        'privacy_url' => env('XISTI_PRIVACY_URL', 'https://www.xistiapp.com/politica-de-privacidad'),
+    ],
 ];
