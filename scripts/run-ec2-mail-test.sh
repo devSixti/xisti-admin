@@ -17,7 +17,7 @@ fi
 SSH=(ssh -o BatchMode=yes xisti-ec2)
 
 echo "==> Configure Resend on EC2"
-"${SSH[@]}" "cd /var/www/xisti-admin && RESEND_API_KEY='${RESEND_API_KEY}' sudo -u ubuntu bash scripts/ec2-configure-resend.sh"
+"${SSH[@]}" "cd /var/www/xisti-admin && sudo -u ubuntu env RESEND_API_KEY='${RESEND_API_KEY}' bash scripts/ec2-configure-resend.sh"
 
 echo "==> Send showcase emails to ${EMAIL}"
 "${SSH[@]}" "cd /var/www/xisti-admin && sudo -u ubuntu php artisan xisti:send-mail-test '${EMAIL}' --seed"

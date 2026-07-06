@@ -16,8 +16,8 @@ class TransactionalMailHelper
 
     public static function resendEnabled(): bool
     {
-        $resendKey = (string) config('services.resend.key', env('RESEND_API_KEY', ''));
-        $mailer = (string) config('mail.default', env('MAIL_MAILER', 'smtp'));
+        $resendKey = (string) config('services.resend.key', '');
+        $mailer = (string) config('mail.default', 'smtp');
 
         return $resendKey !== '' && in_array($mailer, ['resend', 'failover'], true);
     }

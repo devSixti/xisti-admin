@@ -36,9 +36,8 @@ class AutoMail implements ShouldQueue
         $smtp_encryption = $data['smtp_encryption'];
 
         if (TransactionalMailHelper::resendEnabled()) {
-            $mailer = (string) env('MAIL_MAILER', 'resend');
+            $mailer = (string) config('mail.default', 'resend');
             Config::set('mail.default', $mailer === 'failover' ? 'failover' : 'resend');
-            Config::set('services.resend.key', (string) env('RESEND_API_KEY', ''));
         } else {
             Config::set('mail.default', 'smtp');
             Config::set('mail.mailers.smtp.username', $smtp_user_name);
