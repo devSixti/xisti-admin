@@ -10,12 +10,16 @@ class BrandedEmailTemplatesSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach (EmailBrandLayoutHelper::templateCatalog() as $index => $tpl) {
+        foreach (EmailBrandLayoutHelper::templateCatalog() as $tpl) {
             EmailTemplates::query()->updateOrCreate(
                 ['type' => $tpl['type']],
                 [
                     'title' => $tpl['title'],
-                    'content' => EmailBrandLayoutHelper::wrap($tpl['greeting'], $tpl['body']),
+                    'content' => EmailBrandLayoutHelper::wrap(
+                        $tpl['greeting'],
+                        $tpl['body'],
+                        $tpl['preheader'] ?? null
+                    ),
                     'status' => 1,
                 ]
             );
