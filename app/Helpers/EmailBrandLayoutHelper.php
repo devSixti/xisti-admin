@@ -11,15 +11,20 @@ class EmailBrandLayoutHelper
     {
         $brand = config('xisti.brand', []);
         $baseUrl = rtrim((string) config('app.url', 'https://admin.xistiapp.com'), '/');
-        $assetVersion = '6';
+        if ($baseUrl === '' || str_contains($baseUrl, 'localhost')) {
+            $baseUrl = 'https://admin.xistiapp.com';
+        }
+        $assetVersion = '7';
+        $defaultLogo = $baseUrl.'/assets/images/email/xisti-email-logo.png?v='.$assetVersion;
+        $configuredLogo = config('xisti.mail.logo_url');
+        $logoUrl = is_string($configuredLogo) && trim($configuredLogo) !== ''
+            ? trim($configuredLogo)
+            : $defaultLogo;
 
         return [
             'admin_url' => (string) config('xisti.allowed_admin_host', 'admin.xistiapp.com'),
             'public_url' => (string) config('xisti.public_site_url', 'https://www.xistiapp.com'),
-            'logo_url' => (string) config(
-                'xisti.mail.logo_url',
-                $baseUrl.'/assets/images/email/xisti-email-logo.png?v='.$assetVersion
-            ),
+            'logo_url' => $logoUrl,
             'pattern_url' => $baseUrl.'/assets/images/email/xisti-email-header-pattern.png?v='.$assetVersion,
             'primary' => (string) ($brand['primary'] ?? '#80FF00'),
             'primary_dark' => '#5CE600',
@@ -244,6 +249,82 @@ HTML;
 HTML;
     }
 
+    public static function brandHeader(): string
+    {
+        $b = self::brandConfig();
+        $logo = htmlspecialchars($b['logo_url'], ENT_QUOTES, 'UTF-8');
+        $siteName = htmlspecialchars($b['mail_site_name'], ENT_QUOTES, 'UTF-8');
+        $tagline = htmlspecialchars($b['tagline'], ENT_QUOTES, 'UTF-8');
+        $accent = $b['primary'];
+        $secondary = $b['secondary'];
+        $footer = $b['footer_bg'];
+        $pattern = htmlspecialchars($b['pattern_url'], ENT_QUOTES, 'UTF-8');
+        $publicUrl = htmlspecialchars($b['public_url'], ENT_QUOTES, 'UTF-8');
+
+        return <<<HTML
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td style="height:6px;background:linear-gradient(90deg,{$accent} 0%,{$secondary} 55%,{$accent} 100%);font-size:0;line-height:0;">&nbsp;</td>
+  </tr>
+  <tr>
+    <td background="{$pattern}" style="background-color:{$footer};background-image:url('{$pattern}');background-repeat:no-repeat;background-position:center bottom;background-size:cover;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td style="padding:30px 24px 26px;text-align:center;">
+            <table role="presentation" cellspacing="0" cellpadding="0" align="center" style="margin:0 auto 16px;background:#FFFFFF;border-radius:18px;box-shadow:0 18px 40px rgba(0,0,0,.35);">
+              <tr>
+                <td style="padding:18px 28px 14px;text-align:center;">
+                  <a href="{$publicUrl}" style="text-decoration:none;">
+                    <img src="{$logo}" width="260" height="auto" alt="{$siteName}" style="display:block;margin:0 auto;max-width:260px;width:100%;height:auto;border:0;" />
+                  </a>
+                </td>
+              </tr>
+            </table>
+            <p style="margin:0 0 4px;font-family:Arial Black,Arial,Helvetica,sans-serif;font-size:34px;line-height:1;font-weight:900;letter-spacing:-.05em;color:{$accent};">xisti<span style="color:#FFFFFF;">!</span></p>
+            <p style="margin:0 0 14px;font-family:'Segoe UI',Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#FFFFFF;font-weight:700;">{$tagline}</p>
+            <table role="presentation" cellspacing="0" cellpadding="0" align="center">
+              <tr>
+                <td style="width:42px;height:3px;background:{$accent};border-radius:999px;font-size:0;line-height:0;">&nbsp;</td>
+                <td style="width:8px;font-size:0;line-height:0;">&nbsp;</td>
+                <td style="width:42px;height:3px;background:{$secondary};border-radius:999px;font-size:0;line-height:0;">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+HTML;
+    }
+
+    public static function metaChip(string $label, string $value): string
+    {
+        $b = self::brandConfig();
+
+        return <<<HTML
+<td style="padding:8px 10px;">
+  <table role="presentation" cellspacing="0" cellpadding="0" style="border:1px solid {$b['border']};border-radius:12px;background:#FAFAFA;min-width:120px;">
+    <tr>
+      <td style="padding:10px 14px;font-family:'Segoe UI',Arial,Helvetica,sans-serif;">
+        <span style="display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:{$b['body_muted']};margin-bottom:4px;">{$label}</span>
+        <strong style="font-size:14px;color:{$b['body_text']};">{$value}</strong>
+      </td>
+    </tr>
+  </table>
+</td>
+HTML;
+    }
+
+    public static function metaChipRow(string $chipsHtml): string
+    {
+        return <<<HTML
+<table role="presentation" cellspacing="0" cellpadding="0" style="margin:0 0 20px;">
+  <tr>{$chipsHtml}</tr>
+</table>
+HTML;
+    }
+
     public static function wrap(string $greeting, string $bodyHtml, ?string $preheader = null): string
     {
         $b = self::brandConfig();
@@ -251,8 +332,7 @@ HTML;
         $accent = $b['primary'];
         $secondary = $b['secondary'];
         $footer = $b['footer_bg'];
-        $logo = $b['logo_url'];
-        $pattern = $b['pattern_url'];
+        $header = self::brandHeader();
         $preheader = $preheader ?? $b['tagline'];
         $preheader = htmlspecialchars($preheader, ENT_QUOTES, 'UTF-8');
         $publicUrl = $b['public_url'];
@@ -276,52 +356,25 @@ HTML;
       <td align="center" style="padding:36px 14px;">
         <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;width:100%;border-collapse:separate;">
           <tr>
-            <td style="padding:0 8px 14px;text-align:center;font-family:'Segoe UI',Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:{$b['muted']};">
-              {$siteName} · {$b['tagline']}
-            </td>
-          </tr>
-          <tr>
-            <td style="border-radius:22px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.45);background:{$b['card_bg']};">
+            <td style="border-radius:24px;overflow:hidden;box-shadow:0 28px 70px rgba(0,0,0,.5);background:{$b['card_bg']};border:1px solid rgba(255,255,255,.06);">
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                 <tr>
-                  <td style="padding:0;background:{$footer};position:relative;">
-                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td style="height:5px;background:linear-gradient(90deg,{$accent} 0%,{$secondary} 100%);font-size:0;line-height:0;">&nbsp;</td>
-                      </tr>
-                      <tr>
-                        <td background="{$pattern}" style="background-color:{$footer};background-image:url('{$pattern}');background-repeat:no-repeat;background-position:center bottom;background-size:cover;">
-                          <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-                            <tr>
-                              <td style="padding:34px 28px 28px;text-align:center;">
-                                <img src="{$logo}" width="280" alt="{$siteName}" style="display:block;margin:0 auto;max-width:280px;width:100%;height:auto;border:0;" />
-                                <table role="presentation" cellspacing="0" cellpadding="0" style="margin:18px auto 0;">
-                                  <tr>
-                                    <td style="border:1px solid rgba(128,255,0,.35);border-radius:999px;padding:8px 16px;font-family:'Segoe UI',Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:{$accent};font-weight:800;background:rgba(11,11,11,.55);">
-                                      {$b['tagline']}
-                                    </td>
-                                  </tr>
-                                </table>
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                    </table>
+                  <td style="padding:0;background:{$footer};">
+                    {$header}
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:34px 34px 10px;background:{$b['card_bg']};">
+                  <td style="padding:36px 36px 12px;background:{$b['card_bg']};">
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                       <tr>
                         <td style="font-family:'Segoe UI',Arial,Helvetica,sans-serif;color:{$b['body_text']};">
-                          <p style="margin:0 0 8px;font-size:28px;line-height:1.2;font-weight:900;letter-spacing:-.03em;color:#111111;">{$greeting}</p>
-                          <table role="presentation" cellspacing="0" cellpadding="0" style="margin:0 0 22px;">
+                          <p style="margin:0 0 10px;font-size:30px;line-height:1.15;font-weight:900;letter-spacing:-.03em;color:#111111;">{$greeting}</p>
+                          <table role="presentation" cellspacing="0" cellpadding="0" style="margin:0 0 24px;">
                             <tr>
-                              <td style="width:56px;height:4px;background:linear-gradient(90deg,{$accent} 0%,{$secondary} 100%);border-radius:999px;font-size:0;line-height:0;">&nbsp;</td>
+                              <td style="width:72px;height:4px;background:linear-gradient(90deg,{$accent} 0%,{$secondary} 100%);border-radius:999px;font-size:0;line-height:0;">&nbsp;</td>
                             </tr>
                           </table>
-                          <div style="font-size:15px;line-height:1.75;color:{$b['body_text']};">
+                          <div style="font-size:16px;line-height:1.8;color:{$b['body_text']};">
                             {$bodyHtml}
                           </div>
                         </td>
@@ -330,10 +383,10 @@ HTML;
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:8px 34px 26px;background:{$b['card_bg']};">
+                  <td style="padding:10px 36px 28px;background:{$b['card_bg']};">
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-top:1px solid {$b['border']};">
                       <tr>
-                        <td style="padding-top:18px;font-family:'Segoe UI',Arial,Helvetica,sans-serif;font-size:12px;line-height:1.7;color:{$b['body_muted']};">
+                        <td style="padding-top:20px;font-family:'Segoe UI',Arial,Helvetica,sans-serif;font-size:12px;line-height:1.75;color:{$b['body_muted']};">
                           Este correo fue enviado por <strong style="color:{$b['body_text']};">{$siteName}</strong>.
                           Si no solicitaste esta acción, ignóralo o escríbenos a
                           <a href="mailto:##site_email##" style="color:{$secondary};text-decoration:none;font-weight:700;">##site_email##</a>.
@@ -343,26 +396,26 @@ HTML;
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:26px 34px 30px;background:{$footer};">
+                  <td style="padding:28px 36px 32px;background:{$footer};">
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                       <tr>
                         <td style="font-family:'Segoe UI',Arial,Helvetica,sans-serif;color:{$b['text']};">
-                          <p style="margin:0 0 10px;font-size:15px;font-weight:900;color:{$accent};letter-spacing:.06em;text-transform:uppercase;">{$siteName}</p>
-                          <p style="margin:0 0 6px;font-size:13px;line-height:1.6;">
+                          <p style="margin:0 0 12px;font-size:16px;font-weight:900;color:{$accent};letter-spacing:.08em;text-transform:uppercase;">{$siteName}</p>
+                          <p style="margin:0 0 8px;font-size:13px;line-height:1.65;">
                             <a href="mailto:##site_email##" style="color:{$b['text']};text-decoration:none;">##site_email##</a>
                           </p>
-                          <p style="margin:0 0 14px;font-size:13px;line-height:1.6;">
+                          <p style="margin:0 0 16px;font-size:13px;line-height:1.65;">
                             <a href="##site_url##" style="color:{$b['text']};text-decoration:none;">##site_url##</a>
-                            ·
-                            <a href="{$publicUrl}" style="color:{$accent};text-decoration:none;font-weight:700;">Descargar app</a>
+                            <span style="color:#52525B;"> · </span>
+                            <a href="{$publicUrl}" style="color:{$accent};text-decoration:none;font-weight:800;">Descargar app</a>
                           </p>
-                          <table role="presentation" cellspacing="0" cellpadding="0" style="margin-top:8px;">
+                          <table role="presentation" cellspacing="0" cellpadding="0">
                             <tr>
-                              <td style="padding-right:10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:{$b['muted']};">Movilidad urbana</td>
-                              <td style="width:4px;height:4px;border-radius:999px;background:{$accent};font-size:0;line-height:0;">&nbsp;</td>
-                              <td style="padding:0 10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:{$b['muted']};">Pagos seguros</td>
-                              <td style="width:4px;height:4px;border-radius:999px;background:{$secondary};font-size:0;line-height:0;">&nbsp;</td>
-                              <td style="padding-left:10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:{$b['muted']};">Soporte 24/7</td>
+                              <td style="padding-right:12px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:{$b['muted']};">Movilidad urbana</td>
+                              <td style="width:5px;height:5px;border-radius:999px;background:{$accent};font-size:0;line-height:0;">&nbsp;</td>
+                              <td style="padding:0 12px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:{$b['muted']};">Pagos seguros</td>
+                              <td style="width:5px;height:5px;border-radius:999px;background:{$secondary};font-size:0;line-height:0;">&nbsp;</td>
+                              <td style="padding-left:12px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:{$b['muted']};">Soporte 24/7</td>
                             </tr>
                           </table>
                         </td>
@@ -374,7 +427,7 @@ HTML;
             </td>
           </tr>
           <tr>
-            <td style="padding:18px 8px 0;text-align:center;font-family:'Segoe UI',Arial,Helvetica,sans-serif;font-size:11px;line-height:1.6;color:#71717A;">
+            <td style="padding:20px 8px 0;text-align:center;font-family:'Segoe UI',Arial,Helvetica,sans-serif;font-size:11px;line-height:1.65;color:#71717A;">
               © {$siteName} · Movilidad con conductores verificados
             </td>
           </tr>
@@ -419,19 +472,27 @@ HTML;
                 'title' => 'Recuperación de contraseña',
                 'preheader' => 'Restablece tu contraseña de XISTI de forma segura.',
                 'greeting' => 'Hola ##user_name##,',
-                'body' => '<p>Recibimos una solicitud para restablecer la contraseña de tu cuenta XISTI. El enlace es válido por <strong>60 minutos</strong>.</p>'
+                'body' => '<p>Recibimos una solicitud para restablecer la contraseña de tu cuenta XISTI.</p>'
+                    .self::metaChipRow(
+                        self::metaChip('Validez', '60 minutos').self::metaChip('Seguridad', 'Enlace único')
+                    )
                     .self::alertBox('Si no solicitaste este cambio, ignora este correo. Tu contraseña actual seguirá activa.', 'warning')
                     .$ctaReset
-                    .'<p style="font-size:13px;color:#71717A;">Enlace alternativo:<br><a href="##reset_link##" style="color:#681FFF;word-break:break-all;text-decoration:none;font-weight:700;">##reset_link##</a></p>',
+                    .'<p style="font-size:13px;color:#71717A;margin-top:18px;">Enlace alternativo:<br><a href="##reset_link##" style="color:#681FFF;word-break:break-all;text-decoration:none;font-weight:700;">##reset_link##</a></p>',
             ],
             [
                 'type' => 'ride_invoice_email',
                 'title' => 'Factura de recorrido',
                 'preheader' => 'Tu comprobante del recorrido ##ride_id## está listo.',
                 'greeting' => 'Comprobante de pago',
-                'body' => '<p>Hola <strong>##user_name##</strong>, aquí está el resumen de tu recorrido <strong>##ride_id##</strong> del <strong>##date_time##</strong>.</p>'
+                'body' => '<p>Hola <strong>##user_name##</strong>, aquí está el resumen de tu recorrido.</p>'
+                    .self::metaChipRow(
+                        self::metaChip('Recorrido', '##ride_id##').self::metaChip('Fecha', '##date_time##')
+                    )
                     .$route
-                    .'<p style="margin:0 0 6px;font-size:13px;color:#71717A;">Conductor asignado</p><p style="margin:0 0 18px;font-size:16px;font-weight:800;color:#111111;">##driver_name##</p>'
+                    .self::metaChipRow(
+                        self::metaChip('Conductor', '##driver_name##').self::metaChip('Total', '##total_amount##')
+                    )
                     .$invoice.$ctaInvoice,
             ],
             [

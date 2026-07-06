@@ -32,6 +32,6 @@ return [
         /** Inbound support / admin notifications (Reply-To / site contact). */
         'support_address' => env('XISTI_SUPPORT_EMAIL', 'soporte@xistiapp.com'),
         /** Public URL for hosted email assets (logo, header pattern). */
-        'logo_url' => env('XISTI_MAIL_LOGO_URL'),
+        'logo_url' => env('XISTI_MAIL_LOGO_URL', ''),
     ],
 ];
