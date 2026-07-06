@@ -454,7 +454,6 @@
     <script src="{{asset('assets/js/responsive/buttons.html5.min.js')}}"></script>
     <script src="{{asset('assets/js/responsive/buttons.print.min.js')}}"></script>
     <script src="{{ asset('assets/js/responsive/dataTables.responsive.min.js')}}" type="text/javascript"></script>
-    <script src="{{ asset('assets/js/responsive/responsive-custom.js')}}" type="text/javascript"></script>
 
     {{--<script src="{{ asset('assets/js/responsive/jquery.dataTables.min.js')}}" type="text/javascript"></script>--}}
     {{--<script src="{{ asset('assets/js/responsive/dataTables.bootstrap4.min.js')}}" type="text/javascript"></script>--}}
@@ -481,12 +480,19 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#new-cons').DataTable({
+            var $table = $('#new-cons');
+            if (!$table.length) {
+                return;
+            }
+            if ($.fn.DataTable.isDataTable($table)) {
+                $table.DataTable().destroy(true);
+            }
+            $table.DataTable({
                 dom: 'Bfrtip',
                 searching: false,
                 bPaginate: false,
+                responsive: true,
                 buttons: [
-                    // 'excel'
                     {
                         extend: 'excel',
                         text: 'Download Excel',
