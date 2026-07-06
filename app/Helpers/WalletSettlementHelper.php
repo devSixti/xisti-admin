@@ -9,6 +9,41 @@ use App\Models\TransportRideBook;
 class WalletSettlementHelper
 {
     /**
+     * Mark cash / pay-at-destination rides as paid once the trip has reached drop-off.
+     */
+    public static function markCashRidePaidIfNeeded(
+        TransportRideBook $ride,
+        NotificationClass $notificationClass,
+        ?object $generalSettings = null
+    ): bool {
+        if ((int) $ride->payment_status === 1) {
+            return true;
+        }
+        if ((int) $ride->status < 6) {
+            return false;
+        }
+
+        $destination = strtolower(trim((string) ($ride->destination_payment_method ?? '')));
+        $cashLike = (int) $ride->payment_type === 1
+            || ($destination !== '' && $destination === DestinationPaymentHelper::CASH)
+            || (RideKindHelper::isDeliveryRide($ride) && ($destination === '' || $destination === DestinationPaymentHelper::CASH));
+
+        if (! $cashLike) {
+            return false;
+        }
+
+        self::settleDriverCommissionOnCashRide(
+            $ride,
+            $notificationClass,
+            $generalSettings ?? request()->get('general_settings')
+        );
+        $ride->payment_status = 1;
+        $ride->save();
+
+        return true;
+    }
+
+    /**
      * Debit platform commission from driver wallet on cash rides (auto-settle mode).
      */
     public static function settleDriverCommissionOnCashRide(

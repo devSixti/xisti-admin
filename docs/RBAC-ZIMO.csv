@@ -1,0 +1,200 @@
+Producto,Rol,Modulo,Seccion,En_Menu,Ver,Crear,Editar,Eliminar,Aprobar,Exportar,Configurar,Virtual,Diferido
+ZIMO,admin_total,*,"Todos los módulos activos",1,1,1,1,1,1,1,1,0,0
+ZIMO,contabilidad,api-keys,"API keys",0,0,0,0,0,0,0,0,1,0
+ZIMO,contabilidad,app-version-setting,"Versión de la app",0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,audit-logs,Auditoría,0,0,0,0,0,0,0,0,1,0
+ZIMO,contabilidad,cash-out-list,"Retiros (cash-out)",1,1,0,0,0,0,1,0,0,0
+ZIMO,contabilidad,coupon-deals,"Cupones / deals",0,0,0,0,0,0,0,0,0,1
+ZIMO,contabilidad,customer-list,Clientes,0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,dashboard,Dashboard,0,1,0,0,0,0,1,0,1,0
+ZIMO,contabilidad,driver-documents,"Documentos requeridos",0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,drivers-moderation,"Moderación de conductores",0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,earning-report,"Reporte de ganancias",1,1,0,0,0,0,1,0,0,0
+ZIMO,contabilidad,email-templates,"Plantillas de email",0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,geo-fencing-list,Geo-fencing,0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,gods-view,"God's View",0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,heat-map,"Mapa de calor",0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,pending-delivery-person-list,"Repartidores pendientes",0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,pending-provider-list,"Proveedores pendientes (legacy)",0,0,0,0,0,0,0,0,1,0
+ZIMO,contabilidad,pending-transport-provider-list,"Conductores pendientes",0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,promotions,Promociones,0,0,0,0,0,0,0,0,0,1
+ZIMO,contabilidad,push-notification,"Notificaciones push",0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,referral-history,Referidos,1,1,0,0,0,0,1,0,0,0
+ZIMO,contabilidad,report-issue,"Reportar problema",0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,ride-list,Viajes,0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,search-radius,"Radio de búsqueda",0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,security,Seguridad,0,0,0,0,0,0,0,0,1,0
+ZIMO,contabilidad,service-settings,"Configuración de servicio",1,1,0,0,0,0,1,0,0,0
+ZIMO,contabilidad,site-setting,"Configuración del sitio",0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,sos-list,SOS,0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,support-page-list,"Páginas de soporte",0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,transport-providers-list,"Conductores (aprobados)",0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,vehicle-commission-rates,"Comisiones por vehículo",1,1,0,0,0,0,1,0,0,0
+ZIMO,contabilidad,vehicle-services,"Servicios de vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,vehicle-type,"Tipos de vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,contabilidad,world-currency-list,Monedas,1,1,0,0,0,0,1,0,0,0
+ZIMO,socio,api-keys,"API keys",0,0,0,0,0,0,0,0,1,0
+ZIMO,socio,app-version-setting,"Versión de la app",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,audit-logs,Auditoría,0,0,0,0,0,0,0,0,1,0
+ZIMO,socio,cash-out-list,"Retiros (cash-out)",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,coupon-deals,"Cupones / deals",0,0,0,0,0,0,0,0,0,1
+ZIMO,socio,customer-list,Clientes,1,1,0,1,0,0,0,0,0,0
+ZIMO,socio,dashboard,Dashboard,0,1,0,1,0,0,0,0,1,0
+ZIMO,socio,driver-documents,"Documentos requeridos",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,drivers-moderation,"Moderación de conductores",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,earning-report,"Reporte de ganancias",1,1,0,1,0,0,0,0,0,0
+ZIMO,socio,email-templates,"Plantillas de email",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,geo-fencing-list,Geo-fencing,0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,gods-view,"God's View",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,heat-map,"Mapa de calor",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,pending-delivery-person-list,"Repartidores pendientes",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,pending-provider-list,"Proveedores pendientes (legacy)",0,0,0,0,0,0,0,0,1,0
+ZIMO,socio,pending-transport-provider-list,"Conductores pendientes",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,promotions,Promociones,0,0,0,0,0,0,0,0,0,1
+ZIMO,socio,push-notification,"Notificaciones push",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,referral-history,Referidos,0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,report-issue,"Reportar problema",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,ride-list,Viajes,1,1,0,1,0,0,0,0,0,0
+ZIMO,socio,search-radius,"Radio de búsqueda",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,security,Seguridad,0,0,0,0,0,0,0,0,1,0
+ZIMO,socio,service-settings,"Configuración de servicio",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,site-setting,"Configuración del sitio",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,sos-list,SOS,0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,support-page-list,"Páginas de soporte",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,transport-providers-list,"Conductores (aprobados)",1,1,0,1,0,0,0,0,0,0
+ZIMO,socio,vehicle-commission-rates,"Comisiones por vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,vehicle-services,"Servicios de vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,vehicle-type,"Tipos de vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,socio,world-currency-list,Monedas,0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,api-keys,"API keys",0,1,0,0,0,0,0,1,1,0
+ZIMO,desarrollador,app-version-setting,"Versión de la app",1,1,0,0,0,0,0,1,0,0
+ZIMO,desarrollador,audit-logs,Auditoría,0,1,0,0,0,0,0,1,1,0
+ZIMO,desarrollador,cash-out-list,"Retiros (cash-out)",0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,coupon-deals,"Cupones / deals",0,0,0,0,0,0,0,0,0,1
+ZIMO,desarrollador,customer-list,Clientes,0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,dashboard,Dashboard,0,1,0,0,0,0,0,1,1,0
+ZIMO,desarrollador,driver-documents,"Documentos requeridos",0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,drivers-moderation,"Moderación de conductores",0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,earning-report,"Reporte de ganancias",0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,email-templates,"Plantillas de email",0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,geo-fencing-list,Geo-fencing,0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,gods-view,"God's View",0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,heat-map,"Mapa de calor",0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,pending-delivery-person-list,"Repartidores pendientes",0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,pending-provider-list,"Proveedores pendientes (legacy)",0,0,0,0,0,0,0,0,1,0
+ZIMO,desarrollador,pending-transport-provider-list,"Conductores pendientes",0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,promotions,Promociones,0,0,0,0,0,0,0,0,0,1
+ZIMO,desarrollador,push-notification,"Notificaciones push",1,1,0,0,0,0,0,1,0,0
+ZIMO,desarrollador,referral-history,Referidos,0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,report-issue,"Reportar problema",0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,ride-list,Viajes,0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,search-radius,"Radio de búsqueda",0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,security,Seguridad,0,1,0,0,0,0,0,1,1,0
+ZIMO,desarrollador,service-settings,"Configuración de servicio",0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,site-setting,"Configuración del sitio",1,1,0,0,0,0,0,1,0,0
+ZIMO,desarrollador,sos-list,SOS,0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,support-page-list,"Páginas de soporte",1,1,0,0,0,0,0,1,0,0
+ZIMO,desarrollador,transport-providers-list,"Conductores (aprobados)",0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,vehicle-commission-rates,"Comisiones por vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,vehicle-services,"Servicios de vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,vehicle-type,"Tipos de vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,desarrollador,world-currency-list,Monedas,0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,api-keys,"API keys",0,0,0,0,0,0,0,0,1,0
+ZIMO,aprobaciones,app-version-setting,"Versión de la app",0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,audit-logs,Auditoría,0,0,0,0,0,0,0,0,1,0
+ZIMO,aprobaciones,cash-out-list,"Retiros (cash-out)",0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,coupon-deals,"Cupones / deals",0,0,0,0,0,0,0,0,0,1
+ZIMO,aprobaciones,customer-list,Clientes,0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,dashboard,Dashboard,0,1,0,0,0,1,0,0,1,0
+ZIMO,aprobaciones,driver-documents,"Documentos requeridos",1,1,0,0,0,1,0,0,0,0
+ZIMO,aprobaciones,drivers-moderation,"Moderación de conductores",1,1,0,0,0,1,0,0,0,0
+ZIMO,aprobaciones,earning-report,"Reporte de ganancias",0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,email-templates,"Plantillas de email",0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,geo-fencing-list,Geo-fencing,0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,gods-view,"God's View",0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,heat-map,"Mapa de calor",0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,pending-delivery-person-list,"Repartidores pendientes",1,1,0,0,0,1,0,0,0,0
+ZIMO,aprobaciones,pending-provider-list,"Proveedores pendientes (legacy)",0,0,0,0,0,0,0,0,1,0
+ZIMO,aprobaciones,pending-transport-provider-list,"Conductores pendientes",1,1,0,0,0,1,0,0,0,0
+ZIMO,aprobaciones,promotions,Promociones,0,0,0,0,0,0,0,0,0,1
+ZIMO,aprobaciones,push-notification,"Notificaciones push",0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,referral-history,Referidos,0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,report-issue,"Reportar problema",0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,ride-list,Viajes,0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,search-radius,"Radio de búsqueda",0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,security,Seguridad,0,0,0,0,0,0,0,0,1,0
+ZIMO,aprobaciones,service-settings,"Configuración de servicio",0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,site-setting,"Configuración del sitio",0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,sos-list,SOS,0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,support-page-list,"Páginas de soporte",0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,transport-providers-list,"Conductores (aprobados)",1,1,0,0,0,1,0,0,0,0
+ZIMO,aprobaciones,vehicle-commission-rates,"Comisiones por vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,vehicle-services,"Servicios de vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,vehicle-type,"Tipos de vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,aprobaciones,world-currency-list,Monedas,0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,api-keys,"API keys",0,0,0,0,0,0,0,0,1,0
+ZIMO,soporte,app-version-setting,"Versión de la app",0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,audit-logs,Auditoría,0,0,0,0,0,0,0,0,1,0
+ZIMO,soporte,cash-out-list,"Retiros (cash-out)",0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,coupon-deals,"Cupones / deals",0,0,0,0,0,0,0,0,0,1
+ZIMO,soporte,customer-list,Clientes,1,1,1,1,0,0,0,0,0,0
+ZIMO,soporte,dashboard,Dashboard,0,1,1,1,0,0,0,0,1,0
+ZIMO,soporte,driver-documents,"Documentos requeridos",0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,drivers-moderation,"Moderación de conductores",0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,earning-report,"Reporte de ganancias",0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,email-templates,"Plantillas de email",0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,geo-fencing-list,Geo-fencing,0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,gods-view,"God's View",0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,heat-map,"Mapa de calor",0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,pending-delivery-person-list,"Repartidores pendientes",0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,pending-provider-list,"Proveedores pendientes (legacy)",0,0,0,0,0,0,0,0,1,0
+ZIMO,soporte,pending-transport-provider-list,"Conductores pendientes",0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,promotions,Promociones,0,0,0,0,0,0,0,0,0,1
+ZIMO,soporte,push-notification,"Notificaciones push",1,1,1,1,0,0,0,0,0,0
+ZIMO,soporte,referral-history,Referidos,0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,report-issue,"Reportar problema",1,1,1,1,0,0,0,0,0,0
+ZIMO,soporte,ride-list,Viajes,1,1,1,1,0,0,0,0,0,0
+ZIMO,soporte,search-radius,"Radio de búsqueda",0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,security,Seguridad,0,0,0,0,0,0,0,0,1,0
+ZIMO,soporte,service-settings,"Configuración de servicio",0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,site-setting,"Configuración del sitio",0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,sos-list,SOS,1,1,1,1,0,0,0,0,0,0
+ZIMO,soporte,support-page-list,"Páginas de soporte",1,1,1,1,0,0,0,0,0,0
+ZIMO,soporte,transport-providers-list,"Conductores (aprobados)",1,1,1,1,0,0,0,0,0,0
+ZIMO,soporte,vehicle-commission-rates,"Comisiones por vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,vehicle-services,"Servicios de vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,vehicle-type,"Tipos de vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,soporte,world-currency-list,Monedas,0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,api-keys,"API keys",0,0,0,0,0,0,0,0,1,0
+ZIMO,marketing,app-version-setting,"Versión de la app",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,audit-logs,Auditoría,0,0,0,0,0,0,0,0,1,0
+ZIMO,marketing,cash-out-list,"Retiros (cash-out)",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,coupon-deals,"Cupones / deals",1,1,1,1,0,0,0,0,0,1
+ZIMO,marketing,customer-list,Clientes,0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,dashboard,Dashboard,0,1,1,1,0,0,0,0,1,0
+ZIMO,marketing,driver-documents,"Documentos requeridos",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,drivers-moderation,"Moderación de conductores",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,earning-report,"Reporte de ganancias",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,email-templates,"Plantillas de email",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,geo-fencing-list,Geo-fencing,0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,gods-view,"God's View",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,heat-map,"Mapa de calor",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,pending-delivery-person-list,"Repartidores pendientes",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,pending-provider-list,"Proveedores pendientes (legacy)",0,0,0,0,0,0,0,0,1,0
+ZIMO,marketing,pending-transport-provider-list,"Conductores pendientes",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,promotions,Promociones,1,1,1,1,0,0,0,0,0,1
+ZIMO,marketing,push-notification,"Notificaciones push",1,1,1,1,0,0,0,0,0,0
+ZIMO,marketing,referral-history,Referidos,1,1,1,1,0,0,0,0,0,0
+ZIMO,marketing,report-issue,"Reportar problema",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,ride-list,Viajes,0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,search-radius,"Radio de búsqueda",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,security,Seguridad,0,0,0,0,0,0,0,0,1,0
+ZIMO,marketing,service-settings,"Configuración de servicio",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,site-setting,"Configuración del sitio",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,sos-list,SOS,0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,support-page-list,"Páginas de soporte",1,1,1,1,0,0,0,0,0,0
+ZIMO,marketing,transport-providers-list,"Conductores (aprobados)",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,vehicle-commission-rates,"Comisiones por vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,vehicle-services,"Servicios de vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,vehicle-type,"Tipos de vehículo",0,0,0,0,0,0,0,0,0,0
+ZIMO,marketing,world-currency-list,Monedas,0,0,0,0,0,0,0,0,0,0

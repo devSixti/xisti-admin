@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api\Transport;
 
 use App\Classes\AdminClass;
 use App\Helpers\DestinationPaymentHelper;
-use App\Helpers\RideAccessHelper;
 use App\Helpers\RideKindHelper;
+use App\Helpers\WalletSettlementHelper;
 use App\Classes\NotificationClass;
 use App\Classes\UserClassApi;
 use App\Models\AdminAreaList;
@@ -18,13 +18,13 @@ use App\Models\RestrictedArea;
 use App\Models\SearchRadius;
 use App\Models\ServiceSettings;
 use App\Models\Sos;
-use App\Models\SosTriggerLog;
 use App\Models\TransportCourierDetails;
 use App\Models\TransportDriverDetails;
 use App\Models\TransportVehicleType;
 use App\Models\TransportRatings;
 use App\Models\TransportRideBook;
 use App\Models\User;
+use App\Support\ApiValidationRules;
 use App\Models\UserCardDetails;
 use App\Models\UserRatings;
 use App\Models\UserReferHistory;
@@ -32,6 +32,8 @@ use App\Models\UserRideWayPoint;
 use App\Models\UserRunningRide;
 use App\Models\UserWalletTransaction;
 use App\Models\VehicleService;
+use App\Helpers\AcarreoHelper;
+use App\Helpers\DriverVehicleHelper;
 use App\Helpers\ServiceCatalogHelper;
 use App\Helpers\WalletSettlementHelper;
 use App\Models\WorldCurrency;
@@ -77,7 +79,7 @@ class UserController extends Controller
         $this->notificationClass->ApiLogDetail($logger_type =0, $request->get('user_id'), "postTransportRideBooking", $request->all());
         $validator = Validator::make($request->all(), [
             "user_id" => "required",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -120,20 +122,6 @@ class UserController extends Controller
         $user_check = $this->userClassapi->checkUserAllow($request->get('user_id'), $request->get('access_token'));
         if ($failed = $this->userClassapi->authJsonResponse($user_check)) {
             return $failed;
-        }
-
-        $rideId = (int) $request->get('ride_id');
-        $userId = (int) $request->get('user_id');
-        $ride = RideAccessHelper::findRideOrNull($rideId);
-        if ($ride === null) {
-            return response()->json([
-                'status' => 0,
-                'message' => __('user_messages.26'),
-                'message_code' => 26,
-            ]);
-        }
-        if ((int) $ride->user_id !== $userId && (int) $ride->driver_id !== $userId) {
-            return RideAccessHelper::denyForbidden();
         }
 
         return $this->userClassapi->transportRideBookingCancel(
@@ -414,11 +402,17 @@ class UserController extends Controller
                 ]);
             }
             if ($check_ride->payment_status != 1) {
-                return response()->json([
-                    "status" => 0,
-                    "message" => __('user_messages.83'),
-                    "message_code" => 83,
-                ]);
+                if (! WalletSettlementHelper::markCashRidePaidIfNeeded(
+                    $check_ride,
+                    $this->notificationClass,
+                    request()->get('general_settings')
+                )) {
+                    return response()->json([
+                        "status" => 0,
+                        "message" => __('user_messages.83'),
+                        "message_code" => 83,
+                    ]);
+                }
             }
 
             $driver_details_id = TransportDriverDetails::query()->select('user_id')
@@ -645,7 +639,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "current_lat" => "required",
             "current_long" => "required",
         ]);
@@ -691,7 +685,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -741,7 +735,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -893,6 +887,11 @@ class UserController extends Controller
 
     public function postServiceRegister(Request $request)
     {
+        $requiresPlate = $this->driverRegistrationRequiresPlate($request);
+        $plateRules = $requiresPlate
+            ? ['required', new ColombianVehiclePlate((int) $request->get('vehicle_type_id'))]
+            : ['nullable', 'string', 'max:20'];
+
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
             "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
@@ -901,10 +900,7 @@ class UserController extends Controller
             "model_name" => "required",
             "model_year" => "required|integer|min:1950|max:" . (date('Y') + 1),
             "technical_inspection_expiry" => "nullable|date|after_or_equal:today",
-            "vehicle_plat_no" => [
-                "required",
-                new ColombianVehiclePlate((int) $request->get('vehicle_type_id')),
-            ],
+            "vehicle_plat_no" => $plateRules,
             "vehicle_color" => "required",
             // TEMP: allow legacy app (single vehicle_image) until all clients send 3 angles.
             "vehicle_image" => "nullable",
@@ -919,7 +915,7 @@ class UserController extends Controller
             "accept_delivery" => "nullable|in:0,1",
             "accept_encomiendas" => "nullable|in:0,1",
             "also_transport_passengers" => "nullable|in:0,1",
-            "delivery_variant" => "nullable|string",
+            "delivery_variant" => "nullable|string|in:motoraton,motocarro,bicycle,motocarguero,camion,jaula",
         ]);
         if ($validator->fails()) {
             if ($validator->errors()->has('vehicle_plat_no')) {
@@ -949,6 +945,7 @@ class UserController extends Controller
         $deliveryVariant = $request->filled('delivery_variant')
             ? (string) $request->get('delivery_variant')
             : null;
+        $isAcarreoVariant = AcarreoHelper::normalizeVariant($deliveryVariant) !== null;
 
         $user_details = User::query()->where('id',$request->get('user_id'))->where('status',1)->whereNull('deleted_at')->first();
         if($user_details == Null){
@@ -1023,12 +1020,10 @@ class UserController extends Controller
             $add_driver_vehicle_details->current_long = $request->get('current_long');
         }
         $add_driver_vehicle_details->vehicle_type_id = $request->get('vehicle_type_id');
-        if (\Illuminate\Support\Facades\Schema::hasColumn('transport_driver_details', 'delivery_variant')) {
-            $driverVariant = \App\Helpers\XistiVehicleVariantHelper::normalize($deliveryVariant);
-            $add_driver_vehicle_details->delivery_variant = $driverVariant !== '' ? $driverVariant : null;
-        }
         $add_driver_vehicle_details->vehicle_company = $request->get('manufacture_name');
-        $add_driver_vehicle_details->plat_no = ColombiaFormValidation::normalizePlate($request->get('vehicle_plat_no'));
+        $add_driver_vehicle_details->plat_no = $requiresPlate
+            ? ColombiaFormValidation::normalizePlate($request->get('vehicle_plat_no'))
+            : trim((string) $request->get('vehicle_plat_no', ''));
         $add_driver_vehicle_details->model_name = $request->get('model_name');
         $add_driver_vehicle_details->model_year = $request->get('model_year');
         if ($request->filled('technical_inspection_expiry')) {
@@ -1046,15 +1041,11 @@ class UserController extends Controller
         $alsoTransportPassengers = (int) $request->get('also_transport_passengers', 0);
         $acceptDelivery = (int) $request->get('accept_delivery', 1);
         $acceptEncomiendas = (int) $request->get('accept_encomiendas', 1);
-        $variantSlug = \App\Helpers\XistiVehicleVariantHelper::normalize($deliveryVariant ?? '');
-        $isTransportMatrixRegistration = $variantSlug !== ''
-            && ! \App\Helpers\DriverVehicleHelper::isDeliveryOnlyRegistration($variantSlug, $vehicleServiceId);
-        $taxiEligibleVariant = \App\Helpers\XistiVehicleVariantHelper::isTaxiEligibleVariant($variantSlug);
 
         if ($vehicleServiceId === 4
             || \App\Helpers\DriverVehicleHelper::isDeliveryOnlyRegistration($deliveryVariant, $vehicleServiceId)) {
             $add_driver_vehicle_details->accept_delivery = 1;
-            $add_driver_vehicle_details->accept_encomiendas = $acceptEncomiendas;
+            $add_driver_vehicle_details->accept_encomiendas = $deliveryVariant === 'bicycle' ? 0 : $acceptEncomiendas;
             $add_driver_vehicle_details->accept_transport = 0;
             $add_driver_vehicle_details->also_transport_passengers = 0;
         } elseif (\App\Helpers\DeliveryVehicleHelper::serviceSupportsPassengerToggle($vehicleServiceId)) {
@@ -1063,13 +1054,18 @@ class UserController extends Controller
             $add_driver_vehicle_details->also_transport_passengers = $alsoTransportPassengers;
             // Carro / moto / motoratón must receive transport requests; toggle only affects extras (taxi, seats).
             $add_driver_vehicle_details->accept_transport = 1;
-            if (! $alsoTransportPassengers && ! $isTransportMatrixRegistration) {
+            if (!$alsoTransportPassengers) {
                 $add_driver_vehicle_details->child_seat = 0;
                 $add_driver_vehicle_details->handicap = 0;
                 $add_driver_vehicle_details->is_taxi = 0;
             }
+        } elseif ($isAcarreoVariant || (string) DB::table('vehicle_services')->where('id', $vehicleServiceId)->value('service_mode') === AcarreoHelper::MODE) {
+            $add_driver_vehicle_details->accept_transport = 0;
+            $add_driver_vehicle_details->accept_delivery = 0;
+            $add_driver_vehicle_details->accept_encomiendas = 0;
+            $add_driver_vehicle_details->also_transport_passengers = 0;
         } elseif ($vehicleServiceId === 7) {
-            // Expreso bus: only long-distance expreso requests.
+            // Viajes compartidos (legacy id 7): transport + shared-ride offers.
             $add_driver_vehicle_details->accept_transport = 1;
             $add_driver_vehicle_details->accept_delivery = 0;
             $add_driver_vehicle_details->accept_encomiendas = 0;
@@ -1080,27 +1076,27 @@ class UserController extends Controller
             $add_driver_vehicle_details->accept_encomiendas = 0;
         }
 
-        $add_driver_vehicle_details->is_taxi = ($vehicleServiceId === 1 && $taxiEligibleVariant)
+        $add_driver_vehicle_details->is_taxi = ($vehicleServiceId === 1 && (int) ($add_driver_vehicle_details->also_transport_passengers ?? 0) === 1)
             ? (int) $request->get('is_taxi', 0)
             : 0;
 
         if ((int) ($add_driver_vehicle_details->accept_delivery ?? 0) === 1
             && \Illuminate\Support\Facades\Schema::hasTable('vehicle_type_service_eligibility')) {
-            $vehicleTypeId = (int) $request->get('vehicle_type_id');
             \Illuminate\Support\Facades\DB::table('vehicle_type_service_eligibility')->updateOrInsert(
                 [
-                    'vehicle_type_id' => $vehicleTypeId,
-                    'service_id' => $vehicleServiceId,
-                ],
-                ['updated_at' => now(), 'created_at' => now()]
-            );
-            \Illuminate\Support\Facades\DB::table('vehicle_type_service_eligibility')->updateOrInsert(
-                [
-                    'vehicle_type_id' => $vehicleTypeId,
+                    'vehicle_type_id' => (int) $request->get('vehicle_type_id'),
                     'service_id' => 4,
                 ],
                 ['updated_at' => now(), 'created_at' => now()]
             );
+        }
+
+        if (\Illuminate\Support\Facades\Schema::hasColumn('transport_driver_details', 'delivery_variant')) {
+            $persistVariant = $deliveryVariant;
+            if ($persistVariant === null || trim($persistVariant) === '') {
+                $persistVariant = DriverVehicleHelper::resolveStoredDeliveryVariant((int) $request->get('vehicle_type_id'));
+            }
+            $add_driver_vehicle_details->delivery_variant = $persistVariant;
         }
 
         $add_driver_vehicle_details->save();
@@ -1140,7 +1136,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -1158,18 +1154,50 @@ class UserController extends Controller
             return $failed;
         }
 
-        $driver_details = TransportDriverDetails::query()->select('vehicle_services.id as service_id','transport_driver_details.vehicle_type_id', 'transport_driver_details.vehicle_company',
-                        'transport_driver_details.model_name', 'transport_driver_details.model_year', 'transport_driver_details.technical_inspection_expiry', 'transport_driver_details.plat_no','transport_driver_details.vehicle_color','transport_driver_details.vehicle_image','transport_driver_details.child_seat','transport_driver_details.handicap')
+        $driverSelect = [
+            'vehicle_services.id as service_id',
+            'transport_driver_details.vehicle_type_id',
+            'transport_driver_details.vehicle_company',
+            'transport_driver_details.model_name',
+            'transport_driver_details.model_year',
+            'transport_driver_details.technical_inspection_expiry',
+            'transport_driver_details.plat_no',
+            'transport_driver_details.vehicle_color',
+            'transport_driver_details.vehicle_image',
+            'transport_driver_details.vehicle_image_front',
+            'transport_driver_details.vehicle_image_side',
+            'transport_driver_details.vehicle_image_rear',
+            'transport_driver_details.child_seat',
+            'transport_driver_details.handicap',
+            'transport_vehicle_type.name as vehicle_type_name',
+        ];
+        if (\Illuminate\Support\Facades\Schema::hasColumn('transport_driver_details', 'delivery_variant')) {
+            $driverSelect[] = 'transport_driver_details.delivery_variant';
+        }
+
+        $driver_details = TransportDriverDetails::query()->select($driverSelect)
                         ->join('transport_vehicle_type','transport_vehicle_type.id','=','transport_driver_details.vehicle_type_id')
                         ->join('vehicle_services','vehicle_services.id','=','transport_vehicle_type.service_id')
                         ->where('transport_driver_details.user_id', $request->get('user_id'))->first();
         if($driver_details != Null){
+            $deliveryVariant = DriverVehicleHelper::resolveStoredDeliveryVariant(
+                (int) $driver_details->vehicle_type_id,
+                $driver_details->delivery_variant ?? null
+            );
+            $registrationKey = DriverVehicleHelper::registrationKeyFromRequest(
+                $deliveryVariant,
+                (int) $driver_details->service_id,
+                'transport'
+            );
+
             return response()->json([
                 "status" => 1,
                 "message" => __('driver_messages.1'),
                 "message_code" => 1,
                 "service_id" => $driver_details->service_id,
                 "vehicle_type_id" => $driver_details->vehicle_type_id,
+                "delivery_variant" => $deliveryVariant ?? '',
+                "registration_key" => $registrationKey,
                 "manufacture_name" => $driver_details->vehicle_company,
                 "model_name" => $driver_details->model_name,
                 "model_year" => $driver_details->model_year,
@@ -1205,7 +1233,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
                 "user_id" => "required|numeric",
-                "access_token" => "required",
+                "access_token" => ApiValidationRules::ACCESS_TOKEN,
                 "update_status" => "required|numeric|in:0,1"
             ]
         );
@@ -1233,9 +1261,41 @@ class UserController extends Controller
         $currency = $user_currency != Null ? $user_currency->ratio : 1;
 
         if($request->get('update_status') == 1){
-            if ($blocked = \App\Helpers\DriverDocumentGateHelper::onlineBlockResponse((int) $request->get('user_id'))) {
-                return $blocked;
+            if($general_settings != Null && $general_settings->auto_approve == 0){
+                $driver_document = ProviderDocuments::query()
+                    ->join('required_documents','required_documents.id','=','provider_documents.req_document_id')
+                    ->where('required_documents.status', 1)
+                    ->where('provider_documents.user_id', $request->get('user_id'));
+
+                $driver_pending_document = (clone $driver_document)->where('provider_documents.status',0)->first();
+                $driver_rejected_document = (clone $driver_document)->where('provider_documents.status',2)->first();
+                $driver_expired_document = (clone $driver_document)->where('provider_documents.status',3)->first();
+                if($driver_pending_document != Null){
+                    return response()->json([
+                        "status" => 0,
+                        "message" => __('driver_messages.370'),
+                        "message_code" => 370,
+                        "is_document_pending" => 1
+                    ]);
+                }
+                if($driver_rejected_document != Null){
+                    return response()->json([
+                        "status" => 0,
+                        "message" => __('driver_messages.368'),
+                        "message_code" => 370,
+                        "is_document_pending" => 1
+                    ]);
+                }
+                if($driver_expired_document != Null){
+                    return response()->json([
+                        "status" => 0,
+                        "message" => __('driver_messages.342'),
+                        "message_code" => 342,
+                        "is_document_expired" => 1
+                    ]);
+                }
             }
+
         }
         $user_details = User::query()->where('id',$request->get('user_id'))->where('status',1)->whereNull('deleted_at')->first();
         if($user_details == Null){
@@ -1275,7 +1335,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -1284,6 +1344,7 @@ class UserController extends Controller
                 "message_code" => 9,
             ]);
         }
+        try {
         $user_check = $this->userClassapi->checkUserAllow($request->get('user_id'), $request->get('access_token'));
         if ($failed = $this->userClassapi->authJsonResponse($user_check)) {
             return $failed;
@@ -1332,13 +1393,6 @@ class UserController extends Controller
             ]);
         }
 
-        if ($request->filled('current_lat') && $request->filled('current_long')) {
-            $driver_details->current_lat = $request->get('current_lat');
-            $driver_details->current_long = $request->get('current_long');
-            $driver_details->last_online_date_time = date('Y-m-d H:i:s');
-            $driver_details->save();
-        }
-
         $current_lat = $driver_details->current_lat;
         $current_long = $driver_details->current_long;
 
@@ -1359,13 +1413,17 @@ class UserController extends Controller
         if ((int) ($driver_details->accept_transport ?? 1) === 1
             && $driverServiceId === 7
             && \App\Helpers\MobileFeatureFlagsHelper::isExpresoEnabled()) {
-            $allowedServiceModes[] = 'expreso';
+            $allowedServiceModes[] = 'viajes_compartidos';
         }
         if ($canReceiveDelivery) {
             $allowedServiceModes[] = 'delivery';
         }
         if ($canReceiveEncomiendas && \App\Helpers\MobileFeatureFlagsHelper::isEncomiendasEnabled()) {
             $allowedServiceModes[] = 'encomiendas';
+        }
+        if (\App\Helpers\AcarreoHelper::driverCanReceiveAcarreoRequests($driver_details)
+            && \App\Helpers\MobileFeatureFlagsHelper::isAcarreosEnabled()) {
+            $allowedServiceModes[] = 'acarreos';
         }
         if ($allowedServiceModes === []) {
             $allowedServiceModes[] = 'transport';
@@ -1378,19 +1436,33 @@ class UserController extends Controller
         $allowedServiceModes = array_values(array_unique($allowedServiceModes));
 
         $avatar = url('/assets/images/profile-images/customer/');
-        \App\Helpers\RideLifecycleHelper::expireStalePendingRides();
-        $now = date('Y-m-d H:i:s');
+        $expire_date_time = date('Y-m-d H:i:s', strtotime("-".$ride_expiry." minutes"));
+
+        $courierSelect = [
+            'user_courier_service_details.recipient_name',
+            'user_courier_service_details.recipient_contact_number',
+            'user_courier_service_details.item_description',
+            'user_courier_service_details.estimate_price',
+            'user_courier_service_details.package_weight_kg',
+            'user_courier_service_details.package_height_cm',
+            'user_courier_service_details.package_width_cm',
+            'user_courier_service_details.package_length_cm',
+        ];
+        if (Schema::hasColumn('user_courier_service_details', 'errand_type')) {
+            $courierSelect[] = 'user_courier_service_details.errand_type';
+        }
 
             $available_ride_requests = TransportRideBook::query()
-                ->select('user_ride_booking.id as ride_id','user_ride_booking.ride_no','user_ride_booking.pickup_address','user_ride_booking.destination_address','users.rating','user_ride_booking.pickup_datetime as schedule_date',
+                ->select(array_merge([
+                    'user_ride_booking.id as ride_id','user_ride_booking.ride_no','user_ride_booking.pickup_address','user_ride_booking.destination_address','users.rating','user_ride_booking.pickup_datetime as schedule_date',
                     'user_ride_booking.user_name','user_ride_booking.pickup_lat','user_ride_booking.pickup_long','user_ride_booking.user_id','user_ride_booking.vehicle_service_id as service_id','vehicle_services.service_mode','user_ride_booking.ride_type','user_ride_booking.is_auto_accept','user_ride_booking.destination_payment_method',
                     'user_ride_booking.child_seat','user_ride_booking.handicap','user_ride_booking.other_user_name','user_ride_booking.other_user_contact_number',
                     DB::raw('user_ride_booking.total_pay * '.$currency.' as offered_price'),
-                    DB::raw("COUNT(user_rating.id) as total_ratings "),'user_ride_booking.additional_request as additional_remarks','user_courier_service_details.recipient_name','user_courier_service_details.recipient_contact_number','user_courier_service_details.item_description','user_courier_service_details.estimate_price','user_courier_service_details.errand_type','user_courier_service_details.package_weight_kg','user_courier_service_details.package_height_cm','user_courier_service_details.package_width_cm','user_courier_service_details.package_length_cm',
+                    DB::raw("COUNT(user_rating.id) as total_ratings "),'user_ride_booking.additional_request as additional_remarks',
 //                                            DB::raw("TIMESTAMPDIFF(SECOND, user_ride_booking.created_at, NOW()) AS order_time"),
                     DB::raw("SUBSTRING_INDEX(user_ride_booking.destination_latlong,',',1) as destination_lat"),
                     DB::raw("SUBSTRING_INDEX(user_ride_booking.destination_latlong,',',-1) as destination_long"),
-                    DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN users.avatar LIKE 'http%' THEN users.avatar ELSE concat('$avatar','/',users.avatar,'?v=0.4') END) ELSE '' END) as profile_image"),
+                    DB::raw("(CASE WHEN users.avatar != '' THEN (concat('$avatar','/',users.avatar,'?v=0.4')) ELSE '' END) as profile_image"),
                     DB::raw("
                                                 CASE WHEN (MINUTE(TIMEDIFF(user_ride_booking.created_at, NOW())) >= 1)
                                                 THEN
@@ -1400,8 +1472,8 @@ class UserController extends Controller
                                                 END
                                                 AS order_time"),
                     DB::raw("ROUND((6371 * acos( cos( radians(pickup_lat) ) * cos( radians(" .$current_lat. ") )  * cos( radians( " .$current_long. " ) - radians(pickup_long) ) + sin( radians(pickup_lat) ) * sin(radians( " .$current_lat. " ) ) ) ), 2) as distance" ),
-                    DB::raw("ROUND((((6371 * acos( cos( radians(pickup_lat) ) * cos( radians(" .$current_lat. ") )  * cos( radians( " .$current_long. " ) - radians(pickup_long) ) + sin( radians(pickup_lat) ) * sin(radians( " .$current_lat. " ) ) ) ) / 40 ) * 60 ), 2) as time" )
-                )
+                    DB::raw("ROUND((((6371 * acos( cos( radians(pickup_lat) ) * cos( radians(" .$current_lat. ") )  * cos( radians( " .$current_long. " ) - radians(pickup_long) ) + sin( radians(pickup_lat) ) * sin(radians( " .$current_lat. " ) ) ) ) / 40 ) * 60 ), 2) as time" ),
+                ], $courierSelect))
                 ->join('users','users.id','=','user_ride_booking.user_id')
                 ->leftjoin('user_courier_service_details','user_courier_service_details.ride_id','=','user_ride_booking.id')
                 ->leftJoin('user_rating','user_rating.user_id','=','users.id')
@@ -1419,9 +1491,14 @@ class UserController extends Controller
                 $allowedServiceModes,
                 static fn ($m) => $m !== 'encomiendas'
             ));
-            $available_ride_requests = $available_ride_requests->where(function ($modeOuter) use ($modeFilter, $canReceiveEncomiendas) {
-                if ($modeFilter !== []) {
-                    $modeOuter->whereIn('vehicle_services.service_mode', $modeFilter);
+            $modesForQuery = $modeFilter;
+            if (in_array('viajes_compartidos', $modeFilter, true)) {
+                $modesForQuery[] = 'expreso';
+            }
+            $modesForQuery = array_values(array_unique($modesForQuery));
+            $available_ride_requests = $available_ride_requests->where(function ($modeOuter) use ($modesForQuery, $modeFilter, $canReceiveEncomiendas) {
+                if ($modesForQuery !== []) {
+                    $modeOuter->whereIn('vehicle_services.service_mode', $modesForQuery);
                 }
                 if ($canReceiveEncomiendas && Schema::hasColumn('user_courier_service_details', 'errand_type')) {
                     $method = $modeFilter !== [] ? 'orWhere' : 'where';
@@ -1433,7 +1510,7 @@ class UserController extends Controller
         }
 
         $available_ride_requests = $available_ride_requests
-                ->where('user_ride_booking.ride_time_out', '>=', $now)
+                ->where('user_ride_booking.ride_time_out', '>=', $expire_date_time)
                 ->whereNull('users.deleted_at')
                 ->when($driver_details->child_seat != 1, function ($q) {
                     $q->where('user_ride_booking.child_seat', 0);
@@ -1452,6 +1529,7 @@ class UserController extends Controller
 
         $address_list = array();
         foreach ($available_ride_requests as $key => $value){
+            $address_list = [];
             $address_list[] = [
                 "address" => $value['pickup_address'],
                 "address_lat" => trim($value['pickup_lat']),
@@ -1496,7 +1574,6 @@ class UserController extends Controller
             );
             $available_ride_requests[$key]['is_delivery'] = RideKindHelper::isDeliveryFlag($value);
             $available_ride_requests[$key]['is_encomienda'] = \App\Helpers\EncomiendaHelper::isEncomiendaFlag($value);
-            $available_ride_requests[$key] = \App\Helpers\XistiVehicleVariantHelper::enrichRideRow($available_ride_requests[$key]);
             $address_list = [];
         }
 
@@ -1507,13 +1584,6 @@ class UserController extends Controller
             ->where('status', 1)->first();
 
         $general_settings = request()->get("general_settings");
-        if ($general_settings == Null) {
-            return response()->json([
-                "status" => 0,
-                "message" => "something went to wrong!",
-                "message_code" => 9,
-            ]);
-        }
         return response()->json([
             "status" => 1,
             "message" => __('driver_messages.1'),
@@ -1521,16 +1591,29 @@ class UserController extends Controller
             "ride_list" => $available_ride_requests,
             "service" => $services,
             "nearest_ride_popup" => $nearest_ride_popup,
-            "driver_price_suggestion" => $general_settings->driver_price_suggestion != Null ? $general_settings->driver_price_suggestion : 1
+            "driver_price_suggestion" => $general_settings?->driver_price_suggestion ?? 1
         ]);
 
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json([
+                "status" => 1,
+                "message" => __('driver_messages.1'),
+                "message_code" => 1,
+                "ride_list" => [],
+                "service" => null,
+                "nearest_ride_popup" => 0.5,
+                "driver_price_suggestion" => 1,
+            ]);
+        }
     }
 
     public function postDriverBid(Request $request)
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "ride_id" => "required|numeric",
             "offered_price" => "required|numeric",
         ]);
@@ -1607,7 +1690,7 @@ class UserController extends Controller
             }
         }
 
-        $passenger_details = User::query()->where('id', $ride_details->user_id)->where('status', 1)->whereNull('deleted_at')->first();
+        $passenger_details = User::query()->where('id',$ride_details->user_id,'currency')->where('status',1)->whereNull('deleted_at')->first();
         if($passenger_details == Null){
             return response()->json([
                 'status' => 5,
@@ -1615,7 +1698,7 @@ class UserController extends Controller
                 'message_code' => 5,
             ]);
         }
-      $general_settings = request()->get('general_settings');
+      $general_settings=request()->get('general_settings');
         $user_currency = WorldCurrency::query()->where('symbol', $user_check->currency)->first();
         if ($user_currency == Null) {
             $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
@@ -1624,7 +1707,7 @@ class UserController extends Controller
 
         $driver_bid_accepted = DriverBid::query()->where('ride_id',$request->get('ride_id'))->where('status',1)->first();
         $service_setting = ServiceSettings::query()->select('admin_commission','driver_timeout')->first();
-        if ($general_settings != Null && (int) ($general_settings->auto_settle_wallet ?? 0) === 1) {
+        if($general_settings->auto_settle_wallet == 1){
             //get wallet balance
             $last_amount = $this->notificationClass->getWalletBalance($request->get('user_id'));
             $commissionPercent = VehicleCommissionHelper::resolvePercent(
@@ -1667,12 +1750,12 @@ class UserController extends Controller
             $driver_bid->bidding_time = date('Y-m-d H:i:s');
             $driver_bid->save();
         }
-        $this->notificationClass->userBidNotification($ride_details,$passenger_details->device_token,$passenger_details->language);
+        $this->notificationClass->userBidNotification($ride_details,$passenger_details->device_token,$passenger_details->language,$passenger_details->login_device);
         return response()->json([
             "status" => 1,
             "message" => __('driver_messages.1'),
             "message_code" => 1,
-            "timeout" => $service_setting?->driver_timeout ?? 30,
+            "timeout" =>$service_setting->driver_timeout != Null ? $service_setting->driver_timeout : '',
             "user_profile" => $passenger_details->avatar != Null ? url('/assets/images/profile-images/customer/'.$passenger_details->avatar) : '',
         ]);
     }
@@ -1681,7 +1764,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "ride_id" => "required|numeric",
         ]);
         if ($validator->fails()) {
@@ -1743,7 +1826,7 @@ class UserController extends Controller
                 'vehicle_services.id as service_id',
                 'user_ride_booking.ride_type',
                 DB::raw("COUNT(transport_driver_rating.id) as total_ratings "),
-                DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN users.avatar LIKE 'http%' THEN users.avatar ELSE concat('$avatar','/',users.avatar,'?v=0.4') END) ELSE '' END) as profile_image"),
+                DB::raw("(CASE WHEN users.avatar != '' THEN (concat('$avatar','/',users.avatar,'?v=0.4')) ELSE '' END) as profile_image"),
                 DB::raw("(CASE WHEN vehicle_services.vehicle_service_icon != '' THEN (concat('$vehicle_service_icon','/',vehicle_services.vehicle_service_icon)) ELSE '' END) as vehicle_service_icon"),'driver_ride_bid_amount.bidding_time',
                 DB::raw("ROUND((6371 * acos( cos( radians(" . $pickup_lat . ") ) * cos( radians(current_lat) )  * cos( radians( transport_driver_details.current_long ) - radians(" . $pickup_long . ") ) + sin( radians(current_lat) ) * sin(radians( " . $pickup_lat . " ) ) ) ), 2) as distance"),
                 DB::raw("ROUND((((6371 * acos( cos( radians(" . $pickup_lat . ") ) * cos( radians(current_lat) )  * cos( radians( transport_driver_details.current_long ) - radians(" . $pickup_long . ") ) + sin( radians(current_lat) ) * sin(radians(" . $pickup_lat . ") ) ) ) / 40 ) * 60 ), 2) as time")
@@ -1776,7 +1859,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "ride_id" => "required|numeric",
             "offered_price" => "required|numeric",
         ]);
@@ -1791,10 +1874,6 @@ class UserController extends Controller
         $user_check = $this->userClassapi->checkUserAllow($request->get('user_id'), $request->get('access_token'));
         if ($failed = $this->userClassapi->authJsonResponse($user_check)) {
             return $failed;
-        }
-
-        if ($denied = RideAccessHelper::assertPassengerOwnsRide((int) $request->get('user_id'), (int) $request->get('ride_id'))) {
-            return $denied;
         }
 
         $user_details = User::query()->where('id',$request->get('user_id'))->where('status',1)->whereNull('deleted_at')->first();
@@ -1828,7 +1907,7 @@ class UserController extends Controller
         if($ride_details->offered_price != $request->get('offered_price')){
             $ride_details->total_pay = $amount;
             $ride_details->offered_price = $amount;
-            $ride_details->ride_time_out = \App\Helpers\RideLifecycleHelper::rideTimeoutFromNow();
+            $ride_details->ride_time_out = $date->format('Y-m-d H:i:s');
             $ride_details->save();
             DriverBid::query()->where('ride_id',$request->get('ride_id'))->update(['status' => 2]);
             $this->notificationClass->userFareChangeNotification($request->get('ride_id'));
@@ -1847,7 +1926,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "ride_id" => "required|numeric",
             "driver_id" => "required|numeric",
         ]);
@@ -1909,7 +1988,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "ride_id" => "required|numeric",
         ]);
         if ($validator->fails()) {
@@ -1987,7 +2066,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "driver_id" => "required|numeric",
             "ride_id" => "required|numeric",
         ]);
@@ -2003,11 +2082,6 @@ class UserController extends Controller
         if ($failed = $this->userClassapi->authJsonResponse($user_check)) {
             return $failed;
         }
-
-        if ($denied = RideAccessHelper::assertPassengerOwnsRide((int) $request->get('user_id'), (int) $request->get('ride_id'))) {
-            return $denied;
-        }
-
         $driver_id = $request->get('driver_id');
         $ride = TransportRideBook::query()->where('id', $request->get('ride_id'))->first();
         if ($ride != Null) {
@@ -2039,7 +2113,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -2110,7 +2184,7 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "ride_id" => "required|numeric",
             "ride_status" => "required|numeric|in:3,4,5,6,7,8,9",
         ]);
@@ -2245,7 +2319,7 @@ class UserController extends Controller
                         }
 
                         //deleting chat from firebase
-                        (new FirebaseService())->safeDeleteOrderChat($ride->ride_no, $ride->id);
+                        (new FirebaseService())->deleteOrderChat($ride->ride_no,$ride->id);
 
                         //ProviderUserRunningService::query()->where('provider_id', $driver_id)->where('user_id', $ride->user_id)->where('service_cat_id', $service_category_id)->where('booking_id', $ride->id)->delete();
                         return response()->json([
@@ -2432,7 +2506,8 @@ class UserController extends Controller
                                 $ride->save();
 
                                 //deleting chat from firebase
-                                (new FirebaseService())->safeDeleteOrderChat($ride->ride_no, $ride->id);
+                                if((new FirebaseService())->deleteOrderChat($ride->ride_no,$ride->id)){
+                                }
 
                                 $update_driver_status->driver_current_status = 1;
                                 $update_driver_status->save();
@@ -2455,28 +2530,27 @@ class UserController extends Controller
                                 //refer history code
                                 if($ride_status >= 0 && $ride_status <= 9 ){
                                     if ($ride->refer_discount > 0) {
-                                        $refer_user = User::query()->select('id','pending_refer_discount')->where('id', $ride->user_id)->whereNull('deleted_at')->first();
-                                        if ($refer_user != Null) {
+                                        $user = User::query()->select('id','pending_refer_discount')->where('id', $ride->user_id)->whereNull('deleted_at')->first();
+                                        if ($user != Null) {
                                             $user_refer_history = UserReferHistory::query()->where('id',$ride->user_refer_history_id)->where('user_id', $ride->user_id)->where('user_status', 1)->first();
                                             if ($user_refer_history != Null) {
                                                 $user_refer_history->user_status = 0;
                                                 $user_refer_history->save();
-                                                $refer_user->pending_refer_discount = $refer_user->pending_refer_discount + 1;
-                                                $refer_user->save();
+                                                $user->pending_refer_discount = $user->pending_refer_discount + 1;
+                                                $user->save();
                                             } else {
                                                 $user_refer_history = UserReferHistory::query()->where('id',$ride->user_refer_history_id)->where('refer_id', $ride->user_id)->where('refer_status', 1)->first();
                                                 if ($user_refer_history != Null) {
                                                     $user_refer_history->refer_status = 0;
                                                     $user_refer_history->save();
-                                                    $refer_user->pending_refer_discount = $refer_user->pending_refer_discount + 1;
-                                                    $refer_user->save();
+                                                    $user->pending_refer_discount = $user->pending_refer_discount + 1;
+                                                    $user->save();
                                                 }
                                             }
                                         }
                                     }
                                 }
                                 //refer history code
-                                $cancel_message = __('driver_messages.20');
                                 $this->notificationClass->userTransportNotification($ride->id, $user->device_token, $request_status, $user->login_device, $user->language);
                                 ProviderUserRunningService::query()->where('provider_id', $driver_id)->where('user_id', $ride->user_id)->where('booking_id', $ride->id)->delete();
                                 UserRunningRide::query()->where('user_id', $ride->user_id)->where('booking_id', $ride->id)->delete();
@@ -2505,7 +2579,7 @@ class UserController extends Controller
                                     "ride_id" => $ride->id,
                                     "ride_status" => $request_status - 0,
                                     "ride_completed_status" => 0,
-                                    "ride_cancelled_status" => 1,
+                                    "ride_cancelled_status" => 0,
                                     "driver_current_status" => $update_driver_status->driver_current_status,
                                     "cancel_by" => $cancel_message,
                                     "way_point_status" => $way_point_status - 0,
@@ -2827,6 +2901,11 @@ class UserController extends Controller
                                 //        "message_code" => 83,
                                 //    ]);
                                 //}
+                                WalletSettlementHelper::markCashRidePaidIfNeeded(
+                                    $ride,
+                                    $this->notificationClass,
+                                    request()->get('general_settings')
+                                );
                                 $ride->status = $request_status;
                                 $ride->save();
                                 if ($request->get('rating') != Null || $request->get('comment') != Null) {
@@ -2901,13 +2980,9 @@ class UserController extends Controller
                                     ProviderUserRunningService::query()->where('provider_id', $driver_id)->where('booking_id', $ride->id)->delete();
                                 }
 
-                                info('status:complete');
-                                info('ride-detail');
-                                info($ride->ride_no);
-                                info($ride->id);
-
                                 //deleting chat from firebase
-                                (new FirebaseService())->safeDeleteOrderChat($ride->ride_no, $ride->id);
+                                if((new FirebaseService())->deleteOrderChat($ride->ride_no,$ride->id)){
+                                }
 
                                 if($ride->is_hail != 1) {
                                     $general_settings = request()->get("general_settings");
@@ -2990,7 +3065,7 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "ride_id" => "required|numeric",
         ]);
         if ($validator->fails()) {
@@ -3003,21 +3078,6 @@ class UserController extends Controller
         $user_check = $this->userClassapi->checkUserAllow($request->get('user_id'), $request->get('access_token'));
         if ($failed = $this->userClassapi->authJsonResponse($user_check)) {
             return $failed;
-        }
-
-        $driverUserId = (int) $request->get('user_id');
-        $rideId = (int) $request->get('ride_id');
-        $ride = RideAccessHelper::findRideOrNull($rideId);
-        if ($ride === null) {
-            return response()->json([
-                'status' => 0,
-                'message' => __('driver_messages.26'),
-                'message_code' => 26,
-            ]);
-        }
-        $assignedDriver = (int) $ride->driver_id;
-        if ($assignedDriver > 0 && $assignedDriver !== $driverUserId) {
-            return RideAccessHelper::denyForbidden();
         }
 
         $driver_check = $this->userClassapi->checkDriverRegisterAllow($request->get('user_id'));
@@ -3050,7 +3110,7 @@ class UserController extends Controller
                 'user_ride_booking.ride_no as booking_no',
                 'user_ride_booking.vehicle_service_id',
                 'user_ride_booking.ride_type as ride_type',
-                DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN users.avatar LIKE 'http%' THEN users.avatar ELSE concat('$user_profile_url','/',users.avatar,'?v=0.4') END) ELSE '' END) as user_profile_image"),
+                DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN CHAR_LENGTH(users.avatar) >= 25 THEN users.avatar ELSE concat('$user_profile_url','/',users.avatar) END) ELSE '' END) as user_profile_image"),
                 DB::raw("(concat(users.first_name,'')) as user_name"),
                 DB::raw("(concat(users.country_code,users.contact_number)) as user_contact_number"),
                 'users.id as user_id',
@@ -3261,7 +3321,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "filter_type" => "nullable|in:0,1,2,3,4,5,6",// 6 for running delivery ride [ for multi delivery module ].
             "order_status" => "nullable",
             "timezone" => "required"
@@ -3512,7 +3572,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "filter_type" => "nullable|in:0,1,2,3,4,5,6",// 6 for running delivery ride [ for multi delivery module ]
             "timezone" => "required"
         ]);
@@ -3723,7 +3783,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -3757,7 +3817,7 @@ class UserController extends Controller
             $user_profile_url = url('/assets/images/profile-images/customer');
             $ride_ratings = TransportRatings::query()->select('transport_driver_rating.id as rating_id',
                 'transport_driver_rating.ride_id as ride_id', DB::raw("concat(users.first_name,'')as user_name"),
-                DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN users.avatar LIKE 'http%' THEN users.avatar ELSE concat('$user_profile_url','/',users.avatar,'?v=0.4') END) ELSE '' END) as user_profile_image"),
+                DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN CHAR_LENGTH(users.avatar) >= 25 THEN users.avatar ELSE concat('$user_profile_url','/',users.avatar) END) ELSE '' END) as user_profile_image"),
                 'transport_driver_rating.rating', DB::raw("(CASE WHEN transport_driver_rating.comment != '' THEN transport_driver_rating.comment ELSE '' END) as comment"),
                 (DB::raw('transport_driver_rating.created_at as datetime')),
             )
@@ -3809,7 +3869,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "ride_id" => "required"
         ]);
         if ($validator->fails()) {
@@ -3870,22 +3930,16 @@ class UserController extends Controller
         $current_lat = $driver_details->current_lat;
         $current_long = $driver_details->current_long;
 
-        $newRequestSelect = [
-            'user_ride_booking.id as ride_id','user_ride_booking.ride_no','user_ride_booking.pickup_address','user_ride_booking.destination_address','users.rating','user_ride_booking.pickup_datetime',
-            'user_ride_booking.user_name','user_ride_booking.pickup_lat','user_ride_booking.pickup_long','user_ride_booking.user_id','user_ride_booking.vehicle_service_id as service_id','user_ride_booking.payment_type','user_ride_booking.ride_type','user_ride_booking.is_auto_accept','user_ride_booking.destination_payment_method',
-        ];
-        if (Schema::hasColumn('user_ride_booking', 'delivery_variant')) {
-            $newRequestSelect[] = 'user_ride_booking.delivery_variant';
-        }
         $available_ride = TransportRideBook::query()
-            ->select(array_merge($newRequestSelect, [
+            ->select('user_ride_booking.id as ride_id','user_ride_booking.ride_no','user_ride_booking.pickup_address','user_ride_booking.destination_address','users.rating','user_ride_booking.pickup_datetime',
+                'user_ride_booking.user_name','user_ride_booking.pickup_lat','user_ride_booking.pickup_long','user_ride_booking.user_id','user_ride_booking.vehicle_service_id as service_id','user_ride_booking.payment_type','user_ride_booking.ride_type','user_ride_booking.is_auto_accept','user_ride_booking.destination_payment_method',
                 'user_courier_service_details.recipient_name','user_courier_service_details.recipient_contact_number','user_courier_service_details.item_description','user_courier_service_details.estimate_price','user_courier_service_details.package_weight_kg','user_courier_service_details.package_height_cm','user_courier_service_details.package_width_cm','user_courier_service_details.package_length_cm',
                 DB::raw('user_ride_booking.total_pay * '.$currency.' as offered_price'),
                 DB::raw("COUNT(user_rating.id) as total_ratings "),'user_ride_booking.additional_request as additional_remarks',
 //                                            DB::raw("TIMESTAMPDIFF(SECOND, user_ride_booking.created_at, NOW()) AS order_time"),
                 DB::raw("SUBSTRING_INDEX(user_ride_booking.destination_latlong,',',1) as destination_lat"),
                 DB::raw("SUBSTRING_INDEX(user_ride_booking.destination_latlong,',',-1) as destination_long"),
-                DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN users.avatar LIKE 'http%' THEN users.avatar ELSE concat('$avatar','/',users.avatar,'?v=0.4') END) ELSE '' END) as profile_image"),
+                DB::raw("(CASE WHEN users.avatar != '' THEN (concat('$avatar','/',users.avatar,'?v=0.4')) ELSE '' END) as profile_image"),
                 DB::raw("
                                                 CASE WHEN (MINUTE(TIMEDIFF(user_ride_booking.created_at, NOW())) >= 1)
                                                 THEN
@@ -3896,7 +3950,7 @@ class UserController extends Controller
                                                 AS order_time"),
                 DB::raw("ROUND((6371 * acos( cos( radians(pickup_lat) ) * cos( radians(" .$current_lat. ") )  * cos( radians( " .$current_long. " ) - radians(pickup_long) ) + sin( radians(pickup_lat) ) * sin(radians( " .$current_lat. " ) ) ) ), 2) as distance" ),
                 DB::raw("ROUND((((6371 * acos( cos( radians(pickup_lat) ) * cos( radians(" .$current_lat. ") )  * cos( radians( " .$current_long. " ) - radians(pickup_long) ) + sin( radians(pickup_lat) ) * sin(radians( " .$current_lat. " ) ) ) ) / 40 ) * 60 ), 2) as time" )
-            ]))
+            )
             ->join('users','users.id','=','user_ride_booking.user_id')
             ->leftjoin('user_courier_service_details','user_courier_service_details.ride_id','=','user_ride_booking.id')
             ->leftJoin('user_rating','user_rating.user_id','=','users.id')
@@ -3982,7 +4036,7 @@ class UserController extends Controller
             ]);
         }
 
-        return response()->json(\App\Helpers\XistiVehicleVariantHelper::enrichRideRow([
+        return response()->json([
             "status" => 1,
             "message" => __('driver_messages.1'),
             "message_code" => 1,
@@ -4017,8 +4071,7 @@ class UserController extends Controller
             "package_width_cm" => $available_ride->package_width_cm ?? null,
             "package_length_cm" => $available_ride->package_length_cm ?? null,
             "is_delivery" => RideKindHelper::isDeliveryFlag($available_ride),
-            "delivery_variant" => $available_ride->delivery_variant ?? '',
-        ], $service->service_name ?? null));
+        ]);
 
     }
 
@@ -4026,7 +4079,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "current_lat" => "required",
             "current_long" => "required"
         ]);
@@ -4090,7 +4143,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -4133,7 +4186,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "account_number" => "required|numeric",
             "holder_name" => "required",
             "bank_name" => "required",
@@ -4178,7 +4231,7 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "app_version" => "required",
             "search_distance" => "nullable",
         ]);
@@ -4217,9 +4270,6 @@ class UserController extends Controller
         $current_long = $request->get("current_long");
         $area_id = 0;
         if ($current_lat != Null && $current_long != Null) {
-            $transport_details->current_lat = $current_lat;
-            $transport_details->current_long = $current_long;
-            $transport_details->last_online_date_time = date('Y-m-d H:i:s');
             $get_admin_area_list = AdminAreaList::query()->where('status', 1)->get();
             $this->notificationClass->ApiLogDetail(2, 0, "get_admin_area_list", $get_admin_area_list);
             if ($get_admin_area_list->isNotEmpty()) {
@@ -4286,7 +4336,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "accept_transport" => "required|in:0,1",
             "accept_delivery" => "required|in:0,1",
             "accept_encomiendas" => "required|in:0,1",
@@ -4360,7 +4410,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "service_id"=>"required|numeric",
             "offered_fare" => "required",
             "estimated_time" => "required",
@@ -4571,7 +4621,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => ApiValidationRules::ACCESS_TOKEN,
             "ride_id" => "required|numeric",
         ]);
         if ($validator->fails()) {
@@ -4594,14 +4644,14 @@ class UserController extends Controller
         $ride = TransportRideBook::query()->where('id', $request->get('ride_id'))->first();
 
         if ($ride != Null) {
-            $general_settings = request()->get('general_settings');
+            $general_settings=request()->get('general_settings');
             $user_currency = WorldCurrency::query()->where('symbol', $user_check->currency)->first();
             if ($user_currency == Null) {
                 $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
             }
             $currency = $user_currency != Null ? $user_currency->ratio : 1;
             $service_setting = ServiceSettings::query()->select('admin_commission','driver_timeout')->first();
-            if ($general_settings != Null && (int) ($general_settings->auto_settle_wallet ?? 0) === 1) {
+            if($general_settings->auto_settle_wallet == 1){
                 //get wallet balance
                 $last_amount = $this->notificationClass->getWalletBalance($request->get('user_id'));
                 // admin commission of user offered price
@@ -4650,7 +4700,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
                 "user_id" => "required|numeric",
-                "access_token" => "required",
+                "access_token" => ApiValidationRules::ACCESS_TOKEN,
                 "ride_id" => "required|numeric",
             ]
         );
@@ -4722,7 +4772,7 @@ class UserController extends Controller
                         $user_profile_url = url('/assets/images/profile-images/customer');
                         $ride_details = TransportRideBook::query()->select('user_ride_booking.id as ride_id',
                             'user_ride_booking.ride_no as booking_no',
-                            DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN users.avatar LIKE 'http%' THEN users.avatar ELSE concat('$user_profile_url','/',users.avatar,'?v=0.4') END) ELSE '' END) as user_profile_image"),
+                            DB::raw("(CASE WHEN users.avatar != '' THEN (CASE WHEN CHAR_LENGTH(users.avatar) >= 25 THEN users.avatar ELSE concat('$user_profile_url','/',users.avatar) END) ELSE '' END) as user_profile_image"),
                             DB::raw("(concat(users.first_name,' ',users.last_name)) as user_name"),
                             'users.contact_number',
                             'user_ride_booking.pickup_address as pickup_address',
@@ -4877,64 +4927,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * MVP Core — audit trail when a user initiates an SOS call during an active ride.
-     */
-    public function postLogSosTrigger(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'required|integer',
-            'access_token' => 'required',
-            'ride_id' => 'nullable|integer',
-            'user_role' => 'nullable|string|in:passenger,driver',
-            'contact_name' => 'nullable|string|max:191',
-            'country_code' => 'nullable|string|max:16',
-            'contact_number' => 'nullable|string|max:32',
-            'current_lat' => 'nullable',
-            'current_long' => 'nullable',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 0,
-                'message' => $validator->errors()->first(),
-                'message_code' => 0,
-            ]);
-        }
-
-        $user_check = $this->userClassapi->checkUserAllow($request->get('user_id'), $request->get('access_token'));
-        if ($failed = $this->returnJsonIfAuthFailed($user_check)) {
-            return $failed;
-        }
-
-        if ($request->filled('ride_id')) {
-            if ($denied = RideAccessHelper::assertRideParticipant((int) $request->get('user_id'), (int) $request->get('ride_id'))) {
-                return $denied;
-            }
-        }
-
-        if (Schema::hasTable('sos_trigger_logs')) {
-            SosTriggerLog::query()->create([
-                'user_id' => (int) $request->get('user_id'),
-                'ride_id' => $request->filled('ride_id') ? (int) $request->get('ride_id') : null,
-                'user_role' => (string) $request->get('user_role', 'passenger'),
-                'contact_name' => $request->get('contact_name'),
-                'country_code' => $request->get('country_code'),
-                'contact_number' => $request->get('contact_number'),
-                'latitude' => $request->filled('current_lat') ? (float) $request->get('current_lat') : null,
-                'longitude' => $request->filled('current_long') ? (float) $request->get('current_long') : null,
-                'product' => 'XISTI',
-                'triggered_at' => now(),
-            ]);
-        }
-
-        return response()->json([
-            'status' => 1,
-            'message' => 'OK',
-            'message_code' => 1,
-        ]);
-    }
-
     private function storeDriverVehiclePhoto(Request $request, string $field, ?string $existingFile = null): ?string
     {
         if (!$request->hasFile($field)) {
@@ -4948,6 +4940,27 @@ class UserController extends Controller
         $file->move(public_path('/assets/images/provider-vehicle-image/'), $fileNew);
 
         return $fileNew;
+    }
+
+    private function driverRegistrationRequiresPlate(Request $request): bool
+    {
+        $deliveryVariant = $request->filled('delivery_variant')
+            ? (string) $request->get('delivery_variant')
+            : null;
+
+        if ($deliveryVariant === 'bicycle') {
+            return false;
+        }
+
+        $typeId = (int) $request->get('vehicle_type_id');
+        if ($typeId > 0 && Schema::hasColumn('transport_vehicle_type', 'requires_plate')) {
+            $flag = DB::table('transport_vehicle_type')->where('id', $typeId)->value('requires_plate');
+            if ($flag !== null) {
+                return (int) $flag === 1;
+            }
+        }
+
+        return true;
     }
 
 }

@@ -224,16 +224,126 @@ class AdminRbacMatrixTest extends TestCase
         );
     }
 
-    public static function mockUserEmailProvider(): array
+    #[Test]
+    public function admin_total_can_delete_transport_provider_route(): void
+    {
+        $role = AdminRole::query()->where('slug', 'admin_total')->firstOrFail();
+        $admin = $this->adminForRole($role);
+
+        $this->assertTrue(
+            $this->rbac->canAccessRoute($admin, 'get:admin:delete_transport_provider')
+        );
+        $this->assertTrue(
+            $this->rbac->canPerformAction($admin, 'transport-providers-list', AdminRbacService::ACTION_DELETE)
+        );
+    }
+
+    #[Test]
+    public function soporte_cannot_delete_transport_provider_route(): void
+    {
+        $role = AdminRole::query()->where('slug', 'soporte')->firstOrFail();
+        $admin = $this->adminForRole($role);
+
+        $this->assertFalse(
+            $this->rbac->canAccessRoute($admin, 'get:admin:delete_transport_provider')
+        );
+    }
+
+    #[Test]
+    public function socio_cannot_access_geo_fencing_or_gods_view_routes(): void
+    {
+        $role = AdminRole::query()->where('slug', 'socio')->firstOrFail();
+        $admin = $this->adminForRole($role);
+
+        $this->assertFalse($this->rbac->canAccessRoute($admin, 'get:admin:restricted_area_list'));
+        $this->assertFalse($this->rbac->canAccessRoute($admin, 'get:admin:transport_all_provider_location'));
+        $this->assertFalse($this->rbac->canAccessRoute($admin, 'get:admin:search_radius_list'));
+    }
+
+    #[Test]
+    #[DataProvider('roleDeniedRouteProvider')]
+    public function role_cannot_access_critical_denied_routes(string $roleSlug, string $routeName, string $matrixKey): void
+    {
+        $role = AdminRole::query()->where('slug', $roleSlug)->firstOrFail();
+        $admin = $this->adminForRole($role);
+
+        $this->assertFalse(
+            $this->rbac->canAccessRoute($admin, $routeName),
+            "Role [{$roleSlug}] should not access {$routeName} ({$matrixKey})"
+        );
+    }
+
+    #[Test]
+    public function consolidated_matrix_flags_match_role_policy(): void
+    {
+        foreach (AdminRbacService::allRoleSlugs() as $roleSlug) {
+            if ($roleSlug === 'admin_total') {
+                continue;
+            }
+            foreach (AdminRbacService::allMatrixKeys() as $moduleKey) {
+                $flags = AdminRbacService::permissionFlagsForRoleOnModule($roleSlug, $moduleKey);
+                $allowed = in_array($moduleKey, AdminRbacService::roleModuleMatrix()[$roleSlug], true);
+                if (! $allowed) {
+                    $this->assertSame('0', $flags['ver'], "{$roleSlug}/{$moduleKey} should not have view");
+                    $this->assertSame('0', $flags['en_menu'], "{$roleSlug}/{$moduleKey} should not be in menu");
+                    continue;
+                }
+                $this->assertSame('1', $flags['ver'], "{$roleSlug}/{$moduleKey} should have view");
+                foreach (AdminRbacService::permissionActionsForRole($roleSlug) as $action) {
+                    $column = match ($action) {
+                        AdminRbacService::ACTION_VIEW => 'ver',
+                        AdminRbacService::ACTION_CREATE => 'crear',
+                        AdminRbacService::ACTION_EDIT => 'editar',
+                        AdminRbacService::ACTION_DELETE => 'eliminar',
+                        AdminRbacService::ACTION_APPROVE => 'aprobar',
+                        AdminRbacService::ACTION_EXPORT => 'exportar',
+                        AdminRbacService::ACTION_CONFIGURE => 'configurar',
+                        default => null,
+                    };
+                    if ($column !== null) {
+                        $this->assertSame('1', $flags[$column], "{$roleSlug}/{$moduleKey} missing {$column}");
+                    }
+                }
+            }
+        }
+    }
+
+    public static function roleDeniedRouteProvider(): array
     {
         return [
-            ['socio@xistiapp.com', 'socio'],
-            ['contabilidad@xistiapp.com', 'contabilidad'],
-            ['desarrollador@xistiapp.com', 'desarrollador'],
-            ['aprobaciones@xistiapp.com', 'aprobaciones'],
-            ['soporte@xistiapp.com', 'soporte'],
-            ['marketing@xistiapp.com', 'marketing'],
+            ['contabilidad', 'get:admin:transport_all_provider_location', 'gods-view'],
+            ['contabilidad', 'get:admin:restricted_area_list', 'geo-fencing-list'],
+            ['contabilidad', 'get:admin:user_list', 'customer-list'],
+            ['contabilidad', 'get:admin:ride_list', 'ride-list'],
+            ['socio', 'get:admin:transport_heat_map', 'heat-map'],
+            ['socio', 'get:admin:transport_cash_out_list', 'cash-out-list'],
+            ['desarrollador', 'get:admin:user_list', 'customer-list'],
+            ['desarrollador', 'get:admin:earning_report', 'earning-report'],
+            ['desarrollador', 'get:admin:transport_service_approved_providers_list', 'transport-providers-list'],
+            ['aprobaciones', 'get:admin:earning_report', 'earning-report'],
+            ['aprobaciones', 'get:admin:push_notification', 'push-notification'],
+            ['aprobaciones', 'get:admin:transport_heat_map', 'heat-map'],
+            ['soporte', 'get:admin:delete_transport_provider', 'transport-providers-list'],
+            ['soporte', 'get:admin:earning_report', 'earning-report'],
+            ['soporte', 'get:admin:vehicle_commission_rates', 'vehicle-commission-rates'],
+            ['marketing', 'get:admin:ride_list', 'ride-list'],
+            ['marketing', 'get:admin:transport_service_approved_providers_list', 'transport-providers-list'],
+            ['marketing', 'get:admin:earning_report', 'earning-report'],
+            ['marketing', 'get:admin:sos', 'sos-list'],
         ];
+    }
+
+    public static function mockUserEmailProvider(): array
+    {
+        $cases = [];
+        foreach (AdminRbacMockUsersSeeder::mockUsers() as $entry) {
+            if ($entry['role'] === 'admin_total') {
+                continue;
+            }
+            $cases[] = [$entry['email'], $entry['role']];
+        }
+
+        return $cases;
     }
 
     private function adminForRole(AdminRole $role): Admin

@@ -1,45 +1,200 @@
-Producto,Rol,Modulo,Ver,Crear,Editar,Eliminar,Aprobar,Exportar,Configurar
-XISTI,admin_total,*,1,1,1,1,1,1,1
-XISTI,contabilidad,dashboard,1,0,0,0,0,1,0
-XISTI,contabilidad,earning-report,1,0,0,0,0,1,0
-XISTI,contabilidad,cash-out-list,1,0,0,0,0,1,0
-XISTI,contabilidad,world-currency-list,1,0,0,0,0,1,0
-XISTI,contabilidad,vehicle-commission-rates,1,0,0,0,0,1,0
-XISTI,contabilidad,service-settings,1,0,0,0,0,1,0
-XISTI,contabilidad,referral-history,1,0,0,0,0,1,0
-XISTI,socio,dashboard,1,1,1,0,0,0,0
-XISTI,socio,transport-providers-list,1,1,1,0,0,0,0
-XISTI,socio,customer-list,1,1,1,0,0,0,0
-XISTI,socio,ride-list,1,1,1,0,0,0,0
-XISTI,socio,earning-report,1,1,1,0,0,0,0
-XISTI,socio,heat-map,1,1,1,0,0,0,0
-XISTI,socio,search-radius,1,1,1,0,0,0,0
-XISTI,socio,geo-fencing-list,1,1,1,0,0,0,0
-XISTI,desarrollador,dashboard,1,0,0,0,0,0,1
-XISTI,desarrollador,app-version-setting,1,0,0,0,0,0,1
-XISTI,desarrollador,site-setting,1,0,0,0,0,0,1
-XISTI,desarrollador,support-page-list,1,0,0,0,0,0,1
-XISTI,desarrollador,push-notification,1,0,0,0,0,0,1
-XISTI,desarrollador,api-keys,1,0,0,0,0,0,1
-XISTI,desarrollador,audit-logs,1,0,0,0,0,0,1
-XISTI,desarrollador,security,1,0,0,0,0,0,1
-XISTI,aprobaciones,dashboard,1,0,0,0,1,0,0
-XISTI,aprobaciones,pending-provider-list,1,0,0,0,1,0,0
-XISTI,aprobaciones,pending-transport-provider-list,1,0,0,0,1,0,0
-XISTI,aprobaciones,pending-delivery-person-list,1,0,0,0,1,0,0
-XISTI,aprobaciones,transport-providers-list,1,0,0,0,1,0,0
-XISTI,aprobaciones,driver-documents,1,0,0,0,1,0,0
-XISTI,soporte,dashboard,1,1,1,0,0,0,0
-XISTI,soporte,customer-list,1,1,1,0,0,0,0
-XISTI,soporte,transport-providers-list,1,1,1,0,0,0,0
-XISTI,soporte,ride-list,1,1,1,0,0,0,0
-XISTI,soporte,sos-list,1,1,1,0,0,0,0
-XISTI,soporte,support-page-list,1,1,1,0,0,0,0
-XISTI,soporte,push-notification,1,1,1,0,0,0,0
-XISTI,soporte,report-issue,1,1,1,0,0,0,0
-XISTI,marketing,dashboard,1,1,1,0,0,0,0
-XISTI,marketing,push-notification,1,1,1,0,0,0,0
-XISTI,marketing,support-page-list,1,1,1,0,0,0,0
-XISTI,marketing,referral-history,1,1,1,0,0,0,0
-XISTI,marketing,coupon-deals,1,1,1,0,0,0,0
-XISTI,marketing,promotions,1,1,1,0,0,0,0
+Producto,Rol,Modulo,Seccion,En_Menu,Ver,Crear,Editar,Eliminar,Aprobar,Exportar,Configurar,Virtual,Diferido
+XISTI,admin_total,*,"Todos los módulos activos",1,1,1,1,1,1,1,1,0,0
+XISTI,contabilidad,api-keys,"API keys",0,0,0,0,0,0,0,0,1,0
+XISTI,contabilidad,app-version-setting,"Versión de la app",0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,audit-logs,Auditoría,0,0,0,0,0,0,0,0,1,0
+XISTI,contabilidad,cash-out-list,"Retiros (cash-out)",1,1,0,0,0,0,1,0,0,0
+XISTI,contabilidad,coupon-deals,"Cupones / deals",0,0,0,0,0,0,0,0,0,1
+XISTI,contabilidad,customer-list,Clientes,0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,dashboard,Dashboard,0,1,0,0,0,0,1,0,1,0
+XISTI,contabilidad,driver-documents,"Documentos requeridos",0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,drivers-moderation,"Moderación de conductores",0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,earning-report,"Reporte de ganancias",1,1,0,0,0,0,1,0,0,0
+XISTI,contabilidad,email-templates,"Plantillas de email",0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,geo-fencing-list,Geo-fencing,0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,gods-view,"God's View",0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,heat-map,"Mapa de calor",0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,pending-delivery-person-list,"Repartidores pendientes",0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,pending-provider-list,"Proveedores pendientes (legacy)",0,0,0,0,0,0,0,0,1,0
+XISTI,contabilidad,pending-transport-provider-list,"Conductores pendientes",0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,promotions,Promociones,0,0,0,0,0,0,0,0,0,1
+XISTI,contabilidad,push-notification,"Notificaciones push",0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,referral-history,Referidos,1,1,0,0,0,0,1,0,0,0
+XISTI,contabilidad,report-issue,"Reportar problema",0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,ride-list,Viajes,0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,search-radius,"Radio de búsqueda",0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,security,Seguridad,0,0,0,0,0,0,0,0,1,0
+XISTI,contabilidad,service-settings,"Configuración de servicio",1,1,0,0,0,0,1,0,0,0
+XISTI,contabilidad,site-setting,"Configuración del sitio",0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,sos-list,SOS,0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,support-page-list,"Páginas de soporte",0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,transport-providers-list,"Conductores (aprobados)",0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,vehicle-commission-rates,"Comisiones por vehículo",1,1,0,0,0,0,1,0,0,0
+XISTI,contabilidad,vehicle-services,"Servicios de vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,vehicle-type,"Tipos de vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,contabilidad,world-currency-list,Monedas,1,1,0,0,0,0,1,0,0,0
+XISTI,socio,api-keys,"API keys",0,0,0,0,0,0,0,0,1,0
+XISTI,socio,app-version-setting,"Versión de la app",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,audit-logs,Auditoría,0,0,0,0,0,0,0,0,1,0
+XISTI,socio,cash-out-list,"Retiros (cash-out)",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,coupon-deals,"Cupones / deals",0,0,0,0,0,0,0,0,0,1
+XISTI,socio,customer-list,Clientes,1,1,0,1,0,0,0,0,0,0
+XISTI,socio,dashboard,Dashboard,0,1,0,1,0,0,0,0,1,0
+XISTI,socio,driver-documents,"Documentos requeridos",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,drivers-moderation,"Moderación de conductores",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,earning-report,"Reporte de ganancias",1,1,0,1,0,0,0,0,0,0
+XISTI,socio,email-templates,"Plantillas de email",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,geo-fencing-list,Geo-fencing,0,0,0,0,0,0,0,0,0,0
+XISTI,socio,gods-view,"God's View",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,heat-map,"Mapa de calor",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,pending-delivery-person-list,"Repartidores pendientes",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,pending-provider-list,"Proveedores pendientes (legacy)",0,0,0,0,0,0,0,0,1,0
+XISTI,socio,pending-transport-provider-list,"Conductores pendientes",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,promotions,Promociones,0,0,0,0,0,0,0,0,0,1
+XISTI,socio,push-notification,"Notificaciones push",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,referral-history,Referidos,0,0,0,0,0,0,0,0,0,0
+XISTI,socio,report-issue,"Reportar problema",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,ride-list,Viajes,1,1,0,1,0,0,0,0,0,0
+XISTI,socio,search-radius,"Radio de búsqueda",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,security,Seguridad,0,0,0,0,0,0,0,0,1,0
+XISTI,socio,service-settings,"Configuración de servicio",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,site-setting,"Configuración del sitio",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,sos-list,SOS,0,0,0,0,0,0,0,0,0,0
+XISTI,socio,support-page-list,"Páginas de soporte",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,transport-providers-list,"Conductores (aprobados)",1,1,0,1,0,0,0,0,0,0
+XISTI,socio,vehicle-commission-rates,"Comisiones por vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,vehicle-services,"Servicios de vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,vehicle-type,"Tipos de vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,socio,world-currency-list,Monedas,0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,api-keys,"API keys",0,1,0,0,0,0,0,1,1,0
+XISTI,desarrollador,app-version-setting,"Versión de la app",1,1,0,0,0,0,0,1,0,0
+XISTI,desarrollador,audit-logs,Auditoría,0,1,0,0,0,0,0,1,1,0
+XISTI,desarrollador,cash-out-list,"Retiros (cash-out)",0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,coupon-deals,"Cupones / deals",0,0,0,0,0,0,0,0,0,1
+XISTI,desarrollador,customer-list,Clientes,0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,dashboard,Dashboard,0,1,0,0,0,0,0,1,1,0
+XISTI,desarrollador,driver-documents,"Documentos requeridos",0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,drivers-moderation,"Moderación de conductores",0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,earning-report,"Reporte de ganancias",0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,email-templates,"Plantillas de email",0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,geo-fencing-list,Geo-fencing,0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,gods-view,"God's View",0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,heat-map,"Mapa de calor",0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,pending-delivery-person-list,"Repartidores pendientes",0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,pending-provider-list,"Proveedores pendientes (legacy)",0,0,0,0,0,0,0,0,1,0
+XISTI,desarrollador,pending-transport-provider-list,"Conductores pendientes",0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,promotions,Promociones,0,0,0,0,0,0,0,0,0,1
+XISTI,desarrollador,push-notification,"Notificaciones push",1,1,0,0,0,0,0,1,0,0
+XISTI,desarrollador,referral-history,Referidos,0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,report-issue,"Reportar problema",0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,ride-list,Viajes,0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,search-radius,"Radio de búsqueda",0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,security,Seguridad,0,1,0,0,0,0,0,1,1,0
+XISTI,desarrollador,service-settings,"Configuración de servicio",0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,site-setting,"Configuración del sitio",1,1,0,0,0,0,0,1,0,0
+XISTI,desarrollador,sos-list,SOS,0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,support-page-list,"Páginas de soporte",1,1,0,0,0,0,0,1,0,0
+XISTI,desarrollador,transport-providers-list,"Conductores (aprobados)",0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,vehicle-commission-rates,"Comisiones por vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,vehicle-services,"Servicios de vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,vehicle-type,"Tipos de vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,desarrollador,world-currency-list,Monedas,0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,api-keys,"API keys",0,0,0,0,0,0,0,0,1,0
+XISTI,aprobaciones,app-version-setting,"Versión de la app",0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,audit-logs,Auditoría,0,0,0,0,0,0,0,0,1,0
+XISTI,aprobaciones,cash-out-list,"Retiros (cash-out)",0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,coupon-deals,"Cupones / deals",0,0,0,0,0,0,0,0,0,1
+XISTI,aprobaciones,customer-list,Clientes,0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,dashboard,Dashboard,0,1,0,0,0,1,0,0,1,0
+XISTI,aprobaciones,driver-documents,"Documentos requeridos",1,1,0,0,0,1,0,0,0,0
+XISTI,aprobaciones,drivers-moderation,"Moderación de conductores",1,1,0,0,0,1,0,0,0,0
+XISTI,aprobaciones,earning-report,"Reporte de ganancias",0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,email-templates,"Plantillas de email",0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,geo-fencing-list,Geo-fencing,0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,gods-view,"God's View",0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,heat-map,"Mapa de calor",0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,pending-delivery-person-list,"Repartidores pendientes",1,1,0,0,0,1,0,0,0,0
+XISTI,aprobaciones,pending-provider-list,"Proveedores pendientes (legacy)",0,0,0,0,0,0,0,0,1,0
+XISTI,aprobaciones,pending-transport-provider-list,"Conductores pendientes",1,1,0,0,0,1,0,0,0,0
+XISTI,aprobaciones,promotions,Promociones,0,0,0,0,0,0,0,0,0,1
+XISTI,aprobaciones,push-notification,"Notificaciones push",0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,referral-history,Referidos,0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,report-issue,"Reportar problema",0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,ride-list,Viajes,0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,search-radius,"Radio de búsqueda",0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,security,Seguridad,0,0,0,0,0,0,0,0,1,0
+XISTI,aprobaciones,service-settings,"Configuración de servicio",0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,site-setting,"Configuración del sitio",0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,sos-list,SOS,0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,support-page-list,"Páginas de soporte",0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,transport-providers-list,"Conductores (aprobados)",1,1,0,0,0,1,0,0,0,0
+XISTI,aprobaciones,vehicle-commission-rates,"Comisiones por vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,vehicle-services,"Servicios de vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,vehicle-type,"Tipos de vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,aprobaciones,world-currency-list,Monedas,0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,api-keys,"API keys",0,0,0,0,0,0,0,0,1,0
+XISTI,soporte,app-version-setting,"Versión de la app",0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,audit-logs,Auditoría,0,0,0,0,0,0,0,0,1,0
+XISTI,soporte,cash-out-list,"Retiros (cash-out)",0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,coupon-deals,"Cupones / deals",0,0,0,0,0,0,0,0,0,1
+XISTI,soporte,customer-list,Clientes,1,1,1,1,0,0,0,0,0,0
+XISTI,soporte,dashboard,Dashboard,0,1,1,1,0,0,0,0,1,0
+XISTI,soporte,driver-documents,"Documentos requeridos",0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,drivers-moderation,"Moderación de conductores",0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,earning-report,"Reporte de ganancias",0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,email-templates,"Plantillas de email",0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,geo-fencing-list,Geo-fencing,0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,gods-view,"God's View",0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,heat-map,"Mapa de calor",0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,pending-delivery-person-list,"Repartidores pendientes",0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,pending-provider-list,"Proveedores pendientes (legacy)",0,0,0,0,0,0,0,0,1,0
+XISTI,soporte,pending-transport-provider-list,"Conductores pendientes",0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,promotions,Promociones,0,0,0,0,0,0,0,0,0,1
+XISTI,soporte,push-notification,"Notificaciones push",1,1,1,1,0,0,0,0,0,0
+XISTI,soporte,referral-history,Referidos,0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,report-issue,"Reportar problema",1,1,1,1,0,0,0,0,0,0
+XISTI,soporte,ride-list,Viajes,1,1,1,1,0,0,0,0,0,0
+XISTI,soporte,search-radius,"Radio de búsqueda",0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,security,Seguridad,0,0,0,0,0,0,0,0,1,0
+XISTI,soporte,service-settings,"Configuración de servicio",0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,site-setting,"Configuración del sitio",0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,sos-list,SOS,1,1,1,1,0,0,0,0,0,0
+XISTI,soporte,support-page-list,"Páginas de soporte",1,1,1,1,0,0,0,0,0,0
+XISTI,soporte,transport-providers-list,"Conductores (aprobados)",1,1,1,1,0,0,0,0,0,0
+XISTI,soporte,vehicle-commission-rates,"Comisiones por vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,vehicle-services,"Servicios de vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,vehicle-type,"Tipos de vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,soporte,world-currency-list,Monedas,0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,api-keys,"API keys",0,0,0,0,0,0,0,0,1,0
+XISTI,marketing,app-version-setting,"Versión de la app",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,audit-logs,Auditoría,0,0,0,0,0,0,0,0,1,0
+XISTI,marketing,cash-out-list,"Retiros (cash-out)",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,coupon-deals,"Cupones / deals",1,1,1,1,0,0,0,0,0,1
+XISTI,marketing,customer-list,Clientes,0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,dashboard,Dashboard,0,1,1,1,0,0,0,0,1,0
+XISTI,marketing,driver-documents,"Documentos requeridos",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,drivers-moderation,"Moderación de conductores",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,earning-report,"Reporte de ganancias",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,email-templates,"Plantillas de email",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,geo-fencing-list,Geo-fencing,0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,gods-view,"God's View",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,heat-map,"Mapa de calor",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,pending-delivery-person-list,"Repartidores pendientes",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,pending-provider-list,"Proveedores pendientes (legacy)",0,0,0,0,0,0,0,0,1,0
+XISTI,marketing,pending-transport-provider-list,"Conductores pendientes",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,promotions,Promociones,1,1,1,1,0,0,0,0,0,1
+XISTI,marketing,push-notification,"Notificaciones push",1,1,1,1,0,0,0,0,0,0
+XISTI,marketing,referral-history,Referidos,1,1,1,1,0,0,0,0,0,0
+XISTI,marketing,report-issue,"Reportar problema",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,ride-list,Viajes,0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,search-radius,"Radio de búsqueda",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,security,Seguridad,0,0,0,0,0,0,0,0,1,0
+XISTI,marketing,service-settings,"Configuración de servicio",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,site-setting,"Configuración del sitio",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,sos-list,SOS,0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,support-page-list,"Páginas de soporte",1,1,1,1,0,0,0,0,0,0
+XISTI,marketing,transport-providers-list,"Conductores (aprobados)",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,vehicle-commission-rates,"Comisiones por vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,vehicle-services,"Servicios de vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,vehicle-type,"Tipos de vehículo",0,0,0,0,0,0,0,0,0,0
+XISTI,marketing,world-currency-list,Monedas,0,0,0,0,0,0,0,0,0,0

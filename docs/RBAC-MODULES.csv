@@ -1,0 +1,34 @@
+Producto,Modulo,Seccion,Virtual,Diferido
+ZIMO,api-keys,"API keys",1,0
+ZIMO,app-version-setting,"Versión de la app",0,0
+ZIMO,audit-logs,Auditoría,1,0
+ZIMO,cash-out-list,"Retiros (cash-out)",0,0
+ZIMO,coupon-deals,"Cupones / deals",0,1
+ZIMO,customer-list,Clientes,0,0
+ZIMO,dashboard,Dashboard,1,0
+ZIMO,driver-documents,"Documentos requeridos",0,0
+ZIMO,drivers-moderation,"Moderación de conductores",0,0
+ZIMO,earning-report,"Reporte de ganancias",0,0
+ZIMO,email-templates,"Plantillas de email",0,0
+ZIMO,geo-fencing-list,Geo-fencing,0,0
+ZIMO,gods-view,"God's View",0,0
+ZIMO,heat-map,"Mapa de calor",0,0
+ZIMO,pending-delivery-person-list,"Repartidores pendientes",0,0
+ZIMO,pending-provider-list,"Proveedores pendientes (legacy)",1,0
+ZIMO,pending-transport-provider-list,"Conductores pendientes",0,0
+ZIMO,promotions,Promociones,0,1
+ZIMO,push-notification,"Notificaciones push",0,0
+ZIMO,referral-history,Referidos,0,0
+ZIMO,report-issue,"Reportar problema",0,0
+ZIMO,ride-list,Viajes,0,0
+ZIMO,search-radius,"Radio de búsqueda",0,0
+ZIMO,security,Seguridad,1,0
+ZIMO,service-settings,"Configuración de servicio",0,0
+ZIMO,site-setting,"Configuración del sitio",0,0
+ZIMO,sos-list,SOS,0,0
+ZIMO,support-page-list,"Páginas de soporte",0,0
+ZIMO,transport-providers-list,"Conductores (aprobados)",0,0
+ZIMO,vehicle-commission-rates,"Comisiones por vehículo",0,0
+ZIMO,vehicle-services,"Servicios de vehículo",0,0
+ZIMO,vehicle-type,"Tipos de vehículo",0,0
+ZIMO,world-currency-list,Monedas,0,0

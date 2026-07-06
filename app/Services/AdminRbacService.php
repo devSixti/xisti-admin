@@ -42,15 +42,16 @@ class AdminRbacService
         ],
         'socio' => [
             'dashboard', 'transport-providers-list', 'customer-list', 'ride-list',
-            'earning-report', 'heat-map', 'search-radius', 'geo-fencing-list',
+            'earning-report',
         ],
         'desarrollador' => [
             'dashboard', 'app-version-setting', 'site-setting', 'support-page-list',
             'push-notification', 'api-keys', 'audit-logs', 'security',
         ],
         'aprobaciones' => [
-            'dashboard', 'pending-provider-list', 'pending-transport-provider-list',
+            'dashboard', 'pending-transport-provider-list',
             'pending-delivery-person-list', 'transport-providers-list', 'driver-documents',
+            'drivers-moderation',
         ],
         'soporte' => [
             'dashboard', 'customer-list', 'transport-providers-list', 'ride-list',
@@ -68,8 +69,45 @@ class AdminRbacService
         'aprobaciones' => '1,5',
         'marketing' => '1,2,3',
         'desarrollador' => '1,7',
-        'socio' => '1,2,3',
+        'socio' => '1,3',
         'soporte' => '1,2,3',
+    ];
+
+    /** Human-readable labels for consolidated RBAC exports. */
+    private const MATRIX_KEY_LABELS = [
+        'dashboard' => 'Dashboard',
+        'customer-list' => 'Clientes',
+        'transport-providers-list' => 'Conductores (aprobados)',
+        'ride-list' => 'Viajes',
+        'earning-report' => 'Reporte de ganancias',
+        'heat-map' => 'Mapa de calor',
+        'search-radius' => 'Radio de búsqueda',
+        'geo-fencing-list' => 'Geo-fencing',
+        'cash-out-list' => 'Retiros (cash-out)',
+        'world-currency-list' => 'Monedas',
+        'vehicle-commission-rates' => 'Comisiones por vehículo',
+        'service-settings' => 'Configuración de servicio',
+        'site-setting' => 'Configuración del sitio',
+        'app-version-setting' => 'Versión de la app',
+        'push-notification' => 'Notificaciones push',
+        'support-page-list' => 'Páginas de soporte',
+        'pending-provider-list' => 'Proveedores pendientes (legacy)',
+        'pending-transport-provider-list' => 'Conductores pendientes',
+        'pending-delivery-person-list' => 'Repartidores pendientes',
+        'driver-documents' => 'Documentos requeridos',
+        'sos-list' => 'SOS',
+        'referral-history' => 'Referidos',
+        'coupon-deals' => 'Cupones / deals',
+        'promotions' => 'Promociones',
+        'report-issue' => 'Reportar problema',
+        'api-keys' => 'API keys',
+        'audit-logs' => 'Auditoría',
+        'security' => 'Seguridad',
+        'gods-view' => "God's View",
+        'email-templates' => 'Plantillas de email',
+        'vehicle-type' => 'Tipos de vehículo',
+        'vehicle-services' => 'Servicios de vehículo',
+        'drivers-moderation' => 'Moderación de conductores',
     ];
 
     /**
@@ -142,13 +180,15 @@ class AdminRbacService
             'module_names' => ['support-page-list'],
         ],
         'pending-provider-list' => [
-            'match_urls' => ['admin/pending-provider-list', 'admin/drivers-list/un-approved'],
+            'match_urls' => ['admin/pending-provider-list'],
             'module_names' => ['pending-provider-list'],
+            'virtual' => true,
+            'route_paths' => ['get:admin:pending_provider_list'],
         ],
         'pending-transport-provider-list' => [
             'match_urls' => ['admin/drivers-list/un-approved', 'transport/provider-list'],
             'module_names' => ['pending-transport-provider-list'],
-            'route_paths' => ['get:admin:pending_transport_provider_list'],
+            'route_paths' => ['get:admin:pending_transport_provider_list', 'get:admin:transport_service_un_approved_providers_list'],
         ],
         'pending-delivery-person-list' => [
             'match_urls' => ['admin/delivery-person-list', 'admin/drivers-list/un-approved'],
@@ -197,6 +237,31 @@ class AdminRbacService
             'route_paths' => ['get:admin:security'],
             'virtual' => true,
         ],
+        'gods-view' => [
+            'match_urls' => ['provider-location-on-map', 'location-on-map'],
+            'module_names' => ['gods view'],
+        ],
+        'email-templates' => [
+            'match_urls' => ['admin/email-templates'],
+            'module_names' => ['email-templates'],
+        ],
+        'vehicle-type' => [
+            'match_urls' => ['admin/vehicle-type'],
+            'route_paths' => ['get:admin:vehicle_type'],
+        ],
+        'vehicle-services' => [
+            'match_urls' => ['admin/vehicle-service'],
+            'route_paths' => ['get:admin:vehicle_service'],
+        ],
+        'drivers-moderation' => [
+            'match_urls' => [
+                'admin/drivers-list/blocked',
+                'admin/drivers-list/rejected',
+                'admin/drivers-list/un-approved',
+            ],
+            'module_names' => ['drivers-list'],
+            'exclude_match_urls' => ['admin/drivers-list/approved'],
+        ],
     ];
 
     /** @var array<string, string> */
@@ -207,6 +272,20 @@ class AdminRbacService
         'get:admin:audit_logs' => 'audit-logs',
         'get:admin:audit_logs.export' => 'audit-logs',
         'get:admin:api_keys' => 'api-keys',
+        'get:admin:transport_provider_location' => 'gods-view',
+        'get:admin:transport_all_provider_location' => 'gods-view',
+        'get:admin:transport_available_provider_location' => 'gods-view',
+        'get:admin:transport_ride_start_provider_location' => 'gods-view',
+        'get:admin:transport_ride_reached_provider_location' => 'gods-view',
+        'get:admin:transport_ride_enroute_provider_location' => 'gods-view',
+        'get:admin:transport_location_on_map' => 'gods-view',
+        'get:admin:transport_search_provider_on_map' => 'gods-view',
+        'get:admin:email_templates' => 'email-templates',
+        'get:admin:delete_email_templates' => 'email-templates',
+        'get:admin:vehicle_type' => 'vehicle-type',
+        'get:admin:delete_vehicle_type' => 'vehicle-type',
+        'get:admin:vehicle_service' => 'vehicle-services',
+        'get:admin:delete_vehicle_service' => 'vehicle-services',
     ];
 
     public function resolveRole(Admin $admin): ?AdminRole
@@ -282,23 +361,14 @@ class AdminRbacService
         }
 
         $matrixKey = $this->matrixKeyForModule($module) ?? self::routeToMatrixKey($routeName);
-        if ($matrixKey !== null && self::requiredActionForRoute($routeName) !== self::ACTION_VIEW) {
-            return $this->roleCanPerformRoute($role, $matrixKey, $routeName);
+        if ($matrixKey === null) {
+            return false;
         }
-
-        if (RoleModulePermission::query()
-            ->where('role_id', $role->id)
-            ->where('module_id', $module->id)
-            ->where(function ($query) {
-                $this->whereCsvContains($query, 'permissions', self::ACTION_VIEW);
-            })
-            ->exists()) {
+        if ($matrixKey === 'dashboard') {
             return true;
         }
 
-        $matrixKey = $this->matrixKeyForModule($module);
-
-        return $matrixKey !== null && $this->roleHasMatrixKey($role, $matrixKey);
+        return $this->roleCanPerformRoute($role, $matrixKey, $routeName);
     }
 
     /** @return array<int, array{parent_menu: array, child_menu: array}> */
@@ -367,6 +437,80 @@ class AdminRbacService
     public static function permissionActionsForRole(string $roleSlug): array
     {
         return explode(',', self::permissionCsvForRole($roleSlug));
+    }
+
+    /** @return list<string> Sorted matrix keys used in RBAC exports. */
+    public static function allMatrixKeys(): array
+    {
+        $keys = array_keys(self::MATRIX_MODULE_RULES);
+        sort($keys);
+
+        return $keys;
+    }
+
+    public static function matrixKeyLabel(string $matrixKey): string
+    {
+        return self::MATRIX_KEY_LABELS[$matrixKey] ?? $matrixKey;
+    }
+
+    /**
+     * Permission flags for consolidated matrix export (0/1 per action).
+     *
+     * @return array{en_menu: string, ver: string, crear: string, editar: string, eliminar: string, aprobar: string, exportar: string, configurar: string}
+     */
+    public static function permissionFlagsForRoleOnModule(string $roleSlug, string $matrixKey): array
+    {
+        $flags = [
+            'en_menu' => '0',
+            'ver' => '0',
+            'crear' => '0',
+            'editar' => '0',
+            'eliminar' => '0',
+            'aprobar' => '0',
+            'exportar' => '0',
+            'configurar' => '0',
+        ];
+
+        if ($roleSlug === 'admin_total') {
+            foreach ($flags as $key => $_) {
+                $flags[$key] = '1';
+            }
+
+            return $flags;
+        }
+
+        $allowed = self::ROLE_MODULE_MATRIX[$roleSlug] ?? [];
+        if (! in_array($matrixKey, $allowed, true)) {
+            return $flags;
+        }
+
+        if ($matrixKey === 'dashboard' || self::isVirtualMatrixKey($matrixKey)) {
+            $flags['en_menu'] = '0';
+        } else {
+            $flags['en_menu'] = '1';
+        }
+
+        $actionMap = [
+            self::ACTION_VIEW => 'ver',
+            self::ACTION_CREATE => 'crear',
+            self::ACTION_EDIT => 'editar',
+            self::ACTION_DELETE => 'eliminar',
+            self::ACTION_APPROVE => 'aprobar',
+            self::ACTION_EXPORT => 'exportar',
+            self::ACTION_CONFIGURE => 'configurar',
+        ];
+
+        foreach (self::permissionActionsForRole($roleSlug) as $action) {
+            if (isset($actionMap[$action])) {
+                $flags[$actionMap[$action]] = '1';
+            }
+        }
+
+        if ($matrixKey === 'dashboard') {
+            $flags['ver'] = '1';
+        }
+
+        return $flags;
     }
 
     /** @return list<string> Matrix keys granted to a role (excluding admin_total star). */
@@ -466,9 +610,6 @@ class AdminRbacService
         return self::ACTION_VIEW;
     }
 
-  /**
-     * Map AJAX / mutation routes to RBAC matrix keys when not listed in admin_module.
-     */
     private static function inferRouteMatrixKey(string $routeName): ?string
     {
         /** @var array<string, list<string>> */
@@ -480,13 +621,26 @@ class AdminRbacService
             'ride-list' => [
                 'ride_list', 'ride_details', 'transport_update_ride', 'single_provider_ride',
             ],
+            'gods-view' => [
+                'transport_provider_location', 'transport_all_provider_location',
+                'transport_available_provider_location', 'transport_ride_start_provider_location',
+                'transport_ride_reached_provider_location', 'transport_ride_enroute_provider_location',
+                'transport_location_on_map', 'transport_search_provider_on_map',
+            ],
+            'email-templates' => ['email_templates', 'delete_email_templates'],
+            'vehicle-type' => ['vehicle_type', 'delete_vehicle_type'],
+            'vehicle-services' => ['vehicle_service', 'delete_vehicle_service'],
+            'drivers-moderation' => [
+                'transport_service_un_approved', 'transport_service_blocked',
+                'transport_service_rejected', 'drivers-list/blocked', 'drivers-list/rejected',
+            ],
             'transport-providers-list' => [
                 'transport_service_provider', 'transport_service_driver', 'transport_provider',
                 'transport_update_provider', 'add_transport_service_driver', 'edit_transport_service_driver',
                 'transport_provider_document', 'edit_transport_provider_vehicle', 'delete_transport_provider',
             ],
             'pending-provider-list' => [
-                'transport_service_un_approved', 'pending_transport', 'pending_provider',
+                'pending_transport', 'pending_provider',
                 'update_approved_reject_provider_document',
             ],
             'earning-report' => ['earning_report'],
@@ -504,8 +658,10 @@ class AdminRbacService
             'report-issue' => ['report_issue', 'faqs'],
             'sos-list' => [':admin:sos'],
             'service-settings' => [
-                'service_setting', 'vehicle_type', 'vehicle_service', 'required_document',
-                'promocode', 'update_service_setting',
+                'service_setting', 'promocode', 'update_service_setting',
+            ],
+            'driver-documents' => [
+                'required_document', 'required-document',
             ],
         ];
 
