@@ -20,8 +20,8 @@ return [
     'firebase_chat_admin_email' => env('XISTI_FIREBASE_CHAT_ADMIN_EMAIL', 'admin@xistiapp.com'),
     'firebase_chat_admin_password' => env('XISTI_FIREBASE_CHAT_ADMIN_PASSWORD'),
     'brand' => [
-        'primary' => '#39FF14',
-        'secondary' => '#9333EA',
+        'primary' => '#80FF00',
+        'secondary' => '#681FFF',
         'background' => '#0B0B0B',
         'surface' => '#141414',
     ],
@@ -31,5 +31,7 @@ return [
         'from_name' => env('XISTI_MAIL_FROM_NAME', env('MAIL_FROM_NAME', 'XISTI')),
         /** Inbound support / admin notifications (Reply-To / site contact). */
         'support_address' => env('XISTI_SUPPORT_EMAIL', 'soporte@xistiapp.com'),
+        /** Public URL for hosted email assets (logo, header pattern). */
+        'logo_url' => env('XISTI_MAIL_LOGO_URL'),
     ],
 ];
