@@ -2922,7 +2922,7 @@ class TransportController extends Controller
                 'message' => __('driver_messages.0')
             ]);
         }
-        $notification_log = $this->notificationClass->DriverCashOutNotification($user_details->device_token,$user_details->language,$request_for);
+        $notification_log = $this->notificationClass->DriverCashOutNotification($user_details->device_token,$user_details->language,$request_for, (int) $user_details->login_device);
         return response()->json([
             'success' => true
         ]);

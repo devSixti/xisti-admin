@@ -103,10 +103,100 @@ class FcmPushHelper
     }
 
     /**
+     * Broadcast push to an FCM topic (admin campaigns). Always uses visible notification + high priority.
+     *
+     * @param  array<string, string>  $data
+     */
+    public static function sendToTopic(
+        string $topic,
+        string $title,
+        string $body,
+        array $data = [],
+        ?string $iosSound = 'default',
+    ): mixed {
+        if (trim($topic) === '' || (trim($title) === '' && trim($body) === '')) {
+            return null;
+        }
+
+        return self::deliverFcmMessage('topic', $topic, $title, $body, $data, $iosSound, false);
+    }
+
+    /**
+     * @param  array<int, array{token?: string, device_token?: string, login_device?: int|string|null}|string>  $recipients
+     * @param  array<string, string>  $data
+     */
+    public static function sendToRecipientsForLoginDevice(
+        array $recipients,
+        string $title,
+        string $body,
+        array $data = [],
+        ?string $iosSound = 'default',
+    ): void {
+        foreach (self::normalizeRecipients($recipients) as $recipient) {
+            self::sendToTokenForLoginDevice(
+                $recipient['token'],
+                $title,
+                $body,
+                $data,
+                $iosSound,
+                $recipient['login_device'],
+            );
+        }
+    }
+
+    /**
+     * @param  array<int, array{token?: string, device_token?: string, login_device?: int|string|null}|string>  $entries
+     * @return array<int, array{token: string, login_device: ?int}>
+     */
+    public static function normalizeRecipients(array $entries): array
+    {
+        $seen = [];
+        $normalized = [];
+
+        foreach ($entries as $entry) {
+            if (is_array($entry)) {
+                $token = trim((string) ($entry['token'] ?? $entry['device_token'] ?? ''));
+                $loginDevice = (int) ($entry['login_device'] ?? 0);
+            } else {
+                $token = trim((string) $entry);
+                $loginDevice = 0;
+            }
+
+            if ($token === '' || isset($seen[$token])) {
+                continue;
+            }
+
+            $seen[$token] = true;
+            $normalized[] = [
+                'token' => $token,
+                'login_device' => $loginDevice > 0 ? $loginDevice : null,
+            ];
+        }
+
+        return $normalized;
+    }
+
+    /**
      * @param  array<string, string>  $data
      */
     private static function sendFcmMessage(
         string $token,
+        string $title,
+        string $body,
+        array $data,
+        ?string $iosSound,
+        bool $androidDataOnly = false,
+    ): mixed {
+        return self::deliverFcmMessage('token', $token, $title, $body, $data, $iosSound, $androidDataOnly);
+    }
+
+    /**
+     * @param  'token'|'topic'  $targetKey
+     * @param  array<string, string>  $data
+     */
+    private static function deliverFcmMessage(
+        string $targetKey,
+        string $targetValue,
         string $title,
         string $body,
         array $data,
@@ -140,7 +230,7 @@ class FcmPushHelper
         $sound = $isRideAlert ? 'new_request.wav' : ($iosSound ?? 'default');
 
         $fcmMessage = [
-            'token' => $token,
+            $targetKey => $targetValue,
             'data' => $dataPayload,
         ];
 

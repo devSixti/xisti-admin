@@ -162,12 +162,19 @@ class SharedRideHelper
             $body = trim($passenger->first_name . ' ' . ($passenger->last_name ?? ''))
                 . ' — ' . $offer->origin_town . ' → ' . $offer->destination_town;
             if (trim((string) ($driver->device_token ?? '')) !== '') {
-                FcmPushHelper::sendToToken((string) $driver->device_token, $title, $body, [
-                    'notification_type' => '1',
-                    'ride_id' => (string) $rideId,
-                    'user_type' => '2',
-                    'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
-                ]);
+                FcmPushHelper::sendToTokenForLoginDevice(
+                    (string) $driver->device_token,
+                    $title,
+                    $body,
+                    [
+                        'notification_type' => '1',
+                        'ride_id' => (string) $rideId,
+                        'user_type' => '2',
+                        'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                    ],
+                    'default',
+                    (int) ($driver->login_device ?? 0) > 0 ? (int) $driver->login_device : null
+                );
             }
 
             return [

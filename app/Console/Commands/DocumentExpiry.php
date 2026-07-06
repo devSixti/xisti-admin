@@ -41,7 +41,7 @@ class DocumentExpiry extends Command
             $third_warning = $settings->doc_expiry_warning_three > 0 ? $settings->doc_expiry_warning_three : 3;
             $current_date = date('Y-m-d');
 
-            $providers = User::query()->select('users.id as user_id','provider_documents.id as document_id','provider_documents.expiry_date','users.device_token as device_token',
+            $providers = User::query()->select('users.id as user_id','provider_documents.id as document_id','provider_documents.expiry_date','users.device_token as device_token','users.login_device',
                 DB::raw('DATE_SUB(provider_documents.expiry_date,INTERVAL '.$first_warning.' DAY) as first_expiry_warning'),
                 DB::raw('DATE_SUB(provider_documents.expiry_date,INTERVAL '.$second_warning.' DAY) as second_expiry_warning'),
                 DB::raw('DATE_SUB(provider_documents.expiry_date,INTERVAL '.$third_warning.' DAY) as third_expiry_warning'))
@@ -67,17 +67,17 @@ class DocumentExpiry extends Command
 
             $notification_class = new NotificationClass();
 
-            $first_expiry_tokens = array_unique(array_column($first_expiry_array, 'device_token'));
+            $first_expiry_tokens = $this->uniqueDeviceRecipients($first_expiry_array);
             if(!empty($first_expiry_tokens)){
                 $notification_class->sendExpiryNotification($first_expiry_tokens,$first_warning);
             }
 
-            $second_expiry_tokens = array_unique(array_column($second_expiry_array, 'device_token'));
+            $second_expiry_tokens = $this->uniqueDeviceRecipients($second_expiry_array);
             if(!empty($second_expiry_tokens)){
                 $notification_class->sendExpiryNotification($second_expiry_tokens,$second_warning);
             }
 
-            $third_expiry_tokens = array_unique(array_column($third_expiry_array, 'device_token'));
+            $third_expiry_tokens = $this->uniqueDeviceRecipients($third_expiry_array);
             if(!empty($third_expiry_tokens)){
                 $notification_class->sendExpiryNotification($third_expiry_tokens,$third_warning);
             }
@@ -85,7 +85,7 @@ class DocumentExpiry extends Command
             $expired_data = (clone $providers)->whereDate('provider_documents.expiry_date','<',$current_date)->groupBy('user_id')->get()->toArray();
             if($expired_data != NULL){
                 $user_ids = array_column($expired_data,'user_id');
-                $device_tokens = array_column($expired_data,'device_token');
+                $device_tokens = $this->uniqueDeviceRecipients($expired_data);
                 User::query()->whereIn('id',$user_ids)->update(['driver_current_status'=>0]);
 //                TransportDriverDetails::query()->whereIn('user_id',$user_ids)->update(['is_doc_approved' => 0]);
 
@@ -94,5 +94,30 @@ class DocumentExpiry extends Command
                 $notification_class->sendExpiryNotification($device_tokens);
             }
         }
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $rows
+     * @return array<int, array{device_token: string, login_device: int}>
+     */
+    private function uniqueDeviceRecipients(array $rows): array
+    {
+        $seen = [];
+        $recipients = [];
+
+        foreach ($rows as $row) {
+            $token = trim((string) ($row['device_token'] ?? ''));
+            if ($token === '' || isset($seen[$token])) {
+                continue;
+            }
+
+            $seen[$token] = true;
+            $recipients[] = [
+                'device_token' => $token,
+                'login_device' => (int) ($row['login_device'] ?? 0),
+            ];
+        }
+
+        return $recipients;
     }
 }

@@ -1963,10 +1963,10 @@ class UserController extends Controller
         $driver_bid->status = 2;
         $driver_bid->save();
 
-        $driver = User::query()->select('device_token','language')->where('id',$request->get('driver_id'))->first();
+        $driver = User::query()->select('device_token','language','login_device')->where('id',$request->get('driver_id'))->first();
         if ($driver != Null) {
             try {
-                $this->notificationClass->driverBidRejectNotification($driver->device_token, $driver->language);
+                $this->notificationClass->driverBidRejectNotification($driver->device_token, $driver->language, (int) $driver->login_device);
             } catch (\Throwable $e) {
                 \Log::warning('postDeclineRequest: push notification failed', [
                     'ride_id' => $request->get('ride_id'),

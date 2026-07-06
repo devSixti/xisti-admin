@@ -562,7 +562,10 @@ class NotificationClass
         return $this->sendEventPushToToken(
             'passenger_wallet_update',
             $transfer_wallet_holder_device_token,
-            'es'
+            'es',
+            [],
+            [],
+            (int) $transfer_wallet_holder_login_device
         );
     }
 
@@ -961,61 +964,9 @@ class NotificationClass
     //send push notification via cURL call to FCM V1 API
     public function sendPushNotification($topic,$title,$message,$notification_type)
     {
-        //cURL url
-        $fcm_url = "https://fcm.googleapis.com/v1/projects/" . config('firebase-cloud-messaging.configurations.project_id') . "/messages:send";
-        //fetch fcm bearer token and renew if its expired
-        $fcm_bearer_token = (new AuthAlertClass())->fetchFCMBearerToken();
-        //cURL headers
-        $headers = [
-            "Content-Type: application/json",
-            "Authorization: Bearer " . $fcm_bearer_token
-        ];
-        //cURL body (send the body in json format and keep everything in string)
-        $body = [
-            "validate_only" => false,
-            "message" => [
-                "topic" => $topic,
-                "data" => [
-                    "sound" => "true",
-                    "notification_type" => $notification_type . "",
-                    "title" => $title . "",
-                    "body" => $message . "",
-                    "message" => $message . ""
-                ],
-                "notification" => [
-                    "title" => $title . "",
-                    "body" => $message . "",
-                ],
-                "android" => [
-                    "notification" => [
-                        "click_action" => "FLUTTER_NOTIFICATION_CLICK",
-                    ]
-                ],
-                "apns" => [
-                    "payload" => [
-                        "aps" => [
-                            "content-available" => 0,
-                            "sound" => "default"
-                        ]
-                    ]
-                ]
-            ]
-        ];
-        //initialize cURL call
-        $curl = curl_init();
-        //set cURL preferences
-        curl_setopt($curl, CURLOPT_URL, $fcm_url);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($body));
-        //execute cURL call
-        $response = curl_exec($curl);
-        //close cURL call
-        curl_close($curl);
-
-        return $response;
+        return FcmPushHelper::sendToTopic($topic, $title, $message, [
+            'notification_type' => (string) $notification_type,
+        ]);
     }
 
     public function providerUpdateWalletBalance($provider_id,$wallet_provider_type,$transaction_type,$add_update_wallet_bal,$subject,$subject_code,$order_no){
@@ -1053,7 +1004,7 @@ class NotificationClass
     }
 
     //cash out Notification
-    public function DriverCashOutNotification($device_token,$language,$request_for)
+    public function DriverCashOutNotification($device_token,$language,$request_for,$login_device = null)
     {
         if ($device_token == Null) {
             return response()->json([
@@ -1066,7 +1017,7 @@ class NotificationClass
         $language = $language != Null ? $language : 'es';
         $eventKey = (int) $request_for === 1 ? 'driver_cash_out_processed' : 'driver_cash_out_rejected';
 
-        return $this->sendEventPushToToken($eventKey, $device_token, $language);
+        return $this->sendEventPushToToken($eventKey, $device_token, $language, [], [], $login_device);
     }
 
     //get walletBalance
@@ -1101,17 +1052,24 @@ class NotificationClass
 
     public function sendExpiryNotification($device_token, $warning_days = 0)
     {
+        $vars = ['days' => (string) $warning_days];
+
         if (is_array($device_token)) {
-            $tokens = array_values(array_filter($device_token, static fn ($token) => trim((string) $token) !== ''));
-            if ($tokens === []) {
+            $recipients = FcmPushHelper::normalizeRecipients($device_token);
+            if ($recipients === []) {
                 return null;
             }
-            $this->sendEventPushToTokens(
-                'driver_document_expiry',
-                $tokens,
-                'es',
-                ['days' => (string) $warning_days]
-            );
+
+            foreach ($recipients as $recipient) {
+                $this->sendEventPushToToken(
+                    'driver_document_expiry',
+                    $recipient['token'],
+                    'es',
+                    $vars,
+                    [],
+                    $recipient['login_device']
+                );
+            }
 
             return response()->json(['status' => 1, 'message' => __('user_messages.1'), 'message_code' => 1]);
         }
@@ -1120,7 +1078,9 @@ class NotificationClass
             'driver_document_expiry',
             $device_token,
             'es',
-            ['days' => (string) $warning_days]
+            $vars,
+            [],
+            null
         );
     }
 
@@ -1333,7 +1293,7 @@ class NotificationClass
         }
     }
 
-    public function driverApproveDocumentNotification($document_id, $device_token, $title = '', $message = '', $is_approved = 0)
+    public function driverApproveDocumentNotification($document_id, $device_token, $title = '', $message = '', $is_approved = 0, $login_device = null)
     {
         return $this->sendEventPushToToken(
             'driver_document_approved',
@@ -1343,11 +1303,12 @@ class NotificationClass
             [
                 'document_id' => (string) $document_id,
                 'is_approved' => '1',
-            ]
+            ],
+            $login_device
         );
     }
 
-    public function driverRejectDocumentNotification($document_id, $device_token, $title = '', $message = '')
+    public function driverRejectDocumentNotification($document_id, $device_token, $title = '', $message = '', $login_device = null)
     {
         return $this->sendEventPushToToken(
             'driver_document_rejected',
@@ -1357,16 +1318,20 @@ class NotificationClass
             [
                 'document_id' => (string) $document_id,
                 'is_approved' => '0',
-            ]
+            ],
+            $login_device
         );
     }
 
-    public function driverBidRejectNotification($device_token,$language)
+    public function driverBidRejectNotification($device_token,$language, $login_device = null)
     {
         return $this->sendEventPushToToken(
             'driver_bid_rejected',
             $device_token,
-            $language ?: 'es'
+            $language ?: 'es',
+            [],
+            [],
+            $login_device
         );
     }
 

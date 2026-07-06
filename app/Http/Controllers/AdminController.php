@@ -787,14 +787,14 @@ class AdminController extends Controller
 //        }
         $provider_document_details->save();
 
-        $driver = User::query()->select('users.device_token', 'users.language')
+        $driver = User::query()->select('users.device_token', 'users.language', 'users.login_device')
             ->where('users.id', '=', $provider_document_details->user_id)
             ->first();
 
         if($status == 1){
-            $this->notificationClass->driverApproveDocumentNotification($id, $driver->device_token, __('driver_messages.91', [], $driver->language),__('driver_messages.369', [], $driver->language));
+            $this->notificationClass->driverApproveDocumentNotification($id, $driver->device_token, __('driver_messages.91', [], $driver->language),__('driver_messages.369', [], $driver->language), 0, (int) $driver->login_device);
         } elseif ($status == 2){
-            $this->notificationClass->driverRejectDocumentNotification($id, $driver->device_token, __('driver_messages.91', [], $driver->language),__('driver_messages.368', [], $driver->language));
+            $this->notificationClass->driverRejectDocumentNotification($id, $driver->device_token, __('driver_messages.91', [], $driver->language),__('driver_messages.368', [], $driver->language), (int) $driver->login_device);
         }
         return response()->json([
             'success' => true,
