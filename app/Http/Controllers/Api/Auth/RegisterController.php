@@ -57,7 +57,8 @@ class RegisterController extends Controller
             ->first();
 
         $loginType = (string) ($registerUser?->login_type ?? '');
-        $isPhoneSignup = $loginType === '' || in_array($loginType, ['phone', 'biometric', 'fingerprint', 'sim'], true);
+        $isSocialSignup = in_array($loginType, ['facebook', 'google', 'apple'], true);
+        $isPhoneSignup = ! $isSocialSignup;
         $isAppleSignup = $loginType === 'apple';
 
         $emergencyCountryCode = ColombiaFormValidation::normalizeCountryDialCode(
