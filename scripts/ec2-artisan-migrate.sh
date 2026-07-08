@@ -64,13 +64,16 @@ if ! export_db_migrate_credentials; then
   echo "WARNING: set GitHub secrets EC2_DB_MIGRATE_USERNAME and EC2_DB_MIGRATE_PASSWORD (or fix /etc/mysql/debian.cnf)." >&2
 fi
 
+RBAC_SEED_MOCK_USERS="${RBAC_SEED_MOCK_USERS:-0}"
+
 # sudo strips the parent environment unless variables are passed explicitly.
 sudo -u "${DEPLOY_USER}" \
   DB_USERNAME="${DB_USERNAME}" \
   DB_PASSWORD="${DB_PASSWORD}" \
-  bash -lc "
+  RBAC_SEED_MOCK_USERS="${RBAC_SEED_MOCK_USERS}" \
+  bash -lc '
     set -euo pipefail
-    cd '${APP_DIR}'
+    cd "'"${APP_DIR}"'"
     rm -f bootstrap/cache/config.php 2>/dev/null || true
     rm -f bootstrap/cache/packages.php bootstrap/cache/services.php 2>/dev/null || true
     php artisan config:clear
@@ -87,6 +90,10 @@ sudo -u "${DEPLOY_USER}" \
     php artisan db:seed --class=AdminModuleSeeder --force
     php artisan db:seed --class=BrandedEmailTemplatesSeeder --force
     php artisan db:seed --class=AdminRbacMatrixSeeder --force
-    php artisan db:seed --class=AdminRbacMockUsersSeeder --force
+    if [[ "${RBAC_SEED_MOCK_USERS:-0}" == "1" ]]; then
+      php artisan db:seed --class=AdminRbacMockUsersSeeder --force
+    else
+      echo "==> skipping AdminRbacMockUsersSeeder"
+    fi
     php artisan db:seed --class=FarePricingRuleSeeder --force
-  "
+  '

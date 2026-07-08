@@ -75,6 +75,8 @@ sudo -u "${DEPLOY_USER}" bash -lc "
 
 bash "${APP_DIR}/scripts/ec2-artisan-migrate.sh" "${APP_DIR}" "${DEPLOY_USER}"
 
+sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/resources" "${APP_DIR}/app" 2>/dev/null || true
+
 sudo -u "${DEPLOY_USER}" bash -lc "
   set -euo pipefail
   cd '${APP_DIR}'
@@ -92,7 +94,13 @@ if [ -d "${APP_DIR}/public/assets/images" ]; then
   sudo find "${APP_DIR}/public/assets/images" -type f -exec chmod 664 {} \;
 fi
 rm -rf "${CD_STAGING}"
-sudo systemctl reload php8.5-fpm nginx 2>/dev/null || sudo systemctl reload php-fpm nginx
+if sudo systemctl reload php8.5-fpm 2>/dev/null; then
+  sudo systemctl reload nginx
+elif sudo systemctl reload php8.2-fpm 2>/dev/null; then
+  sudo systemctl reload nginx
+else
+  sudo systemctl reload php-fpm nginx 2>/dev/null || sudo systemctl reload nginx
+fi
 echo "==> Deploy OK"
 DEPLOY_EOF
 

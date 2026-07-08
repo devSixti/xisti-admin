@@ -153,6 +153,9 @@ jobs:
             tar xzf "${TAR_PATH}" -C "${CD_STAGING}"
             rm -f "${TAR_PATH}" /tmp/tmp/xisti-release.tar.gz 2>/dev/null || true
 
+            # Manual hotfixes as root can block ubuntu rsync (Permission denied).
+            sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/resources" "${APP_DIR}/app" "${APP_DIR}/routes" "${APP_DIR}/config" 2>/dev/null || true
+
             sudo -u "${DEPLOY_USER}" rsync -av \
               --exclude '.env' \
               --exclude 'storage' \
@@ -191,5 +194,11 @@ jobs:
               sudo find "${APP_DIR}/public/assets/images" -type f -exec chmod 664 {} \;
             fi
             rm -rf "${CD_STAGING}"
-            sudo systemctl reload php8.5-fpm nginx 2>/dev/null || sudo systemctl reload php-fpm nginx
+            if sudo systemctl reload php8.5-fpm 2>/dev/null; then
+              sudo systemctl reload nginx
+            elif sudo systemctl reload php8.2-fpm 2>/dev/null; then
+              sudo systemctl reload nginx
+            else
+              sudo systemctl reload php-fpm nginx 2>/dev/null || sudo systemctl reload nginx
+            fi
             DEPLOY_EOF
