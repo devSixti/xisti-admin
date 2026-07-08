@@ -991,6 +991,37 @@ class TransportController extends Controller
         return view('admin.pages.transport_services.transport_provider_review_list', compact('slug', 'service_category', 'provider_reviews'));
     }
 
+    public function getDeleteTransportProvider(Request $request)
+    {
+        if ($this->is_restricted == 1) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Add / Edit / Delete Property has been disabled in the Demo Admin Panel. We will provide the enabled features in the main clone script.',
+            ]);
+        }
+
+        $id = $request->get('id');
+        if ($id == null) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Driver not found',
+            ]);
+        }
+
+        $driver = User::query()
+            ->where('id', $id)
+            ->where('is_driver_type', 1)
+            ->first();
+        if ($driver == null) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Driver not found',
+            ]);
+        }
+
+        return app(AdminController::class)->getAdminDeleteUser($request);
+    }
+
     //get Delete Transport Provider Ride Review
     public function getDeleteTransportProviderRideReview(Request $request)
     {
@@ -2268,7 +2299,12 @@ class TransportController extends Controller
 
         $provider_lists = null;
         $service_category_id = 0;
-        $view = view('admin.pages.transport_services.transport_provider_list', compact('status','provider_lists','service_category_id'));
+        $wallet_payment = 0;
+        $general_settings = request()->get('general_settings');
+        if ($general_settings != null) {
+            $wallet_payment = (int) $general_settings->wallet_payment;
+        }
+        $view = view('admin.pages.transport_services.transport_provider_list', compact('status', 'provider_lists', 'service_category_id', 'wallet_payment'));
         if ($request->ajax()) {
             $view = $view->renderSections();
             return $this->adminClass->renderingResponce($view);

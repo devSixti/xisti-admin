@@ -251,6 +251,7 @@ Route::prefix('admin')->group(function () {
                 Route::get('/drivers-list/rejected', [TransportController::class,'getTransportProvidersRejectedList'])->name('get:admin:transport_service_rejected_providers_list');
 
                 Route::get('/provider-list-new', [TransportController::class,'getTransportProviderListNew'])->name('get:admin:transport_service_provider_list_new');
+                Route::get('/delete-transport-provider', [TransportController::class,'getDeleteTransportProvider'])->name('get:admin:delete_transport_provider');
 
                 //ajax transport provider status(approved/blocked) change
                 Route::get('/update-provider-status', [TransportController::class,'getUpdateTransportProviderStatus'])->name('get:admin:transport_update_provider_status');
