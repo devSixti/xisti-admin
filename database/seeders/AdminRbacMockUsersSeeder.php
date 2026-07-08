@@ -14,13 +14,19 @@ class AdminRbacMockUsersSeeder extends Seeder
 
     public const DEFAULT_PASSWORD = 'PdP-Xisti-RBAC-2026!';
 
-    /** @return list<array{email: string, role: string, name: string}> */
+    /** @return list<array{email: string, role: string, name: string, credential_key?: string}> */
     public static function mockUsers(string $domain = self::DEFAULT_EMAIL_DOMAIN): array
     {
         return [
             ['email' => "admin@{$domain}", 'role' => 'admin_total', 'name' => 'Admin Total XISTI'],
             ['email' => "contabilidad@{$domain}", 'role' => 'contabilidad', 'name' => 'Contabilidad XISTI'],
-            ['email' => "socio@{$domain}", 'role' => 'socio', 'name' => 'Socio XISTI'],
+            ['email' => "socio@{$domain}", 'role' => 'socio', 'name' => 'Socio 1 XISTI', 'credential_key' => 'socio'],
+            [
+                'email' => "socio2@{$domain}",
+                'role' => 'socio',
+                'name' => 'Socio 2 XISTI',
+                'credential_key' => 'socio_2',
+            ],
             ['email' => "desarrollador@{$domain}", 'role' => 'desarrollador', 'name' => 'Desarrollador XISTI'],
             ['email' => "aprobaciones@{$domain}", 'role' => 'aprobaciones', 'name' => 'Aprobaciones XISTI'],
             ['email' => "soporte@{$domain}", 'role' => 'soporte', 'name' => 'Soporte XISTI'],

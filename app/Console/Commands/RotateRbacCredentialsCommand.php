@@ -12,7 +12,8 @@ class RotateRbacCredentialsCommand extends Command
 {
     protected $signature = 'rbac:rotate-credentials
         {--dry-run : Show generated passwords without saving}
-        {--shared-password : Use one password for all RBAC mock users (easier QA)}';
+        {--shared-password : Use one password for all RBAC mock users (easier QA)}
+        {--only= : Comma-separated credential keys or emails to rotate (default: all mock users)}';
 
     protected $description = 'Rotate RBAC mock admin passwords and export credentials to docs/';
 
@@ -34,17 +35,29 @@ class RotateRbacCredentialsCommand extends Command
             }
         }
 
+        $onlyFilter = $this->option('only')
+            ? array_map('trim', explode(',', (string) $this->option('only')))
+            : null;
+
         $productCreds = [];
         $shared = $this->option('shared-password')
             ? Str::password(24, symbols: true)
             : null;
 
         foreach (AdminRbacMockUsersSeeder::mockUsers($domain) as $entry) {
+            $credKey = $entry['credential_key'] ?? $entry['role'];
+            if ($onlyFilter !== null
+                && ! in_array($credKey, $onlyFilter, true)
+                && ! in_array($entry['email'], $onlyFilter, true)) {
+                continue;
+            }
+
             $password = $shared ?? Str::password(24, symbols: true);
-            $productCreds[$entry['role']] = [
+            $productCreds[$credKey] = [
                 'email' => $entry['email'],
                 'password' => $password,
                 'name' => $entry['name'],
+                'role' => $entry['role'],
             ];
 
             if ($this->option('dry-run')) {
