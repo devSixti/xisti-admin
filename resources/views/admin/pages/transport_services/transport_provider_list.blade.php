@@ -1,6 +1,6 @@
 @extends('admin.layout.super_admin')
 @section('title')
-    @if(isset($status) && $status == 1 ) Approved @elseif(isset($status) && $status == 0) Un-Approved @elseif(isset($status) && $status == 2) Blocked @elseif(isset($status) && $status == 3) Rejected @endif Drivers List
+    @if(isset($status) && $status == 1 ) {{ __('admin.pages.approved') }} @elseif(isset($status) && $status == 0) {{ __('admin.pages.unapproved') }} @elseif(isset($status) && $status == 2) {{ __('admin.pages.blocked') }} @elseif(isset($status) && $status == 3) {{ __('admin.pages.rejected') }} @endif Drivers List
 @endsection
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
@@ -62,7 +62,7 @@
         .md-perspective,
         .md-perspective body {
             height: 100%;
-            overflow: hidden;
+            /* /* overflow: hidden; */ /* admin-zimo: allow page scroll */ */ /* admin-zimo: allow page scroll */
         }
 
         .md-perspective body {
@@ -260,9 +260,9 @@
                     <div class="page-header-title">
                         <i class="feather icon-list bg-c-green"></i>
                         <div class="d-inline">
-                            <h5> @if(isset($status) && $status == 1 ) Approved @elseif(isset($status) && $status == 0) Un-Approved @elseif(isset($status) && $status == 2) Blocked @elseif(isset($status) && $status == 3) Rejected @endif
+                            <h5> @if(isset($status) && $status == 1 ) {{ __('admin.pages.approved') }} @elseif(isset($status) && $status == 0) {{ __('admin.pages.unapproved') }} @elseif(isset($status) && $status == 2) {{ __('admin.pages.blocked') }} @elseif(isset($status) && $status == 3) {{ __('admin.pages.rejected') }} @endif
                                 Drivers List</h5>
-                            <span>All Drivers List</span>
+                            <span>{{ __('admin.pages.all_drivers_list') }}</span>
                         </div>
                     </div>
                 </div>
@@ -276,21 +276,21 @@
                     <div class="page-body">
                         <div class="card">
                             <div class="card-header">
-                                <h5> Drivers List</h5>
+                                <h5>{{ __('admin.pages.all_drivers_list') }}</h5>
                             </div>
                             <div class="card-block">
                                 <div class="dt-responsive table-responsive">
                                     <table id="drivers" class="table table-striped table-bordered nowrap" style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th id="no">No</th>
-                                            <th>Vehicle Type</th>
-                                            <th>Driver Name</th>
-                                            <th>Email</th>
-                                            <th>Contact No.</th>
-                                            <th>Rating</th>
+                                            <th id="no">{{ __('admin.common.no') }}</th>
+                                            <th>{{ __('admin.pages.vehicle_type') }}</th>
+                                            <th>{{ __('admin.columns.driver_name') }}</th>
+                                            <th>{{ __('admin.columns.email') }}</th>
+                                            <th>{{ __('admin.forms.contact_no_label') }}</th>
+                                            <th>{{ __('admin.columns.rating') }}</th>
                                             @if((isset($status) && $status == 1) || (isset($status) && $status == 2))
-                                            <th>Trip</th>
+                                            <th>{{ __('admin.columns.trip') }}</th>
                                                 @php
                                                 $wallet_payment = 0;
                                                 $general_settings = request()->get("general_settings");
@@ -299,15 +299,15 @@
                                                 }
                                                 @endphp
                                                 @if($wallet_payment == 1)
-                                                <th>Wallet Balance</th>
+                                                <th>{{ __('admin.columns.wallet_balance') }}</th>
                                                 @endif
                                             @endif
-                                            <th>Documents</th>
+                                            <th>{{ __('admin.columns.documents') }}</th>
                                             @if(isset($status)&& in_array($status, [0,2,3]))
                                                 <th>Sign-Up Time</th>
                                             @endif
-                                            <th>App Version</th>
-                                            <th>Actions</th>
+                                            <th>{{ __('admin.columns.app_version') }}</th>
+                                            <th>{{ __('admin.common.actions') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -327,16 +327,16 @@
             <div>
                 <div><img id="vehicle_icon" src=""></div>
                 <ul>
-                    <li><strong>Vehicle Type : </strong> <span id="vehicle_name"></span></li>
-                    <li><strong>Model Name : </strong> <span id="model_name"></span></li>
-                    <li><strong>License Plate : </strong> <span id="license_name"></span></li>
-                    <li><strong>Vehicle Year : </strong> <span id="vehicle_year"></span></li>
-                    <li><strong>Vehicle Color : </strong> <span id="vehicle_color"></span></li>
+                    <li><strong>{{ __('admin.forms.vehicle_type_colon') }} : </strong> <span id="vehicle_name"></span></li>
+                    <li><strong>{{ __('admin.forms.model_name') }} : </strong> <span id="model_name"></span></li>
+                    <li><strong>{{ __('admin.forms.license_plate') }} : </strong> <span id="license_name"></span></li>
+                    <li><strong>{{ __('admin.forms.vehicle_year') }} : </strong> <span id="vehicle_year"></span></li>
+                    <li><strong>{{ __('admin.forms.vehicle_color') }} : </strong> <span id="vehicle_color"></span></li>
                 </ul>
                 <a href="" id="driver_vehicle_details">
-                    <button type="button" class="btn btn-success waves-effect">Edit</button>
+                    <button type="button" class="btn btn-success waves-effect">{{ __('admin.common.edit') }}</button>
                 </a>
-                <button type="button" class="btn btn-success waves-effect md-close">Close</button>
+                <button type="button" class="btn btn-success waves-effect md-close">{{ __('admin.forms.close') }}</button>
             </div>
         </div>
     </div>
@@ -346,66 +346,66 @@
             <h3 class="bg-c-green" id="driver_name">Nixon</h3>
             <div>
                 <ul>
-                    <li><strong>Total Request : </strong> <span id="total_request"></span></li>
-                    <li><strong>Total Completed : </strong> <span id="total_completed"></span></li>
-                    <li><strong>Total Rejected : </strong> <span id="total_rejected"></span></li>
+                    <li><strong>{{ __('admin.forms.total_request') }} : </strong> <span id="total_request"></span></li>
+                    <li><strong>{{ __('admin.forms.total_completed') }} : </strong> <span id="total_completed"></span></li>
+                    <li><strong>{{ __('admin.forms.total_rejected') }} : </strong> <span id="total_rejected"></span></li>
                 </ul>
-                <button type="button" class="btn btn-success waves-effect md-close">Close</button>
+                <button type="button" class="btn btn-success waves-effect md-close">{{ __('admin.forms.close') }}</button>
             </div>
         </div>
     </div>
     <div class="md-modal md-effect-1" id="modal-3">
         <div class="md-content">
-            <h3 class="bg-c-blue">Change Password</h3>
+            <h3 class="bg-c-blue">{{ __('admin.nav.change_password') }}</h3>
             <div class="wrapper">
                 <div class="cover-spin" style="display: none"></div>
                 <form method="get" id="change_password_form">
                     <p id="send_message" class="text-success font-weight-bold"></p>
-                    <input type="hidden" class="form-control" name="provider_id" id="provider_id" placeholder="Provider id" value="">
+                    <input type="hidden" class="form-control" name="provider_id" id="provider_id" placeholder="{{ __('admin.forms.provider_id') }}" value="">
                     <div class="form-group">
-                        <label class="col-form-label">Password:</label>
-                        <input type="password" name="password" class="form-control border-r-top-left-right" required id="password" value="{{ old('password') }}" placeholder="Enter new password">
+                        <label class="col-form-label">{{ __('admin.forms.password') }}:</label>
+                        <input type="password" name="password" class="form-control border-r-top-left-right" required id="password" value="{{ old('password') }}" placeholder="{{ __('admin.forms.enter_new_password') }}">
                         <i class="far fa-eye" id="togglePassword" style="float: right; margin-top: -25px; margin-right: 10px; cursor: pointer;"></i>
                     </div>
                     <div class="form-group">
-                        <label class="col-form-label">Confirm Password:</label>
-                        <input type="password" name="confirm_password" class="form-control border-r-top-left-right" required id="confirm_password" value="{{ old('forgot_confirm_password') }}" placeholder="Confirm Password">
+                        <label class="col-form-label">{{ __('admin.forms.confirm_password') }}:</label>
+                        <input type="password" name="confirm_password" class="form-control border-r-top-left-right" required id="confirm_password" value="{{ old('forgot_confirm_password') }}" placeholder="{{ __('admin.forms.confirm_password') }}">
                         <i class="far fa-eye" id="toggleConfirmPassword" style="float: right; margin-top: -25px; margin-right: 10px; cursor: pointer;"></i>
                     </div>
                     <div class="form-group">
                         <p id="fail_message" class="text-danger"></p>
                     </div>
-                    <button type="submit" class="btn btn-primary btn_model_send">Submit</button>
-                    <button type="button" class="btn btn-login btn_model_close md-close">Close</button>
+                    <button type="submit" class="btn btn-primary btn_model_send">{{ __('admin.common.submit') }}</button>
+                    <button type="button" class="btn btn-login btn_model_close md-close">{{ __('admin.forms.close') }}</button>
                 </form>
             </div>
         </div>
     </div>
     <div class="md-modal md-effect-1" id="modal-4">
         <div class="md-content">
-            <h3 class="bg-c-blue">Wallet</h3>
+            <h3 class="bg-c-blue">{{ __('admin.columns.wallet') }}</h3>
             <div class="wrapper">
                 <div class="cover-spin" style="display: none"></div>
                 <form method="get" id="wallet_transaction_form">
                     <p id="send_message_2" class="text-success font-weight-bold"></p>
-                    <input type="hidden" class="form-control" name="provider_id" id="wallet_provider_id" placeholder="Provider id" value="">
+                    <input type="hidden" class="form-control" name="provider_id" id="wallet_provider_id" placeholder="{{ __('admin.forms.provider_id') }}" value="">
                     <div class="form-group">
-                        <label class="col-form-label">Wallet Amount:</label>
-                        <input type="number" min="1" name="wallet_amount" class="form-control border-r-top-left-right" required id="wallet_amount" value="{{ old('password') }}" placeholder="Enter Wallet Amount">
+                        <label class="col-form-label">{{ __('admin.forms.wallet_amount') }}:</label>
+                        <input type="number" min="1" name="wallet_amount" class="form-control border-r-top-left-right" required id="wallet_amount" value="{{ old('password') }}" placeholder="{{ __('admin.forms.enter_wallet_amount') }}">
                     </div>
                     <div class="form-group">
-                        <label class="col-form-label">Choose Option (Add or Deduct Money):</label>
+                        <label class="col-form-label">{{ __('admin.forms.choose_wallet_option') }}:</label>
                         <select name="choose_option" class="form-control border-r-top-left-right" required>
-                            <option value="1">Add Money</option>
-                            <option value="2">Deduct Money</option>
+                            <option value="1">{{ __('admin.forms.add_money') }}</option>
+                            <option value="2">{{ __('admin.forms.deduct_money') }}</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <p id="fail_message_2" class="text-danger"></p>
                     </div>
-                    <button type="submit" class="btn btn-primary btn_model_send_2">Submit</button>
-                    <button type="button" class="btn btn-login btn_model_close_2 md-close-2">Close</button>
+                    <button type="submit" class="btn btn-primary btn_model_send_2">{{ __('admin.common.submit') }}</button>
+                    <button type="button" class="btn btn-login btn_model_close_2 md-close-2">{{ __('admin.forms.close') }}</button>
 
                 </form>
             </div>
@@ -550,8 +550,8 @@
                             page: 'all',
                         },
                     },
-                    text: 'Download Excel',
-                    "action": newexportaction,
+                    text: window.adminExcelButtonText,
+                    "action": window.newexportaction,
                 }],
             });
         });
@@ -768,6 +768,47 @@
                     }
                 });
         });
+        $(document).on('click', '.delete-driver', function (e) {
+            e.preventDefault();
+            var table = $('#drivers').DataTable();
+            var id = $(this).attr('providerid');
+            swal({
+                    title: "{{ __('admin.common.delete') }}?",
+                    text: "You will not be able to recover this driver!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "{{ __('admin.common.yes') }}, {{ __('admin.common.delete') }}!",
+                    cancelButtonText: "{{ __('admin.common.no') }}, {{ __('admin.common.cancel') }}!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            type: 'get',
+                            url: '{{ route('get:admin:delete_transport_provider') }}',
+                            data: {id: id},
+                            success: function (result) {
+                                if (result.success == true) {
+                                    swal("Success", "driver remove successfully", "success");
+                                    table.ajax.reload();
+                                } else {
+                                    swal("Warning", result.message || "Unable to delete driver", "warning");
+                                }
+                            },
+                            error: function (xhr) {
+                                var msg = (xhr.responseJSON && xhr.responseJSON.message)
+                                    ? xhr.responseJSON.message
+                                    : "Request failed";
+                                swal("Warning", msg, "warning");
+                            }
+                        });
+                    } else {
+                        swal("Cancelled", "driver not removed", "error");
+                    }
+                });
+        });
     </script>
     <script rel="stylesheet" src="{{ asset('assets/js/validation/jquery.validate.js')}}"></script>
     <script>
@@ -812,11 +853,11 @@
                 },
                 messages: {
                     wallet_amount: {
-                        required :"Wallet Amount field is required",
+                        required :"{{ __('admin.forms.wallet_amount_required') }}",
                         number: "Please enter valid amount field is required",
                     },
                     choose_option: {
-                        required :"Choose Option field is required",
+                        required :"{{ __('admin.forms.choose_option_required') }}",
                     },
                 },
                 submitHandler: function(form) {

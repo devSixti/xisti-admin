@@ -28,8 +28,8 @@
                     <div class="page-header-title">
                         <i class="feather icon-edit-1 bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>SOS</h5>
-                            <span>@if(!isset($sos))Add @else Edit @endif SOS</span>
+                            <h5>{{ __('admin.pages.sos') }}</h5>
+                            <span>@if(!isset($sos)){{ \App\Helpers\AdminUi::formEntityTitle(true, 'sos') }}@else{{ \App\Helpers\AdminUi::formEntityTitle(false, 'sos') }}@endif</span>
                         </div>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                     <div class="page-body">
                         <div class="card">
                             <div class="card-header">
-                                <h5>@if(!isset($sos))Add @else Edit @endif SOS</h5>
+                                <h5>@if(!isset($sos)){{ \App\Helpers\AdminUi::formEntityTitle(true, 'sos') }}@else{{ \App\Helpers\AdminUi::formEntityTitle(false, 'sos') }}@endif</h5>
                                 <a href="{{ route('get:admin:sos') }}" class="btn btn-primary m-b-0 btn-right render_link"> Back</a>
                             </div>
                             <div class="card-block">
@@ -54,9 +54,9 @@
                                     <div class="row">
                                         <div class="form-group col-sm-7">
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Name:<sup class="error">*</sup></label>
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.columns.name') }}:<sup class="error">*</sup></label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control"  name="name" required id="name" placeholder="Name" value="{{ (isset($sos)) ? $sos->name : old('name') }}">
+                                                    <input type="text" class="form-control"  name="name" required id="name" placeholder="{{ __('admin.columns.name') }}" value="{{ (isset($sos)) ? $sos->name : old('name') }}">
                                                     <span class="error">{{ $errors->first('name') }}</span>
                                                 </div>
                                             </div>
@@ -69,10 +69,10 @@
                                                     @endphp
 
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Language Value (in {{$language_name}}):<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.language_value_in', ['lang' => $language_name]) }}:<sup
                                                                 class="error">*</sup></label>
                                                         <div class="col-sm-8">
-                                                            <input type="text" class="form-control" name="{{$col_name}}" id="{{$col_name}}" value="{{ isset($sos->$col_name)?$sos->$col_name:"" }}"  placeholder="Please enter language (in {{$language_name}})" value="" autocomplete="off" required>
+                                                            <input type="text" class="form-control" name="{{$col_name}}" id="{{$col_name}}" value="{{ isset($sos->$col_name)?$sos->$col_name:"" }}"  placeholder="{{ __('admin.forms.please_enter_language_in', ['lang' => $language_name]) }}" value="" autocomplete="off" required>
                                                             <span class="error">{{ $errors->first($col_name) }}</span>
                                                         </div>
                                                     </div>
@@ -80,11 +80,11 @@
                                             @endif
 
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Contact Number:<sup class="error">*</sup></label>
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.contact_number') }}:<sup class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control phone"
                                                            onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode === 13)"
-                                                           name="contact_number" required id="phone" placeholder="Unique Contact Number" value="{{ (isset($sos)) ? $sos->country_code.App\Models\User::ContactNumber2Stars($sos->contact_number) : '' }}">
+                                                           name="contact_number" required id="phone" placeholder="{{ __('admin.forms.unique_contact_number') }}" value="{{ (isset($sos)) ? $sos->country_code.App\Models\User::ContactNumber2Stars($sos->contact_number) : '' }}">
                                                     <input type="hidden" id="contact_numbers" name="contact_numbers" value="{{ (isset($sos)) ? $sos->country_code.$sos->contact_number : '' }}">
                                                     <input type="hidden" id="country_code" name="country_code" value="{{ (isset($sos)) ? $sos->country_code : '+57' }}">
                                                     <span id="phone_error" class="error">{{ $errors->first('contact_number') }}</span>
@@ -93,16 +93,16 @@
                                             </div>
 
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">SOS Status:</label>
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.sos_status') }}:</label>
                                                 <div class="col-sm-8">
                                                     <select name="sos_status" id="sos_status"
                                                             class="form-control" required>
                                                             @if(isset($sos) && $sos->status == 0)
-                                                                <option value="1">Activate</option>
-                                                                <option value="0" selected>Deactivate</option>
+                                                                <option value="1">{{ __('admin.forms.activate') }}</option>
+                                                                <option value="0" selected>{{ __('admin.forms.deactivate') }}</option>
                                                             @else
-                                                                <option value="1" selected>Activate</option>
-                                                                <option value="0">Deactivate</option>
+                                                                <option value="1" selected>{{ __('admin.forms.activate') }}</option>
+                                                                <option value="0">{{ __('admin.forms.deactivate') }}</option>
                                                             @endif
                                                     </select>
                                                     <span class="error">{{ $errors->first('sos_status') }}</span>
@@ -112,7 +112,7 @@
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-sm-12">
-                                            <center><button type="submit" class="btn btnsaveclick btn-primary m-b-0 buttonloader">Save</button></center>
+                                            <center><button type="submit" class="btn btnsaveclick btn-primary m-b-0 buttonloader">{{ __('admin.common.save') }}</button></center>
                                         </div>
                                     </div>
                                 </form>

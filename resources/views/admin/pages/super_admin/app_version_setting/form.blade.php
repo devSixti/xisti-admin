@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    App Version Setting
-@endsection
+@section('title', __('admin.pages.app_version_setting'))
 @section('page-css')
     <style>
         /*checkbox style*/
@@ -27,8 +25,8 @@
                     <div class="page-header-title">
                         <i class="feather icon-edit-1 bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>App Version Setting</h5>
-                            <span>@if(!isset($general_settings)) Add @else Edit @endif App Version Setting</span>
+                            <h5>{{ __('admin.pages.app_version_setting') }}</h5>
+                            <span>@if(!isset($general_settings)){{ \App\Helpers\AdminUi::formEntityTitle(true, 'app_version_setting') }}@else{{ \App\Helpers\AdminUi::formEntityTitle(false, 'app_version_setting') }}@endif</span>
                         </div>
                     </div>
                 </div>
@@ -52,7 +50,7 @@
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Android Flutter User App Current Version:</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.android_flutter_user_version') }}:</label>
                                                 <div class="col-sm-12">
                                                     <select type="text" class="form-control" name="android_flutter_user_app_version" id="android_flutter_user_app_version">
                                                         <option value="" disabled selected>Select Android Flutter User App Current Version</option>
@@ -68,7 +66,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Do you want?</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.do_you_want') }}:</label>
                                                 <div class="col-sm-12">
                                                     <div class="border-checkbox-section">
                                                         <div class="border-checkbox-group border-checkbox-group-primary">
@@ -92,7 +90,7 @@
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Ios Flutter User App Current Version:</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.ios_flutter_user_version') }}:</label>
                                                 <div class="col-sm-12">
                                                     <select type="text" class="form-control" name="ios_flutter_user_app_version" id="ios_flutter_user_app_version">
                                                         <option value="" disabled selected>Select Ios Flutter User App Current Version</option>
@@ -108,7 +106,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Do you want?</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.do_you_want') }}:</label>
                                                 <div class="col-sm-12">
                                                     <div class="border-checkbox-section">
                                                         <div class="border-checkbox-group border-checkbox-group-primary">
@@ -132,7 +130,7 @@
                             <div class="card">
                                 <div class="card-block">
                                     <div class="col-sm-10">
-                                        <button type="submit" class="btn btn-primary m-b-0">Save</button>
+                                        <button type="submit" class="btn btn-primary m-b-0">{{ __('admin.common.save') }}</button>
                                     </div>
                                 </div>
                             </div>

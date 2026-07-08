@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    All Ride List
-@endsection
+@section('title', __('admin.pages.all_ride_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -54,9 +52,9 @@
                     <div class="page-header-title">
                         <i class="feather icon-list bg-c-green"></i>
                         <div class="d-inline">
-                            <h5>All Ride List @if(isset($driver_details) && $driver_details != Null) - {{ ucwords(strtolower($driver_details->driver_name)) }} @endif
+                            <h5>{{ __('admin.pages.all_ride_list') }} @if(isset($driver_details) && $driver_details != Null) - {{ ucwords(strtolower($driver_details->driver_name)) }} @endif
                             </h5>
-                            <span>All Ride List</span>
+                            <span>{{ __('admin.pages.all_ride_list') }}</span>
                         </div>
                     </div>
                 </div>
@@ -76,14 +74,14 @@
                                             <table id="service_transport" class="table table-striped table-bordered nowrap" style="width:100%">
                                                 <thead>
                                                 <tr>
-                                                    <th>No</th>
+                                                    <th>{{ __('admin.common.no') }}</th>
                                                     <th>Ride No.</th>
-                                                    <th>Customer Name</th>
-                                                    <th>Driver Name</th>
-                                                    <th>Vehicle Type</th>
-                                                    <th>Total Cost</th>
-                                                    <th>Status</th>
-                                                    <th>Details</th>
+                                                    <th>{{ __('admin.columns.customer_name') }}</th>
+                                                    <th>{{ __('admin.columns.driver_name') }}</th>
+                                                    <th>{{ __('admin.pages.vehicle_type') }}</th>
+                                                    <th>{{ __('admin.columns.total_cost') }}</th>
+                                                    <th>{{ __('admin.common.status') }}</th>
+                                                    <th>{{ __('admin.columns.details') }}</th>
                                                     <th>Pick / Drop Address</th>
                                                 </tr>
                                                 </thead>

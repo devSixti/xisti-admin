@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Add Country
-@endsection
+@section('title', __('admin.pages.add_country'))
 @section('page-css')
 @endsection
 @section('page-content')
@@ -14,7 +12,7 @@
                     <div class="page-header-title">
                         <i class="feather icon-edit-1 bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>Add Country</h5>
+                            <h5>{{ __('admin.pages.add_country') }}</h5>
                             <span>Country Details</span>
                         </div>
                     </div>
@@ -30,7 +28,7 @@
                     <div class="page-body">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Add Country</h5>
+                                <h5>{{ __('admin.pages.add_country') }}</h5>
                                 <a href="{{ route('get:admin:world_country_list') }}"
                                    class="btn btn-primary m-b-0 btn-right render_link"> Back</a>
                             </div>
@@ -44,21 +42,21 @@
                                     <div class="row">
                                         <div class="form-group col-sm-8">
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Country Name:
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.country_name') }}:
                                                     <sup class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" name="name" required
-                                                           id="name" placeholder="Country Name"
+                                                           id="name" placeholder="{{ __('admin.forms.country_name') }}"
                                                            value="{{ (isset($service_category)) ? $service_category->country_name : old('country_name') }}">
                                                     <span class="error">{{ $errors->first('country_name') }}</span>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Country Code:<sup
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.country_code') }}:<sup
                                                             class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" name="name" required
-                                                           id="name" placeholder="Country Code"
+                                                           id="name" placeholder="{{ __('admin.forms.country_code') }}"
                                                            value="{{ (isset($service_category)) ? $service_category->country_code : old('country_code') }}">
                                                     <span class="error">{{ $errors->first('country_code') }}</span>
                                                 </div>
@@ -66,7 +64,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-4 col-form-label"></label>
                                                 <div class="col-sm-8">
-                                                    <button type="submit" class="btn btn-primary m-b-0">Save</button>
+                                                    <button type="submit" class="btn btn-primary m-b-0">{{ __('admin.common.save') }}</button>
                                                 </div>
                                             </div>
                                         </div>

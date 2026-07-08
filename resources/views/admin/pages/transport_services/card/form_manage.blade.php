@@ -1,7 +1,5 @@
 @extends('admin.layout.driver_service')
-@section('title')
-    Card Lists
-@endsection
+@section('title', __('admin.pages.card_lists'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -19,8 +17,8 @@
                     <div class="page-header-title">
                         <i class="feather icon-edit-1 bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>Card Lists</h5>
-                            <span>Card Lists</span>
+                            <h5>{{ __('admin.pages.card_lists') }}</h5>
+                            <span>{{ __('admin.pages.card_lists') }}</span>
                         </div>
                     </div>
                 </div>
@@ -41,7 +39,7 @@
                                     {{csrf_field() }}
                                     <div class="card">
                                         <div class="card-header">
-                                            <h5>Card Lists</h5>
+                                            <h5>{{ __('admin.pages.card_lists') }}</h5>
                                             {{--<a href="{{ route('get:admin:user_list') }}"--}}
                                             {{--class="btn btn-primary m-b-0 btn-right render_link"> Back</a>--}}
                                         </div>
@@ -49,12 +47,12 @@
                                             <div class="row">
                                                 <div class="form-group col-sm-6">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Card Holder Name:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.card_holder_name') }}:<sup
                                                                 class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <input type="text" class="form-control"
                                                                    name="card_holder_name" id="card_holder_name"
-                                                                   placeholder="Enter Card Holder Name"
+                                                                   placeholder="{{ __('admin.forms.enter_card_holder_name') }}"
                                                                    required autocomplete="off" value="{{ old('card_holder_name') }}">
                                                             <span
                                                                 class="error">{{ $errors->first('card_holder_name') }}</span>
@@ -63,11 +61,11 @@
                                                 </div>
                                                 <div class="form-group col-sm-6">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Expiry Date:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.expiry_date') }}:<sup
                                                                 class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <input type="text" class="form-control" name="expiry_date"
-                                                                   id="datepicker1" placeholder="Enter Expiry Date"
+                                                                   id="datepicker1" placeholder="{{ __('admin.forms.enter_expiry_date') }}"
                                                                    autocomplete="off" required value="{{ old('expire_date') }}">
                                                             <span
                                                                 class="error">{{ $errors->first('expire_date') }}</span>
@@ -78,11 +76,11 @@
                                             <div class="row">
                                                 <div class="form-group col-sm-6">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Card Number:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.card_number') }}:<sup
                                                                 class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <input type="text" class="form-control" name="card_number"
-                                                                   id="card_number" placeholder="Enter Your Card Number"
+                                                                   id="card_number" placeholder="{{ __('admin.forms.enter_card_number') }}"
                                                                    autocomplete="off" required value="{{ old('card_number') }}"
                                                                    minlength="14" maxlength="16">
                                                             <span
@@ -92,11 +90,11 @@
                                                 </div>
                                                 <div class="form-group col-sm-6">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">CVV:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.cvv') }}:<sup
                                                                 class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <input type="password" class="form-control" name="cvv"
-                                                                   id="cvv" placeholder="Enter cvv" maxlength="3" minlength="3"
+                                                                   id="cvv" placeholder="{{ __('admin.forms.enter_cvv') }}" maxlength="3" minlength="3"
                                                                    autocomplete="off" required value="{{ old('cvv') }}">
                                                             <span
                                                                 class="error">{{ $errors->first('cvv') }}</span>
@@ -109,7 +107,7 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <center>
-                                                <button type="submit" class="btn btn-primary m-b-0">Add</button>
+                                                <button type="submit" class="btn btn-primary m-b-0">{{ __('admin.common.add') }}</button>
                                             </center>
                                         </div>
                                     </div>
@@ -127,11 +125,11 @@
                                                    style="width:100%">
                                                 <thead>
                                                 <tr>
-                                                    <th>No</th>
-                                                    <th>Card Number</th>
+                                                    <th>{{ __('admin.common.no') }}</th>
+                                                    <th>{{ __('admin.forms.card_number') }}</th>
                                                     <th>Holder Name</th>
                                                     <th>Expiry</th>
-                                                    <th>Action</th>
+                                                    <th>{{ __('admin.columns.action') }}</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -199,17 +197,17 @@
                 },
                 messages: {
                     card_holder_name: {
-                        required :"Please enter card holder name",
+                        required :"{{ __('admin.forms.card_holder_name_required') }}",
                     },
                     expiry_date: {
-                        required :"Please enter expiry date",
+                        required :"{{ __('admin.forms.expiry_date_required') }}",
                     },
                     card_number: {
-                        required :"please enter card number",
+                        required :"{{ __('admin.forms.card_number_required') }}",
                         number : "please enter only number"
                     },
                     cvv: {
-                        required :"please enter cvv",
+                        required :"{{ __('admin.forms.cvv_required') }}",
                         number : "please enter only number"
                     }
 

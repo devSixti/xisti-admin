@@ -3,7 +3,7 @@
     @if(isset($status) && $status == 'scheduled' )
         @if(isset($slug) && $slug == "courier-service") Services @else Scheduled Ride @endif
     @elseif(isset($status) && $status == 'all')
-        @if(isset($slug) && $slug == "courier-service") All Services @else All Ride @endif
+        @if(isset($slug) && $slug == "courier-service") {{ __('admin.forms.all_services') }} @else {{ __('admin.forms.all_ride') }} @endif
     @elseif(isset($status) && $status == "pending")
         @if(isset($slug) && $slug == "courier-service")  Pending Services @else Pending Ride @endif
     @elseif(isset($status) && $status == 4)
@@ -70,7 +70,7 @@
                                     @if(isset($slug) && $slug == "courier-service") Scheduled Deliveries @else Scheduled
                                     Ride @endif
                                 @elseif(isset($status) && $status == 'all')
-                                    @if(isset($slug) && $slug == "courier-service") All Deliveries @else All Ride @endif
+                                    @if(isset($slug) && $slug == "courier-service") {{ __('admin.forms.all_deliveries') }} @else {{ __('admin.forms.all_ride') }} @endif
                                 @elseif(isset($status) && $status == "pending")
                                     @if(isset($slug) && $slug == "courier-service") Pending Deliveries @else Pending
                                     Ride @endif
@@ -121,7 +121,7 @@
                                         @if(isset($slug) && $slug == "courier-service")  Scheduled Deliveries @else
                                             Scheduled Ride @endif
                                     @elseif(isset($status) && $status == 'all')
-                                        @if(isset($slug) && $slug == "courier-service")  All Deliveries @else All
+                                        @if(isset($slug) && $slug == "courier-service") {{ __('admin.forms.all_deliveries') }} @else {{ __('admin.forms.all_ride') }}
                                         Ride @endif
                                     @elseif(isset($status) && $status == "pending")
                                         @if(isset($slug) && $slug == "courier-service")  Pending Deliveries @else
@@ -139,7 +139,7 @@
                                 </h5>
                                 {{--<a href="{{ URL::previous() }}"--}}
                                 {{--                                        href="{{ route('get:transport:transport_provider_list') }}"--}}
-                                {{--class="btn btn-success m-b-0 btn-right render_link">Back</a>--}}
+                                {{--class="btn btn-success m-b-0 btn-right render_link">{{ __('admin.common.back') }}</a>--}}
                             </div>
                             <div class="card-block">
                                 <div class="dt-responsive table-responsive">
@@ -147,18 +147,18 @@
                                            style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th>No</th>
+                                            <th>{{ __('admin.common.no') }}</th>
                                             <th>@if(isset($slug) && $slug == "courier-service") Delivery No. @else
                                                     Ride
                                                     No. @endif</th>
-                                            <th>Service</th>
+                                            <th>{{ __('admin.columns.service') }}</th>
                                             <th>@if(isset($slug) && $slug == "courier-service") Recipient Name @else
                                                     Customer Name @endif</th>
-{{--                                            <th>Driver Name</th>--}}
-{{--                                            <th>Vehicle Type</th>--}}
-                                            <th>Total Cost</th>
-                                            <th>Status</th>
-                                            <th>Details</th>
+{{--                                            <th>{{ __('admin.columns.driver_name') }}</th>--}}
+{{--                                            <th>{{ __('admin.pages.vehicle_type') }}</th>--}}
+                                            <th>{{ __('admin.columns.total_cost') }}</th>
+                                            <th>{{ __('admin.common.status') }}</th>
+                                            <th>{{ __('admin.columns.details') }}</th>
                                             <th>@if(isset($slug) && $slug == "courier-service") Pick /
                                                 Delivery @else
                                                     Pick / Drop @endif Address

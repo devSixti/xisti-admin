@@ -1,5 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title') God's View @endsection
+@section('title', __('admin.modules.gods_view'))
 @section('page-css')
     <style>
         .tab-panel .card .card-header {
@@ -256,15 +256,15 @@
 @endsection
 @section('page-content')
 
-    <div class="pcoded-content">
-        <div class="page-header card">
+    <div class="pcoded-content admin-gods-view">
+        <div class="page-header card admin-page-header">
             <div class="row align-items-end">
                 <div class="col-lg-8">
                     <div class="page-header-title">
-                        <i class="feather icon-list bg-c-green"></i>
+                        <i class="feather icon-map bg-c-green"></i>
                         <div class="d-inline">
-                            <h5> Drivers Location Track On Map</h5>
-                            <span>All Drivers Location Track On Map</span>
+                            <h5>{{ __('admin.pages.all_drivers_location_track') }}</h5>
+                            <span>{{ __('admin.modules.gods_view') }}</span>
                         </div>
                     </div>
                 </div>
@@ -279,25 +279,25 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="p-b-20">
-                                    <ul class="nav nav-tabs md-tabs" role="tablist">
+                                    <ul class="nav nav-tabs md-tabs admin-gods-view-tabs" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" data-toggle="tab" id="all_provider" href="#all" role="tab">All</a>
+                                            <a class="nav-link active" data-toggle="tab" id="all_provider" href="#all" role="tab">{{ __('admin.common.all') }}</a>
                                             <div id="all_slide" class="slide"></div>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" data-toggle="tab" id="available_provider" href="#available" role="tab">Available</a>
+                                            <a class="nav-link" data-toggle="tab" id="available_provider" href="#available" role="tab">{{ __('admin.gods_view.available') }}</a>
                                             <div id="available_slide" class="slide"></div>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" data-toggle="tab" href="#enroute_pickup" id="enroute_pickup_provider" role="tab">Enroute to Pickup</a>
+                                            <a class="nav-link" data-toggle="tab" href="#enroute_pickup" id="enroute_pickup_provider" role="tab">{{ __('admin.gods_view.enroute_to_pickup') }}</a>
                                             <div id="enroute_pickup_slide" class="slide"></div>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" data-toggle="tab" href="#reached_pickup" id="reached_pickup_provider" role="tab">Reached Pickup</a>
+                                            <a class="nav-link" data-toggle="tab" href="#reached_pickup" id="reached_pickup_provider" role="tab">{{ __('admin.gods_view.reached_pickup') }}</a>
                                             <div id="reached_pickup_slide" class="slide"></div>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" data-toggle="tab" id="ride_start_provider" href="#ride_start" role="tab">Ride Start</a>
+                                            <a class="nav-link" data-toggle="tab" id="ride_start_provider" href="#ride_start" role="tab">{{ __('admin.gods_view.ride_start') }}</a>
                                             <div id="ride_start_slide" class="slide"></div>
                                         </li>
                                     </ul>
@@ -309,10 +309,10 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <div id="provider-head" class="provider-head provider-head-all">
-                                            <h4>All</h4>
+                                            <h4>{{ __('admin.common.all') }}</h4>
                                         </div>
                                         <div style="padding: 12px; background-color: #fff; border-bottom: 1px solid #eeeeee;">
-                                            <input type="search" name="all" id="search-provider" class="form-control" placeholder="Search Driver">
+                                            <input type="search" name="all" id="search-provider" class="form-control" placeholder="{{ __('admin.forms.search_driver') }}">
                                         </div>
                                     </div>
                                     <div class="card-block tab-content p-t-20 assign-provider">
@@ -353,35 +353,35 @@
                                     <div class="card-block">
                                         <div id="provider-details" class="provider-details" style="display: none;">
                                             <div class="provider-details-head">
-                                                <h4>Driver Details</h4>
+                                                <h4>{{ __('admin.forms.driver_details') }}</h4>
                                             </div>
                                             <div class="provider-details-content">
                                                 <div class="provider-content">
                                                     <div class="provider-body">
-                                                        <strong>Driver </strong> :
+                                                        <strong>{{ __('admin.forms.driver_label') }} </strong> :
                                                     </div>
                                                     <div class="provider-body" id="provider_name">John</div>
                                                 </div>
                                                 <div class="provider-content">
                                                     <div class="provider-body">
-                                                        <strong>Phone </strong> :
+                                                        <strong>{{ __('admin.forms.phone_label') }} </strong> :
                                                     </div>
                                                     <div class="provider-body" id="provider_phone">John</div>
                                                 </div>
                                             </div>
                                             <div class="provider-details-head">
-                                                <h4>Rider Details</h4>
+                                                <h4>{{ __('admin.forms.rider_details') }}</h4>
                                             </div>
                                             <div class="provider-details-content" style="padding-bottom: 20px; border-bottom: 1px solid lightgray;">
                                                 <div class="provider-content">
                                                     <div class="provider-body">
-                                                        <strong>Driver </strong> :
+                                                        <strong>{{ __('admin.forms.driver_label') }} </strong> :
                                                     </div>
                                                     <div class="provider-body" id="user_name">John</div>
                                                 </div>
                                                 <div class="provider-content">
                                                     <div class="provider-body">
-                                                        <strong>Phone </strong> :
+                                                        <strong>{{ __('admin.forms.phone_label') }} </strong> :
                                                     </div>
                                                     <div class="provider-body" id="user_name_phone">John</div>
                                                 </div>
@@ -407,9 +407,19 @@
     </div>
 
 @endsection
+@php
+    $godsViewLabels = [
+        'all' => __('admin.common.all'),
+        'available' => __('admin.gods_view.available'),
+        'enroute_to_pickup' => __('admin.gods_view.enroute_to_pickup'),
+        'reached_pickup' => __('admin.gods_view.reached_pickup'),
+        'ride_start' => __('admin.gods_view.ride_started'),
+    ];
+@endphp
 @section('page-js')
 
     <script type="text/javascript">
+        var adminGodsViewLabels = @json($godsViewLabels);
         var temp = [];
         $(".media").click(ProviderClick);
 
@@ -451,7 +461,7 @@
             $('#all, #available ,#ride_start ,#reached_pickup, #enroute_pickup').empty();
             $("#provider-head").removeClass();
             $("#provider-head").addClass("provider-head").addClass("provider-head-all");
-            $("#provider-head h4").text("All");
+            $("#provider-head h4").text(adminGodsViewLabels.all);
             temp = [];
             $.ajax({
                 url: '{{ (Illuminate\Support\Facades\Auth::guard("admin")->check() && (Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 1 || Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 4)  ) ? route("get:admin:transport_all_provider_location") : route("get:dispatcher:transport_all_provider_location") }}',
@@ -474,7 +484,7 @@
             $('#all, #available ,#ride_start ,#reached_pickup, #enroute_pickup').empty();
             $("#provider-head").removeClass();
             $("#provider-head").addClass("provider-head").addClass("provider-head-available");
-            $("#provider-head h4").text("Available");
+            $("#provider-head h4").text(adminGodsViewLabels.available);
             temp = [];
             $.ajax({
                 url: '{{ (Illuminate\Support\Facades\Auth::guard("admin")->check() && (Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 1 || Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 4 )) ? route("get:admin:transport_available_provider_location") : route("get:dispatcher:transport_available_provider_location") }}',
@@ -497,7 +507,7 @@
             $('#all, #available ,#ride_start ,#reached_pickup, #enroute_pickup').empty();
             $("#provider-head").removeClass();
             $("#provider-head").addClass("provider-head").addClass("provider-head-start");
-            $("#provider-head h4").text("Ride Started");
+            $("#provider-head h4").text(adminGodsViewLabels.ride_start);
             temp = [];
             $.ajax({
                 url: '{{ (Illuminate\Support\Facades\Auth::guard("admin")->check() && (Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 1 || Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 4)) ? route("get:admin:transport_ride_start_provider_location") : route("get:dispatcher:transport_ride_start_provider_location") }}',
@@ -520,7 +530,7 @@
             $('#all, #available ,#ride_start ,#reached_pickup, #enroute_pickup').empty();
             $("#provider-head").removeClass();
             $("#provider-head").addClass("provider-head").addClass("provider-head-reache");
-            $("#provider-head h4").text("Reached Pickup");
+            $("#provider-head h4").text(adminGodsViewLabels.reached_pickup);
             temp = [];
             $.ajax({
                 url: '{{ (Illuminate\Support\Facades\Auth::guard("admin")->check() && (Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 1 || Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 4)) ? route("get:admin:transport_ride_reached_provider_location") : route("get:dispatcher:transport_ride_reached_provider_location") }}',
@@ -543,7 +553,7 @@
             $('#all, #available ,#ride_start ,#reached_pickup, #enroute_pickup').empty();
             $("#provider-head").removeClass();
             $("#provider-head").addClass("provider-head").addClass("provider-head-enroute");
-            $("#provider-head h4").text("Enroute To Pickup");
+            $("#provider-head h4").text(adminGodsViewLabels.enroute_to_pickup);
             temp = [];
             $.ajax({
                 url: '{{ (Illuminate\Support\Facades\Auth::guard("admin")->check() && (Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 1 || Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 4 )) ? route("get:admin:transport_ride_enroute_provider_location") : route("get:dispatcher:transport_ride_enroute_provider_location") }}',
@@ -570,7 +580,7 @@
         function AjaxData(data, status) {
             var id_value = status;
             if (data == "") {
-                document.getElementById(id_value).innerHTML = "<p style='color: red; margin: 10px 16px;'>Driver Not Found !</p>";
+                document.getElementById(id_value).innerHTML = "<p style='color: red; margin: 10px 16px;'>{{ __('admin.forms.driver_not_found') }}</p>";
             } else {
                 var html = document.getElementById(id_value).innerHTML = '';
                 var k = 0;
@@ -607,7 +617,7 @@
         function AjaxRideData(data, status) {
             var id_value = status;
             if (data == "") {
-                document.getElementById(id_value).innerHTML = "<p style='color: red; margin: 10px 16px;'>Driver Not Found !</p>";
+                document.getElementById(id_value).innerHTML = "<p style='color: red; margin: 10px 16px;'>{{ __('admin.forms.driver_not_found') }}</p>";
             } else {
                 var html = document.getElementById(id_value).innerHTML = '';
                 var k = 0;
@@ -677,7 +687,7 @@
                 var ride_dropped_address = $('p.ride-dropped-address', this).text();
                 var plat_no = $('p.plat-no', this).text();
                 $('#provider-details').empty();
-                $('#provider-details').append('<div class="provider-details-head"><h4>Driver Details</h4></div><div class="provider-details-content"><div class="provider-content"><div class="provider-body"><strong>Driver </strong> : </div><div class="provider-body" id="provider_name">' + provider_name + '</div></div><div class="provider-content"><div class="provider-body"><strong>Phone </strong> : </div><div class="provider-body" id="provider_name">' + provider_phone + '</div></div><div class="provider-content"><div class="provider-body"><strong>Plat No </strong> : </div><div class="provider-body" id="plat_no">' + plat_no + '</div></div></div><div class="provider-details-head"><h4>Rider Details</h4></div><div class="provider-details-content" style="padding-bottom: 20px; border-bottom: 1px solid lightgray;"><div class="provider-content"><div class="provider-body"><strong>Rider Name </strong> : </div><div class="provider-body" id="provider_name">' + rider_name + '</div></div><div class="provider-content"><div class="provider-body"><strong>Phone </strong> : </div><div class="provider-body" id="provider_name"> ' + rider_phone + ' </div></div></div><div style="padding: 8px 10px;"><div class="provider-ride"><i class="fa fa-map-marker text-success" style="font-size: 22px; padding-right: 10px;"></i> <span> ' + ride_pickup_address + ' </span></div><div class="provider-ride"><i class="fa fa-map-marker text-success" style="font-size: 22px; padding-right: 10px;"></i> <span> ' + ride_dropped_address + ' </span></div></div>');
+                $('#provider-details').append('<div class="provider-details-head"><h4>{{ __('admin.forms.driver_details') }}</h4></div><div class="provider-details-content"><div class="provider-content"><div class="provider-body"><strong>{{ __('admin.forms.driver_label') }} </strong> : </div><div class="provider-body" id="provider_name">' + provider_name + '</div></div><div class="provider-content"><div class="provider-body"><strong>{{ __('admin.forms.phone_label') }} </strong> : </div><div class="provider-body" id="provider_name">' + provider_phone + '</div></div><div class="provider-content"><div class="provider-body"><strong>{{ __('admin.forms.plat_no') }} </strong> : </div><div class="provider-body" id="plat_no">' + plat_no + '</div></div></div><div class="provider-details-head"><h4>{{ __('admin.forms.rider_details') }}</h4></div><div class="provider-details-content" style="padding-bottom: 20px; border-bottom: 1px solid lightgray;"><div class="provider-content"><div class="provider-body"><strong>{{ __('admin.forms.rider_name') }} </strong> : </div><div class="provider-body" id="provider_name">' + rider_name + '</div></div><div class="provider-content"><div class="provider-body"><strong>{{ __('admin.forms.phone_label') }} </strong> : </div><div class="provider-body" id="provider_name"> ' + rider_phone + ' </div></div></div><div style="padding: 8px 10px;"><div class="provider-ride"><i class="fa fa-map-marker text-success" style="font-size: 22px; padding-right: 10px;"></i> <span> ' + ride_pickup_address + ' </span></div><div class="provider-ride"><i class="fa fa-map-marker text-success" style="font-size: 22px; padding-right: 10px;"></i> <span> ' + ride_dropped_address + ' </span></div></div>');
                 $("#provider-details").slideToggle("slow");
             } else {
                 $("#provider-details").hide();
@@ -694,7 +704,7 @@
                 var provider_name = $('h5.media-heading', this).text();
                 var provider_phone = $('p.provider-phone', this).text();
                 $('#provider-details').empty();
-                $('#provider-details').append('<div class="provider-details-head"><h4>Driver Details</h4></div><div class="provider-details-content"><div class="provider-content"><div class="provider-body"><strong>Driver </strong> : </div><div class="provider-body" id="provider_name">' + provider_name + ' </div></div><div class="provider-content"><div class="provider-body"><strong>Phone </strong> : </div><div class="provider-body" id="provider_name">' + provider_phone + '</div></div></div>');
+                $('#provider-details').append('<div class="provider-details-head"><h4>{{ __('admin.forms.driver_details') }}</h4></div><div class="provider-details-content"><div class="provider-content"><div class="provider-body"><strong>{{ __('admin.forms.driver_label') }} </strong> : </div><div class="provider-body" id="provider_name">' + provider_name + ' </div></div><div class="provider-content"><div class="provider-body"><strong>{{ __('admin.forms.phone_label') }} </strong> : </div><div class="provider-body" id="provider_name">' + provider_phone + '</div></div></div>');
                 $("#provider-details").slideToggle("slow");
             } else {
                 $("#provider-details").hide();

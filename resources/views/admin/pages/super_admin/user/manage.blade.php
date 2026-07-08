@@ -10,7 +10,7 @@
         .md-perspective,
         .md-perspective body {
             height: 100%;
-            overflow: hidden;
+            /* /* overflow: hidden; */ /* admin-zimo: allow page scroll */ */ /* admin-zimo: allow page scroll */
         }
         .md-perspective body {
             background: #222;
@@ -215,7 +215,7 @@
                         </div>
                         {{--<div class="col-lg-4">--}}
                         {{--<a href="{{ route('get:admin:user_list') }}"--}}
-                        {{--class="btn btn-primary m-b-0 btn-right render_link">Back</a>--}}
+                        {{--class="btn btn-primary m-b-0 btn-right render_link">{{ __('admin.common.back') }}</a>--}}
                         {{--</div>--}}
                     </div>
                 </div>
@@ -339,26 +339,26 @@
     </div>
     <div class="md-modal md-effect-1" id="modal-2">
         <div class="md-content">
-            <h3 class="bg-c-blue">Change Password</h3>
+            <h3 class="bg-c-blue">{{ __('admin.nav.change_password') }}</h3>
             <div class="wrapper">
                 <div class="cover-spin" style="display: none"></div>
                 <form method="get" id="change_password_form">
                     <p id="send_message" class="text-success font-weight-bold"></p>
-                    <input type="hidden" class="form-control" name="user_id" id="user_id" placeholder="User id" value="">
+                    <input type="hidden" class="form-control" name="user_id" id="user_id" placeholder="{{ __('admin.forms.user_id') }}" value="">
                     <div class="form-group">
-                        <label class="col-form-label">Password:</label>
-                        <input type="password" name="password" class="form-control border-r-top-left-right" required id="password" value="{{ old('password') }}" placeholder="Enter new password">
+                        <label class="col-form-label">{{ __('admin.forms.password') }}:</label>
+                        <input type="password" name="password" class="form-control border-r-top-left-right" required id="password" value="{{ old('password') }}" placeholder="{{ __('admin.forms.enter_new_password') }}">
                     </div>
                     <div class="form-group">
-                        <label class="col-form-label">Confirm Password:</label>
-                        <input type="password" name="confirm_password" class="form-control border-r-top-left-right" required id="confirm_password" value="{{ old('forgot_confirm_password') }}" placeholder="Confirm Password">
+                        <label class="col-form-label">{{ __('admin.forms.confirm_password') }}:</label>
+                        <input type="password" name="confirm_password" class="form-control border-r-top-left-right" required id="confirm_password" value="{{ old('forgot_confirm_password') }}" placeholder="{{ __('admin.forms.confirm_password') }}">
                     </div>
 
                     <div class="form-group">
                         <p id="fail_message" class="text-danger"></p>
                     </div>
-                    <button type="submit" class="btn btn-primary btn_model_send">Submit</button>
-                    <button type="button" class="btn btn-login btn_model_close md-close">Close</button>
+                    <button type="submit" class="btn btn-primary btn_model_send">{{ __('admin.common.submit') }}</button>
+                    <button type="button" class="btn btn-login btn_model_close md-close">{{ __('admin.forms.close') }}</button>
 
                 </form>
             </div>
@@ -366,29 +366,29 @@
     </div>
     <div class="md-modal md-effect-1" id="modal-3">
         <div class="md-content">
-            <h3 class="bg-c-blue">Wallet</h3>
+            <h3 class="bg-c-blue">{{ __('admin.columns.wallet') }}</h3>
             <div class="wrapper">
                 <div class="cover-spin" style="display: none"></div>
                 <form method="get" id="wallet_transaction_form">
                     <p id="send_message_1" class="text-success font-weight-bold"></p>
-                    <input type="hidden" class="form-control" name="user_id" id="wallet_user_id" placeholder="User id" value="">
+                    <input type="hidden" class="form-control" name="user_id" id="wallet_user_id" placeholder="{{ __('admin.forms.user_id') }}" value="">
                     <div class="form-group">
-                        <label class="col-form-label">Wallet Amount:</label>
-                        <input type="number" min="1" name="wallet_amount" class="form-control border-r-top-left-right" required id="wallet_amount" value="{{ old('wallet_amount') }}" placeholder="Enter Wallet Amount">
+                        <label class="col-form-label">{{ __('admin.forms.wallet_amount') }}:</label>
+                        <input type="number" min="1" name="wallet_amount" class="form-control border-r-top-left-right" required id="wallet_amount" value="{{ old('wallet_amount') }}" placeholder="{{ __('admin.forms.enter_wallet_amount') }}">
                     </div>
                     <div class="form-group">
-                        <label class="col-form-label">Choose Option (Add or Deduct Money):</label>
+                        <label class="col-form-label">{{ __('admin.forms.choose_wallet_option') }}:</label>
                             <select name="choose_option" class="form-control border-r-top-left-right" required>
-                                <option value="1">Add Money</option>
-                                <option value="2">Deduct Money</option>
+                                <option value="1">{{ __('admin.forms.add_money') }}</option>
+                                <option value="2">{{ __('admin.forms.deduct_money') }}</option>
                             </select>
                     </div>
 
                     <div class="form-group">
                         <p id="fail_message_1" class="text-danger"></p>
                     </div>
-                    <button type="submit" class="btn btn-primary btn_model_send_1">Submit</button>
-                    <button type="button" class="btn btn-login btn_model_close_1 md-close-1">Close</button>
+                    <button type="submit" class="btn btn-primary btn_model_send_1">{{ __('admin.common.submit') }}</button>
+                    <button type="button" class="btn btn-login btn_model_close_1 md-close-1">{{ __('admin.forms.close') }}</button>
 
                 </form>
             </div>
@@ -410,8 +410,14 @@
     <script src="{{asset('assets/js/datatablecommonfunction.js')}}"></script>
 
     <script>
-        var customerListTable;
-        $(document).ready(function () {
+        window.initCustomerListTable = function () {
+            if (!$('#users').length || !$.fn || !$.fn.DataTable) {
+                return;
+            }
+            if ($.fn.DataTable.isDataTable('#users')) {
+                $('#users').DataTable().destroy();
+                $('#users').closest('.dataTables_wrapper').find('.top, .bottom, .dt-buttons').remove();
+            }
             customerListTable = $('#users').DataTable(window.adminDataTableOptions({
                 processing: true,
                 serverSide: true,
@@ -432,8 +438,8 @@
                     {data: 'action', 'sortable': false},
                 ],
                 "columnDefs" : [ {
-                    'targets': [0], /* column index */
-                    'orderable': false, /* true or false */
+                    'targets': [0],
+                    'orderable': false,
                 }],
                 dom: '<"top"lBf>rt<"bottom"pi><"clear">',
                 buttons: [{
@@ -448,13 +454,26 @@
                     "action": window.newexportaction,
                 }],
             }));
+        };
+
+        var customerListTable;
+        $(function () {
+            window.initCustomerListTable();
         });
+        $(document).on('admin:page-loaded', window.initCustomerListTable);
     </script>
 
     <script type="text/javascript">
+        if (!window.__zimoCustomerListHandlers) {
+            window.__zimoCustomerListHandlers = true;
+
         $(document).on('click', '.delete', function (e) {
             e.preventDefault();
+            e.stopPropagation();
             var id = $(this).attr('userid');
+            if (!id || !window.adminSwal) {
+                return;
+            }
             swal({
                     title: window.adminSwal.confirmTitle,
                     text: window.adminSwal.confirmText,
@@ -472,19 +491,27 @@
                             type: 'get',
                             url: '{{ route('get:admin:delete_user') }}',
                             data: {id: id},
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' },
                             success: function (result) {
                                 if (result.success == true) {
                                     swal(window.adminSwal.success, window.adminSwal.customerRemoved, "success");
                                     if (customerListTable) {
-                                        customerListTable.ajax.reload();
-                                    } else {
-                                        $('#users').DataTable().ajax.reload();
+                                        customerListTable.ajax.reload(null, false);
+                                    } else if ($.fn.DataTable.isDataTable('#users')) {
+                                        $('#users').DataTable().ajax.reload(null, false);
                                     }
-                                }else {
-                                    swal(window.adminSwal.warning, result.message, "warning");
+                                } else {
+                                    swal(window.adminSwal.warning, result.message || window.adminSwal.warning, "warning");
                                 }
+                            },
+                            error: function (xhr) {
+                                var msg = window.adminSwal.serverError;
+                                if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    msg = xhr.responseJSON.message;
+                                }
+                                swal(window.adminSwal.warning, msg, "warning");
                             }
-                        })
+                        });
                     } else {
                         swal(window.adminSwal.cancelled, window.adminSwal.dataSafe, "error");
                     }
@@ -545,6 +572,7 @@
                     }
                 });
         });
+        }
     </script>
 
     {{--Model Script type detials--}}
@@ -613,11 +641,11 @@
             },
             messages: {
                 wallet_amount: {
-                    required :"Wallet Amount field is required",
+                    required :"{{ __('admin.forms.wallet_amount_required') }}",
                     number: "Please enter valid amount field is required",
                 },
                 choose_option: {
-                    required :"Choose Option field is required",
+                    required :"{{ __('admin.forms.choose_option_required') }}",
                 },
             },
             submitHandler: function(form) {

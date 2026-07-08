@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    SOS List
-@endsection
+@section('title', __('admin.pages.sos_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -28,8 +26,8 @@
                             <div class="page-header-title ">
                                 <i class="feather icon-list bg-c-blue"></i>
                                 <div class="d-inline">
-                                    <h5>SOS List</h5>
-                                    <span>SOS List</span>
+                                    <h5>{{ __('admin.pages.sos_list') }}</h5>
+                                    <span>{{ __('admin.pages.sos_list') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -46,9 +44,7 @@
                         <div class="card">
                             <!-- Add SOS -->
                             <div class="card-header">
-                                <h5>SOS List</h5>
-                                <a href="{{ route('get:admin:sos_trigger_logs') }}"
-                                   class="btn btn-outline-danger m-b-0 btn-right render_link" style="margin-right: 8px;">Ver SOS Log</a>
+                                <h5>{{ __('admin.pages.sos_list') }}</h5>
                                 <a href="{{ route('get:admin:add_sos') }}"
                                    class="btn btn-primary m-b-0 btn-right render_link">Add SOS</a>
                             </div>
@@ -59,11 +55,11 @@
                                            style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Name</th>
+                                            <th>{{ __('admin.common.no') }}</th>
+                                            <th>{{ __('admin.columns.name') }}</th>
                                             <th>Phone No.</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
+                                            <th>{{ __('admin.common.status') }}</th>
+                                            <th>{{ __('admin.columns.action') }}</th>
                                         </thead>
                                         <tbody>
                                         </tbody>

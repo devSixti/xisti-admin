@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Report Issue Setting
-@endsection
+@section('title', __('admin.pages.report_issue_setting'))
 @section('page-css')
     <style>
 
@@ -16,7 +14,7 @@
                     <div class="page-header-title">
                         <i class="feather icon-list bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>Report Issue Setting</h5>
+                            <h5>{{ __('admin.pages.report_issue_setting') }}</h5>
                             <span>Edit Report Issue Setting</span>
                         </div>
                     </div>
@@ -39,7 +37,7 @@
                                             <div class="row">
                                                 <div class="form-group col-sm-10">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Chat History delete:</label>
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.chat_history_delete') }}:</label>
                                                         <div class="col-sm-8">
                                                             <select type="text" class="form-control report_chat_history_delete"
                                                                     name="report_chat_history_delete"
@@ -60,7 +58,7 @@
                                             <div class="row">
                                                 <div class="form-group col-sm-10" id="chatDeletionDaysSection">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">After how many days chat will be deleted after issue resolved:</label>
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.chat_delete_days') }}:</label>
                                                         <div class="col-sm-8">
                                                             <input type="number" class="form-control"
                                                                    name="chat_deletion_days_after_issue_resolution"
@@ -68,7 +66,7 @@
                                                                    max="999"
                                                                    required step="1"
                                                                    id="chat_deletion_days_after_issue_resolution"
-                                                                   placeholder="Chat deletion days after issue resolution"
+                                                                   placeholder="{{ __('admin.forms.chat_deletion_days') }}"
                                                                    value="{{ (isset($general_settings)) ? $general_settings->chat_deletion_days_after_issue_resolution : old('chat_deletion_days_after_issue_resolution') }}">
                                                             <span class="error">{{ $errors->first('chat_deletion_days_after_issue_resolution') }}</span>
                                                         </div>
@@ -79,7 +77,7 @@
                                                 {{--  report issue general image    --}}
                                                 <div class="form-group col-sm-10">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">General Report Issue Image:</label>
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.general_report_issue_image') }}:</label>
                                                         <div class="col-sm-8">
                                                             <div class="col-sm-4">
                                                                 <img id="upload-preview" src="{{ asset('/assets/images/report-issue/logo/'.$general_settings->general_report_issue_icon)}}" style="width: 50px; height: 50px">
@@ -101,24 +99,24 @@
                                         <div class="card-block">
                                             <div class="row">
                                                 <div class="form-group col-sm-6">
-                                                    <label class="col-form-label">Min Report Issue Image Upload Limit:<SUP CLASS="ERROR">*</sup></label>
+                                                    <label class="col-form-label">{{ __('admin.forms.min_report_image_limit') }}<sup class="error">*</sup></label>
                                                     <div>
                                                         <input type="number" class="form-control"
                                                                name="min_report_issue_image_upload"
                                                                id="min_report_issue_image_upload"
-                                                               placeholder="Min Report Issue Image Upload Limit"
+                                                               placeholder="{{ __('admin.forms.min_report_image_limit') }}"
                                                                value="{{ (isset($general_settings)) ? $general_settings->min_report_issue_image_upload : old('min_report_issue_image_upload') }}">
                                                         <span class="error">{{ $errors->first('min_report_issue_image_upload') }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-sm-6">
-                                                    <label class="col-form-label">Max Report Issue Image Upload Limit<sup class="error">*</sup></label>
+                                                    <label class="col-form-label">{{ __('admin.forms.max_report_image_limit') }}<sup class="error">*</sup></label>
                                                     <div>
                                                         <input type="number" class="form-control"
                                                                name="max_report_issue_image_upload"
                                                                required step="1"
                                                                id="max_report_issue_image_upload"
-                                                               placeholder="Max Report Issue Image Upload Limit"
+                                                               placeholder="{{ __('admin.forms.max_report_image_limit') }}"
                                                                value="{{ (isset($general_settings)) ? $general_settings->max_report_issue_image_upload : old('max_report_issue_image_upload') }}">
                                                         <span class="error">{{ $errors->first('max_report_issue_image_upload') }}</span>
                                                     </div>
@@ -129,7 +127,7 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <center>
-                                                <button type="submit" class="btn btn-primary m-b-0 buttonloader">Save</button>
+                                                <button type="submit" class="btn btn-primary m-b-0 buttonloader">{{ __('admin.common.save') }}</button>
                                             </center>
                                         </div>
                                     </div>

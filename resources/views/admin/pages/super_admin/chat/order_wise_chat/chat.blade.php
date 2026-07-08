@@ -159,7 +159,7 @@
                     <div class="page-header-title">
                         <i class="feather icon-list bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5 id="chat_user_provider_name">Chat</h5>
+                            <h5 id="chat_user_provider_name">{{ __('admin.columns.chat') }}</h5>
                             <span>Chat Details For Ride</span>
                         </div>
                     </div>

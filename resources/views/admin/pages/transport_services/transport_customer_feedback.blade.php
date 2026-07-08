@@ -1,7 +1,5 @@
 @extends('admin.layout.driver_service')
-@section('title')
-    Customer Feedback
-@endsection
+@section('title', __('admin.pages.customer_feedback'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -19,7 +17,7 @@
                     <div class="page-header-title">
                         <i class="feather icon-edit-1 bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>Customer Feedback</h5>
+                            <h5>{{ __('admin.pages.customer_feedback') }}</h5>
                             <span>Feedback list</span>
                         </div>
                     </div>
@@ -37,7 +35,7 @@
                             <div class="form-group col-sm-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5>Customer Feedback</h5>
+                                        <h5>{{ __('admin.pages.customer_feedback') }}</h5>
                                     </div>
                                     <div class="card-block">
 
@@ -46,11 +44,11 @@
                                                    style="width:100%">
                                                 <thead>
                                                 <tr>
-                                                    <th>No</th>
-                                                    <th>Customer Name</th>
-                                                    <th>Category Name</th>
-                                                    <th>Rating</th>
-                                                    <th>Comment</th>
+                                                    <th>{{ __('admin.common.no') }}</th>
+                                                    <th>{{ __('admin.columns.customer_name') }}</th>
+                                                    <th>{{ __('admin.columns.category_name') }}</th>
+                                                    <th>{{ __('admin.columns.rating') }}</th>
+                                                    <th>{{ __('admin.columns.comment') }}</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>

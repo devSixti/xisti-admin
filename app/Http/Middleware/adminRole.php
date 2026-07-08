@@ -47,11 +47,11 @@ class adminRole
                 if ($request->ajax() || $request->wantsJson()) {
                     return response()->json([
                         'status' => 0,
-                        'message' => "You don't have permission to access this module",
+                        'message' => __('admin.errors.no_permission'),
                     ], 403);
                 }
 
-                return redirect('/admin/dashboard')->with('error', "You don't have permission to access this module");
+                return redirect('/admin/dashboard')->with('error', __('admin.errors.no_permission'));
             }
             $request->attributes->set('admin_role', $this->admin_role);
             $request->attributes->set('admin_main_menu_list', $this->admin_main_menu_list);

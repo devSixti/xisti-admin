@@ -2,45 +2,43 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class SuperAdminSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
-        $super_admin_record =[
+        $password = env('SUPER_ADMIN_SEED_PASSWORD');
+        if (! $password) {
+            $password = Str::password(20);
+            $this->command?->warn('SUPER_ADMIN_SEED_PASSWORD not set; generated random password for seed run only.');
+        }
+
+        $super_admin_record = [
             [
                 'id' => 1,
                 'name' => 'Super Admin',
-                'email' => 'admin@xistiapp.com',
-                'password' =>Hash::make('w(0Gu(127Y}7$O50eMZD'),
+                'email' => env('SUPER_ADMIN_SEED_EMAIL', 'admin@xistiapp.com'),
+                'password' => Hash::make($password),
                 'roles' => 1,
                 'area_id' => 0,
                 'is_restrict_admin' => 0,
                 'admin_type' => 's',
-                'access_token' => '92455607201919047',
-                'device_token' => 'ePm7ClDJlWcRrPd-KWEwr6:APA91bG1UPJol-KRVZLPEdMeNgW6peUnCUWkBPxNCocxl7iQPK2tB2x3_IMfVAMlfbDeFmcMk4d3e3Bqs7T71YB0j41ZsIBhbTGP56H0uKIb16Jhs7mM6X2VlMRGCu_QjRxWoOEr6m7s',
-                'remember_token' => 'zU5vPJLFUGTG7zjTbsiyiY18Hwni6feKZjjnzYJ0u8T131DxX1KLKhdIVZEm',
-            ]
-           ];
-        /*
-       | upsert
-       |--------------------------------------------------------------------------
-       | We are using upsert here as it functions to either insert or update records efficiently.
-       | If a record already exists, it updates it; if not, it inserts a new record.
-       | This operation compares records using a unique key and supports handling multiple records in a single operation.
-       */
+                'status' => 1,
+                'must_change_password' => env('SUPER_ADMIN_SEED_PASSWORD') ? 0 : 1,
+                'access_token' => '',
+                'device_token' => '',
+                'remember_token' => Str::random(60),
+            ],
+        ];
+
         DB::table('super_admin')->upsert(
             $super_admin_record,
-            ['id'], // Unique column to determine if a row exists
-            ['name', 'email', 'password', 'roles', 'area_id', 'is_restrict_admin', 'admin_type', 'access_token', 'device_token', 'remember_token']
+            ['id'],
+            ['name', 'email', 'password', 'roles', 'area_id', 'is_restrict_admin', 'admin_type', 'status', 'must_change_password', 'access_token', 'device_token', 'remember_token']
         );
     }
 }

@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Driver Required Documents
-@endsection
+@section('title', __('admin.pages.driver_required_documents'))
 @section('page-css')
     <link rel="stylesheet" href="{{ asset('/assets/css/widget/widget.css') }}">
     <style>
@@ -90,14 +88,14 @@
                             <div class="page-header-title ">
                                 <i class="feather icon-list bg-c-blue"></i>
                                 <div class="d-inline">
-                                    <h5>Driver Required Documents</h5>
-                                    <span>Driver Required Documents List</span>
+                                    <h5>{{ __('admin.pages.driver_required_documents') }}</h5>
+                                    <span>{{ __('admin.forms.driver_required_documents_list') }}</span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             {{--<a href="{{ route('get:transport:transport_provider_list') }}"--}}
-                            {{--class="btn btn-primary m-b-0 btn-right render_link">Back</a>--}}
+                            {{--class="btn btn-primary m-b-0 btn-right render_link">{{ __('admin.common.back') }}</a>--}}
                         </div>
                     </div>
                 </div>
@@ -200,7 +198,7 @@
                                 {{--                                <div class="col-xl-3 col-md-6">--}}
                                 {{--                                    <div class="card comp-card">--}}
                                 {{--                                        <div class="card-body text-center">--}}
-                                {{--                                            --}}{{--<h6 class="m-b-20">Required Documents</h6>--}}
+                                {{--                                            --}}{{--<h6 class="m-b-20">{{ __('admin.modules.required_documents') }}</h6>--}}
                                 {{--                                            <p>Required documents list not found</p>--}}
                                 {{--                                            <a>--}}
                                 {{--                                                <i class="fa fa-eye bg-c-blue"></i>--}}
@@ -215,7 +213,7 @@
                                 {{--                                    </div>--}}
                                 {{--                                </div>--}}
                                 <div class="page-wrapper ml-auto mr-auto">
-                                    <h4 class="">No Documents Required</h4>
+                                    <h4 class="">{{ __('admin.forms.no_documents_required') }}</h4>
                                 </div>
                             @endif
                         </div>
@@ -245,9 +243,9 @@
                                 </span>
                             </div>
                             <input id='fileid' name="document_file" type='file' />
-                            <span class="error d-none file-error">Document file is required</span>
+                            <span class="error d-none file-error">{{ __('admin.forms.document_file_required') }}</span>
                             {{--                            <center>--}}
-                            {{--                                <input type='date' id='document-expiry' name="document_expiry" class="form-control text-dark w-50 mb-3" placeholder="Enter Expiry date" />--}}
+                            {{--                                <input type='date' id='document-expiry' name="document_expiry" class="form-control text-dark w-50 mb-3" placeholder="{{ __('admin.forms.enter_expiry_date_lowercase') }}" />--}}
                             {{--                                <span class="error d-none date-error">Expiry date is required</span>--}}
                             {{--                            </center>--}}
                             <center>
@@ -255,7 +253,7 @@
                             </center>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary doc-save">Save</button>
+                            <button type="submit" class="btn btn-primary doc-save">{{ __('admin.common.save') }}</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
                             </button>
                         </div>
@@ -281,11 +279,11 @@
                             <input type="hidden" name="docs_id" value="" id="docs_id">
 {{--                            <input id='fileid' name="document_file" type='file' />--}}
                             <center>
-                                <input type='date' data-date="" data-date-format="DD-MM-YYYY" id='document-expiry' name="document_expiry" class="form-control text-dark w-50 mb-3" placeholder="Enter Expiry date" onfocus="disablePastDates()" />
+                                <input type='date' data-date="" data-date-format="DD-MM-YYYY" id='document-expiry' name="document_expiry" class="form-control text-dark w-50 mb-3" placeholder="{{ __('admin.forms.enter_expiry_date_lowercase') }}" onfocus="disablePastDates()" />
                             </center>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary doc-save">Save</button>
+                            <button type="submit" class="btn btn-primary doc-save">{{ __('admin.common.save') }}</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
                             </button>
                         </div>
@@ -410,18 +408,18 @@
                                         var provider_document_id = '.provider_document_id_' + id;
                                         if (result.status['status'] == 1) {
                                             $(provider_document_id).empty();
-                                            $(provider_document_id).text("Approved");
+                                            $(provider_document_id).text(@json(__('admin.status.approved')));
                                             swal("Success", "Approved Document File Successfully", "success");
                                             location.reload();
                                         }
                                         else if (result.status['status'] == 2) {
                                             $(provider_document_id).empty();
-                                            $(provider_document_id).text("Rejected");
+                                            $(provider_document_id).text(@json(__('admin.status.rejected')));
                                             swal("Success", "Reject Document File Successfully", "success");
                                             location.reload();
                                         } else {
                                             $(provider_document_id).empty();
-                                            $(provider_document_id).text("Pending");
+                                            $(provider_document_id).text(@json(__('admin.status.pending')));
                                             swal("Success", "Reject Document File Successfully", "success");
                                         }
                                     }else {

@@ -60,7 +60,7 @@
                                     <div class="row">
                                         <div class="form-group col-sm-8">
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Vehicle Type:<sup
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.vehicle_type') }}:<sup
                                                             class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <select name="vehicle_type_id" id="vehicle_type_id"
@@ -89,62 +89,50 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Matriz XISTI (variante):<sup class="error">*</sup></label>
-                                                <div class="col-sm-8">
-                                                    <select name="delivery_variant" id="delivery_variant" class="form-control" required>
-                                                        <option value="" disabled {{ empty($transport_provider->delivery_variant ?? '') ? 'selected' : '' }}>Seleccionar variante</option>
-                                                        @foreach(\App\Helpers\XistiVehicleVariantHelper::matrixLabels() as $slug => $label)
-                                                            <option value="{{ $slug }}" {{ (isset($transport_provider) && ($transport_provider->delivery_variant ?? '') === $slug) ? 'selected' : '' }}>{{ $label }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <span class="error">{{ $errors->first('delivery_variant') }}</span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Vehicle Company:<sup
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.vehicle_company') }}:<sup
                                                             class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" name="vehicle_company"
                                                            required
-                                                           id="vehicle_company" placeholder="Unique Vehicle Type Name"
+                                                           id="vehicle_company" placeholder="{{ __('admin.forms.unique_vehicle_type_name') }}"
                                                            value="{{ (isset($transport_provider)) ? $transport_provider->vehicle_company : old('vehicle_company') }}">
                                                     <span class="error">{{ $errors->first('vehicle_company') }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Model Name:<sup
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.model_name') }}:<sup
                                                             class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" name="model_name"
                                                            required
-                                                           id="model_name" placeholder="Model Name"
+                                                           id="model_name" placeholder="{{ __('admin.forms.model_name') }}"
                                                            value="{{ (isset($transport_provider)) ? $transport_provider->model_name : old('model_name') }}">
                                                     <span class="error">{{ $errors->first('model_name') }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Plat No.:<sup
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.plat_no') }}.:<sup
                                                             class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" name="plat_no"
                                                            required
-                                                           id="plat_no" placeholder="Plat No"
+                                                           id="plat_no" placeholder="{{ __('admin.forms.plat_no') }}"
                                                            value="{{ (isset($transport_provider)) ? $transport_provider->plat_no : old('plat_no') }}">
                                                     <span class="error">{{ $errors->first('plat_no') }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Model Year:<sup
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.model_year') }}:<sup
                                                             class="error">*</sup></label>
                                                 <div class="col-sm-8">
 
                                                     <div class="input-group date form_datetime">
                                                         <input name="model_year" type="text"
                                                                class="form-control category"
-                                                               placeholder="Model Year From Picker"
+                                                               placeholder="{{ __('admin.forms.model_year_picker') }}"
                                                                id="model_year"
                                                                value="{{ (isset($transport_provider)) ? $transport_provider->model_year : old('model_year') }}"
                                                                readonly required>
@@ -167,10 +155,10 @@
                                             </div>
 
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Vehicle Color:</label>
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.vehicle_color') }}:</label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" name="vehicle_color"
-                                                           id="vehicle_color" placeholder="Vehicle Color"
+                                                           id="vehicle_color" placeholder="{{ __('admin.forms.vehicle_color') }}"
                                                            value="{{ (isset($transport_provider)) ? $transport_provider->vehicle_color : old('vehicle_color') }}">
                                                     <span class="error">{{ $errors->first('vehicle_color') }}</span>
                                                 </div>

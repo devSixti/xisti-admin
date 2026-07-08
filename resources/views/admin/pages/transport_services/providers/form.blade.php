@@ -1,6 +1,6 @@
 @extends('admin.layout.super_admin')
 @section('title')
-    @if(!isset($driver_detials))Add @else Edit @endif Driver
+    @if(!isset($driver_detials)){{ \App\Helpers\AdminUi::formEntityTitle(true, 'driver') }}@else{{ \App\Helpers\AdminUi::formEntityTitle(false, 'driver') }}@endif
 @endsection
 @section('page-css')
     <link href="{{ asset('/assets/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet" media="screen">
@@ -236,8 +236,8 @@
                     <div class="page-header-title">
                         <i class="feather icon-edit-1 bg-c-green"></i>
                         <div class="d-inline">
-                            <h5>Driver</h5>
-                            <span>@if(!isset($driver_detials))Add @else Edit @endif Driver
+                            <h5>{{ __('admin.pages.driver') }}</h5>
+                            <span>@if(!isset($driver_detials)){{ \App\Helpers\AdminUi::formEntityTitle(true, 'driver') }}@else{{ \App\Helpers\AdminUi::formEntityTitle(false, 'driver') }}@endif
                                 @if(isset($service_category) && $service_category->name != Null)
                                     of {{ ucwords(strtolower($service_category->name)) }} @endif
                             </span>
@@ -269,8 +269,7 @@
                                 <div class="form-group col-sm-12">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h5>@if(!isset($driver_detials))Add @else Edit @endif
-                                                Driver @if(isset($service_category) && $service_category->name != Null)
+                                            <h5>@if(!isset($driver_detials)){{ \App\Helpers\AdminUi::formEntityTitle(true, 'driver') }}@else{{ \App\Helpers\AdminUi::formEntityTitle(false, 'driver') }}@endif @if(isset($service_category) && $service_category->name != Null)
                                                     of {{ ucwords(strtolower($service_category->name)) }} @endif</h5>
                                             {{--<a href="{{ route('get:transport:vehicle_type') }}"--}}
                                             {{--class="btn btn-success m-b-0 btn-right render_link"> Back</a>--}}
@@ -310,35 +309,35 @@
 
                                                     <span class="error">{{ $errors->first('service_cat_id') }}</span>
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Driver First Name:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.driver_first_name') }}:<sup
                                                                     class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <input type="text" class="form-control" name="first_name"
                                                                    required
-                                                                   id="first_name" placeholder="Driver First Name"
+                                                                   id="first_name" placeholder="{{ __('admin.forms.driver_first_name') }}"
                                                                    value="{{ (isset($driver_detials)) ? $driver_detials->first_name : old('first_name') }}">
                                                             <span class="error">{{ $errors->first('first_name') }}</span>
                                                         </div>
                                                     </div>
                                                         <div class="form-group row">
-                                                            <label class="col-sm-4 col-form-label">Driver Last Name:<sup
+                                                            <label class="col-sm-4 col-form-label">{{ __('admin.forms.driver_last_name') }}:<sup
                                                                     class="error">*</sup></label>
                                                             <div class="col-sm-8">
                                                                 <input type="text" class="form-control" name="last_name"
                                                                        required
-                                                                       id="last_name" placeholder="Driver Last Name"
+                                                                       id="last_name" placeholder="{{ __('admin.forms.driver_last_name') }}"
                                                                        value="{{ (isset($driver_detials)) ? $driver_detials->last_name : old('last_name') }}">
                                                                 <span class="error">{{ $errors->first('last_name') }}</span>
                                                             </div>
                                                         </div>
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Email:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.mfa.email_label') }}<sup
                                                                     class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <input type="email" class="form-control" name="email"
                                                                    required
                                                                    {{ (isset($driver_detials)) ? "readonly" : "" }}
-                                                                   id="email" placeholder="Unique Email"
+                                                                   id="email" placeholder="{{ __('admin.forms.unique_email') }}"
                                                                    value="{{ (isset($driver_detials)) ? App\Models\User::Email2Stars($driver_detials->email) : old('email') }}">
                                                             <span class="error">{{ $errors->first('email') }}</span>
                                                         </div>
@@ -346,24 +345,24 @@
 
                                                     @if(!isset($driver_detials))
                                                         <div class="form-group row">
-                                                            <label class="col-sm-4 col-form-label">Password:<sup
+                                                            <label class="col-sm-4 col-form-label">{{ __('admin.forms.password') }}:<sup
                                                                         class="error">*</sup></label>
                                                             <div class="col-sm-8">
                                                                 <input type="password" class="form-control"
                                                                        name="pass"
-                                                                       id="pass" placeholder="Password"
+                                                                       id="pass" placeholder="{{ __('admin.forms.password') }}"
                                                                        value="{{ old('pass') }}">
                                                                 <span class="error">{{ $errors->first('pass') }}</span>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label class="col-sm-4 col-form-label">Confirm Password:<sup
+                                                            <label class="col-sm-4 col-form-label">{{ __('admin.forms.confirm_password') }}:<sup
                                                                         class="error">*</sup></label>
                                                             <div class="col-sm-8">
                                                                 <input type="password" class="form-control"
                                                                        name="confirm_password" required
                                                                        id="confirm_password"
-                                                                       placeholder="Confirm Password"
+                                                                       placeholder="{{ __('admin.forms.confirm_password') }}"
                                                                        value="{{ old('confirm_password') }}">
                                                                 <span class="error">{{ $errors->first('confirm_password') }}</span>
                                                             </div>
@@ -371,7 +370,7 @@
                                                     @endif
 
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Contact Number:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.contact_number') }}:<sup
                                                                     class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <input type="text" class="form-control"
@@ -379,7 +378,7 @@
                                                                    required
                                                                    {{ (isset($driver_detials)) ? "readonly" : "" }}
                                                                    id="phone"
-                                                                   placeholder="Unique Contact Number"
+                                                                   placeholder="{{ __('admin.forms.unique_contact_number') }}"
                                                                    value="{{ (isset($driver_detials)) ? $driver_detials->country_code.App\Models\User::ContactNumber2Stars($driver_detials->contact_number) : '' }}">
                                                             <input type="hidden" id="contact_numbers"
                                                                    name="contact_numbers"
@@ -393,7 +392,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Gender:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.gender') }}:<sup
                                                                     class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <div class="radio radio-outline radio-inline">
@@ -423,8 +422,7 @@
                                                 </div>
                                                 <div class="form-group col-sm-6">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label image image-label">Profile
-                                                            Image:</label>
+                                                        <label class="col-sm-4 col-form-label image image-label">{{ __('admin.forms.profile_image') }}:</label>
                                                         <div class="col-sm-8">
                                                             <div id="upload-image-preview">
                                                                 @if(isset($driver_detials))
@@ -466,19 +464,18 @@
                                 <div class="form-group col-sm-12">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h5>@if(!isset($driver_detials))Add @else Edit @endif
-                                                Driver Vehicle Type Details</h5>
+                                            <h5>@if(!isset($driver_detials)){{ \App\Helpers\AdminUi::formEntityTitle(true, 'driver') }}@else{{ \App\Helpers\AdminUi::formEntityTitle(false, 'driver') }}@endif Vehicle Type Details</h5>
                                         </div>
                                         <div class="card-block">
                                             <div class="row">
                                                 <div class="form-group col-sm-6">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Vehicle Type:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.vehicle_type') }}:<sup
                                                                     class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <select name="vehicle_type_id" id="vehicle_type_id"
                                                                     class="form-control" required>
-                                                                <option disabled selected>Select Vehicle Type</option>
+                                                                <option disabled selected>{{ __('admin.forms.select_vehicle_type') }}</option>
                                                                 @if(isset($vehicle_types))
                                                                     @foreach($vehicle_types as $key => $vehicle_type)
                                                                         {{ $selected = (isset($driver_detials))? ($driver_detials->vehicle_type_id == $vehicle_type->id)? "selected" : "" : "" }}
@@ -490,25 +487,25 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Vehicle Company:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.vehicle_company') }}:<sup
                                                                     class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <input type="text" class="form-control"
                                                                    name="vehicle_company"
                                                                    required
                                                                    id="vehicle_company"
-                                                                   placeholder="Vehicle Company Name"
+                                                                   placeholder="{{ __('admin.forms.vehicle_company_name') }}"
                                                                    value="{{ (isset($driver_detials)) ? $driver_detials->vehicle_company : old('vehicle_company') }}">
                                                             <span class="error">{{ $errors->first('vehicle_company') }}</span>
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Model Name:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.model_name') }}:<sup
                                                                     class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <input type="text" class="form-control" name="model_name"
                                                                    required
-                                                                   id="model_name" placeholder="Model Name"
+                                                                   id="model_name" placeholder="{{ __('admin.forms.model_name') }}"
                                                                    value="{{ (isset($driver_detials)) ? $driver_detials->model_name : old('model_name') }}">
                                                             <span class="error">{{ $errors->first('model_name') }}</span>
                                                         </div>
@@ -517,7 +514,7 @@
                                                     @if(isset($service_category) && $service_category->id == 1)
                                                     @elseif(isset($service_category) && $service_category->id == 2)
                                                         <div class="form-group row">
-                                                            <label class="col-sm-4 col-form-label">Number of Seat:<sup
+                                                            <label class="col-sm-4 col-form-label">{{ __('admin.forms.number_of_seat') }}:<sup
                                                                         class="error">*</sup></label>
                                                             <div class="col-sm-8">
                                                                 <select name="no_of_seat" id="no_of_seat"
@@ -545,12 +542,12 @@
                                                         </div>
                                                     @elseif(isset($service_category) && $service_category->id == 4)
                                                         <div class="form-group row">
-                                                            <label class="col-sm-4 col-form-label">Support
+                                                            <label class="col-sm-4 col-form-label">{{ __('admin.forms.support_weight') }}
                                                                 Weight:</label>
                                                             <div class="col-sm-8">
                                                                 <input type="number" class="form-control"
                                                                        name="support_weight"
-                                                                       id="support_weight" placeholder="Support Weight"
+                                                                       id="support_weight" placeholder="{{ __('admin.forms.support_weight') }}"
                                                                        value="{{ (isset($driver_detials)) ? $driver_detials->support_weight : old('support_weight') }}">
                                                                 <span class="error">{{ $errors->first('support_weight') }}</span>
                                                             </div>
@@ -559,14 +556,14 @@
                                                 </div>
                                                 <div class="form-group col-sm-6">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Model Year:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.model_year') }}:<sup
                                                                     class="error">*</sup></label>
                                                         <div class="col-sm-8">
 
                                                             <div class="input-group date form_datetime">
                                                                 <input name="model_year" type="text"
                                                                        class="form-control category"
-                                                                       placeholder="Model Year From Picker"
+                                                                       placeholder="{{ __('admin.forms.model_year_picker') }}"
                                                                        id="model_year" required
                                                                        value="{{ (isset($driver_detials)) ? $driver_detials->model_year : old('model_year') }}"
                                                                        readonly required>
@@ -585,21 +582,21 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Plat No:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.plat_no') }}:<sup
                                                                     class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <input type="text" class="form-control" name="plat_no"
                                                                    required
-                                                                   id="plat_no" placeholder="Plat No"
+                                                                   id="plat_no" placeholder="{{ __('admin.forms.plat_no') }}"
                                                                    value="{{ (isset($driver_detials)) ? $driver_detials->plat_no : old('plat_no') }}">
                                                             <span class="error">{{ $errors->first('plat_no') }}</span>
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Vehicle Color:</label>
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.vehicle_color') }}:</label>
                                                         <div class="col-sm-8">
                                                             <input type="text" class="form-control" name="vehicle_color"
-                                                                   id="vehicle_color" placeholder="Vehicle Color"
+                                                                   id="vehicle_color" placeholder="{{ __('admin.forms.vehicle_color') }}"
                                                                    value="{{ (isset($driver_detials)) ? $driver_detials->vehicle_color : old('vehicle_color') }}">
                                                             <span class="error">{{ $errors->first('vehicle_color') }}</span>
                                                         </div>
@@ -614,7 +611,7 @@
                                     {{--<div class="row">--}}
                                     {{--<div class="col-sm-12">--}}
                                     <center>
-                                        <button type="submit" class="btn btn-success m-b-0">Save</button>
+                                        <button type="submit" class="btn btn-success m-b-0">{{ __('admin.common.save') }}</button>
                                     </center>
                                     {{--</div>--}}
                                     {{--</div>--}}
@@ -637,7 +634,7 @@
                 <!-- Modal content -->
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Driver Services</h4>
+                        <h4 class="modal-title">{{ __('admin.forms.driver_services') }}</h4>
                         <a href="{{route('get:admin:transport_service_dashboard',$slug)}}" class="render_link">
                             <button type="button" class="btn btn-outline-danger" style="padding: 0px 8px;"
                                     data-dismiss="modal" title="close">&times;
@@ -647,7 +644,7 @@
                     <div class="modal-body">
                         <form>
                             <div class="form-group row">
-                                <label class="col-sm-12 col-form-label">Service Category:<sup
+                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.service_category') }}:<sup
                                             class="error">*</sup></label>
                                 <div class="col-sm-12">
                                     <div class="border-checkbox-section">

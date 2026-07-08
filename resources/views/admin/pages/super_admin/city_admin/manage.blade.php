@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Admin List
-@endsection
+@section('title', __('admin.pages.admin_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -22,8 +20,8 @@
                     <div class="page-header-title">
                         <i class="feather icon-list bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>Admin List</h5>
-                            <span>All Admin List</span>
+                            <h5>{{ __('admin.pages.admin_list') }}</h5>
+                            <span>{{ __('admin.pages.all_admin_list') }}</span>
                         </div>
                     </div>
                 </div>
@@ -45,10 +43,10 @@
                                     <table id="new-cons" class="table table-striped table-bordered" style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th style="width: 30px !important;">No</th>
-                                            <th style="width:600px !important;">Name</th>
-                                            <th style="width:600px !important;">Email</th>
-                                            <th style="width: 60px !important;">Actions</th>
+                                            <th style="width: 30px !important;">{{ __('admin.common.no') }}</th>
+                                            <th style="width:600px !important;">{{ __('admin.columns.name') }}</th>
+                                            <th style="width:600px !important;">{{ __('admin.columns.email') }}</th>
+                                            <th style="width: 60px !important;">{{ __('admin.common.actions') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>

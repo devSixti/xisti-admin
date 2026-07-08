@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Vehicle Type List
-@endsection
+@section('title', __('admin.pages.vehicle_type_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -40,8 +38,8 @@
                     <div class="page-header-title">
                         <i class="feather icon-list bg-c-green"></i>
                         <div class="d-inline">
-                            <h5>Vehicle Type</h5>
-                            <span>All Vehicle Type List
+                            <h5>{{ __('admin.pages.vehicle_type') }}</h5>
+                            <span>{{ \App\Helpers\AdminUi::pageSubtitle('vehicle_type_list') }}
                             </span>
                         </div>
                     </div>
@@ -57,7 +55,7 @@
                     <div class="page-body">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Vehicle Type List</h5>
+                                <h5>{{ __('admin.pages.vehicle_type_list') }}</h5>
 
                                 <a href="{{ route('get:admin:add_vehicle_type')}}"
                                    class="btn btn-success m-b-0 btn-right render_link">Add Vehicle Type</a>
@@ -68,12 +66,12 @@
                                            style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th data-orderable="false">Vehicle Icon</th>
-                                            <th>Vehicle Name</th>
-                                            <th>Service Name</th>
-                                            <th data-orderable="false">Status</th>
-                                            <th data-orderable="false">Actions</th>
+                                            <th>{{ __('admin.common.no') }}</th>
+                                            <th data-orderable="false">{{ __('admin.columns.vehicle_icon') }}</th>
+                                            <th>{{ __('admin.columns.vehicle_name') }}</th>
+                                            <th>{{ __('admin.columns.service_name') }}</th>
+                                            <th data-orderable="false">{{ __('admin.common.status') }}</th>
+                                            <th data-orderable="false">{{ __('admin.common.actions') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>

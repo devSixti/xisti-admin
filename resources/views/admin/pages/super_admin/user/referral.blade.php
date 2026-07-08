@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Referred List
-@endsection
+@section('title', __('admin.pages.referred_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -12,7 +10,7 @@
         .md-perspective,
         .md-perspective body {
             height: 100%;
-            overflow: hidden;
+            /* /* overflow: hidden; */ /* admin-zimo: allow page scroll */ */ /* admin-zimo: allow page scroll */
         }
         .md-perspective body {
             background: #222;
@@ -217,8 +215,8 @@
                             <div class="page-header-title ">
                                 <i class="feather icon-list bg-c-blue"></i>
                                 <div class="d-inline">
-                                    <h5>Referred List</h5>
-                                    <span>All Referred List</span>
+                                    <h5>{{ __('admin.pages.referred_list') }}</h5>
+                                    <span>{{ \App\Helpers\AdminUi::pageSubtitle('referred_list') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -239,11 +237,11 @@
                                            style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th>No</th>
+                                            <th>{{ __('admin.common.no') }}</th>
                                             <th>User Name (referred to)</th>
-                                            <th>Refer Discount Type</th>
-                                            <th>Refer Discount</th>
-                                            <th>Refer Status</th>
+                                            <th>{{ __('admin.columns.refer_discount_type') }}</th>
+                                            <th>{{ __('admin.columns.refer_discount') }}</th>
+                                            <th>{{ __('admin.columns.refer_status') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -305,7 +303,7 @@
                             page: 'all',
                         },
                     },
-                    text: 'Download Excel',
+                    text: window.adminExcelButtonText,
                     "action": newexportaction,
                 }],
             });

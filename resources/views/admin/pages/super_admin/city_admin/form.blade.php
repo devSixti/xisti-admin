@@ -44,7 +44,7 @@
                                 <div class="card-header">
                                     <h5>City Admin</h5>
                                     <a href="{{ route('get:admin:city_admin_list') }}"
-                                       class="btn btn-primary m-b-0 btn-right render_link">Back</a>
+                                       class="btn btn-primary m-b-0 btn-right render_link">{{ __('admin.common.back') }}</a>
                                 </div>
                                 <div style="padding: 8px;"></div>
                                 <div class="card-block">
@@ -53,26 +53,26 @@
                                     @endif
 
                                     <div class="form-group row">
-                                        <label class="col-sm-12 col-form-label">Name:<sup class="error">*</sup></label>
+                                        <label class="col-sm-12 col-form-label">{{ __('admin.columns.name') }}:<sup class="error">*</sup></label>
                                         <div class="col-sm-12">
                                             <input type="text" class="form-control" name="name" required id="name"
-                                                   placeholder="Admin Name"
+                                                   placeholder="{{ __('admin.forms.admin_name') }}"
                                                    value="{{ (isset($admin_user)) ? $admin_user->name : old('name') }}">
                                             <span class="error">{{ $errors->first('name') }}</span>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-12 col-form-label">Email:<sup class="error">*</sup></label>
+                                        <label class="col-sm-12 col-form-label">{{ __('admin.mfa.email_label') }}<sup class="error">*</sup></label>
                                         <div class="col-sm-12">
                                             <input type="email" class="form-control" name="email" required id="email"
                                                    pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}"
-                                                   placeholder="Admin email address"
+                                                   placeholder="{{ __('admin.forms.admin_email_address') }}"
                                                    value="{{ (isset($admin_user)) ? $admin_user->email : old('email') }}">
                                             <span class="error">{{ $errors->first('email') }}</span>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-12 col-form-label">Password:
+                                        <label class="col-sm-12 col-form-label">{{ __('admin.forms.password') }}:
                                             @if(!isset($admin_user))
                                                 <sup class="error">*</sup>
                                             @endif
@@ -80,17 +80,17 @@
                                         <div class="col-sm-12">
                                             <input type="password" class="form-control" name="password"
                                                    {{(isset($admin_user) && $admin_user->password != null)?"":"required"}} id="password"
-                                                   placeholder="Password" value="">
+                                                   placeholder="{{ __('admin.forms.password') }}" value="">
                                             <span class="error">{{ $errors->first('password') }}</span>
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label class="col-sm-12 col-form-label">Select City:<sup
+                                        <label class="col-sm-12 col-form-label">{{ __('admin.forms.select_city') }}:<sup
                                                 class="error">*</sup></label>
                                         <div class="col-sm-12">
                                             <select class="form-control" name="city_id" required>
-                                                <option value="" selected disabled>Select City</option>
+                                                <option value="" selected disabled>{{ __('admin.forms.select_city') }}</option>
                                                 @if(isset($area_list))
                                                     @foreach($area_list as $key => $area_details)
                                                         <option value="{{ $area_details->id }}"
@@ -198,7 +198,7 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <center>
-                                        <button type="submit" class="btn btn-primary m-b-0 buttonloader">Save</button>
+                                        <button type="submit" class="btn btn-primary m-b-0 buttonloader">{{ __('admin.common.save') }}</button>
                                     </center>
                                 </div>
                             </div>

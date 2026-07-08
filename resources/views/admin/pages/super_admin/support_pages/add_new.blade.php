@@ -50,11 +50,11 @@
                                     @endif
 
                                     <div class="form-group row">
-                                        <label class="col-sm-12 col-form-label">Name(English):<sup
+                                        <label class="col-sm-12 col-form-label">{{ __('admin.forms.name_english') }}:<sup
                                                     class="error">*</sup></label>
                                         <div class="col-sm-12">
                                             <input type="text" class="form-control" name="name" required
-                                                   id="name" placeholder="Page Name"
+                                                   id="name" placeholder="{{ __('admin.forms.page_name') }}"
                                                    {{ (isset($pages) && $pages->name != Null) ? $pages->name : "" }}
                                                    value="{{ (isset($pages)) ? $pages->name : old('name') }}">
                                             <span class="error">{{ $errors->first('name') }}</span>
@@ -68,11 +68,11 @@
                                                 $col_name = $language_code."_name";
                                             @endphp
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Name({{$language_name}}):<sup
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.name_in_lang', ['lang' => $language_name]) }}:<sup
                                                         class="error">*</sup></label>
                                                 <div class="col-sm-12">
                                                     <input type="text" class="form-control" name="{{$col_name}}" required
-                                                           id="{{$col_name}}" placeholder="Page Name {{$language_name}}"
+                                                           id="{{$col_name}}" placeholder="{{ __('admin.forms.page_name_in', ['lang' => $language_name]) }}"
                                                            {{ (isset($pages) && $pages->$col_name != Null) ? $pages->name : "" }}
                                                            value="{{ (isset($pages)) ? $pages->$col_name : old($language_code) }}">
                                                     <span class="error">{{ $errors->first($language_code) }}</span>
@@ -82,9 +82,9 @@
                                     @endif
 
                                     <div class="form-group row">
-                                        <label class="col-sm-12 col-form-label">Description(English):<sup class="error">*</sup></label>
+                                        <label class="col-sm-12 col-form-label">{{ __('admin.forms.description_english') }}:<sup class="error">*</sup></label>
                                         <div class="col-sm-12">
-                                            <textarea id="description1" name="description" placeholder="Page Description English" class="form-control description">{{ (isset($pages)) ? $pages->description : old('description')}}</textarea>
+                                            <textarea id="description1" name="description" placeholder="{{ __('admin.forms.page_description_english') }}" class="form-control description">{{ (isset($pages)) ? $pages->description : old('description')}}</textarea>
                                             <span class="error">{{ $errors->first('description') }}</span>
                                         </div>
                                     </div>
@@ -99,9 +99,9 @@
                                             @endphp
                                             @php $i++ @endphp
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Description({{$language_name}}):<sup class="error">*</sup></label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.description_in_lang', ['lang' => $language_name]) }}:<sup class="error">*</sup></label>
                                                 <div class="col-sm-12">
-                                            <textarea id="description{{$i}}" name="{{$col_name}}" placeholder="Page Description {{$language_name}}"
+                                            <textarea id="description{{$i}}" name="{{$col_name}}" placeholder="{{ __('admin.forms.page_description_in', ['lang' => $language_name]) }}"
                                                       class="form-control description">{{ (isset($pages)) ? $pages->$col_name : old($col_name)}}</textarea>
                                                     <span class="error">{{ $errors->first('$col_name') }}</span>
                                                 </div>
@@ -110,7 +110,7 @@
                                     @endif
                                     <div class="form-group row">
                                         <div class="col-sm-12">
-                                            <button type="submit" class="btn btn-primary m-b-0">Save</button>
+                                            <button type="submit" class="btn btn-primary m-b-0">{{ __('admin.common.save') }}</button>
                                         </div>
                                     </div>
 

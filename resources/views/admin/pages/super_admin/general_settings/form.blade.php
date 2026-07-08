@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Site Setting
-@endsection
+@section('title', __('admin.settings.site_title'))
 @section('page-css')
     <style>
         .image {
@@ -13,7 +11,7 @@
             width: 100%;
             height: 200px;
             position: relative;
-            overflow: hidden;
+            /* /* overflow: hidden; */ /* admin-zimo: allow page scroll */ */ /* admin-zimo: allow page scroll */
             background-color: #ffffff;
             color: #ecf0f1;
             cursor: pointer;
@@ -96,20 +94,12 @@
 @endsection
 @section('page-content')
 
-    <div class="pcoded-content">
-        <div class="page-header card">
-            <div class="row align-items-end">
-                <div class="col-lg-8">
-                    <div class="page-header-title">
-                        <i class="feather icon-edit-1 bg-c-blue"></i>
-                        <div class="d-inline">
-                            <h5>Site Setting</h5>
-                            <span>@if(!isset($general_settings))Add @else Edit @endif Site Setting</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="pcoded-content admin-page-scroll">
+        <x-admin.page-header
+            :title="__('admin.settings.site_title')"
+            :subtitle="isset($general_settings) ? __('admin.common.edit') : __('admin.common.add')"
+            icon="feather icon-edit-1"
+        />
 
         <div class="pcoded-inner-content">
             <div class="main-body">
@@ -125,17 +115,17 @@
 
                             <div class="card">
                                 <div class="card-header">
-                                    <h5>@if(!isset($general_settings))Add @else Edit @endif Site Setting</h5>
+                                    <h5>{{ isset($general_settings) ? __('admin.common.edit') : __('admin.common.add') }} — {{ __('admin.settings.card_heading') }}</h5>
                                 </div>
                                 <div class="card-block">
                                     <div class="row">
                                         <div class="form-group col-sm-12">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Website Name:<sup
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.website_name_label') }}:<sup
                                                         class="error">*</sup></label>
                                                 <div class="col-sm-12">
                                                     <input type="text" class="form-control" name="website_name" required
-                                                           id="website_name" placeholder="Website Name"
+                                                           id="website_name" placeholder="{{ __('admin.forms.website_name') }}"
                                                            value="{{ (isset($general_settings)) ? $general_settings->website_name : old('website_name') }}">
                                                     <span class="error">{{ $errors->first('website_name') }}</span>
                                                 </div>
@@ -193,11 +183,11 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Address:</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.address_label') }}:</label>
                                                 <div class="col-sm-12">
                                                     <textarea name="address" id="address"
                                                               class="form-control"
-                                                              placeholder="address">{{ (isset($general_settings)) ? $general_settings->address : old('address') }}</textarea>
+                                                              placeholder="{{ __('admin.forms.address') }}">{{ (isset($general_settings)) ? $general_settings->address : old('address') }}</textarea>
                                                     <span class="error">{{ $errors->first('address') }}</span>
                                                 </div>
                                             </div>
@@ -205,13 +195,12 @@
                                             <div class="form-group row">
                                                 <div class="col-sm-6">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-12 col-form-label">Admin Receive
-                                                            Email:</label>
+                                                        <label class="col-sm-12 col-form-label">{{ __('admin.forms.admin_receive_email_label') }}:</label>
                                                         <div class="col-sm-12">
                                                             <input type="email" class="form-control"
                                                                    name="send_receive_email"
                                                                    id="send_receive_email"
-                                                                   placeholder="Admin Receive Email"
+                                                                   placeholder="{{ __('admin.forms.admin_receive_email') }}"
                                                                    value="{{ (isset($general_settings)) ? App\Models\User::Email2Stars($general_settings->send_receive_email) : old('send_receive_email') }}">
                                                             <span
                                                                 class="error">{{ $errors->first('send_receive_email') }}</span>
@@ -220,10 +209,10 @@
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-12 col-form-label">Email:</label>
+                                                        <label class="col-sm-12 col-form-label">{{ __('admin.mfa.email_label') }}</label>
                                                         <div class="col-sm-12">
                                                             <input type="email" class="form-control" name="email"
-                                                                   id="email" placeholder="Email"
+                                                                   id="email" placeholder="{{ __('admin.forms.email_placeholder') }}"
                                                                    value="{{ (isset($general_settings)) ? App\Models\User::Email2Stars($general_settings->email) : old('email') }}">
                                                             <span class="error">{{ $errors->first('email') }}</span>
                                                         </div>
@@ -231,10 +220,10 @@
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-12 col-form-label">Contact No:</label>
+                                                        <label class="col-sm-12 col-form-label">{{ __('admin.forms.contact_no_label') }}:</label>
                                                         <div class="col-sm-12">
                                                             <input type="text" class="form-control" name="contact_no"
-                                                                   id="contact_no" placeholder="Contact No"
+                                                                   id="contact_no" placeholder="{{ __('admin.forms.contact_no') }}"
                                                                    value="{{ (isset($general_settings)) ? App\Models\User::ContactNumber2Stars($general_settings->contact_no) : old('contact_no') }}">
                                                             <span
                                                                 class="error">{{ $errors->first('contact_no') }}</span>
@@ -243,11 +232,10 @@
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-12 col-form-label">Copy Right
-                                                            Content:</label>
+                                                        <label class="col-sm-12 col-form-label">{{ __('admin.forms.copy_right_label') }}:</label>
                                                         <div class="col-sm-12">
                                                             <input type="text" class="form-control" name="copy_right"
-                                                                   id="copy_right" placeholder="Copy Right Content"
+                                                                   id="copy_right" placeholder="{{ __('admin.forms.copy_right_content') }}"
                                                                    value="{{ (isset($general_settings)) ? $general_settings->copy_right : old('copy_right') }}">
                                                             <span
                                                                 class="error">{{ $errors->first('copy_right') }}</span>
@@ -270,30 +258,30 @@
                                             <div class="form-group row">
                                                 <div class="col-sm-6">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-12 col-form-label">Facebook Link:</label>
+                                                        <label class="col-sm-12 col-form-label">{{ __('admin.forms.facebook_link_label') }}:</label>
                                                         <div class="col-sm-12">
                                                             <input type="url" class="form-control" name="facebook_link"
-                                                                   id="facebook_link" placeholder="Facebook Link"
+                                                                   id="facebook_link" placeholder="{{ __('admin.forms.facebook_link') }}"
                                                                    value="{{ (isset($general_settings)) ? $general_settings->facebook_link : old('facebook_link') }}">
                                                             <span
                                                                 class="error">{{ $errors->first('facebook_link') }}</span>
                                                         </div>
                                                     </div>
     <!--                                                    <div class="form-group row">
-                                                        <label class="col-sm-12 col-form-label">Twitter Link:</label>
+                                                        <label class="col-sm-12 col-form-label">{{ __('admin.forms.twitter_link_label') }}:</label>
                                                         <div class="col-sm-12">
                                                             <input type="url" class="form-control" name="twitter_link"
-                                                                   id="twitter_link" placeholder="Twitter Link"
+                                                                   id="twitter_link" placeholder="{{ __('admin.forms.twitter_link') }}"
                                                                    value="{{ (isset($general_settings)) ? $general_settings->twitter_link : old('twitter_link') }}">
                                                             <span
                                                                 class="error">{{ $errors->first('twitter_link') }}</span>
                                                         </div>
                                                     </div>-->
                                                     <div class="form-group row">
-                                                        <label class="col-sm-12 col-form-label">Linkedin Link:</label>
+                                                        <label class="col-sm-12 col-form-label">{{ __('admin.forms.linkedin_link_label') }}:</label>
                                                         <div class="col-sm-12">
                                                             <input type="url" class="form-control" name="linkedin_link"
-                                                                   id="linkedin_link" placeholder="Linkedin Link"
+                                                                   id="linkedin_link" placeholder="{{ __('admin.forms.linkedin_link') }}"
                                                                    value="{{ (isset($general_settings)) ? $general_settings->linkedin_link : old('linkedin_link') }}">
                                                             <span
                                                                 class="error">{{ $errors->first('linkedin_link') }}</span>
@@ -303,10 +291,10 @@
                                                 <div class="col-sm-6">
 
                                                     <div class="form-group row">
-                                                        <label class="col-sm-12 col-form-label">Instagram Link:</label>
+                                                        <label class="col-sm-12 col-form-label">{{ __('admin.forms.instagram_link_label') }}:</label>
                                                         <div class="col-sm-12">
                                                             <input type="url" class="form-control" name="instagram_link"
-                                                                   id="instagram_link" placeholder="Instagram Link"
+                                                                   id="instagram_link" placeholder="{{ __('admin.forms.instagram_link') }}"
                                                                    value="{{ (isset($general_settings)) ? $general_settings->instagram_link : old('instagram_link') }}">
                                                             <span
                                                                 class="error">{{ $errors->first('instagram_link') }}</span>
@@ -327,13 +315,12 @@
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">User Playstore
-                                                    Link:</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.user_playstore_label') }}:</label>
                                                 <div class="col-sm-12">
                                                     <input type="url" class="form-control"
                                                            name="user_playstore_link"
                                                            id="user_playstore_link"
-                                                           placeholder="User Playstore Link"
+                                                           placeholder="{{ __('admin.forms.user_playstore_link') }}"
                                                            value="{{ (isset($general_settings)) ? $general_settings->user_playstore_link : old('user_playstore_link') }}">
                                                     <span
                                                         class="error">{{ $errors->first('user_playstore_link') }}</span>
@@ -342,13 +329,12 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">User Appstore
-                                                    Link:</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.user_appstore_label') }}:</label>
                                                 <div class="col-sm-12">
                                                     <input type="url" class="form-control"
                                                            name="user_appstore_link"
                                                            id="user_appstore_link"
-                                                           placeholder="User Appstore Link"
+                                                           placeholder="{{ __('admin.forms.user_appstore_link') }}"
                                                            value="{{ (isset($general_settings)) ? $general_settings->user_appstore_link : old('user_appstore_link') }}">
                                                     <span
                                                         class="error">{{ $errors->first('user_appstore_link') }}</span>
@@ -361,34 +347,32 @@
 
                             <div class="card">
                                 <div class="card-header">
-                                    <h5>User Refer Discount</h5>
+                                    <h5>{{ __('admin.forms.user_refer_discount') }}</h5>
                                 </div>
                                 <div class="card-block">
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Used User
-                                                    Discount:</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.used_user_discount_label') }}:</label>
                                                 <div class="col-sm-12">
                                                     <input type="number" class="form-control"
                                                            name="used_user_discount" step="0.01"
                                                            min="0"
                                                            id="used_user_discount"
-                                                           placeholder="Used User Discount"
+                                                           placeholder="{{ __('admin.forms.used_user_discount') }}"
                                                            value="{{ (isset($general_settings)) ? $general_settings->used_user_discount : old('used_user_discount') }}">
                                                     <span
                                                         class="error">{{ $errors->first('used_user_discount') }}</span>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Refer User
-                                                    Discount:</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.refer_user_discount_label') }}:</label>
                                                 <div class="col-sm-12">
                                                     <input type="number" class="form-control"
                                                            min="0"
                                                            name="refer_user_discount" step="0.01"
                                                            id="refer_user_discount"
-                                                           placeholder="Refer User Discount"
+                                                           placeholder="{{ __('admin.forms.refer_user_discount') }}"
                                                            value="{{ (isset($general_settings)) ? $general_settings->refer_user_discount : old('refer_user_discount') }}">
                                                     <span
                                                         class="error">{{ $errors->first('refer_user_discount') }}</span>
@@ -397,22 +381,21 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Used User Discount
-                                                    Type:</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.used_user_discount_type_label') }}:</label>
                                                 <div class="col-sm-12">
                                                     <select type="text" class="form-control"
                                                             name="used_user_discount_type"
                                                             id="used_user_discount_type"
-                                                            placeholder="Used User Discount Type"
+                                                            placeholder="{{ __('admin.forms.used_user_discount_type') }}"
                                                             value="{{ (isset($general_settings)) ? $general_settings->used_user_discount_type : old('used_user_discount_type') }}">
-                                                        <option value="">Select Used User Discount Type</option>
+                                                        <option value="">{{ __('admin.forms.select_used_user_discount_type') }}</option>
                                                         <option
                                                             value="1" {{ (isset($general_settings)) ? ($general_settings->used_user_discount_type == 1 ? "selected" : "") : "" }}>
-                                                            Amount
+                                                            {{ __('admin.values.amount') }}
                                                         </option>
                                                         <option
                                                             value="2" {{ (isset($general_settings)) ? ($general_settings->used_user_discount_type == 2 ? "selected" : "") : "" }}>
-                                                            Percentage
+                                                            {{ __('admin.values.percentage') }}
                                                         </option>
                                                     </select>
 
@@ -421,22 +404,20 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Refer User Discount
-                                                    Type:</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.refer_user_discount_type_label') }}:</label>
                                                 <div class="col-sm-12">
                                                     <select type="text" class="form-control"
                                                             name="refer_user_discount_type"
                                                             id="refer_user_discount_type"
-                                                            placeholder="Refer User Discount Type">
-                                                        <option value="">Select Refer User Discount Type
-                                                        </option>
+                                                            placeholder="{{ __('admin.forms.refer_user_discount_type') }}">
+                                                        <option value="">{{ __('admin.forms.select_refer_user_discount_type') }}</option>
                                                         <option
                                                             value="1" {{ (isset($general_settings)) ? ($general_settings->refer_user_discount_type == 1 ? "selected" : "") : "" }}>
-                                                            Amount
+                                                            {{ __('admin.values.amount') }}
                                                         </option>
                                                         <option
                                                             value="2" {{ (isset($general_settings)) ? ($general_settings->refer_user_discount_type == 2 ? "selected" : "") : "" }}>
-                                                            Percentage
+                                                            {{ __('admin.values.percentage') }}
                                                         </option>
                                                     </select>
 
@@ -458,7 +439,7 @@
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Cash<sup class="error">*</sup></label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.cash') }}<sup class="error">*</sup></label>
                                                 <div class="col-sm-12">
                                                     <select type="text" class="form-control"
                                                             name="cash_payment"
@@ -478,7 +459,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Wallet<sup class="error">*</sup></label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.columns.wallet') }}<sup class="error">*</sup></label>
                                                 <div class="col-sm-12">
                                                     <select type="text" class="form-control"
                                                             name="wallet_payment"
@@ -500,7 +481,7 @@
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Card<sup class="error">*</sup></label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.card') }}<sup class="error">*</sup></label>
                                                 <div class="col-sm-12">
                                                     <select type="text" class="form-control"
                                                             name="card_payment"
@@ -544,11 +525,11 @@
                                         </div>
                                         <div class="col-sm-6" id="driver_min_amount_for_change" <?php echo($general_settings->auto_settle_wallet == 1) ? '': 'hidden' ?>>
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Minimum wallet Required Amount for Request (Driver):</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.min_wallet_driver') }}:</label>
                                                 <div class="col-sm-12">
                                                     <input type="text" class="form-control"  min="0" name="driver_min_amount"
                                                            id="driver_min_amount" required
-                                                           placeholder="Minimum wallet Amount"
+                                                           placeholder="{{ __('admin.forms.min_wallet_amount') }}"
                                                            value="{{ (isset($general_settings)) ? $general_settings->driver_min_amount : old('driver_min_amount') }}">
                                                     <span
                                                         class="error">{{ $errors->first('driver_min_amount') }}</span>
@@ -557,13 +538,13 @@
                                         </div>
                                         <div class="col-sm-6" id="min_cashout_for_change" <?php echo($general_settings->auto_settle_wallet == 1) ? '': 'hidden' ?>>
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Minimum Cashout:</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.minimum_cashout') }}:</label>
                                                 <div class="col-sm-12">
                                                     <input type="number" class="form-control"
                                                            name="min_cashout"
                                                            min="0"
                                                            id="min_cashout"
-                                                           placeholder="Min Cashout"
+                                                           placeholder="{{ __('admin.forms.min_cashout') }}"
                                                            value="{{ (isset($general_settings)) ? $general_settings->min_cashout : old('min_cashout') }}">
                                                     <span
                                                         class="error">{{ $errors->first('min_cashout') }}</span>
@@ -572,12 +553,12 @@
                                         </div>
                                         <div class="col-sm-6" id="max_cashout_for_change" <?php echo($general_settings->auto_settle_wallet == 1) ? '': 'hidden' ?>>
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Maximum Cashout:</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.maximum_cashout') }}:</label>
                                                 <div class="col-sm-12">
                                                     <input type="number" class="form-control"
                                                            name="max_cashout" min="0"
                                                            id="max_cashout"
-                                                           placeholder="Max Cashout"
+                                                           placeholder="{{ __('admin.forms.max_cashout') }}"
                                                            value="{{ (isset($general_settings)) ? $general_settings->max_cashout : old('max_cashout') }}">
                                                     <span class="error">{{ $errors->first('max_cashout') }}</span>
                                                 </div>
@@ -596,7 +577,7 @@
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Google Login<sup class="error">*</sup></label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.google_login') }}<sup class="error">*</sup></label>
                                                 <div class="col-sm-12">
                                                     <select type="text" class="form-control"
                                                             name="is_google_login"
@@ -616,7 +597,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Facebook Login<sup class="error">*</sup></label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.facebook_login') }}<sup class="error">*</sup></label>
                                                 <div class="col-sm-12">
                                                     <select type="text" class="form-control"
                                                             name="is_facebook_login"
@@ -638,7 +619,7 @@
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Apple Login<sup class="error">*</sup></label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.apple_login') }}<sup class="error">*</sup></label>
                                                 <div class="col-sm-12">
                                                     <select type="text" class="form-control"
                                                             name="is_apple_login"
@@ -658,7 +639,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Bio-Metric Login<sup class="error">*</sup></label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.biometric_login') }}<sup class="error">*</sup></label>
                                                 <div class="col-sm-12">
                                                     <select type="text" class="form-control"
                                                             name="is_finger_login"
@@ -690,13 +671,13 @@
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Document Expiry Warning 1(in days) :</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.document_expiry_warning_1_days') }} :</label>
                                                 <div class="col-sm-12">
                                                     <input type="number" class="form-control"
                                                            name="doc_expiry_warning_one"
                                                            min="1"
                                                            id="doc_expiry_warning_one"
-                                                           placeholder="Document Expiry Warning 1"
+                                                           placeholder="{{ __('admin.forms.document_expiry_warning_1') }}"
                                                            value="{{ (isset($general_settings)) ? $general_settings->doc_expiry_warning_one : old('doc_expiry_warning_one') }}">
                                                     <span
                                                         class="error">{{ $errors->first('doc_expiry_warning_one') }}</span>
@@ -705,13 +686,13 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Document Expiry Warning 2(in days) :</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.document_expiry_warning_2_days') }} :</label>
                                                 <div class="col-sm-12">
                                                     <input type="number" class="form-control"
                                                            name="doc_expiry_warning_two"
                                                            min="1"
                                                            id="doc_expiry_warning_two"
-                                                           placeholder="Document Expiry Warning 2"
+                                                           placeholder="{{ __('admin.forms.document_expiry_warning_2') }}"
                                                            value="{{ (isset($general_settings)) ? $general_settings->doc_expiry_warning_two : old('doc_expiry_warning_two') }}">
                                                     <span
                                                         class="error">{{ $errors->first('doc_expiry_warning_two') }}</span>
@@ -722,12 +703,12 @@
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Document Expiry Warning 3 (in days) :</label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.document_expiry_warning_3_days') }} :</label>
                                                 <div class="col-sm-12">
                                                     <input type="number" class="form-control"
                                                            name="doc_expiry_warning_three" min="1"
                                                            id="doc_expiry_warning_three"
-                                                           placeholder="Document Expiry Warning 3"
+                                                           placeholder="{{ __('admin.forms.document_expiry_warning_3') }}"
                                                            value="{{ (isset($general_settings)) ? $general_settings->doc_expiry_warning_three : old('doc_expiry_warning_three') }}">
                                                     <span class="error">{{ $errors->first('doc_expiry_warning_three') }}</span>
                                                 </div>
@@ -740,13 +721,13 @@
                             {{-- code for dynamic Toll charge module 0 - off , 1 - driver will give the final charge , 2 - driver will give no of tolls & charge per toll is decided by admin--}}
                             <div class="card">
                                 <div class="card-header">
-                                    <h5>Toll Charge</h5>
+                                    <h5>{{ __('admin.columns.toll_charge') }}</h5>
                                 </div>
                                 <div class="card-block">
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Toll Charge<sup class="error">*</sup></label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.columns.toll_charge') }}<sup class="error">*</sup></label>
                                                 <div class="col-sm-12">
                                                     <select type="text" class="form-control"
                                                             name="is_toll_module"
@@ -770,12 +751,12 @@
                                         </div>
                                         <div class="col-sm-6 toll_per_charge {{ ($general_settings->is_toll_module != 2) ? 'toll_charge_hide' : '' }}">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Toll Charge(charge per toll)<sup class="error">*</sup></label>
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.toll_charge_per') }}<sup class="error">*</sup></label>
                                                 <div class="col-sm-12">
                                                     <input type="text" class="form-control"
                                                            name="charge_per_toll" required
                                                            id="charge_per_toll"
-                                                           placeholder="Toll Charge(charge per toll)"
+                                                           placeholder="{{ __('admin.forms.toll_charge_per') }}"
                                                            value="{{ (isset($general_settings)) ? $general_settings->charge_per_toll : old('charge_per_toll') }}">
                                                     <span
                                                         class="error">{{ $errors->first('charge_per_toll') }}</span>
@@ -794,26 +775,26 @@
                                 <div class="card-block">
                                     <div class="form-group row">
                                         <div class="col-sm-4">
-                                            <label class="col-form-label">Driver Price Suggestion<sup class="error">*</sup></label>
+                                            <label class="col-form-label">{{ __('admin.forms.driver_price_suggestion') }}<sup class="error">*</sup></label>
                                             <input type="text" class="form-control" name="driver_price_suggestion" required
                                                    id="driver_price_suggestion" min="1"
                                                    value="{{ $general_settings->driver_price_suggestion ?? old('driver_price_suggestion', 1) }}">
                                         </div>
                                         <div class="col-sm-4">
-                                            <label class="col-form-label">Fare negotiation step (COP)</label>
+                                            <label class="col-form-label">{{ __('admin.forms.fare_negotiation_step') }}</label>
                                             <input type="number" class="form-control" name="fare_negotiation_step" min="1"
                                                    value="{{ $general_settings->fare_negotiation_step ?? old('fare_negotiation_step', 500) }}">
                                             <small class="text-muted">e.g. 500 for +/- on fare offers (COP).</small>
                                         </div>
                                         <div class="col-sm-4">
-                                            <label class="col-form-label">VAT on commission (%)</label>
+                                            <label class="col-form-label">{{ __('admin.forms.vat_on_commission') }}</label>
                                             <input type="number" step="0.01" class="form-control" name="vat_rate_on_commission" min="0"
                                                    value="{{ $general_settings->vat_rate_on_commission ?? old('vat_rate_on_commission', 19) }}">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-sm-4">
-                                            <label class="col-form-label">Driver may cancel until status</label>
+                                            <label class="col-form-label">{{ __('admin.forms.driver_cancel_until_status') }}</label>
                                             <input type="number" class="form-control" name="driver_cancel_until_status" min="0" max="9"
                                                    value="{{ $general_settings->driver_cancel_until_status ?? old('driver_cancel_until_status', 3) }}">
                                             <small class="text-muted">3 = arrived at pickup; 4 = cancelled (B4).</small>
@@ -823,8 +804,8 @@
                             </div>
                             <div class="card border-info">
                                 <div class="card-header bg-light">
-                                    <h5>XISTI mobile — modos opcionales</h5>
-                                    <span class="text-muted">XISTI (Medellín): deja Expreso desmarcado hasta definir rutas intermunicipales. Encomiendas suele ir activo en lanzamiento urbano. No confundir con ZIMO (flags municipales en su propia instancia).</span>
+                                    <h5>{{ __('admin.settings.mobile_v102_heading') }}</h5>
+                                    <span class="text-muted">{{ __('admin.settings.mobile_v102_help') }}</span>
                                 </div>
                                 <div class="card-block">
                                     <div class="form-group row">
@@ -834,7 +815,7 @@
                                                     <input type="checkbox" name="enable_expreso_mobile" value="1"
                                                         @checked(($general_settings->enable_expreso_mobile ?? 0) == 1)>
                                                     <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                                                    <span>Expreso (passenger + driver)</span>
+                                                    <span>{{ __('admin.settings.enable_viajes_compartidos') }}</span>
                                                 </label>
                                             </div>
                                         </div>
@@ -844,7 +825,17 @@
                                                     <input type="checkbox" name="enable_encomiendas_mobile" value="1"
                                                         @checked(($general_settings->enable_encomiendas_mobile ?? 0) == 1)>
                                                     <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                                                    <span>Encomiendas (passenger + driver)</span>
+                                                    <span>{{ __('admin.settings.enable_encomiendas_roles') }}</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="checkbox-fade fade-in-primary">
+                                                <label>
+                                                    <input type="checkbox" name="enable_acarreos_mobile" value="1"
+                                                        @checked(($general_settings->enable_acarreos_mobile ?? 1) == 1)>
+                                                    <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                                    <span>{{ __('admin.settings.enable_acarreos') }}</span>
                                                 </label>
                                             </div>
                                         </div>
@@ -854,17 +845,7 @@
                                                     <input type="checkbox" name="require_courier_package_dimensions_mobile" value="1"
                                                         @checked(($general_settings->require_courier_package_dimensions_mobile ?? 0) == 1)>
                                                     <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                                                    <span>Require courier package dimensions</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <div class="checkbox-fade fade-in-primary">
-                                                <label>
-                                                    <input type="checkbox" name="enable_xisti_new_home_layout" value="1"
-                                                        @checked(($general_settings->enable_xisti_new_home_layout ?? 1) == 1)>
-                                                    <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                                                    <span>New passenger home layout (map + sheet)</span>
+                                                    <span>{{ __('admin.settings.require_dimensions') }}</span>
                                                 </label>
                                             </div>
                                         </div>
@@ -876,11 +857,11 @@
                             @endphp
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">Métodos de pago en destino (app móvil)</h5>
-                                    <button type="button" class="btn btn-sm btn-primary" id="btn-add-destination-payment">+ Agregar método</button>
+                                    <h5 class="mb-0">{{ __('admin.settings.destination_payments_app') }}</h5>
+                                    <button type="button" class="btn btn-sm btn-primary" id="btn-add-destination-payment">+ {{ __('admin.settings.add_payment_method') }}</button>
                                 </div>
                                 <div class="card-block">
-                                    <p class="text-muted">Esta lista aparece en la app al reservar envíos/encomiendas. Código: minúsculas, sin espacios (ej. <code>nequi</code>).</p>
+                                    <p class="text-muted">{{ __('admin.settings.destination_payments_help') }}</p>
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="destination-payment-methods-table">
                                             <thead>
@@ -1039,7 +1020,7 @@
                                 <div class="card-block">
                                     <div class="form-group row">
                                         <div class="col-sm-10">
-                                            <button type="submit" class="btn btn-primary m-b-0 buttonloader">Save</button>
+                                            <button type="submit" class="btn btn-primary m-b-0 buttonloader">{{ __('admin.common.save') }}</button>
                                         </div>
                                     </div>
                                 </div>

@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Language Constant
-@endsection
+@section('title', __('admin.modules.language_constant'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -16,8 +14,8 @@
                     <div class="page-header-title">
                         <i class="feather icon-edit-1 bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>Language Constant</h5>
-                            <span>Language Constant</span>
+                            <h5>{{ __('admin.pages.language_constant') }}</h5>
+                            <span>{{ __('admin.pages.language_constant') }}</span>
                         </div>
                     </div>
                 </div>
@@ -38,7 +36,7 @@
                                     {{csrf_field() }}
                                     <div class="card">
                                         <div class="card-header">
-                                            <h5>Language Constant</h5>
+                                            <h5>{{ __('admin.pages.language_constant') }}</h5>
                                             {{--<a href="{{ route('get:admin:user_list') }}"--}}
                                             {{--class="btn btn-primary m-b-0 btn-right render_link"> Back</a>--}}
                                         </div>
@@ -47,11 +45,11 @@
                                             <div class="row">
                                                 <div class="form-group col-sm-12">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Language Constant:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.language_constant') }}:<sup
                                                                     class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <input type="hidden" name="id" value="{{ isset($language_single_constant->id)?$language_single_constant->id:0}}">
-                                                            <input type="text" class="form-control" name="constant_name" id="constant_name" value="{{isset($language_single_constant->constant_name)?$language_single_constant->constant_name:""}}" placeholder="Please enter language constant" required autocomplete="off">
+                                                            <input type="text" class="form-control" name="constant_name" id="constant_name" value="{{isset($language_single_constant->constant_name)?$language_single_constant->constant_name:""}}" placeholder="{{ __('admin.forms.please_enter_language_constant') }}" required autocomplete="off">
                                                             <span class="error">{{ $errors->first('constant_name') }}</span>
                                                         </div>
                                                     </div>
@@ -60,10 +58,10 @@
                                             <div class="row">
                                                 <div class="form-group col-sm-12">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Language value:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.language_value') }}:<sup
                                                                 class="error">*</sup></label>
                                                         <div class="col-sm-8">
-                                                            <input type="text" class="form-control" name="value" id="value" value="{{isset($language_single_constant->value)?$language_single_constant->value:""}}" placeholder="Please enter language constant value" required autocomplete="off">
+                                                            <input type="text" class="form-control" name="value" id="value" value="{{isset($language_single_constant->value)?$language_single_constant->value:""}}" placeholder="{{ __('admin.forms.please_enter_language_constant_value') }}" required autocomplete="off">
                                                             <span class="error">{{ $errors->first('value') }}</span>
                                                         </div>
                                                     </div>
@@ -83,10 +81,10 @@
                                                     <div class="row">
                                                         <div class="form-group col-sm-12">
                                                             <div class="form-group row">
-                                                                <label class="col-sm-4 col-form-label">Language Value (in {{$language_name}}):<sup
+                                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.language_value_in', ['lang' => $language_name]) }}:<sup
                                                                         class="error">*</sup></label>
                                                                 <div class="col-sm-8">
-                                                                    <input type="text" class="form-control" name="{{$col_name}}" id="{{$col_name}}" value="{{ isset($language_single_constant->$col_name)?$language_single_constant->$col_name:"" }}"  placeholder="Please enter language code (in {{$language_name}})" value="" autocomplete="off" required>
+                                                                    <input type="text" class="form-control" name="{{$col_name}}" id="{{$col_name}}" value="{{ isset($language_single_constant->$col_name)?$language_single_constant->$col_name:"" }}"  placeholder="{{ __('admin.forms.please_enter_language_code_in', ['lang' => $language_name]) }}" value="" autocomplete="off" required>
                                                                     <span class="error">{{ $errors->first($col_name) }}</span>
                                                                 </div>
                                                             </div>
@@ -100,7 +98,7 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <center>
-                                                <button type="submit" class="btn btn-primary m-b-0">Add</button>
+                                                <button type="submit" class="btn btn-primary m-b-0">{{ __('admin.common.add') }}</button>
                                             </center>
                                         </div>
                                     </div>
@@ -109,7 +107,7 @@
                             <div class="form-group col-sm-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5>Language Constant</h5>
+                                        <h5>{{ __('admin.pages.language_constant') }}</h5>
                                     </div>
                                     <div class="card-block">
 
@@ -118,10 +116,10 @@
                                                    style="width:100%">
                                                 <thead>
                                                 <tr>
-                                                    <th>No</th>
-                                                    <th>Language Constant</th>
-                                                    <th>Language Value</th>
-                                                    <th>Action</th>
+                                                    <th>{{ __('admin.common.no') }}</th>
+                                                    <th>{{ __('admin.pages.language_constant') }}</th>
+                                                    <th>{{ __('admin.columns.language_value') }}</th>
+                                                    <th>{{ __('admin.columns.action') }}</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>

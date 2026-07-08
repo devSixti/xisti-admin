@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Drivers Review List
-@endsection
+@section('title', __('admin.pages.drivers_review_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -77,12 +75,12 @@
                     <div class="page-header-title">
                         <i class="feather icon-list bg-c-green"></i>
                         <div class="d-inline">
-                            <h5>@if(!isset($driver_details)) Drivers @endif Review List
+                            <h5>@if(!isset($driver_details)) {{ __('admin.pages.drivers') }} @endif {{ __('admin.pages.drivers_review_list') }}
                                 @if(isset($driver_details) && $driver_details != Null)
                                     of {{ ucwords(strtolower($driver_details->driver_name)) }}
                                 @endif
                                 </h5>
-                            <span>All Review List @if(isset($service_category) && $service_category->name != Null) of {{ ucwords(strtolower($service_category->name)) }} @endif
+                            <span>{{ __('admin.pages.all_review_list_of') }} @if(isset($service_category) && $service_category->name != Null) of {{ ucwords(strtolower($service_category->name)) }} @endif
                                 Drivers </span>
                         </div>
                     </div>
@@ -98,13 +96,13 @@
                     <div class="page-body">
                         <div class="card">
                             <div class="card-header">
-                                <h5>@if(!isset($driver_details)) Drivers @endif Review List @if(isset($service_category) && $service_category->name != Null) of {{ ucwords(strtolower($service_category->name)) }} @endif
+                                <h5>@if(!isset($driver_details)) {{ __('admin.pages.drivers') }} @endif {{ __('admin.pages.drivers_review_list') }} @if(isset($service_category) && $service_category->name != Null) of {{ ucwords(strtolower($service_category->name)) }} @endif
                                     @if(isset($driver_details) && $driver_details != Null)
                                         - {{ ucwords(strtolower($driver_details->driver_name)) }}
                                     @endif
                                 </h5>
                                 {{--<a --}}{{--href="{{ route('get:transport:transport_provider_list') }}"--}}
-                                        {{--class="btn btn-success m-b-0 btn-right render_link">Back</a>--}}
+                                        {{--class="btn btn-success m-b-0 btn-right render_link">{{ __('admin.common.back') }}</a>--}}
                             </div>
                             <div class="card-block">
                                 <div class="dt-responsive table-responsive">
@@ -112,17 +110,17 @@
                                            style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th>No</th>
+                                            <th>{{ __('admin.common.no') }}</th>
                                             <th>Ride No.</th>
-                                            <th>Customer Name</th>
-                                            <th>Driver Name</th>
+                                            <th>{{ __('admin.columns.customer_name') }}</th>
+                                            <th>{{ __('admin.columns.driver_name') }}</th>
                                             @if( (isset($is_driver_review)) && $is_driver_review == 1)
-                                                <th>Service Name</th>
+                                                <th>{{ __('admin.columns.service_name') }}</th>
                                             @endif
                                             <th>Date & Time</th>
-                                            <th>Rating</th>
-                                            <th>Comments</th>
-                                            <th>Actions</th>
+                                            <th>{{ __('admin.columns.rating') }}</th>
+                                            <th>{{ __('admin.columns.comments') }}</th>
+                                            <th>{{ __('admin.common.actions') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -200,7 +198,7 @@
             dom: '<"top"lBf>rt<"bottom"pi><"clear">',
             buttons: [{
                 extend: 'excel',
-                text: 'Download Excel'
+                text: window.adminExcelButtonText
             }],
             columnDefs: [
                 {

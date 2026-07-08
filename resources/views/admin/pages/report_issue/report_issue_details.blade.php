@@ -71,15 +71,15 @@
                                 <div class="main">
                                     <div class="row">
                                          <div class="col-sm-12">
-                                             <label class="col-sm-6 col-form-label font-weight-bold">Title:</label>
+                                             <label class="col-sm-6 col-form-label font-weight-bold">{{ __('admin.columns.title') }}:</label>
                                              <p class="col-sm-6">{{$report_issue->title ?? ''}}</p>
                                          </div>
                                         <div class="col-sm-12">
-                                            <label class="col-sm-6 col-form-label font-weight-bold">Description:</label>
+                                            <label class="col-sm-6 col-form-label font-weight-bold">{{ __('admin.columns.description') }}:</label>
                                             <p class="col-sm-12 col-form-label">{{$report_issue->description ?? ''}}</p>
                                         </div>
                                         <div class="col-sm-12">
-                                            <label class="col-sm-12 col-form-label font-weight-bold">Status:</label>
+                                            <label class="col-sm-12 col-form-label font-weight-bold">{{ __('admin.common.status') }}:</label>
                                             @if($report_issue)
                                                 <p class="col-sm-2 @if(isset($report_issue) && $report_issue->status == 0) Unresolved @elseif(isset($report_issue) && $report_issue->status == 1) Resolved @endif">@if(isset($report_issue) && $report_issue->status == 0) Unresolved @elseif(isset($report_issue) && $report_issue->status == 1) Resolved @endif</p>
                                             @endif

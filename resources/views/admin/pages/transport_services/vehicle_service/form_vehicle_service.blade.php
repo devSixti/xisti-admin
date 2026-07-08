@@ -1,6 +1,6 @@
 @extends('admin.layout.super_admin')
 @section('title')
-    @if(!isset($transport_vehicle_service))Add @else Edit @endif Vehicle Service
+    @if(!isset($transport_vehicle_service)){{ \App\Helpers\AdminUi::formEntityTitle(true, 'vehicle_service') }}@else{{ \App\Helpers\AdminUi::formEntityTitle(false, 'vehicle_service') }}@endif
 @endsection
 @section('page-css')
     <link rel="stylesheet" href="{{ asset('assets/css/plugin/mdtimepicker.min.css')}}" type="text/css">
@@ -32,8 +32,8 @@
                     <div class="page-header-title">
                         <i class="feather icon-edit-1 bg-c-green"></i>
                         <div class="d-inline">
-                            <h5>Vehicle Service</h5>
-                            <span>@if(!isset($transport_vehicle_service))Add @else Edit @endif Vehicle Service
+                            <h5>{{ __('admin.pages.vehicle_service') }}</h5>
+                            <span>@if(!isset($transport_vehicle_service)){{ \App\Helpers\AdminUi::formEntityTitle(true, 'vehicle_service') }}@else{{ \App\Helpers\AdminUi::formEntityTitle(false, 'vehicle_service') }}@endif
                             </span>
                         </div>
                     </div>
@@ -55,39 +55,38 @@
                                 <div class="form-group col-sm-12">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h5>@if(!isset($transport_vehicle_service))Add @else Edit @endif Vehicle
-                                                Service</h5>
+                                            <h5>@if(!isset($transport_vehicle_service)){{ \App\Helpers\AdminUi::formEntityTitle(true, 'vehicle_service') }}@else{{ \App\Helpers\AdminUi::formEntityTitle(false, 'vehicle_service') }}@endif</h5>
                                         </div>
                                         <div class="card-block">
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Vehicle Service Name:<sup
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.vehicle_service_name') }}:<sup
                                                         class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" name="name" required
-                                                           id="name" placeholder="Unique Vehicle Service Name"
+                                                           id="name" placeholder="{{ __('admin.forms.unique_vehicle_service_name') }}"
                                                            value="{{ (isset($transport_vehicle_service)) ? $transport_vehicle_service->name : old('name') }}">
                                                     <span class="error">{{ $errors->first('name') }}</span>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Service category:</label>
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.service_category_lower') }}:</label>
                                                 <div class="col-sm-8">
                                                     <select class="form-control" name="service_mode" id="service_mode">
-                                                        <option value="transport" {{ (isset($transport_vehicle_service) && ($transport_vehicle_service->service_mode ?? 'transport') == 'transport') ? 'selected' : '' }}>Viajes / Transport</option>
-                                                        <option value="delivery" {{ (isset($transport_vehicle_service) && ($transport_vehicle_service->service_mode ?? '') == 'delivery') ? 'selected' : '' }}>Delivery / Envío</option>
-                                                        <option value="expreso" {{ (isset($transport_vehicle_service) && ($transport_vehicle_service->service_mode ?? '') == 'expreso') ? 'selected' : '' }}>Expreso (larga distancia)</option>
-                                                        <option value="encomiendas" {{ (isset($transport_vehicle_service) && ($transport_vehicle_service->service_mode ?? '') == 'encomiendas') ? 'selected' : '' }}>Encomiendas (compras)</option>
+                                                        <option value="transport" {{ (isset($transport_vehicle_service) && ($transport_vehicle_service->service_mode ?? 'transport') == 'transport') ? 'selected' : '' }}>{{ __('admin.vehicle_service.mode_transport') }}</option>
+                                                        <option value="delivery" {{ (isset($transport_vehicle_service) && ($transport_vehicle_service->service_mode ?? '') == 'delivery') ? 'selected' : '' }}>{{ __('admin.vehicle_service.mode_delivery') }}</option>
+                                                        <option value="viajes_compartidos" {{ (isset($transport_vehicle_service) && in_array($transport_vehicle_service->service_mode ?? '', ['expreso','viajes_compartidos'], true)) ? 'selected' : '' }}>{{ __('admin.vehicle_service.mode_shared') }}</option>
+                                                        <option value="encomiendas" {{ (isset($transport_vehicle_service) && ($transport_vehicle_service->service_mode ?? '') == 'encomiendas') ? 'selected' : '' }}>{{ __('admin.vehicle_service.mode_encomiendas') }}</option>
+                                                        <option value="acarreos" {{ (isset($transport_vehicle_service) && ($transport_vehicle_service->service_mode ?? '') == 'acarreos') ? 'selected' : '' }}>{{ __('admin.vehicle_service.mode_acarreos') }}</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">App display order (left → right):</label>
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.app_display_order') }}:</label>
                                                 <div class="col-sm-8">
                                                     <input type="number" min="0" class="form-control" name="display_order"
                                                            value="{{ (isset($transport_vehicle_service)) ? ($transport_vehicle_service->display_order ?? 0) : old('display_order', 0) }}">
                                                     <small class="form-text text-muted">
-                                                        Transport: Car=1, Bike=2, Motoratón=3. Delivery tab: 1.
-                                                        Applies to mobile app 1.0.2+.
+                                                        {{ __('admin.forms.display_order_hint') }}
                                                     </small>
                                                 </div>
                                             </div>
@@ -100,10 +99,10 @@
                                                         $col_name = $language_code."_name";
                                                     @endphp
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Vehicle Service Name (in {{ $language_name }}):<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.vehicle_service_name_in', ['lang' => $language_name]) }}:<sup
                                                                 class="error">*</sup></label>
                                                         <div class="col-sm-8">
-                                                            <input type="text" class="form-control" name="{{$col_name}}" required id="{{$col_name}}" placeholder="Unique Category Name in {{$language_name}}" value="{{ (isset($transport_vehicle_service)) ? $transport_vehicle_service->$col_name : old('ar_name') }}">
+                                                            <input type="text" class="form-control" name="{{$col_name}}" required id="{{$col_name}}" placeholder="{{ __('admin.forms.unique_category_name_in', ['lang' => $language_name]) }}" value="{{ (isset($transport_vehicle_service)) ? $transport_vehicle_service->$col_name : old('ar_name') }}">
                                                             <span class="error">{{ $errors->first($col_name) }}</span>
                                                         </div>
                                                     </div>
@@ -111,66 +110,66 @@
                                             @endif
 
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Cost For Km:<sup
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.cost_for_km') }}:<sup
                                                         class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <input type="number" class="form-control" name="cost_for_km"
                                                            required
-                                                           id="cost_for_km" placeholder="Cost For Km" min="0"
+                                                           id="cost_for_km" placeholder="{{ __('admin.forms.cost_for_km') }}" min="0"
                                                            value="{{ (isset($transport_vehicle_service)) ? $transport_vehicle_service->cost_for_km : old('cost_for_km') }}">
                                                     <span class="error">{{ $errors->first('cost_for_km') }}</span>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Time Fare(per min):<sup
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.time_fare_per_min') }}:<sup
                                                         class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <input type="number" class="form-control" name="time_fare"
                                                            required
-                                                           id="time_fare" placeholder="Time Fare Per Min"
+                                                           id="time_fare" placeholder="{{ __('admin.forms.time_fare_per_min_ph') }}"
                                                            step="0.01"
                                                            value="{{ (isset($transport_vehicle_service)) ? $transport_vehicle_service->time_fare : old('time_fare') }}">
                                                     <span class="error">{{ $errors->first('time_fare') }}</span>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Minimum Offer Fare Amount in %:<sup
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.minimum_offer_fare_pct') }}:<sup
                                                         class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <input type="number" class="form-control" name="max_bargain_percent"
                                                            required
-                                                           id="max_bargain_percent" placeholder="Maximum bargaining amount (in %)" min="0"
+                                                           id="max_bargain_percent" placeholder="{{ __('admin.forms.max_bargain_percent') }}" min="0"
                                                            value="{{ (isset($transport_vehicle_service)) ? $transport_vehicle_service->max_bargain_percent : old('max_bargain_percent') }}">
                                                     <span class="error">{{ $errors->first('max_bargain_percent') }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Max Offer Fare Amount in %:<sup
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.max_offer_fare_pct') }}:<sup
                                                         class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <input type="number" class="form-control" name="max_offer_percent"
                                                            required
-                                                           id="max_offer_percent" placeholder="Maximum bargaining amount (in %)" min="0"
+                                                           id="max_offer_percent" placeholder="{{ __('admin.forms.max_bargain_percent') }}" min="0"
                                                            value="{{ (isset($transport_vehicle_service)) ? $transport_vehicle_service->max_offer_percent : old('max_offer_percent') }}">
                                                     <span class="error">{{ $errors->first('max_offer_percent') }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Minimum Fare:<sup
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.columns.minimum_fare') }}:<sup
                                                         class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <input type="number" class="form-control" name="min_fare"
                                                            required
-                                                           id="min_fare" placeholder="Minimum Fare" min="0"
+                                                           id="min_fare" placeholder="{{ __('admin.columns.minimum_fare') }}" min="0"
                                                            value="{{ (isset($transport_vehicle_service)) ? $transport_vehicle_service->min_fare : old('min_fare') }}">
                                                     <span class="error">{{ $errors->first('min_fare') }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Vehicle Service Image:<sup
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.vehicle_service_image') }}:<sup
                                                         class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     @if(isset($transport_vehicle_service) && $transport_vehicle_service->icon_name != Null)
@@ -182,13 +181,13 @@
                                                     <input type="file" class="form-control" name="icon"
                                                            id="icon"
                                                            @if(!isset($transport_vehicle_service)) required @endif>
-                                                    <span class="note">[Note: Upload only png icon dimension between 50*50 to 100*100 & max size 100kb.]</span>
+                                                    <span class="note">{{ __('admin.forms.icon_upload_note') }}</span>
                                                     <span class="error">{{ $errors->first('icon') }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Vehicle Service icon:<sup class="error">*</sup></label>
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.vehicle_service_icon') }}:<sup class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     @if(isset($transport_vehicle_service) && $transport_vehicle_service->vehicle_service_icon != Null)
                                                         <div class="col-sm-4">
@@ -199,7 +198,7 @@
                                                     <input type="file" class="form-control" name="vehicle_service_icon"
                                                            id="vehicle_service_icon"
                                                            @if(!isset($transport_vehicle_service)) required @endif>
-                                                    <span class="note">[Note: Upload only png icon dimension between 50*50 to 100*100 & max size 100kb.]</span>
+                                                    <span class="note">{{ __('admin.forms.icon_upload_note') }}</span>
                                                     <span class="error">{{ $errors->first('vehicle_service_icon') }}</span>
                                                 </div>
                                             </div>
@@ -216,24 +215,24 @@
 {{--                                                </div>--}}
 {{--                                            </div>--}}
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Service Description:<sup
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.service_description') }}:<sup
                                                         class="error">*</sup></label>
                                                 <div class="col-sm-8">
-                                                    <textarea rows=7 class="form-control" name="vehicle_service_description" id="vehicle_service_description" placeholder="Service Description" required>{{ (isset($transport_vehicle_service)) ? $transport_vehicle_service->vehicle_service_description : old('vehicle_service_description') }}</textarea>
+                                                    <textarea rows=7 class="form-control" name="vehicle_service_description" id="vehicle_service_description" placeholder="{{ __('admin.forms.service_description') }}" required>{{ (isset($transport_vehicle_service)) ? $transport_vehicle_service->vehicle_service_description : old('vehicle_service_description') }}</textarea>
                                                     <span class="error">{{ $errors->first('vehicle_service_description') }}</span>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Status:</label>
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.common.status') }}:</label>
                                                 <div class="col-sm-8">
                                                     <select name="status" id="status" class="form-control"
                                                             required>
                                                         @if(isset($transport_vehicle_service) && $transport_vehicle_service->status==0)
-                                                            <option value="1">Activate</option>
-                                                            <option value="0" selected>Deactivate</option>
+                                                            <option value="1">{{ __('admin.forms.activate') }}</option>
+                                                            <option value="0" selected>{{ __('admin.forms.deactivate') }}</option>
                                                         @else
-                                                            <option value="1" selected>Activate</option>
-                                                            <option value="0">Deactivate</option>
+                                                            <option value="1" selected>{{ __('admin.forms.activate') }}</option>
+                                                            <option value="0">{{ __('admin.forms.deactivate') }}</option>
                                                         @endif
                                                     </select>
                                                     <span class="error">{{ $errors->first('status') }}</span>
@@ -245,7 +244,7 @@
                                         {{--<label class="col-sm-4 col-form-label"></label>--}}
                                         <div class="col-sm-12">
                                             <center>
-                                                <button type="submit" class="btn btn-success m-b-0">Save</button>
+                                                <button type="submit" class="btn btn-success m-b-0">{{ __('admin.common.save') }}</button>
                                             </center>
                                         </div>
                                     </div>

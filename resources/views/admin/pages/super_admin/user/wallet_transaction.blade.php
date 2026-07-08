@@ -17,7 +17,7 @@
                                 <i class="feather icon-list bg-c-blue"></i>
                                 <div class="d-inline">
                                     <h5> <b>{{isset($user_details->first_name)?$user_details->first_name:""}}</b> :-  Wallet Transaction</h5>
-                                    <span>All Wallet Transaction</span>
+                                    <span>{{ \App\Helpers\AdminUi::pageSubtitle('wallet_transaction') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -41,11 +41,11 @@
                                            style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th>No</th>
+                                            <th>{{ __('admin.common.no') }}</th>
                                             <th>Transaction Detail</th>
-                                            <th>Amount</th>
+                                            <th>{{ __('admin.columns.amount') }}</th>
                                             <th>Remaining Balance</th>
-                                            <th>Date Time</th>
+                                            <th>{{ __('admin.columns.date_time') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>

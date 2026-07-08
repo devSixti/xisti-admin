@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Push Notification
-@endsection
+@section('title', __('admin.pages.push_notification'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -16,8 +14,8 @@
                     <div class="page-header-title">
                         <i class="feather icon-edit-1 bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>Push Notification</h5>
-                            <span>Push Notification</span>
+                            <h5>{{ __('admin.pages.push_notification') }}</h5>
+                            <span>{{ __('admin.pages.push_notification') }}</span>
                         </div>
                     </div>
                 </div>
@@ -131,7 +129,7 @@
                                             <div class="row">
                                                 <div class="form-group col-sm-12">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Notification Type:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.notification_type') }}:<sup
                                                                 class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <select type="text" class="form-control"
@@ -139,31 +137,31 @@
                                                                     required id="notification_type">
                                                                 <option value="" disabled selected>Select Notification Type
                                                                 </option>
-                                                                <option value="1">All Users, Drivers</option>
-                                                                <option value="2">All Users</option>
-                                                                <option value="3">All Drivers</option>
+                                                                <option value="1">{{ __('admin.pages.all_users_drivers') }}</option>
+                                                                <option value="2">{{ __('admin.pages.all_users') }}</option>
+                                                                <option value="3">{{ __('admin.pages.all_drivers') }}</option>
                                                             </select>
                                                             <span
                                                                 class="error">{{ $errors->first('notification_type') }}</span>
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Title:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.title_label') }}:<sup
                                                                 class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <textarea class="form-control" name="title"
                                                                       id="title" required
-                                                                      placeholder="Title">{{ (isset($store_details)) ? $store_details->title : old('title') }}</textarea>
+                                                                      placeholder="{{ __('admin.forms.title_label') }}">{{ (isset($store_details)) ? $store_details->title : old('title') }}</textarea>
                                                             <span class="error">{{ $errors->first('title') }}</span>
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Message:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.message_label') }}:<sup
                                                                 class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <textarea class="form-control" name="message"
                                                                       id="message" required
-                                                                      placeholder="Message">{{ (isset($store_details)) ? $store_details->message : old('message') }}</textarea>
+                                                                      placeholder="{{ __('admin.forms.message_label') }}">{{ (isset($store_details)) ? $store_details->message : old('message') }}</textarea>
                                                             <span class="error">{{ $errors->first('message') }}</span>
                                                         </div>
                                                     </div>
@@ -192,12 +190,12 @@
                                                    style="width:100%">
                                                 <thead>
                                                 <tr>
-                                                    <th>No</th>
-                                                    <th>Notification Type</th>
-                                                    <th>Title</th>
-                                                    <th>Message</th>
+                                                    <th>{{ __('admin.common.no') }}</th>
+                                                    <th>{{ __('admin.forms.notification_type') }}</th>
+                                                    <th>{{ __('admin.columns.title') }}</th>
+                                                    <th>{{ __('admin.forms.message_label') }}</th>
                                                     <th>Send Time</th>
-                                                    <th data-orderable="false">Action</th>
+                                                    <th data-orderable="false">{{ __('admin.columns.action') }}</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>

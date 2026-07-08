@@ -147,9 +147,9 @@
                                     <div class="row">
                                         <div class="form-group col-sm-12">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Restricted Area Name:<sup class="error">*</sup></label>
+                                                <label class="col-sm-3 col-form-label">{{ __('admin.forms.restricted_area_name') }}:<sup class="error">*</sup></label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="area_name" required id="area_name" placeholder="Restricted Area Name"
+                                                    <input type="text" class="form-control" name="area_name" required id="area_name" placeholder="{{ __('admin.forms.restricted_area_name') }}"
                                                            value="{{ (isset($area_details)) ? $area_details->name : old('name') }}">
                                                     <span class="error">{{ $errors->first('name') }}</span>
                                                 </div>
@@ -169,14 +169,14 @@
                                             {{--    <label class="col-sm-3 col-form-label">Restrict Type:<sup class="error">*</sup></label>--}}
                                             {{--    <div class="col-sm-9">--}}
                                             {{--        <select name="restrict_type" id="restrict_type" class="form-control" required>--}}
-                                            {{--            <option value="1" {{ (isset($area_details)) && $area_details->restrict_type == 1 ? "selected" : '' }} >Activate</option>--}}
-                                            {{--            <option value="0" {{ (isset($area_details)) && $area_details->restrict_type == 0 ? "selected" : '' }} >Deactivate</option>--}}
+                                            {{--            <option value="1" {{ (isset($area_details)) && $area_details->restrict_type == 1 ? "selected" : '' }} >{{ __('admin.forms.activate') }}</option>--}}
+                                            {{--            <option value="0" {{ (isset($area_details)) && $area_details->restrict_type == 0 ? "selected" : '' }} >{{ __('admin.forms.deactivate') }}</option>--}}
                                             {{--        </select>--}}
                                             {{--        <span class="error">{{ $errors->first('restrict_type') }}</span>--}}
                                             {{--    </div>--}}
                                             {{--</div>--}}
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Status:<sup class="error">*</sup></label>
+                                                <label class="col-sm-3 col-form-label">{{ __('admin.forms.status_colon') }}:<sup class="error">*</sup></label>
                                                 <div class="col-sm-9">
                                                     <select name="status" id="status" class="form-control" required>
                                                         <option value="1" {{ (isset($area_details)) && $area_details->status == 1 ? "selected" : '' }} >On</option>
@@ -193,7 +193,7 @@
                                                 <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <input id="searchInput" name="store_address" class="input-controls form-control my-2"
-                                                               value="{{ (isset($store_details)) ? $store_details->store_address : old('store_address')}}" type="text" placeholder="Enter a location">
+                                                               value="{{ (isset($store_details)) ? $store_details->store_address : old('store_address')}}" type="text" placeholder="{{ __('admin.forms.enter_location') }}">
                                                         <!-- Suggestions dropdown -->
                                                         <div id="suggestions"></div>
                                                         <div class="map" id="map" style="width: 100%; height: 500px;"></div>
@@ -205,8 +205,8 @@
                                     <div class="row">
                                         <div class="form-group col-sm-12">
                                             <center>
-                                                <button type="submit" class="btn btn-primary m-b-0 buttonloader">Save</button>
-                                                <button type="button" class="btn btn-danger" id="reset">Reset</button>
+                                                <button type="submit" class="btn btn-primary m-b-0 buttonloader">{{ __('admin.common.save') }}</button>
+                                                <button type="button" class="btn btn-danger" id="reset">{{ __('admin.forms.reset') }}</button>
                                             </center>
                                         </div>
                                     </div>

@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Report Issues
-@endsection
+@section('title', __('admin.pages.report_issues'))
 @section('page-css')
     <!-- Data Table Css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
@@ -125,7 +123,7 @@
             list-style-type: none;
             margin: 0;
             padding: 0;
-            overflow: hidden;
+            /* /* overflow: hidden; */ /* admin-zimo: allow page scroll */ */ /* admin-zimo: allow page scroll */
         }
 
         ul.set-date li {
@@ -217,7 +215,7 @@
                                 @endif
                             </h5>
 
-                            <span>All Report Issues</span>
+                            <span>{{ \App\Helpers\AdminUi::pageSubtitle('report_issues') }}</span>
                         </div>
                     </div>
                 </div>
@@ -254,11 +252,11 @@
                                             <ul class="set-date">
                                                 <li><a id="today">Today</a></li>
                                                 <li><a id="yesterday">Yesterday</a></li>
-                                                <li><a id="this_week">This Week</a></li>
-                                                <li><a id="this_month">This Month</a></li>
-                                                <li><a id="last_month">Last Month</a></li>
-                                                <li><a id="this_year">This Year</a></li>
-                                                <li><a id="last_year">Last Year</a></li>
+                                                <li><a id="this_week">{{ __('admin.forms.this_week') }}</a></li>
+                                                <li><a id="this_month">{{ __('admin.forms.this_month') }}</a></li>
+                                                <li><a id="last_month">{{ __('admin.forms.last_month') }}</a></li>
+                                                <li><a id="this_year">{{ __('admin.forms.this_year') }}</a></li>
+                                                <li><a id="last_year">{{ __('admin.forms.last_year') }}</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -269,7 +267,7 @@
                                             <div class="input-group date form_datetime">
                                                 <input name="from_date" class="form-control category"
                                                        value="{{isset($from_date)? ($from_date != Null)?  $from_date : old('from_date') : old('from_date') }}"
-                                                       placeholder="From Date" id="from_date" type="text" readonly>
+                                                       placeholder="{{ __('admin.forms.from_date') }}" id="from_date" type="text" readonly>
                                                 <span class="input-group-append" id="basic-addon3">
                                                         <label class="bg-c-blue input-group-text" style="padding: 10px">
                                                             <span class="fa fa-remove remove_from_date "></span>
@@ -289,7 +287,7 @@
                                             <div class="input-group date to_datetime">
                                                 <input name="to_date" class="form-control category"
                                                        value="{{isset($to_date)? ($to_date != Null)?  $to_date : old('to_date') : old('to_date') }}"
-                                                       placeholder="To Date"
+                                                       placeholder="{{ __('admin.forms.to_date') }}"
                                                        id="to_date"
                                                        type="text" readonly>
                                                 <span class="input-group-append" id="basic-addon3">
@@ -310,7 +308,7 @@
                                         <div class="form-group">
                                             <select id="created_by" name="created_by"  class="js-example-placeholder-single1 js-states form-control">
                                                 <option disabled selected value=""></option>
-                                                <option disabled>Select Created By</option>
+                                                <option disabled>{{ __('admin.forms.select_created_by') }}</option>
                                                 @if(isset($user_list))
                                                     @foreach($user_list as $key => $driver_detail_filter)
                                                         {{ $selected = isset($user)? ($user != Null)? ($user == $driver_detail_filter->id)?  "selected" : "" : "" : "" }}
@@ -338,7 +336,7 @@
 
                                 <div class="form-group">
                                     <div class=" text-center">
-                                        <button class="btn btn-primary" id="dateFilters" style="margin-bottom: 10px;">Search</button>
+                                        <button class="btn btn-primary" id="dateFilters" style="margin-bottom: 10px;">{{ __('admin.common.search') }}</button>
                                         <button class="btn btn-danger" id="resetFilters" style="margin-bottom: 10px;">Clear</button>
                                     </div>
                                 </div>
@@ -349,16 +347,16 @@
                                            style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Ticket ID</th>
-                                            <th>Description</th>
-                                            <th>Created By</th>
-                                            <th>Issue Date</th>
-                                            <th>Order No</th>
-                                            <th>Resolved On</th>
-                                            <th>View</th>
-                                            <th>Chat</th>
-                                            <th>Status</th>
+                                            <th>{{ __('admin.common.no') }}</th>
+                                            <th>{{ __('admin.columns.ticket_id') }}</th>
+                                            <th>{{ __('admin.columns.description') }}</th>
+                                            <th>{{ __('admin.columns.created_by') }}</th>
+                                            <th>{{ __('admin.columns.issue_date') }}</th>
+                                            <th>{{ __('admin.columns.order_no') }}</th>
+                                            <th>{{ __('admin.columns.resolved_on') }}</th>
+                                            <th>{{ __('admin.common.view') }}</th>
+                                            <th>{{ __('admin.columns.chat') }}</th>
+                                            <th>{{ __('admin.common.status') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -381,7 +379,6 @@
     <script src="{{ asset('assets/js/responsive/dataTables.responsive.min.js')}}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/responsive/responsive-custom.js')}}" type="text/javascript"></script>
     <script type="text/javascript" src="{{asset('assets/js/bootstrap-datetimepicker.js')}}" charset="UTF-8"></script>
-    <script src="{{ asset('assets/js/current-date-filter.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
     <!-- Confirm Delete Sweetalert -->

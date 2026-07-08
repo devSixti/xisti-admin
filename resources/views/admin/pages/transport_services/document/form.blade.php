@@ -1,7 +1,5 @@
 @extends('admin.layout.driver_service')
-@section('title')
-    Driver Documents
-@endsection
+@section('title', __('admin.pages.driver_documents'))
 @section('page-css')
     <link rel="stylesheet" href="{{ asset('/assets/css/font/font-awesome-n.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/widget/widget.css') }}">
@@ -70,7 +68,7 @@
                             <div class="page-header-title ">
                                 <i class="feather icon-list bg-c-blue"></i>
                                 <div class="d-inline">
-                                    <h5>Driver's Documents</h5>
+                                    <h5>{{ __('admin.pages.driver_documents') }}</h5>
                                     <span>Driver's Documents List</span>
                                 </div>
                             </div>
@@ -78,7 +76,7 @@
                         <div class="col-lg-4">
                             {{--<a--}}
                                     {{--href="{{ route('get:admin:store_list',[$slug,"approved"]) }}"--}}
-                                    {{--class="btn btn-primary m-b-0 btn-right render_link">Back</a>--}}
+                                    {{--class="btn btn-primary m-b-0 btn-right render_link">{{ __('admin.common.back') }}</a>--}}
                         </div>
                     </div>
                 </div>
@@ -181,7 +179,7 @@
                             </center>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-default doc-save">Save</button>
+                            <button type="submit" class="btn btn-default doc-save">{{ __('admin.common.save') }}</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close
                             </button>
                         </div>

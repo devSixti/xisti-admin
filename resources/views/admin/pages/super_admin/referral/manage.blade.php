@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Referral List
-@endsection
+@section('title', __('admin.pages.referral_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -12,7 +10,7 @@
         .md-perspective,
         .md-perspective body {
             height: 100%;
-            overflow: hidden;
+            /* /* overflow: hidden; */ /* admin-zimo: allow page scroll */ */ /* admin-zimo: allow page scroll */
         }
         .md-perspective body {
             background: #222;
@@ -217,14 +215,14 @@
                             <div class="page-header-title ">
                                 <i class="feather icon-list bg-c-blue"></i>
                                 <div class="d-inline">
-                                    <h5> Referral List</h5>
-                                    <span>All Referral List</span>
+                                    <h5>{{ __('admin.pages.referral_list') }}</h5>
+                                    <span>{{ \App\Helpers\AdminUi::pageSubtitle('referral_list') }}</span>
                                 </div>
                             </div>
                         </div>
                         {{--<div class="col-lg-4">--}}
                         {{--<a href="{{ route('get:admin:user_list') }}"--}}
-                        {{--class="btn btn-primary m-b-0 btn-right render_link">Back</a>--}}
+                        {{--class="btn btn-primary m-b-0 btn-right render_link">{{ __('admin.common.back') }}</a>--}}
                         {{--</div>--}}
                     </div>
                 </div>
@@ -243,15 +241,15 @@
                                            style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th id="no">No</th>
-                                            <th>User Name</th>
-                                            <th>User Discount Type</th>
-                                            <th>User Discount</th>
-                                            <th>User Status</th>
-                                            <th>Refer User Name</th>
-                                            <th>Refer Discount Type</th>
-                                            <th>Refer Discount</th>
-                                            <th>Refer Status</th>
+                                            <th id="no">{{ __('admin.common.no') }}</th>
+                                            <th>{{ __('admin.columns.user_name') }}</th>
+                                            <th>{{ __('admin.columns.user_discount_type') }}</th>
+                                            <th>{{ __('admin.columns.user_discount') }}</th>
+                                            <th>{{ __('admin.columns.user_status') }}</th>
+                                            <th>{{ __('admin.columns.refer_user_name') }}</th>
+                                            <th>{{ __('admin.columns.refer_discount_type') }}</th>
+                                            <th>{{ __('admin.columns.refer_discount') }}</th>
+                                            <th>{{ __('admin.columns.refer_status') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -318,7 +316,7 @@
                             page: 'all',
                         },
                     },
-                    text: 'Download Excel',
+                    text: window.adminExcelButtonText,
                     "action": newexportaction,
                 }],
             });

@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Email Templates List
-@endsection
+@section('title', __('admin.pages.email_templates_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -17,8 +15,8 @@
                             <div class="page-header-title ">
                                 <i class="feather icon-list bg-c-blue"></i>
                                 <div class="d-inline">
-                                    <h5> Email Templates List</h5>
-                                    <span>All Email Templates List</span>
+                                    <h5>{{ __('admin.pages.email_templates_list') }}</h5>
+                                    <span>{{ __('admin.pages.all_email_templates_list') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -34,7 +32,7 @@
                     <div class="page-body">
                         <div class="card">
 {{--                            <div class="card-header">--}}
-{{--                                <h5>Email Templates List</h5>--}}
+{{--                                <h5>{{ __('admin.pages.email_templates_list') }}</h5>--}}
 {{--                                <a href="{{ route('get:admin:add_email_templates') }}"--}}
 {{--                                   class="btn btn-primary m-b-0 btn-right render_link">Add Template</a>--}}
 {{--                            </div>--}}
@@ -44,10 +42,10 @@
                                            style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Title</th>
-                                            <th data-orderable="false">Status</th>
-                                            <th data-orderable="false">Actions</th>
+                                            <th>{{ __('admin.common.no') }}</th>
+                                            <th>{{ __('admin.columns.title') }}</th>
+                                            <th data-orderable="false">{{ __('admin.common.status') }}</th>
+                                            <th data-orderable="false">{{ __('admin.common.actions') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>

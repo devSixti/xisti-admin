@@ -135,11 +135,11 @@
                                     <div class="row">
                                         <div class="form-group col-sm-12">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Title:<sup
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.title_label') }}:<sup
                                                         class="error">*</sup></label>
                                                 <div class="col-sm-12">
                                                     <input type="text" class="form-control" name="title" required
-                                                           id="title" placeholder="Template Title"
+                                                           id="title" placeholder="{{ __('admin.forms.template_title') }}"
                                                            value="{{ (isset($email_templates)) ? $email_templates->title : old('title') }}">
                                                     <span class="error">{{ $errors->first('title') }}</span>
                                                 </div>
@@ -148,11 +148,11 @@
 
                                         <div class="form-group col-sm-12">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label">Content:<sup
+                                                <label class="col-sm-12 col-form-label">{{ __('admin.forms.content_label') }}:<sup
                                                         class="error">*</sup></label>
                                                 <div class="col-sm-12">
                                                     <textarea class="form-control description" name="content" id="description1"
-                                                              placeholder="Content">{{ (isset($email_templates)) ? $email_templates->content : old('content') }}</textarea>
+                                                              placeholder="{{ __('admin.forms.content_label') }}">{{ (isset($email_templates)) ? $email_templates->content : old('content') }}</textarea>
                                                     <span class="error">{{ $errors->first('content') }}</span>
                                                 </div>
                                             </div>
@@ -161,7 +161,7 @@
                                     <div class="row">
                                         <label class="col-sm-12"></label>
                                         <div class="col-sm-12">
-                                            <button type="submit" class="btn btn-primary m-b-0">Save</button>
+                                            <button type="submit" class="btn btn-primary m-b-0">{{ __('admin.common.save') }}</button>
                                         </div>
                                     </div>
                                 </form>

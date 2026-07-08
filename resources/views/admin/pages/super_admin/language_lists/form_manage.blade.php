@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Language Lists
-@endsection
+@section('title', __('admin.pages.language_lists'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -16,8 +14,8 @@
                     <div class="page-header-title">
                         <i class="feather icon-edit-1 bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>Language Lists</h5>
-                            <span>Language Lists</span>
+                            <h5>{{ __('admin.pages.language_lists') }}</h5>
+                            <span>{{ __('admin.pages.language_lists') }}</span>
                         </div>
                     </div>
                 </div>
@@ -38,7 +36,7 @@
                                     {{csrf_field() }}
                                     <div class="card">
                                         <div class="card-header">
-                                            <h5>Language Lists</h5>
+                                            <h5>{{ __('admin.pages.language_lists') }}</h5>
                                             {{--<a href="{{ route('get:admin:user_list') }}"--}}
                                             {{--class="btn btn-primary m-b-0 btn-right render_link"> Back</a>--}}
                                         </div>
@@ -47,10 +45,10 @@
                                             <div class="row">
                                                 <div class="form-group col-sm-12">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Language Name:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.language_name') }}:<sup
                                                                     class="error">*</sup></label>
                                                         <div class="col-sm-8">
-                                                            <input type="text" class="form-control" name="language_name" id="language_name" value="" placeholder="Please enter language name" required autocomplete="off">
+                                                            <input type="text" class="form-control" name="language_name" id="language_name" value="" placeholder="{{ __('admin.forms.please_enter_language_name') }}" required autocomplete="off">
                                                             <span class="error">{{ $errors->first('language_name') }}</span>
                                                         </div>
                                                     </div>
@@ -59,10 +57,10 @@
                                             <div class="row">
                                                 <div class="form-group col-sm-12">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Language Code:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.language_code') }}:<sup
                                                                 class="error">*</sup></label>
                                                         <div class="col-sm-8">
-                                                            <input type="text" class="form-control" name="language_code" id="language_code"  placeholder="Please enter language code" value="" autocomplete="off" required>
+                                                            <input type="text" class="form-control" name="language_code" id="language_code"  placeholder="{{ __('admin.forms.please_enter_language_code') }}" value="" autocomplete="off" required>
                                                             <span class="error">{{ $errors->first('language_code') }}</span>
                                                         </div>
                                                     </div>
@@ -73,7 +71,7 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <center>
-                                                <button type="submit" class="btn btn-primary m-b-0">Add</button>
+                                                <button type="submit" class="btn btn-primary m-b-0">{{ __('admin.common.add') }}</button>
                                             </center>
                                         </div>
                                     </div>
@@ -91,10 +89,10 @@
                                                    style="width:100%">
                                                 <thead>
                                                 <tr>
-                                                    <th>No</th>
+                                                    <th>{{ __('admin.common.no') }}</th>
                                                     <th>Language Title</th>
-                                                    <th>Language Code</th>
-                                                    <th>Action</th>
+                                                    <th>{{ __('admin.forms.language_code') }}</th>
+                                                    <th>{{ __('admin.columns.action') }}</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>

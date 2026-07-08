@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Required Documents List
-@endsection
+@section('title', __('admin.pages.required_documents_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -23,8 +21,8 @@
                             <div class="page-header-title ">
                                 <i class="feather icon-list bg-c-blue"></i>
                                 <div class="d-inline">
-                                    <h5>Required Documents List</h5>
-                                    <span>All Required Documents List
+                                    <h5>{{ __('admin.pages.required_documents_list') }}</h5>
+                                    <span>{{ __('admin.pages.all_required_documents_list') }}
                                     </span>
                                 </div>
                             </div>
@@ -53,10 +51,10 @@
                                            style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th style="width: 30px;">No</th>
-                                            <th>Name</th>
-                                            <th data-orderable="false">Contains Expiry</th>
-                                            <th data-orderable="false" style="width: 50px;">Actions</th>
+                                            <th style="width: 30px;">{{ __('admin.common.no') }}</th>
+                                            <th>{{ __('admin.columns.name') }}</th>
+                                            <th data-orderable="false">{{ __('admin.forms.contains_expiry') }}</th>
+                                            <th data-orderable="false" style="width: 50px;">{{ __('admin.common.actions') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>

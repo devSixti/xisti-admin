@@ -1,6 +1,6 @@
 @extends('admin.layout.super_admin')
 @section('title')
-    Transport Heat Map
+    {{ __('admin.heat_map.transport_heat_map') }}
 @endsection
 @section('page-css')
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
@@ -132,32 +132,43 @@
             padding-left: 10px;
         }
 
-        #floating-panel {
-            background-color: #fff;
-            border: 1px solid #999;
-            left: 25%;
-            padding: 5px;
-            position: absolute;
-            top: 10px;
-            z-index: 5;
+        #map-canvas {
+            min-height: 500px;
         }
 
-        #floating-panel button:hover {
-            cursor: pointer;
+        #mapview {
+            min-height: 500px;
+        }
+
+        @media screen and (max-width: 768px) {
+            #floating-panel {
+                left: 0;
+                right: 0;
+                margin: 0 8px;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+                justify-content: center;
+            }
+
+            #floating-panel button {
+                font-size: 12px;
+                padding: 4px 8px;
+            }
         }
     </style>
 @endsection
 @section('page-content')
 
     <div class="pcoded-content">
-        <div class="page-header card">
+        <div class="page-header card admin-page-header">
             <div class="row align-items-end">
                 <div class="col-lg-8">
                     <div class="page-header-title">
-                        <i class="feather icon-edit-1 bg-c-blue"></i>
+                        <i class="feather icon-map bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>Transport Heat Map Area</h5>
-                            <span>Heat Map Area</span>
+                            <h5>{{ __('admin.heat_map.transport_heat_map_area') }}</h5>
+                            <span>{{ __('admin.heat_map.heat_map_area') }}</span>
                         </div>
                     </div>
                 </div>
@@ -167,21 +178,19 @@
         <div class="pcoded-inner-content">
             <div class="main-body">
                 <div class="page-wrapper">
-                    <!-- Page body start -->
                     <div class="page-body">
-                        <div class="card">
+                        <div class="card admin-map-card">
                             <div class="card-header">
-                                {{--<h5>@if(isset($area_details)) Edit @else Add @endif Restricted Area</h5>--}}
-                                <h5>Heat Map Area</h5>
+                                <h5>{{ __('admin.heat_map.heat_map_area') }}</h5>
                             </div>
                             <div class="card-block">
                                 <div class="row">
                                     <div class="form-group col-sm-12" id="map-canvas">
-                                        <div id="floating-panel">
-                                            <button id="toggle-heatmap">Toggle Heatmap</button>
-                                            <button id="change-gradient">Change gradient</button>
-                                            <button id="change-radius">Change radius</button>
-                                            <button id="change-opacity">Change opacity</button>
+                                        <div id="floating-panel" class="admin-map-toolbar">
+                                            <button type="button" id="toggle-heatmap">{{ __('admin.heat_map.toggle_heatmap') }}</button>
+                                            <button type="button" id="change-gradient">{{ __('admin.heat_map.change_gradient') }}</button>
+                                            <button type="button" id="change-radius">{{ __('admin.heat_map.change_radius') }}</button>
+                                            <button type="button" id="change-opacity">{{ __('admin.heat_map.change_opacity') }}</button>
                                         </div>
                                         <div id="mapview"></div>
                                     </div>

@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Geo Fenced Restricted Area
-@endsection
+@section('title', __('admin.pages.geo_fenced_area'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -19,13 +17,13 @@
                                 <i class="feather icon-list bg-c-blue"></i>
                                 <div class="d-inline">
                                     <h5>Restricted Area List</h5>
-                                    <span>All Restricted Area</span>
+                                    <span>{{ __('admin.pages.all_restricted_area') }}</span>
                                 </div>
                             </div>
                         </div>
                         {{--<div class="col-lg-4">--}}
                         {{--<a href="{{ route('get:admin:user_list') }}"--}}
-                        {{--class="btn btn-primary m-b-0 btn-right render_link">Back</a>--}}
+                        {{--class="btn btn-primary m-b-0 btn-right render_link">{{ __('admin.common.back') }}</a>--}}
                         {{--</div>--}}
                     </div>
                 </div>
@@ -52,10 +50,10 @@
                                            style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th>No</th>
+                                            <th>{{ __('admin.common.no') }}</th>
                                             <th>Area</th>
-                                            <th data-orderable="false">Status</th>
-                                            <th data-orderable="false">Actions</th>
+                                            <th data-orderable="false">{{ __('admin.common.status') }}</th>
+                                            <th data-orderable="false">{{ __('admin.common.actions') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>

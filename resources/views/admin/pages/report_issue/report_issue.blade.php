@@ -61,14 +61,14 @@
                                     <table id="dom-jqry" class="stripe table" style="width: 100%">
                                         <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Title</th>
-                                            <th>Issue Date</th>
-                                            <th>View</th>
-                                            <th>Chat</th>
-                                            <th>Status</th>
+                                            <th>{{ __('admin.common.no') }}</th>
+                                            <th>{{ __('admin.columns.first_name') }}</th>
+                                            <th>{{ __('admin.columns.last_name') }}</th>
+                                            <th>{{ __('admin.columns.title') }}</th>
+                                            <th>{{ __('admin.columns.issue_date') }}</th>
+                                            <th>{{ __('admin.common.view') }}</th>
+                                            <th>{{ __('admin.columns.chat') }}</th>
+                                            <th>{{ __('admin.common.status') }}</th>
                                         </tr>
                                         </thead>
                                     </table>

@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Customer Order List
-@endsection
+@section('title', __('admin.pages.customer_order_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -46,8 +44,8 @@
                             <div class="page-header-title ">
                                 <i class="feather icon-list bg-c-blue"></i>
                                 <div class="d-inline">
-                                    <h5> Customer Order List</h5>
-                                    <span>All Customer Order List</span>
+                                    <h5>{{ __('admin.pages.customer_order_list') }}</h5>
+                                    <span>{{ \App\Helpers\AdminUi::pageSubtitle('customer_order_list') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -71,7 +69,7 @@
                                     <div class="col-md-6">
                                         <table class="customer-details">
                                             <tr>
-                                                <th>Name</th>
+                                                <th>{{ __('admin.columns.name') }}</th>
                                                 <td>{{ isset($user_details)? ucwords(strtolower($user_details->first_name." ".$user_details->last_name)) : "----" }}</td>
                                             </tr>
                                             <tr>
@@ -83,11 +81,11 @@
                                     <div class="col-md-6">
                                         <table class="customer-details">
                                             <tr>
-                                                <th>Email</th>
+                                                <th>{{ __('admin.columns.email') }}</th>
                                                 <td>{{ isset($user_details)? $user_details->email : "----" }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Contact No</th>
+                                                <th>{{ __('admin.forms.contact_no') }}</th>
                                                 <td>{{ isset($user_details)? $user_details->contact_number : "----" }}</td>
                                             </tr>
                                         </table>
@@ -124,11 +122,11 @@
                                                    style="width:100%">
                                                 <thead>
                                                 <tr>
-                                                    <th>No</th>
+                                                    <th>{{ __('admin.common.no') }}</th>
                                                     <th>Order No.</th>
-                                                    <th>Service Name</th>
+                                                    <th>{{ __('admin.columns.service_name') }}</th>
                                                     <th>Total Amount</th>
-                                                    <th>Payment Type</th>
+                                                    <th>{{ __('admin.columns.payment_type') }}</th>
                                                     <th>Order Status</th>
                                                 </tr>
                                                 </thead>

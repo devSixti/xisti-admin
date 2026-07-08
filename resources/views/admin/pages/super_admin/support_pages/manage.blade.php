@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Page List
-@endsection
+@section('title', __('admin.pages.page_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -20,8 +18,8 @@
                     <div class="page-header-title">
                         <i class="feather icon-list bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>Page List</h5>
-                            <span>All Page List</span>
+                            <h5>{{ __('admin.pages.page_list') }}</h5>
+                            <span>{{ \App\Helpers\AdminUi::pageSubtitle('page_list') }}</span>
                         </div>
                     </div>
                 </div>
@@ -34,16 +32,16 @@
                     <div class="page-body">
                         <div class="card">
                             <div class="card-header">
-                                <h5>XISTI App Support Pages</h5>
+                                <h5>{{ __('admin.forms.support_pages_customer_app') }}</h5>
                             </div>
                             <div class="card-block">
                                 <div class="dt-responsive table-responsive">
                                     <table id="myCheckout" class="table table-striped table-bordered" style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th style="width: 30px !important;">No</th>
-                                            <th style="width:600px !important;">Page Name</th>
-                                            <th style="width: 60px !important;">Actions</th>
+                                            <th style="width: 30px !important;">{{ __('admin.common.no') }}</th>
+                                            <th style="width:600px !important;">{{ __('admin.forms.page_name') }}</th>
+                                            <th style="width: 60px !important;">{{ __('admin.common.actions') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>

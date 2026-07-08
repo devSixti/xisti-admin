@@ -1,8 +1,6 @@
 {{--@extends('admin.layout.driver_service')--}}
 @extends('admin.layout.auth')
-@section('title')
-    Account Verification Pending
-@endsection
+@section('title', __('admin.pages.account_verification_pending'))
 @section('page-css')
     @if(Illuminate\Support\Facades\Auth::guard('driver')->user()->status == 3)
         <style>

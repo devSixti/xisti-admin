@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    City Area List
-@endsection
+@section('title', __('admin.pages.city_area_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -16,8 +14,8 @@
                             <div class="page-header-title ">
                                 <i class="feather icon-list bg-c-blue"></i>
                                 <div class="d-inline">
-                                    <h5>City Area List</h5>
-                                    <span>All City Area</span>
+                                    <h5>{{ __('admin.pages.city_area_list') }}</h5>
+                                    <span>{{ __('admin.pages.all_city_area') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -42,10 +40,10 @@
                                            style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th>No</th>
+                                            <th>{{ __('admin.common.no') }}</th>
                                             <th>Area</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
+                                            <th>{{ __('admin.common.status') }}</th>
+                                            <th>{{ __('admin.common.actions') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>

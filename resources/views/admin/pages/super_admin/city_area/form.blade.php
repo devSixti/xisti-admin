@@ -138,14 +138,14 @@
                                     <div class="row">
                                         <div class="form-group col-sm-12">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Area Name:<sup class="error">*</sup></label>
+                                                <label class="col-sm-3 col-form-label">{{ __('admin.forms.area_name') }}:<sup class="error">*</sup></label>
                                                 <div class="col-sm-9">
-                                                    <input type="text"  class="form-control" name="area_name" required id="area_name" placeholder="Area Name" value="{{ (isset($area_details)) ? $area_details->name : old('name') }}">
+                                                    <input type="text"  class="form-control" name="area_name" required id="area_name" placeholder="{{ __('admin.forms.area_name') }}" value="{{ (isset($area_details)) ? $area_details->name : old('name') }}">
                                                     <span class="error">{{ $errors->first('name') }}</span>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Status:<sup class="error">*</sup></label>
+                                                <label class="col-sm-3 col-form-label">{{ __('admin.forms.status_colon') }}:<sup class="error">*</sup></label>
                                                 <div class="col-sm-9">
                                                     <select name="status" id="status" class="form-control" required >
                                                         <option value="1" {{ (isset($area_details)) && $area_details->status == 1 ? "selected" : '' }} >On</option>
@@ -163,7 +163,7 @@
                                                 <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <input id="searchInput" name="store_address" class="input-controls form-control"
-                                                               value="{{ (isset($area_details)) ? $area_details->area_name : old('area_name')}}" type="text" placeholder="Enter a location">
+                                                               value="{{ (isset($area_details)) ? $area_details->area_name : old('area_name')}}" type="text" placeholder="{{ __('admin.forms.enter_location') }}">
                                                         <div class="map" id="map" style="width: 100%; height: 500px;"></div>
                                                     </div>
                                                 </div>
@@ -173,7 +173,7 @@
                                     <div class="row">
                                         <label class="col-sm-12"></label>
                                         <div class="col-sm-10">
-                                            <button type="submit" class="btn btn-primary m-b-0">Save</button>
+                                            <button type="submit" class="btn btn-primary m-b-0">{{ __('admin.common.save') }}</button>
                                         </div>
                                     </div>
                                 </form>

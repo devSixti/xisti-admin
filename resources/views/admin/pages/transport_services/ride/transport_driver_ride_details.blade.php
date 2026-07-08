@@ -34,7 +34,7 @@
                             <div class="page-header-title">
                                 <i class="feather icon-list bg-c-green"></i>
                                 <div class="d-inline">
-                                    <h5> Ride Details</h5>
+                                    <h5>{{ __('admin.pages.ride_details') }}</h5>
                                     <span> Ride Details</span>
                                 </div>
                             </div>
@@ -81,7 +81,7 @@
                                                         <td>: {{ $ride_Details->ride_no }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Customer Name</th>
+                                                        <th>{{ __('admin.columns.customer_name') }}</th>
                                                         <td>
                                                             :
                                                             @if($ride_Details->user_name != Null)
@@ -92,7 +92,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Customer Contact Number</th>
+                                                        <th>{{ __('admin.columns.customer_contact_number') }}</th>
                                                         <td>
                                                             :
                                                             @if((isset($user_details)) && $user_details->contact_number != Null)
@@ -103,7 +103,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Customer Email</th>
+                                                        <th>{{ __('admin.columns.customer_email') }}</th>
                                                         <td>
                                                             :
                                                             @if((isset($user_details)) && $user_details->email != Null)
@@ -114,7 +114,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Driver Name</th>
+                                                        <th>{{ __('admin.columns.driver_name') }}</th>
                                                         <td>:
                                                             @if($ride_Details->driver_name != Null)
                                                                 {{ ucwords(strtolower($ride_Details->driver_name)) }}
@@ -124,7 +124,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Driver Contact Number</th>
+                                                        <th>{{ __('admin.columns.driver_contact_number') }}</th>
                                                         <td>:
                                                             @if((isset($driver_details)) && $driver_details->contact_number != Null)
                                                                 {{ App\Models\User::ContactNumber2Stars($driver_details->country_code."".$driver_details->contact_number) }}
@@ -134,7 +134,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Driver Email</th>
+                                                        <th>{{ __('admin.columns.driver_email') }}</th>
                                                         <td>:
                                                             @if((isset($driver_details)) && $driver_details->email != Null)
                                                                 {{ App\Models\User::Email2Stars($driver_details->email) }}
@@ -144,40 +144,40 @@
                                                         </td>
                                                     </tr>
                                                     {{--<tr>
-                                                        <th>Ride Time</th>
+                                                        <th>{{ __('admin.columns.ride_time') }}</th>
                                                         <td>
                                                             : {{ Carbon\Carbon::parse($ride_Details->pickup_datetime)->format('d F Y h:i:s') }} </td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Ride End Time</th>
+                                                        <th>{{ __('admin.columns.ride_end_time') }}</th>
                                                         <td>
                                                             : {{ Carbon\Carbon::parse($ride_Details->destination_datetime)->format('d F Y h:i:s') }}</td>
                                                     </tr>--}}
                                                     <tr>
-                                                        <th>Ride Type</th>
+                                                        <th>{{ __('admin.columns.ride_type') }}</th>
                                                         <td>: {{ isset($ride_Details) && $ride_Details->ride_type == 1 ? "Schedule Ride" : 'Book Now' }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Ride Booking Date</th>
+                                                        <th>{{ __('admin.columns.ride_booking_date') }}</th>
                                                         <td>: {{ isset($ride_Details) ? $ride_Details->created_at : '' }}</td>
                                                     </tr>
                                                     @if(isset($ride_Details) && $ride_Details->ride_type == 1)
                                                         <tr>
-                                                            <th>Schedule Ride Date</th>
+                                                            <th>{{ __('admin.columns.schedule_ride_date') }}</th>
                                                             <td>: {{ isset($ride_Details) ? $ride_Details->pickup_datetime : '' }}</td>
                                                         </tr>
                                                     @endif
                                                     <tr>
-                                                        <th>Pickup Address</th>
+                                                        <th>{{ __('admin.columns.pickup_address') }}</th>
                                                         <td>: {{ $ride_Details->pickup_address }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Destination Address</th>
+                                                        <th>{{ __('admin.columns.destination_address') }}</th>
                                                         {{--<td>: Sydney Fish Market, 25 Bank St, Pyrmont NSW 2009, Australia</td>--}}
                                                         <td>: {{ $ride_Details->destination_address }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Vehicle Type</th>
+                                                        <th>{{ __('admin.pages.vehicle_type') }}</th>
                                                         <td>
                                                             : @if($ride_Details->vehicle_type_name != Null)
                                                                 {{ ucwords(strtolower($ride_Details->vehicle_type_name)) }}
@@ -198,25 +198,25 @@
                                             <table class="table">
                                                 @if(isset($ride_Details))
                                                     <tr>
-                                                        <th>Base Fare</th>
+                                                        <th>{{ __('admin.columns.base_fare') }}</th>
                                                         <td class="">
                                                             : <span class="currency"></span> {{ $ride_Details->base_fare }}
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Total Distance</th>
+                                                        <th>{{ __('admin.columns.total_distance') }}</th>
                                                         <td>: {{ $ride_Details->total_distance }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Cost Per KM</th>
+                                                        <th>{{ __('admin.columns.cost_per_km_label') }}</th>
                                                         <td>: <span class="currency"></span> {{ $ride_Details->vehicle_cost_for_km }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Distance Fare</th>
+                                                        <th>{{ __('admin.columns.distance_fare') }}</th>
                                                         <td>: <span class="currency"></span> {{ $ride_Details->total_distance_amount }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Time Taken</th>
+                                                        <th>{{ __('admin.columns.time_taken') }}</th>
                                                         <td>: {{ $ride_Details->eta }}</td>
                                                     </tr>
                                                     <tr>
@@ -224,23 +224,23 @@
                                                         <td>: <span class="currency"></span> {{ $ride_Details->time_fare_amount }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Discount</th>
+                                                        <th>{{ __('admin.columns.discount') }}</th>
                                                         <td>: <span class="currency"></span> {{ isset($promo_code_discount)? $promo_code_discount : 0 }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Surcharge Amount</th>
+                                                        <th>{{ __('admin.columns.surcharge_amount') }}</th>
                                                         <td>: <span class="currency"></span> {{ $ride_Details->surcharge_price }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Refer Discount</th>
+                                                        <th>{{ __('admin.columns.refer_discount') }}</th>
                                                         <td>: <span class="currency"></span> {{ $ride_Details->refer_discount }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>SubTotal</th>
+                                                        <th>{{ __('admin.columns.subtotal') }}</th>
                                                         <td>: <span class="currency"></span> {{ isset($ride_Details->sub_total)? $ride_Details->sub_total : 0 }} </td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Min Adjustment Amount</th>
+                                                        <th>{{ __('admin.columns.min_adjustment_amount') }}</th>
                                                         <td>: <span class="currency"></span> {{ $ride_Details->adjustment_amount }}</td>
                                                     </tr>
                                                     <tr>
@@ -252,23 +252,23 @@
                                                         <td>: <span class="currency"></span> {{ $ride_Details->tip }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Total</th>
+                                                        <th>{{ __('admin.columns.total') }}</th>
                                                         <td class="">
                                                             : <span class="currency"></span> {{ isset($grand_total)? $grand_total : 0 }}
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Payment Type</th>
+                                                        <th>{{ __('admin.columns.payment_type') }}</th>
                                                         <td>
                                                             : {{ isset($ride_Details) ? ($ride_Details->payment_type == 1 ? "Cash" : ($ride_Details->payment_type == 2 ? "Card" : ($ride_Details->payment_type == 3 ? "Wallet" : ''))) : '' }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Payment Status</th>
+                                                        <th>{{ __('admin.columns.payment_status') }}</th>
                                                         <td>
                                                             : {{ ($ride_Details->payment_status == 1) ? 'Paid' : 'Not Paid' }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Status</th>
+                                                        <th>{{ __('admin.common.status') }}</th>
                                                         @if($ride_Details->status == 0)
                                                             @php $ride_status = "pending"; @endphp
                                                         @elseif($ride_Details->status == 1 || $ride_Details->status == 2 || $ride_Details->status == 3)

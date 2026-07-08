@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Vehicle Service List
-@endsection
+@section('title', __('admin.pages.vehicle_service_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -40,8 +38,8 @@
                     <div class="page-header-title">
                         <i class="feather icon-list bg-c-green"></i>
                         <div class="d-inline">
-                            <h5>Vehicle Service</h5>
-                            <span>All Vehicle Service List
+                            <h5>{{ __('admin.pages.vehicle_service') }}</h5>
+                            <span>{{ \App\Helpers\AdminUi::pageSubtitle('vehicle_service_list') }}
                             </span>
                         </div>
                     </div>
@@ -57,7 +55,7 @@
                     <div class="page-body">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Vehicle Service List</h5>
+                                <h5>{{ __('admin.pages.vehicle_service_list') }}</h5>
 
                                 <a href="{{ route('get:admin:add_vehicle_service')}}"
                                    class="btn btn-success m-b-0 btn-right render_link">Add Vehicle Service</a>
@@ -68,18 +66,18 @@
                                            style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th data-orderable="false">Vehicle Icon</th>
-                                            <th>Category</th>
-                                            <th>Order</th>
-                                            <th>Vehicle Name</th>
-                                            <th>Cost Per Km</th>
-                                            <th>Time Fare</th>
+                                            <th>{{ __('admin.common.no') }}</th>
+                                            <th data-orderable="false">{{ __('admin.columns.vehicle_icon') }}</th>
+                                            <th>{{ __('admin.columns.category') }}</th>
+                                            <th>{{ __('admin.columns.order') }}</th>
+                                            <th>{{ __('admin.columns.vehicle_name') }}</th>
+                                            <th>{{ __('admin.columns.cost_per_km') }}</th>
+                                            <th>{{ __('admin.columns.time_fare') }}</th>
                                             <th>Minimum Offer Fare Amount (in %)</th>
                                             <th>Max Offer Fare Amount (in %)</th>
-                                            <th>Minimum Fare</th>
-                                            <th data-orderable="false">Status</th>
-                                            <th data-orderable="false">Actions</th>
+                                            <th>{{ __('admin.columns.minimum_fare') }}</th>
+                                            <th data-orderable="false">{{ __('admin.common.status') }}</th>
+                                            <th data-orderable="false">{{ __('admin.common.actions') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>

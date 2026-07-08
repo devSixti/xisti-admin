@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-   Cashout List
-@endsection
+@section('title', __('admin.pages.cashout_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -51,8 +49,8 @@
                     <div class="page-header-title">
                         <i class="feather icon-list bg-c-green"></i>
                         <div class="d-inline">
-                            <h5>Cashout List</h5>
-                            <span>All Cashout List
+                            <h5>{{ __('admin.pages.cashout_list') }}</h5>
+                            <span>{{ \App\Helpers\AdminUi::pageSubtitle('cashout_list') }}
                             </span>
                         </div>
                     </div>
@@ -67,21 +65,21 @@
                     <div class="page-body">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Cashout List</h5>
+                                <h5>{{ __('admin.pages.cashout_list') }}</h5>
                             </div>
                             <div class="card-block">
                                 <div class="dt-responsive table-responsive">
                                     <table id="cashouts" class="table table-striped table-bordered nowrap" style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th id="no">No</th>
-                                            <th>Driver Name</th>
-                                            <th>Amount</th>
-                                            <th>Bank Name</th>
-                                            <th>Account Number</th>
+                                            <th id="no">{{ __('admin.common.no') }}</th>
+                                            <th>{{ __('admin.columns.driver_name') }}</th>
+                                            <th>{{ __('admin.columns.amount') }}</th>
+                                            <th>{{ __('admin.forms.bank_name') }}</th>
+                                            <th>{{ __('admin.forms.account_number') }}</th>
                                             <th>Payment Email</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
+                                            <th>{{ __('admin.common.status') }}</th>
+                                            <th>{{ __('admin.common.actions') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody></tbody>

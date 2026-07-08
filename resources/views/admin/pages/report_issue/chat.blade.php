@@ -81,7 +81,7 @@
                                                     <input type="text" class="form-control"
                                                            name="message"
                                                            id="message" style="height: 44px;"
-                                                           placeholder="Send message">
+                                                           placeholder="{{ __('admin.forms.send_message') }}">
                                                     <div class="input-group-append">
                                                         <input type="file" id ="custom_upload" accept="image/png, image/jpg, image/jpeg, image/webp" style="display: none">
                                                         <label class="btn btn-secondary uploadImage"  for="custom_upload">
@@ -178,7 +178,7 @@
                         console.log(html);
                     } else {
 
-                        html += '<div class="row m-b-20 send-chat"><div class="col-auto"><img src="'+admin_img+'" alt="avatar" class="img-radius img-40"></div><div class="col"><div class="msg">'+ appendData +'</div><p class="text-muted m-b-0 text-time-size">Admin</p><p class="text-muted m-b-0 text-time-size"><i class="fa fa-clock-o m-r-10"></i> ' + localDate.toLocaleString() + ' </p></div></div>';
+                        html += '<div class="row m-b-20 send-chat"><div class="col-auto"><img src="'+admin_img+'" alt="avatar" class="img-radius img-40"></div><div class="col"><div class="msg">'+ appendData +'</div><p class="text-muted m-b-0 text-time-size">{{ __('admin.audit.admin') }}</p><p class="text-muted m-b-0 text-time-size"><i class="fa fa-clock-o m-r-10"></i> ' + localDate.toLocaleString() + ' </p></div></div>';
                         console.log("html 2  => ");
                         console.log(html);
                     }

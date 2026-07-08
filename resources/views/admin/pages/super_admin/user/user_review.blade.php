@@ -19,13 +19,13 @@
                                 <i class="feather icon-list bg-c-blue"></i>
                                 <div class="d-inline">
                                     <h5> {{ isset($user_details)?ucfirst($user_details->first_name):"" }} Customer Review List</h5>
-                                    <span>All Review List</span>
+                                    <span>{{ __('admin.pages.review_list') }}</span>
                                 </div>
                             </div>
                         </div>
                         {{--<div class="col-lg-4">--}}
                         {{--<a href="{{ route('get:admin:user_review_lists') }}"--}}
-                        {{--class="btn btn-primary m-b-0 btn-right render_link">Back</a>--}}
+                        {{--class="btn btn-primary m-b-0 btn-right render_link">{{ __('admin.common.back') }}</a>--}}
                         {{--</div>--}}
                     </div>
                 </div>
@@ -48,12 +48,12 @@
                                            style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th>No</th>
+                                            <th>{{ __('admin.common.no') }}</th>
                                             <th>Provider Name</th>
                                             <th>Provider Service</th>
-                                            <th>Rating</th>
-                                            <th>Comments</th>
-                                            <th>Actions</th>
+                                            <th>{{ __('admin.columns.rating') }}</th>
+                                            <th>{{ __('admin.columns.comments') }}</th>
+                                            <th>{{ __('admin.common.actions') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>

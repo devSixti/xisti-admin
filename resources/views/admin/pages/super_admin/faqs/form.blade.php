@@ -112,7 +112,7 @@
                     <div class="page-header-title">
                         <i class="feather icon-edit-1 bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>FAQs</h5>
+                            <h5>{{ __('admin.modules.faqs') }}</h5>
                             <span>@if(isset($faq_details)) Edit @else Add @endif FAQ</span>
                         </div>
                     </div>
@@ -138,34 +138,34 @@
                                     <div class="row">
                                         <div class="form-group col-sm-12">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Name:<sup class="error">*</sup></label>
+                                                <label class="col-sm-3 col-form-label">{{ __('admin.columns.name') }}:<sup class="error">*</sup></label>
                                                 <div class="col-sm-6">
-                                                    <input type="text"  class="form-control" name="name" required id="name" placeholder="Please enter name" value="{{ (isset($faq_details)) ? $faq_details->name : old('name') }}" maxlength="100">
+                                                    <input type="text"  class="form-control" name="name" required id="name" placeholder="{{ __('admin.forms.please_enter_name') }}" value="{{ (isset($faq_details)) ? $faq_details->name : old('name') }}" maxlength="100">
                                                     <span class="error">{{ $errors->first('name') }}</span>
                                                 </div>
                                             </div>
                                             @foreach($language_lists as $language_list)
                                                 <div class="form-group row">
-                                                    <label class="col-sm-3 col-form-label">Name(in {{$language_list->language_name}}):<sup class="error">*</sup></label>
+                                                    <label class="col-sm-3 col-form-label">{{ __('admin.forms.name_in_lang', ['lang' => $language_list->language_name]) }}:<sup class="error">*</sup></label>
                                                     <div class="col-sm-6">
-                                                        <input type="text"  class="form-control" name="{{$language_list->language_code}}_name" required id="{{$language_list->language_code}}_name" placeholder="Please Enter name in {{$language_list->language_name}}" value="{{ (isset($faq_details)) ? $faq_details->{$language_list->language_code."_name"} : old('name') }}" maxlength="100">
+                                                        <input type="text"  class="form-control" name="{{$language_list->language_code}}_name" required id="{{$language_list->language_code}}_name" placeholder="{{ __('admin.forms.please_enter_name_in', ['lang' => $language_list->language_name]) }}" value="{{ (isset($faq_details)) ? $faq_details->{$language_list->language_code."_name"} : old('name') }}" maxlength="100">
                                                         <span class="error">{{ $errors->first('name') }}</span>
                                                     </div>
                                                 </div>
                                             @endforeach
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Description:<sup class="error">*</sup></label>
+                                                <label class="col-sm-3 col-form-label">{{ __('admin.columns.description') }}:<sup class="error">*</sup></label>
                                                 <div class="col-sm-6">
-                                                    <textarea name="description" data-error="#error-description" style="height: 10em;" placeholder="Please enter description" class="form-control" maxlength="500">{{ (isset($faq_details)) ? $faq_details->description : old('description')}}</textarea>
+                                                    <textarea name="description" data-error="#error-description" style="height: 10em;" placeholder="{{ __('admin.forms.please_enter_description') }}" class="form-control" maxlength="500">{{ (isset($faq_details)) ? $faq_details->description : old('description')}}</textarea>
                                                     <span id="error-description" class="error"></span>
                                                 </div>
                                             </div>
 
                                             @foreach($language_lists as $language_list)
                                                 <div class="form-group row">
-                                                    <label class="col-sm-3 col-form-label">Description(in {{$language_list->language_name}}):<sup class="error">*</sup></label>
+                                                    <label class="col-sm-3 col-form-label">{{ __('admin.forms.description_in_lang', ['lang' => $language_list->language_name]) }}:<sup class="error">*</sup></label>
                                                     <div class="col-sm-6">
-                                                        <textarea name="{{$language_list->language_code}}_description" data-error="#error-{{ $language_list->language_code }}_description" style="height: 10em;" required placeholder="Please Enter Description in {{$language_list->language_name}}" class="form-control" maxlength="500">{{ (isset($faq_details)) ? $faq_details->{$language_list->language_code.'_description'} : old('description')}}</textarea>
+                                                        <textarea name="{{$language_list->language_code}}_description" data-error="#error-{{ $language_list->language_code }}_description" style="height: 10em;" required placeholder="{{ __('admin.forms.please_enter_description_in', ['lang' => $language_list->language_name]) }}" class="form-control" maxlength="500">{{ (isset($faq_details)) ? $faq_details->{$language_list->language_code.'_description'} : old('description')}}</textarea>
                                                         <span id="error-{{$language_list->language_code}}_description" class="error"></span>
                                                         <span class="error">{{ $errors->first('description') }}</span>
                                                     </div>
@@ -173,7 +173,7 @@
                                             @endforeach
 
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Status:<sup class="error">*</sup></label>
+                                                <label class="col-sm-3 col-form-label">{{ __('admin.forms.status_colon') }}:<sup class="error">*</sup></label>
                                                 <div class="col-sm-6">
                                                     <select name="status" id="status" class="form-control" required >
                                                         <option value="1" {{ (isset($faq_details)) && $faq_details->status == 1 ? "selected" : '' }} >On</option>
@@ -187,7 +187,7 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <center>
-                                                <button type="submit" class="btn btn-primary m-b-0 btnsaveclick buttonloader">Save</button>
+                                                <button type="submit" class="btn btn-primary m-b-0 btnsaveclick buttonloader">{{ __('admin.common.save') }}</button>
                                             </center>
                                         </div>
                                     </div>

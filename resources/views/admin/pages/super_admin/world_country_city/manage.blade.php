@@ -1,7 +1,5 @@
 @extends('admin.layout.dispatcher_admin')
-@section('title')
-    World Country List
-@endsection
+@section('title', __('admin.pages.world_country_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -19,12 +17,12 @@
                                 <i class="feather icon-list bg-c-blue"></i>
                                 <div class="d-inline">
                                     <h5> World Country</h5>
-                                    <span>All World Country List</span>
+                                    <span>{{ \App\Helpers\AdminUi::pageSubtitle('world_country_list') }}</span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-4">
-                            <a href="{{ route('get:admin:world_country_list') }}" class="btn btn-primary m-b-0 btn-right render_link">Back</a>
+                            <a href="{{ route('get:admin:world_country_list') }}" class="btn btn-primary m-b-0 btn-right render_link">{{ __('admin.common.back') }}</a>
                         </div>
                     </div>
                 </div>
@@ -39,19 +37,19 @@
                     <div class="page-body">
                         <div class="card">
                             <div class="card-header">
-                                <h5>World Country List</h5>
-                                <a href="{{ route('get:admin:add_country') }}" class="btn btn-primary m-b-0 btn-right render_link">Add Country</a>
+                                <h5>{{ __('admin.pages.world_country_list') }}</h5>
+                                <a href="{{ route('get:admin:add_country') }}" class="btn btn-primary m-b-0 btn-right render_link">{{ __('admin.pages.add_country') }}</a>
                             </div>
                             <div class="card-block">
                                 <div class="dt-responsive table-responsive">
                                     <table id="new-cons" class="table table-striped table-bordered nowrap" style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Country Name</th>
-                                            <th>Country Code</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
+                                            <th>{{ __('admin.common.no') }}</th>
+                                            <th>{{ __('admin.forms.country_name') }}</th>
+                                            <th>{{ __('admin.forms.country_code') }}</th>
+                                            <th>{{ __('admin.common.status') }}</th>
+                                            <th>{{ __('admin.common.actions') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>

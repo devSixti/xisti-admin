@@ -120,7 +120,7 @@
                     <div class="page-header-title">
                         <i class="feather icon-edit-1 bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>Customer</h5>
+                            <h5>{{ __('admin.pages.customer') }}</h5>
                             <span>@if(isset($user_details)) Edit @else Add @endif Customer</span>
                         </div>
                     </div>
@@ -149,28 +149,28 @@
                                     <div class="row">
                                         <div class="form-group col-sm-7">
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Customer Full Name:<sup class="error">*</sup></label>
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.customer_full_name') }}:<sup class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" name="first_name" required
-                                                           id="first_name" placeholder="Customer Full Name"
+                                                           id="first_name" placeholder="{{ __('admin.forms.customer_full_name') }}"
                                                            value="{{ (isset($user_details)) ? $user_details->first_name : old('first_name') }}">
                                                     <span id="first_name_error" class="error">{{ $errors->first('first_name') }}</span>
                                                 </div>
                                             </div>
 <!--                                            <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Customer Last Name:<sup class="error">*</sup></label>
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.customer_last_name') }}:<sup class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" name="last_name" required
-                                                           id="last_name" placeholder="Customer Last Name"
+                                                           id="last_name" placeholder="{{ __('admin.forms.customer_last_name') }}"
                                                            value="{{ (isset($user_details)) ? $user_details->last_name : old('last_name') }}">
                                                     <span class="error">{{ $errors->first('last_name') }}</span>
                                                 </div>
                                             </div>-->
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Email:<sup class="error">*</sup></label>
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.mfa.email_label') }}<sup class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <input type="email" class="form-control" name="email" required
-                                                           id="email" placeholder="Unique Email" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}"
+                                                           id="email" placeholder="{{ __('admin.forms.unique_email') }}" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}"
 {{--                                                           {{ ( (isset($user_details)) && $user_details->login_type != "email" ) ? "readonly" : "" }}--}}
                                                            value="{{ (isset($user_details)) ? App\Models\User::Email2Stars($user_details->email) : old('email') }}">
                                                     <span id="email_error" class="error">{{ $errors->first('email') }}</span>
@@ -179,23 +179,23 @@
 
                                             {{--@if(!isset($user_details))
                                                 <div class="form-group row">
-                                                    <label class="col-sm-4 col-form-label">Password:<sup class="error">*</sup></label>
+                                                    <label class="col-sm-4 col-form-label">{{ __('admin.forms.password') }}:<sup class="error">*</sup></label>
                                                     <div class="col-sm-8">
                                                         <input type="password" class="form-control" name="password"
                                                                required minlength="6" maxlength="16"
-                                                               id="password" placeholder="Password"
+                                                               id="password" placeholder="{{ __('admin.forms.password') }}"
                                                                value="{{ old('password') }}">
                                                         <span class="error">{{ $errors->first('password') }}</span>
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group row">
-                                                    <label class="col-sm-4 col-form-label">Re-Type Password:<sup class="error">*</sup></label>
+                                                    <label class="col-sm-4 col-form-label">{{ __('admin.forms.re_type_password') }}:<sup class="error">*</sup></label>
                                                     <div class="col-sm-8">
                                                         <input type="password" class="form-control"
                                                                name="re_type_password"
                                                                required
-                                                               id="re_type_password" placeholder="Re-Type Password"
+                                                               id="re_type_password" placeholder="{{ __('admin.forms.re_type_password') }}"
                                                                value="{{ old('re_type_password') }}">
                                                         <span class="error">{{ $errors->first('re_type_password') }}</span>
                                                     </div>
@@ -203,11 +203,11 @@
                                             @endif--}}
 
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Contact No.:<sup class="error">*</sup></label>
+                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.contact_no_label') }}:<sup class="error">*</sup></label>
                                                 <div class="col-sm-8">
                                                     <input type="text" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" class="form-control" name="contact_number" required
                                                            @if(isset($store_details)) readonly @endif
-                                                           id="phone" placeholder="Unique Contact Number" value="{{ (isset($user_details)) ? $user_details->country_code.App\Models\User::ContactNumber2Stars($user_details->contact_number) : old('contact_number') }}">
+                                                           id="phone" placeholder="{{ __('admin.forms.unique_contact_number') }}" value="{{ (isset($user_details)) ? $user_details->country_code.App\Models\User::ContactNumber2Stars($user_details->contact_number) : old('contact_number') }}">
                                                     <input type="hidden" id="contact_numbers" name="contact_numbers" value="{{ (isset($user_details)) ? $user_details->country_code.$user_details->contact_number : '' }}">
                                                     <input type="hidden" id="country_code" name="country_code" value="{{ (isset($user_details)) ? $user_details->country_code : '+57' }}">
                                                     <span id="phone_error" class="error">{{ $errors->first('contact_number') }}</span><br>
@@ -216,7 +216,7 @@
                                                 </div>
                                             </div>
 {{--                                            <div class="form-group row">--}}
-{{--                                                <label class="col-sm-4 col-form-label">Gender:<sup--}}
+{{--                                                <label class="col-sm-4 col-form-label">{{ __('admin.forms.gender') }}:<sup--}}
 {{--                                                            class="error">*</sup></label>--}}
 {{--                                                <div class="col-sm-8">--}}
 {{--                                                    <div class="form-radio">--}}
@@ -241,7 +241,7 @@
                                         </div>
                                         <div class="form-group col-sm-5">
                                             <div class="form-group row">
-                                                <label class="col-sm-12 col-form-label image">Profile Image:</label>
+                                                <label class="col-sm-12 col-form-label image">{{ __('admin.forms.profile_image') }}:</label>
                                                 <div class="col-sm-12">
                                                     <div id="upload-image-preview">
                                                         @if(isset($user_details))
@@ -261,7 +261,7 @@
                                     <div class="row">
                                         <label class="col-sm-2"></label>
                                         <div class="col-sm-10">
-                                            <button type="submit" class="btn btn-primary m-b-0">Save</button>
+                                            <button type="submit" class="btn btn-primary m-b-0">{{ __('admin.common.save') }}</button>
                                         </div>
                                     </div>
                                 </form>

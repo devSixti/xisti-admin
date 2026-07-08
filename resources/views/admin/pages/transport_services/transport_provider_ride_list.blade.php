@@ -3,7 +3,7 @@
     @if(isset($status) && $status == 'scheduled' )
         @if(isset($slug) && $slug == "courier-service") Services @else Scheduled Ride @endif
     @elseif(isset($status) && $status == 'all')
-        @if(isset($slug) && $slug == "courier-service") All Services @else All Ride @endif
+        @if(isset($slug) && $slug == "courier-service") {{ __('admin.forms.all_services') }} @else {{ __('admin.forms.all_ride') }} @endif
     @elseif(isset($status) && $status == "pending")
         @if(isset($slug) && $slug == "courier-service")  Pending Services @else Pending Ride @endif
     @elseif(isset($status) && $status == "cancelled")
@@ -79,7 +79,7 @@
                             <h5>@if(isset($status) && $status == 'scheduled' )
                                     Scheduled Ride
                                 @elseif(isset($status) && $status == 'all')
-                                    All Ride
+                                    {{ __('admin.forms.all_ride') }}
                                 @elseif(isset($status) && $status == "pending")
                                      Pending Ride
                                 @elseif(isset($status) && $status == 'cancelled')
@@ -128,7 +128,7 @@
                                 <h5>@if(isset($status) && $status == 'scheduled' )
                                         Scheduled Ride
                                     @elseif(isset($status) && $status == 'all')
-                                        All Ride
+                                        {{ __('admin.forms.all_ride') }}
                                     @elseif(isset($status) && $status == "pending")
                                        Pending Ride
                                     @elseif(isset($status) && $status == 'cancelled')
@@ -149,19 +149,19 @@
                                     <table id="rides" class="table table-striped table-bordered nowrap" style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th id="no">No</th>
+                                            <th id="no">{{ __('admin.common.no') }}</th>
                                             <th>@if(isset($slug) && $slug == "courier-service") Delivery No. @else Ride No. @endif</th>
                                             <th>@if(isset($slug) && $slug == "courier-service") Recipient Name @else Customer Name @endif</th>
-                                            <th>Driver Name</th>
-                                            <th>Vehicle Type</th>
-                                            <th>Total Cost</th>
-                                            <th>Status</th>
+                                            <th>{{ __('admin.columns.driver_name') }}</th>
+                                            <th>{{ __('admin.pages.vehicle_type') }}</th>
+                                            <th>{{ __('admin.columns.total_cost') }}</th>
+                                            <th>{{ __('admin.common.status') }}</th>
                                             @if(Illuminate\Support\Facades\Auth::guard("admin")->check() && isset($slug) && $slug == "courier-service")
-                                                <th>Payment Status</th>
-                                                <th>Refund Status</th>
+                                                <th>{{ __('admin.columns.payment_status') }}</th>
+                                                <th>{{ __('admin.columns.refund_status') }}</th>
                                             @endif
-                                            <th>Chat</th>
-                                            <th>Details</th>
+                                            <th>{{ __('admin.columns.chat') }}</th>
+                                            <th>{{ __('admin.columns.details') }}</th>
                                             <th>@if(isset($slug) && $slug == "courier-service") Pick / Delivery @else Pick / Drop @endif Address</th>
                                         </tr>
                                         </thead>
@@ -232,8 +232,8 @@
                             page: 'all',
                         },
                     },
-                    text: 'Download Excel',
-                    "action": newexportaction,
+                    text: window.adminExcelButtonText,
+                    "action": window.newexportaction,
                 }],
             });
         });

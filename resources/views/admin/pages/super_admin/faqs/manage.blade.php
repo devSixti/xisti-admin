@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Faq Lists
-@endsection
+@section('title', __('admin.pages.faq_lists'))
 @section('page-css')
     <!-- Data Table Css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
@@ -36,7 +34,7 @@
                         <i class="feather icon-list bg-c-blue"></i>
                         <div class="d-inline">
                             <h5> FAQs Lists</h5>
-                            <span>All FAQs Lists</span>
+                            <span>{{ __('admin.pages.all_faqs_lists') }}</span>
                         </div>
                     </div>
                 </div>
@@ -62,10 +60,10 @@
                                            style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Name</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
+                                            <th>{{ __('admin.common.no') }}</th>
+                                            <th>{{ __('admin.columns.name') }}</th>
+                                            <th>{{ __('admin.common.status') }}</th>
+                                            <th>{{ __('admin.columns.action') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>

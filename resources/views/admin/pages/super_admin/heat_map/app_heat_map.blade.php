@@ -1,6 +1,6 @@
 @extends('admin.layout.common_layout')
 @section('title')
-    Transport Heat Map
+    {{ __('admin.heat_map.transport_heat_map') }}
 @endsection
 @section('page-css')
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
@@ -133,36 +133,33 @@
             left: 15%;
             z-index: 5;
             background-color: #fff;
-            padding: 5px;
-            border: 1px solid #999;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
             text-align: center;
             font-family: "Roboto", "sans-serif";
-            line-height: 30px;
-            padding-left: 10px;
         }
 
-        #floating-panel {
-            background-color: #fff;
-            border: 1px solid #999;
-            left: 15%;
-            padding: 5px;
-            position: absolute;
-            top: 10px;
-            z-index: 5;
-        }
+        @media screen and (max-width: 768px) {
+            #floating-panel {
+                left: 8px;
+                right: 8px;
+                top: 8px;
+            }
 
-        #floating-panel button:hover {
-            cursor: pointer;
+            #filter_key {
+                width: 100%;
+            }
         }
     </style>
 @endsection
 @section('page-content')
 
-    <div class=" ">
-
+    <div class="admin-app-heat-map">
         <div class="">
-            <div id="floating-panel">
-                <select name="filter_key" id="filter_key">
+            <div id="floating-panel" class="admin-map-toolbar">
+                <select name="filter_key" id="filter_key" class="form-control form-control-sm">
                     <option value="1" {{ ($filter_key == "1")?"selected":""  }}>{{ __(key : "user_messages.one_day", locale: $userLanguage) }}</option>
                     <option value="2" {{ ($filter_key == "2")?"selected":""  }}>{{ __(key : "user_messages.seven_days", locale: $userLanguage) }}</option>
                     <option value="3" {{ ($filter_key == "3")?"selected":""  }}>{{ __(key : "user_messages.last30_days", locale: $userLanguage) }}</option>

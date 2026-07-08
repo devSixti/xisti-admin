@@ -1,7 +1,5 @@
 @extends('admin.layout.driver_service')
-@section('title')
-    Wallet Transaction
-@endsection
+@section('title', __('admin.pages.wallet_transaction'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -19,8 +17,8 @@
                     <div class="page-header-title">
                         <i class="feather icon-edit-1 bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>Wallet Transaction</h5>
-                            <span>Wallet Transaction</span>
+                            <h5>{{ __('admin.pages.wallet_transaction') }}</h5>
+                            <span>{{ __('admin.pages.wallet_transaction') }}</span>
                         </div>
                     </div>
                 </div>
@@ -39,7 +37,7 @@
                                     {{csrf_field() }}
                                     <div class="card">
                                         <div class="card-header">
-                                            <h5>Wallet Transaction</h5>
+                                            <h5>{{ __('admin.pages.wallet_transaction') }}</h5>
                                             {{--<a href="{{ route('get:admin:user_list') }}"--}}
                                             {{--class="btn btn-primary m-b-0 btn-right render_link"> Back</a>--}}
                                         </div>
@@ -61,12 +59,12 @@
                                             <div class="row">
                                                 <div class="form-group col-sm-12">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-4 col-form-label">Recharge Amount:<sup
+                                                        <label class="col-sm-4 col-form-label">{{ __('admin.forms.recharge_amount') }}:<sup
                                                                 class="error">*</sup></label>
                                                         <div class="col-sm-8">
                                                             <input type="text" class="form-control"
                                                                    name="amount" id="amount"
-                                                                   placeholder="Enter Amount"
+                                                                   placeholder="{{ __('admin.forms.enter_amount') }}"
                                                                    required autocomplete="off"
                                                                    value="{{ old('amount') }}">
                                                             <input type="hidden" class="form-control textBox" autocomplete="off" id="card_id" name="card_id" value="0" >
@@ -90,7 +88,7 @@
                             <div class="form-group col-sm-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5>Wallet Transaction</h5>
+                                        <h5>{{ __('admin.pages.wallet_transaction') }}</h5>
                                     </div>
                                     <div class="card-block">
 
@@ -99,10 +97,10 @@
                                                    style="width:100%">
                                                 <thead>
                                                 <tr>
-                                                    <th>No</th>
-                                                    <th>Subject</th>
-                                                    <th>Date Time</th>
-                                                    <th>Amount</th>
+                                                    <th>{{ __('admin.common.no') }}</th>
+                                                    <th>{{ __('admin.audit.subject') }}</th>
+                                                    <th>{{ __('admin.columns.date_time') }}</th>
+                                                    <th>{{ __('admin.columns.amount') }}</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -178,7 +176,7 @@
                     </div>
                     <div class=" col-6">
                         <button type="button" class="float-right btn btnColor btncouponcart addWalletBtn" @if(isset($card_list) && count($card_list) == 0) disabled @endif>Pay Now</button>
-                        <button type="button" class="float-right btn btn-secondary mr-2" data-dismiss="modal">Close</button>
+                        <button type="button" class="float-right btn btn-secondary mr-2" data-dismiss="modal">{{ __('admin.forms.close') }}</button>
                     </div>
                 </div>
             </div>

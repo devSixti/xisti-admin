@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Report Issues
-@endsection
+@section('title', __('admin.pages.report_issues'))
 @section('page-css')
     <!-- Data Table Css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
@@ -78,9 +76,7 @@
                         {{--                        <i class="fa fa-bug bg-c-blue"></i>--}}
                         <i class="fa fa-file bg-c-blue"></i>
                         <div class="d-inline">
-                            <h5>
-                                Report Issues
-                            </h5>
+                            <h5>{{ __('admin.pages.report_issues') }}</h5>
 
                             <span>Displaying all the Details of Report Issues</span>
                         </div>
@@ -127,7 +123,7 @@
                                                     @endif
                                                     @if($report_issue->service_name != null)
                                                         <tr>
-                                                            <th style="width: 25%;">Service Name:</th>
+                                                            <th style="width: 25%;">{{ __('admin.columns.service_name') }}:</th>
                                                             <td class="">{{ isset($report_issue) ? $report_issue->service_name : ''}}</td>
                                                         </tr>
                                                     @endif
@@ -138,11 +134,11 @@
                                                         </tr>
                                                     @endif
                                                     <tr>
-                                                        <th style="width: 25%;">Ticket ID:</th>
+                                                        <th style="width: 25%;">{{ __('admin.columns.ticket_id') }}:</th>
                                                         <td class=""></span>#{{ isset($report_issue) ? $report_issue->reference_no : '' }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Description</th>
+                                                        <th>{{ __('admin.columns.description') }}</th>
                                                         <td class=""></span> {{ isset($report_issue) ? $report_issue->description : '' }}</td>
                                                     </tr>
                                                     <tr>
@@ -150,17 +146,17 @@
                                                         <td class="">{{ isset($report_issue) ? $report_issue->created_by : '' }}</td>
                                                     </tr>
                                                         <tr>
-                                                        <th>Issue Date:</th>
+                                                        <th>{{ __('admin.columns.issue_date') }}:</th>
                                                         <td class="">{{ isset($report_issue) ? \Carbon\Carbon::parse($report_issue->created_at)->format('Y-m-d H:i') : '' }}</td>
                                                     </tr>
                                                     <tr id="resolved_on_row" style="{{ $report_issue->status == 2 ? '' : 'display: none;' }}">
-                                                        <th>Resolved On:</th>
+                                                        <th>{{ __('admin.columns.resolved_on') }}:</th>
                                                         <td id="resolved_on_field">
                                                             {{ $report_issue->resolved_on ? \Carbon\Carbon::parse($report_issue->resolved_on)->format('Y-m-d H:i') : '' }}
                                                         </td>
                                                     </tr>
                                                         <tr>
-                                                            <th>Status:</th>
+                                                            <th>{{ __('admin.common.status') }}:</th>
                                                             <td>
                                                                 <div class="status @if($report_issue->status == 1) Unresolved @elseif($report_issue->status == 2) Resolved @endif">
                                                                     @if($report_issue->status == 1)

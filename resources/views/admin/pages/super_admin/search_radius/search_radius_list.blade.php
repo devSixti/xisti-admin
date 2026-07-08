@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Search Radius List
-@endsection
+@section('title', __('admin.pages.search_radius_list'))
 @section('page-css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive/responsive.bootstrap4.min.css')}}">
@@ -147,8 +145,8 @@
                             <div class="page-header-title ">
                                 <i class="feather icon-list bg-c-blue"></i>
                                 <div class="d-inline">
-                                    <h5> Search Radius List</h5>
-                                    <span>All Search Radius List</span>
+                                    <h5>{{ __('admin.pages.search_radius_list') }}</h5>
+                                    <span>{{ __('admin.pages.all_search_radius_list') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -164,7 +162,7 @@
                     <div class="page-body">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Search Radius List</h5>
+                                <h5>{{ __('admin.pages.search_radius_list') }}</h5>
                                 <a title="Add Search Radius"
                                    class="btn btn-primary m-b-0 btn-right add_search_radius">
                                     Add Search Radius</a>
@@ -176,8 +174,8 @@
                                         <thead>
                                         <tr>
                                             <th>No.</th>
-                                            <th>Radius</th>
-                                            <th>Actions</th>
+                                            <th>{{ __('admin.columns.radius') }}</th>
+                                            <th>{{ __('admin.common.actions') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -226,16 +224,16 @@
                 <form method="post" name="add_radius_form"  id="add_radius_form" action="{{ route('post:admin:update_search_radius') }}" >
                     {{csrf_field() }}
                     <p id="send_message" class="text-success font-weight-bold"></p>
-                    <input type="hidden" class="form-control" name="radius_id" id="radius_id" placeholder="Radius id" value="">
+                    <input type="hidden" class="form-control" name="radius_id" id="radius_id" placeholder="{{ __('admin.forms.radius_id') }}" value="">
                     <div class="form-group">
-                        <label class="col-form-label">Radius:</label>
-                        <input type="number" name="radius" class="form-control border-r-top-left-right" min="1" required id="radius" value="{{ old('radius') }}" placeholder="Enter new Radius">
+                        <label class="col-form-label">{{ __('admin.forms.radius_label') }}:</label>
+                        <input type="number" name="radius" class="form-control border-r-top-left-right" min="1" required id="radius" value="{{ old('radius') }}" placeholder="{{ __('admin.forms.enter_new_radius') }}">
                     </div>
                     <div class="form-group">
                         <p id="fail_message" class="text-danger"></p>
                     </div>
-                    <button type="submit" class="btn btn-primary btn_model_send">Submit</button>
-                    <button type="button" class="btn btn-login btn_model_close md-close">Close</button>
+                    <button type="submit" class="btn btn-primary btn_model_send">{{ __('admin.common.submit') }}</button>
+                    <button type="button" class="btn btn-login btn_model_close md-close">{{ __('admin.forms.close') }}</button>
                 </form>
             </div>
         </div>

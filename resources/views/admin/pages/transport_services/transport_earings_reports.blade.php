@@ -1,7 +1,5 @@
 @extends('admin.layout.super_admin')
-@section('title')
-    Earnings Report
-@endsection
+@section('title', __('admin.pages.earnings_report'))
 @section('page-css')
     <!-- Data Table Excel Css -->
     <link rel="stylesheet" type="text/css" href="{{asset('assets/css/responsive/buttons.dataTables.min.css?v=0.1')}}">
@@ -29,7 +27,7 @@
             list-style-type: none;
             margin: 0;
             padding: 0;
-            overflow: hidden;
+            /* /* overflow: hidden; */ /* admin-zimo: allow page scroll */ */ /* admin-zimo: allow page scroll */
             /*background-color: #333;*/
         }
 
@@ -155,8 +153,8 @@
                     <div class="page-header-title">
                         <i class="feather icon-list bg-c-green"></i>
                         <div class="d-inline">
-                            <h5> Earnings Report</h5>
-                            <span>All Ride's Earning Report</span>
+                            <h5>{{ __('admin.pages.earnings_report') }}</h5>
+                            <span>{{ __('admin.pages.all_rides_earning_report') }}</span>
                         </div>
                     </div>
                 </div>
@@ -170,7 +168,7 @@
                     <div class="page-body">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Earnings Report</h5>
+                                <h5>{{ __('admin.pages.earnings_report') }}</h5>
                             </div>
                             <div class="card-block">
                                 <form method="post" action="{{ route('post:admin:search_earning_report')}}">
@@ -181,11 +179,11 @@
                                                 <ul class="set-date">
                                                     <li><a id="today">Today</a></li>
                                                     <li><a id="yesterday">Yesterday</a></li>
-                                                    <li><a id="this_week">This Week</a></li>
-                                                    <li><a id="this_month">This Month</a></li>
-                                                    <li><a id="last_month">Last Month</a></li>
-                                                    <li><a id="this_year">This Year</a></li>
-                                                    <li><a id="last_year">Last Year</a></li>
+                                                    <li><a id="this_week">{{ __('admin.forms.this_week') }}</a></li>
+                                                    <li><a id="this_month">{{ __('admin.forms.this_month') }}</a></li>
+                                                    <li><a id="last_month">{{ __('admin.forms.last_month') }}</a></li>
+                                                    <li><a id="this_year">{{ __('admin.forms.this_year') }}</a></li>
+                                                    <li><a id="last_year">{{ __('admin.forms.last_year') }}</a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -196,7 +194,7 @@
                                                 <div class="input-group date form_datetime">
                                                     <input name="from_date" class="form-control category"
                                                            value="{{isset($from_date)? ($from_date != Null)?  $from_date : old('from_date') : old('from_date') }}"
-                                                           placeholder="From Date"
+                                                           placeholder="{{ __('admin.forms.from_date') }}"
                                                            id="from_date"
                                                            type="text" readonly>
                                                     <span class="input-group-append" id="basic-addon3">
@@ -219,7 +217,7 @@
                                                 <div class="input-group date to_datetime">
                                                     <input name="to_date" class="form-control category"
                                                            value="{{isset($to_date)? ($to_date != Null)?  $to_date : old('to_date') : old('to_date') }}"
-                                                           placeholder="To Date"
+                                                           placeholder="{{ __('admin.forms.to_date') }}"
                                                            id="to_date"
                                                            type="text" readonly>
                                                     <span class="input-group-append" id="basic-addon3">
@@ -241,7 +239,7 @@
                                                 {{--<label></label>--}}
                                                 <select id="js-example1" name="driver"
                                                         class="js-example-placeholder-single1 js-states form-control">
-                                                    <option disabled selected>Select Driver</option>
+                                                    <option disabled selected>{{ __('admin.forms.select_driver') }}</option>
                                                     @if(isset($driver_list))
                                                         @if(!$driver_list->isEmpty())
                                                             @foreach($driver_list as $key => $driver_details)
@@ -259,7 +257,7 @@
                                                 {{--<label></label>--}}
                                                 <select id="js-example2" name="user"
                                                         class="js-example-placeholder-single2 js-states form-control">
-                                                    <option disabled selected>Select Customer</option>
+                                                    <option disabled selected>{{ __('admin.forms.select_customer') }}</option>
                                                     @if(isset($user_list))
                                                         @if(!$user_list->isEmpty())
                                                             @foreach($user_list as $key => $user_details)
@@ -275,10 +273,10 @@
                                         <div class="col-lg-4">
                                             <div class="form-group">
                                                 <select name="payment_type" class="form-control select_border gray_text" id="payment_type" onchange="this.className=this.options[this.selectedIndex].className">
-                                                    <option class="form-control select_border gray_text" value="">Select Payment Type</option>
-                                                    <option value="1" {{ $selected = ( (isset($payment_type) && $payment_type == "1")? "selected" : "" ) }} class="form-control select_border black_text">Cash</option>
+                                                    <option class="form-control select_border gray_text" value="">{{ __('admin.forms.select_payment_type') }}</option>
+                                                    <option value="1" {{ $selected = ( (isset($payment_type) && $payment_type == "1")? "selected" : "" ) }} class="form-control select_border black_text">{{ __('admin.forms.cash') }}</option>
                                                     <option value="2" {{ $selected = ( (isset($payment_type) && $payment_type == "2")? "selected" : "" ) }} class="form-control select_border black_text">Online</option>
-                                                    <option value="3" {{ $selected = ( (isset($payment_type) && $payment_type == "3")? "selected" : "" ) }} class="form-control select_border black_text">Wallet</option>
+                                                    <option value="3" {{ $selected = ( (isset($payment_type) && $payment_type == "3")? "selected" : "" ) }} class="form-control select_border black_text">{{ __('admin.modules.wallet') }}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -287,7 +285,7 @@
                                             <div class="form-group">
                                                 {{--<label></label>--}}
                                                 <select id="city" name="driver_pay_type" class="form-control">
-                                                    <option value="2">Select Driver Payment Status</option>
+                                                    <option value="2">{{ __('admin.forms.select_driver_payment_status') }}</option>
                                                     @if(isset($driver_pay_type) && $driver_pay_type != Null)
                                                         @if($driver_pay_type == 1)
                                                             <option value="1" selected>Settled</option>
@@ -336,25 +334,25 @@
                                                                 </div>
                                                             </div>
                                                         </th>
-                                                        <th>Payment Status</th>
-                                                        <th>Ride Date</th>
-{{--                                                        <th>Ride Type</th>--}}
-                                                        <th>Booking Id</th>
-                                                        <th>Customer Name</th>
-                                                        <th>Driver Name</th>
-                                                        <th>Offered Price</th>
+                                                        <th>{{ __('admin.columns.payment_status') }}</th>
+                                                        <th>{{ __('admin.columns.ride_date') }}</th>
+{{--                                                        <th>{{ __('admin.columns.ride_type') }}</th>--}}
+                                                        <th>{{ __('admin.columns.booking_id') }}</th>
+                                                        <th>{{ __('admin.columns.customer_name') }}</th>
+                                                        <th>{{ __('admin.columns.driver_name') }}</th>
+                                                        <th>{{ __('admin.columns.offered_price') }}</th>
 {{--                                                        <th>Ride Fare</th>--}}
 {{--                                                        <th>PromoCode Discount Amount</th>--}}
 {{--                                                        <th>Tax</th>--}}
 {{--                                                        <th>Tip</th>--}}
-                                                        <th>Toll Charge</th>
-                                                        <th>Refer Discount</th>
-                                                        <th>Total</th>
-                                                        <th>Driver Earnings</th>
-                                                        <th>Site Commission</th>
-                                                        <th>Pay to Driver</th>
-                                                        <th>Collect from Driver</th>
-                                                        <th>Type</th>
+                                                        <th>{{ __('admin.columns.toll_charge') }}</th>
+                                                        <th>{{ __('admin.columns.refer_discount') }}</th>
+                                                        <th>{{ __('admin.columns.total') }}</th>
+                                                        <th>{{ __('admin.columns.driver_earnings') }}</th>
+                                                        <th>{{ __('admin.columns.site_commission') }}</th>
+                                                        <th>{{ __('admin.columns.pay_to_driver') }}</th>
+                                                        <th>{{ __('admin.columns.collect_from_driver') }}</th>
+                                                        <th>{{ __('admin.columns.type') }}</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -385,37 +383,37 @@
                                                             </tr>
                                                         @endforeach
                                                     @else
-                                                        <tr class="odd"><td valign="top" colspan="17" class="dataTables_empty">No data available in table.</td></tr>
+                                                        <tr class="odd"><td valign="top" colspan="17" class="dataTables_empty">{{ __('admin.datatables.empty_table') }}</td></tr>
                                                     @endif
                                                     </tbody>
                                                     <tfoot>
                                                     @if(isset($payment_reports) && !$payment_reports->isEmpty())
                                                         <tr>
-                                                            <th colspan="14" style="text-align:right">Total Fare:</th>
+                                                            <th colspan="14" style="text-align:right">{{ __('admin.forms.total_fare') }}:</th>
                                                             <th class=""><span class="currency"></span> @if(isset($total_ride)) {{ $total_ride }} @else 0 @endif </th>
                                                         </tr>
                                                         <tr>
-                                                            <th colspan="14" style="text-align:right">Total Site Commission:</th>
+                                                            <th colspan="14" style="text-align:right">{{ __('admin.forms.total_site_commission') }}:</th>
                                                             <th class=""><span class="currency"></span> @if(isset($total_site_earning)) {{ $total_site_earning }} @else 0 @endif </th>
                                                         </tr>
                                                         <tr>
-                                                            <th colspan="14" style="text-align:right">Total Driver Earning:</th>
+                                                            <th colspan="14" style="text-align:right">{{ __('admin.forms.total_driver_earning') }}:</th>
                                                             <th class=""><span class="currency"></span> @if(isset($total_driver_earning)) {{ $total_driver_earning }} @else 0 @endif</th>
                                                         </tr>
                                                         <tr>
-                                                            <th colspan="14" style="text-align:right">Total Discount:</th>
+                                                            <th colspan="14" style="text-align:right">{{ __('admin.forms.total_discount') }}:</th>
                                                             <th class=""><span class="currency"></span> @if(isset($total_discount)) {{ $total_discount }} @else 0 @endif </th>
                                                         </tr>
                                                         <tr>
-                                                            <th colspan="14" style="text-align:right">Total Pay to Driver:</th>
+                                                            <th colspan="14" style="text-align:right">{{ __('admin.forms.total_pay_to_driver') }}:</th>
                                                             <th class=""><span class="currency"></span> @if(isset($total_pay_driver)) {{ $total_pay_driver }}  @else 0 @endif </th>
                                                         </tr>
                                                         <tr>
-                                                            <th colspan="14" style="text-align:right">Total Collect from Driver:</th>
+                                                            <th colspan="14" style="text-align:right">{{ __('admin.forms.total_collect_from_driver') }}:</th>
                                                             <th class=""><span class="currency"></span> @if(isset($total_collect_payment)) {{ $total_collect_payment }} @else 0 @endif </th>
                                                         </tr>
                                                         <tr>
-                                                            <th colspan="14" style="text-align:right">Total Driver Outstanding Amount:</th>
+                                                            <th colspan="14" style="text-align:right">{{ __('admin.forms.total_driver_outstanding') }}:</th>
                                                             <th class=""><span class="currency"></span> @if(isset($total_driver_outstanding_amount)) {{ $total_driver_outstanding_amount }}  @else 0 @endif </th>
                                                         </tr>
                                                     @endif
@@ -426,7 +424,7 @@
                                             <div class="text-center">
                                                 @if(isset($payment_reports))
                                                     <div class="text-center">
-                                                        <span class="btn btn-success driver_payment"><b>Mark As Settle</b></span>
+                                                        <span class="btn btn-success driver_payment"><b>{{ __('admin.forms.mark_as_settle') }}</b></span>
                                                     </div>
                                                 @endif
                                             </div>
@@ -495,7 +493,7 @@
                 buttons: [
                     {
                         extend: 'excel',
-                        text: 'Download Excel',
+                        text: window.adminExcelButtonText,
                         footer: true
                     }]
             });
