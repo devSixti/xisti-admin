@@ -34,6 +34,18 @@ class Admin extends Authenticatable
         'password',
     ];
 
+    public function loginSuccessMessage(): string
+    {
+        if ($this->role_id) {
+            $role = AdminRole::query()->find($this->role_id);
+            if ($role?->name) {
+                return $role->name.' login successfully.';
+            }
+        }
+
+        return 'Admin Total login successfully.';
+    }
+
     public function generateAccessToken($id)
     {
         $this->access_token = random_int(1, 99) . date('sihYdm') . random_int(1, 99);

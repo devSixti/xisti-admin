@@ -43,7 +43,9 @@ class LoginController extends Controller
                             Auth::logout();
 
                             if (Auth::guard('admin')->attempt(['email' => $request->get('email'), 'password' => $request->get('password')], $request->get('remember'))) {
-                                return redirect()->intended(route('get:admin:dashboard'))->with("success", "Super Admin Login Successfully.");
+                                $admin = Auth::guard('admin')->user();
+
+                                return redirect()->intended(route('get:admin:dashboard'))->with('success', $admin->loginSuccessMessage());
                             } else {
                                 Auth::logout();
                                 return redirect()->back()->with("error", "Your email and password was wrong. Please enter right credential.");

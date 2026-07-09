@@ -62,8 +62,11 @@ class AdminRbacMockUsersSeeder extends Seeder
             }
 
             $admin = Admin::query()->firstOrNew(['email' => $entry['email']]);
+            $isNew = ! $admin->exists;
             $admin->name = $entry['name'];
-            $admin->password = Hash::make($password);
+            if ($isNew || filter_var(env('RBAC_RESET_MOCK_PASSWORDS', false), FILTER_VALIDATE_BOOLEAN)) {
+                $admin->password = Hash::make($password);
+            }
             $admin->roles = 4;
             if ($entry['role'] === 'admin_total') {
                 $admin->roles = 1;
