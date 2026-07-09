@@ -225,6 +225,37 @@ class AdminRbacMatrixTest extends TestCase
     }
 
     #[Test]
+    public function socio_rbac_user_does_not_apply_legacy_city_scope(): void
+    {
+        $role = AdminRole::query()->where('slug', 'socio')->firstOrFail();
+        $admin = $this->adminForRole($role);
+
+        request()->attributes->set('admin_role', 4);
+        request()->attributes->set('admin_city_id', 0);
+
+        $this->assertNotNull($admin->role_id);
+        $this->assertTrue($this->rbac->usesRbac($admin));
+        $this->assertFalse($this->rbac->shouldApplyCityScope($admin));
+    }
+
+    #[Test]
+    public function legacy_city_admin_applies_city_scope_when_area_is_set(): void
+    {
+        $admin = new Admin([
+            'roles' => 4,
+            'role_id' => null,
+            'area_id' => 7,
+        ]);
+
+        request()->attributes->set('admin_role', 4);
+        request()->attributes->set('admin_city_id', 7);
+
+        $this->assertNull($admin->role_id);
+        $this->assertTrue($this->rbac->shouldApplyCityScope($admin));
+        $this->assertSame(7, $this->rbac->adminCityId());
+    }
+
+    #[Test]
     public function admin_total_can_delete_transport_provider_route(): void
     {
         $role = AdminRole::query()->where('slug', 'admin_total')->firstOrFail();

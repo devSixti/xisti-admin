@@ -69,6 +69,15 @@ class User extends Authenticatable
         return $this->invite_code;
     }
 
+    public function ensureInviteCode(): string
+    {
+        if (empty($this->invite_code)) {
+            $this->InviteCode($this->id, $this->first_name ?? 'user');
+        }
+
+        return (string) $this->invite_code;
+    }
+
     public function random_strings($length_of_string)
     {
 

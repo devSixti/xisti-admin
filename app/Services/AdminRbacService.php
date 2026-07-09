@@ -8,6 +8,7 @@ use App\Models\AdminModule;
 use App\Models\AdminRole;
 use App\Models\RoleModulePermission;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
@@ -305,6 +306,35 @@ class AdminRbacService
     {
         return $this->resolveRole($admin) !== null
             && Schema::hasTable('role_module_permissions');
+    }
+
+    public function shouldApplyCityScope(?Admin $admin = null): bool
+    {
+        if ((int) request()->get('admin_role') !== 4) {
+            return false;
+        }
+        $admin = $admin ?? Auth::guard('admin')->user();
+        if ($admin instanceof Admin && $admin->role_id !== null && $this->usesRbac($admin)) {
+            return false;
+        }
+
+        return $this->adminCityId() > 0;
+    }
+
+    public function adminCityId(): int
+    {
+        return (int) request()->get('admin_city_id');
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder  $query
+     */
+    public function applyCityScopeToQuery($query, string $column = 'area_id'): void
+    {
+        if (! $this->shouldApplyCityScope()) {
+            return;
+        }
+        $query->where($column, $this->adminCityId());
     }
 
     /** @return list<int> */

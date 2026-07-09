@@ -213,9 +213,15 @@ class UserClassApi
             }
         }
         if ($is_register == 1) {
+            if ($user_details instanceof User) {
+                $user_details->ensureInviteCode();
+                $referralCode = (string) $user_details->invite_code;
+            } else {
+                $referralCode = (string) ($user_details['invite_code'] ?? '');
+            }
             $final_response_array['user_name'] = $user_details['first_name'].'';
             $final_response_array['email'] = $user_details['email'].'';
-            $final_response_array['referral_code'] = $user_details['invite_code'].'';
+            $final_response_array['referral_code'] = $referralCode;
             $final_response_array['gender'] = $user_details['gender'];
             $final_response_array['profile_image'] = $avatar;
             $final_response_array['select_currency'] = $user_details['currency'].'';
@@ -230,6 +236,13 @@ class UserClassApi
             $final_response_array['is_driver_status'] = $user_details['is_driver_status'];
             $final_response_array['driver_doc_status'] = $user_details['driver_doc_status'];
             $final_response_array['driver_vehicle_status'] = $user_details['driver_vehicle_status'];
+        }
+        if ($is_register === 1) {
+            if ($user_details instanceof User) {
+                $final_response_array['referral_code'] = $user_details->ensureInviteCode();
+            } elseif (empty($final_response_array['referral_code'] ?? '')) {
+                $final_response_array['referral_code'] = (string) ($user_details['invite_code'] ?? '');
+            }
         }
         return response()->json($final_response_array);
     }

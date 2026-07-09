@@ -52,6 +52,7 @@ use App\Models\VehicleService;
 use App\Models\WorldCurrency;
 use App\Models\Sos;
 use App\Models\SosTriggerLog;
+use App\Services\AdminRbacService;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -132,17 +133,12 @@ class AdminController extends Controller
     {
         if (Auth::guard("admin")->user()->roles == 1 || Auth::guard("admin")->user()->roles == 4) {
 
-            $admin_role = request()->get("admin_role");
-            $admin_city_id = request()->get("admin_city_id");
-
             $date = date('Y-m-d');
 
             //total completed order
             $transport_completed = TransportRideBook::query()->where('status', 9)->whereDate('created_at', '=', $date);
             //check area wise
-            if ($admin_role == 4) {
-                $transport_completed->where('area_id', $admin_city_id);
-            }
+            app(AdminRbacService::class)->applyCityScopeToQuery($transport_completed);
             $transport_completed = $transport_completed->count();
             $total_completed_order = ($transport_completed);
 
@@ -150,9 +146,7 @@ class AdminController extends Controller
             //total cancelled order
             $transport_cancelled = TransportRideBook::query()->whereIn('status', [4])->whereDate('created_at', '=', $date);
 
-            if ($admin_role == 4) {
-                $transport_cancelled->where('area_id', $admin_city_id);
-            }
+            app(AdminRbacService::class)->applyCityScopeToQuery($transport_cancelled);
 
             $transport_cancelled = $transport_cancelled->count();
 
@@ -162,9 +156,7 @@ class AdminController extends Controller
             //total order
             $transport_total_order = TransportRideBook::query()->whereNotIn('status', [10])->whereDate('created_at', '=', $date);
 
-            if ($admin_role == 4) {
-                $transport_total_order->where('area_id', $admin_city_id);
-            }
+            app(AdminRbacService::class)->applyCityScopeToQuery($transport_total_order);
 
             $transport_total_order = $transport_total_order->count();
 
@@ -174,9 +166,7 @@ class AdminController extends Controller
             //total completed order
             $transport_revenue = TransportRideBook::query()->where('status', 9)->whereDate('created_at', '=', $date);
 
-            if ($admin_role == 4) {
-                $transport_revenue->where('area_id', $admin_city_id);
-            }
+            app(AdminRbacService::class)->applyCityScopeToQuery($transport_revenue);
 
             $transport_rev = $transport_revenue->sum('admin_commission');
 
@@ -246,20 +236,12 @@ class AdminController extends Controller
         $searchValue = $search_arr['value']; // Search value
 
         $totalRecords = User::query()->select('count(*) as allcount');
-        $admin_role = request()->get("admin_role");
-        if ($admin_role == 4) {
-            $admin_city_id = request()->get("admin_city_id");
-            $totalRecords->where('area_id', $admin_city_id);
-        }
+        app(AdminRbacService::class)->applyCityScopeToQuery($totalRecords);
         $totalRecords = $totalRecords->count();
 
         if ($searchValue != "") {
             $totalRecordswithFilter = User::query()->select('count(*) as allcount');
-            $admin_role = request()->get("admin_role");
-            if ($admin_role == 4) {
-                $admin_city_id = request()->get("admin_city_id");
-                $totalRecordswithFilter->where('area_id', $admin_city_id);
-            }
+            app(AdminRbacService::class)->applyCityScopeToQuery($totalRecordswithFilter);
             $totalRecordswithFilter = $totalRecordswithFilter->where('first_name', 'like', '%' . $searchValue . '%')
                 ->orWhere('email', 'like', '%' . $searchValue . '%')
                 ->orWhere('contact_number', 'like', '%' . $searchValue . '%')
@@ -267,20 +249,12 @@ class AdminController extends Controller
                 ->count();
         } else {
             $totalRecordswithFilter = User::query()->select('count(*) as allcount');
-            $admin_role = request()->get("admin_role");
-            if ($admin_role == 4) {
-                $admin_city_id = request()->get("admin_city_id");
-                $totalRecordswithFilter->where('area_id', $admin_city_id);
-            }
+            app(AdminRbacService::class)->applyCityScopeToQuery($totalRecordswithFilter);
             $totalRecordswithFilter = $totalRecordswithFilter->where('is_register',1)->count();
         }
 
         $records = User::query()->select('users.*')->where('users.is_register',1);
-        $admin_role = request()->get("admin_role");
-        if ($admin_role == 4) {
-            $admin_city_id = request()->get("admin_city_id");
-            $records->where('area_id', $admin_city_id);
-        }
+        app(AdminRbacService::class)->applyCityScopeToQuery($records);
         if ($columnName != 'id'){
             $records = $records->orderBy($columnName, $columnSortOrder);
         }else{
@@ -442,10 +416,9 @@ class AdminController extends Controller
             $user->avatar = $file_new;
         }
 //        $user->gender = $request->get('gender');
-        $admin_role = request()->get("admin_role");
-        if ($admin_role == 4) {
-            $admin_city_id = request()->get("admin_city_id");
-            $user->area_id = $admin_city_id;
+        $rbac = app(AdminRbacService::class);
+        if ($rbac->shouldApplyCityScope()) {
+            $user->area_id = $rbac->adminCityId();
         }
         $user->save();
         if($request->get('id') == Null)
@@ -2486,8 +2459,9 @@ class AdminController extends Controller
             ->join('users as u1','u1.id','=','user_refer_history.user_id')
             ->join('users as u2','u2.id','=','user_refer_history.refer_id');
         /* ----------------------------------------- Access from City Admin ------------------------------------------*/
-        if (request()->get("admin_role") == 4) {
-            $admin_city_id = request()->get("admin_city_id");
+        $rbac = app(AdminRbacService::class);
+        if ($rbac->shouldApplyCityScope()) {
+            $admin_city_id = $rbac->adminCityId();
             $records->where(function ($query) use ($admin_city_id) {
                 $query->where('u1.area_id', $admin_city_id)
                     ->orWhere('u2.area_id', $admin_city_id);

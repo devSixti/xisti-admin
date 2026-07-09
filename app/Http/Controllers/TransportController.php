@@ -25,6 +25,7 @@ use App\Models\UserRunningRide;
 use App\Models\UserReferHistory;
 use App\Models\UserWalletTransaction;
 use App\Models\VehicleService;
+use App\Services\AdminRbacService;
 use App\Services\FirebaseService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -112,9 +113,7 @@ class TransportController extends Controller
             ->where('users.is_driver_status', '=', $status)
             ->whereNull('users.deleted_at');
         /* ----------------------------------------- Access from City Admin ------------------------------------------*/
-        if (request()->get("admin_role") == 4) {
-            $provider_lists->where('users.area_id', request()->get("admin_city_id"));
-        }
+        app(AdminRbacService::class)->applyCityScopeToQuery($provider_lists, 'users.area_id');
         /* ----------------------------------------- End Access from City Admin --------------------------------------*/
         $totalRecords = $provider_lists->count();
         if ($searchValue != "") {
@@ -348,9 +347,7 @@ class TransportController extends Controller
             ->whereNull('users.deleted_at');
 
         /* ----------------------------------------- Access from City Admin ------------------------------------------*/
-        if (request()->get("admin_role") == 4) {
-            $provider_list_check->where('users.area_id', request()->get("admin_city_id"));
-        }
+        app(AdminRbacService::class)->applyCityScopeToQuery($provider_list_check, 'users.area_id');
         /* ----------------------------------------- End Access from City Admin --------------------------------------*/
             $provider_lists = $provider_list_check
                 ->orderBy('transport_driver_details.id',  'desc')
@@ -497,9 +494,7 @@ class TransportController extends Controller
             )
             ->join('transport_vehicle_type', 'transport_vehicle_type.id', '=', 'user_ride_booking.vehicle_type_id');
         /* ----------------------------------------- Access from City Admin ------------------------------------------*/
-        if (request()->get("admin_role") == 4) {
-            $ride_lists_check->where('user_ride_booking.area_id', request()->get("admin_city_id"));
-        }
+        app(AdminRbacService::class)->applyCityScopeToQuery($ride_lists_check, 'user_ride_booking.area_id');
         /* ----------------------------------------- End Access from City Admin --------------------------------------*/
         if ($status_check == "all") {
             $ride_lists = $ride_lists_check->whereIn('user_ride_booking.status', [1, 2, 3, 4, 5, 6,7, 8, 9, 10]);
@@ -956,11 +951,7 @@ class TransportController extends Controller
                 ->where('user_rental_ride_booking.service_cat_id', '=', $service_cat_id)
                 ->whereNull('users.deleted_at')
                 ->whereNull('providers.deleted_at');
-            $admin_role = request()->get("admin_role");
-            if ($admin_role == 4) {
-                $admin_city_id = request()->get("admin_city_id");
-                $provider_reviews->where('user_rental_ride_booking.area_id', $admin_city_id);
-            }
+            app(AdminRbacService::class)->applyCityScopeToQuery($provider_reviews, 'user_rental_ride_booking.area_id');
             $provider_reviews = $provider_reviews->orderBy('transport_driver_rating.id', 'desc')->get();
         } else {
             $provider_reviews = TransportRatings::query()->select(
@@ -977,11 +968,7 @@ class TransportController extends Controller
                 ->whereNull('providers.deleted_at')
                 ->whereNull('users.deleted_at')
                 ->where('user_ride_booking.service_cat_id', '=', $service_cat_id);
-            $admin_role = request()->get("admin_role");
-            if ($admin_role == 4) {
-                $admin_city_id = request()->get("admin_city_id");
-                $provider_reviews->where('user_ride_booking.area_id', $admin_city_id);
-            }
+            app(AdminRbacService::class)->applyCityScopeToQuery($provider_reviews, 'user_ride_booking.area_id');
             $provider_reviews = $provider_reviews->orderBy('transport_driver_rating.id', 'desc')->get();
         }
         if ($request->ajax()) {
@@ -1508,11 +1495,7 @@ class TransportController extends Controller
         $user_list = TransportRideBook::query()->select('users.id', 'users.first_name', 'users.last_name', 'users.contact_number')
             ->join('users', 'users.id', '=', 'user_ride_booking.user_id')
             ->where('user_ride_booking.status', '=', 9);
-        $admin_role = request()->get("admin_role");
-        if ($admin_role == 4) {
-            $admin_city_id = request()->get("admin_city_id");
-            $user_list->where('user_ride_booking.area_id', $admin_city_id);
-        }
+        app(AdminRbacService::class)->applyCityScopeToQuery($user_list, 'user_ride_booking.area_id');
         $user_list = $user_list->groupBy('user_ride_booking.user_id')->get();
 
         $driver_list = TransportRideBook::query()->select('transport_driver_details.id', DB::raw("users.first_name as name"), 'users.contact_number', 'user_ride_booking.driver_id')
@@ -1554,11 +1537,8 @@ class TransportController extends Controller
             ->join('users', 'users.id', '=', 'user_ride_booking.user_id')
             ->where('user_ride_booking.status', '=', 9)
             ->whereNull('users.deleted_at');
-        $admin_role = request()->get("admin_role");
-        if ($admin_role == 4) {
-            $admin_city_id = request()->get("admin_city_id");
-            $user_list->where('users.area_id', $admin_city_id);
-        }
+        $rbac = app(AdminRbacService::class);
+        $rbac->applyCityScopeToQuery($user_list, 'users.area_id');
         $user_list = $user_list->groupBy('user_ride_booking.user_id')->get();
 
         $driver_list = TransportRideBook::query()->select('transport_driver_details.id', DB::raw("users.first_name as name"), 'users.contact_number', 'user_ride_booking.driver_id')
@@ -1566,10 +1546,7 @@ class TransportController extends Controller
             ->join('users', 'users.id', '=', 'transport_driver_details.user_id')
             ->where('user_ride_booking.status', '=', 9)
             ->whereNull('users.deleted_at');
-        if ($admin_role == 4) {
-            $admin_city_id = request()->get("admin_city_id");
-            $driver_list->where('users.area_id', $admin_city_id);
-        }
+        $rbac->applyCityScopeToQuery($driver_list, 'users.area_id');
         $driver_list = $driver_list->groupBy('user_ride_booking.driver_id')->get();
 
         $from_date = Null;
@@ -1601,10 +1578,7 @@ class TransportController extends Controller
         )
             ->where('user_ride_booking.status', '=', 9);
 
-        if ($admin_role == 4) {
-            $admin_city_id = request()->get("admin_city_id");
-            $admin_report_details->where('user_ride_booking.area_id', $admin_city_id);
-        }
+        $rbac->applyCityScopeToQuery($admin_report_details, 'user_ride_booking.area_id');
         if ($request->get('from_date') != Null && $request->get('to_date') != Null) {
             $from_date = $request->get('from_date');
             $to_date = $request->get('to_date');
@@ -1760,9 +1734,7 @@ class TransportController extends Controller
             ->whereNull('users.deleted_at');
 
         /* ----------------------------------------- Access from City Admin ------------------------------------------*/
-        if (request()->get("admin_role") == 4) {
-            $providers_detials->where('users.area_id', request()->get("admin_city_id"));
-        }
+        app(AdminRbacService::class)->applyCityScopeToQuery($providers_detials, 'users.area_id');
         /* ----------------------------------------- End Access from City Admin --------------------------------------*/
         $providers_detials = $providers_detials->get();
         $availability_ride_status = 3;
@@ -2399,8 +2371,9 @@ class TransportController extends Controller
             $provider_details->driver_current_status = 1;
             $provider_details->active_mode = 2;
             /* ----------------------------------------- Access from City Admin ------------------------------------------*/
-            if (request()->get("admin_role") == 4) {
-                $provider_details->area_id = request()->get("admin_city_id");
+            $rbac = app(AdminRbacService::class);
+            if ($rbac->shouldApplyCityScope()) {
+                $provider_details->area_id = $rbac->adminCityId();
             }
             /* ----------------------------------------- End Access from City Admin --------------------------------------*/
             $provider_details->save();
@@ -2817,9 +2790,7 @@ class TransportController extends Controller
         $record = $cashout_list_data;
 
         /* ----------------------------------------- Access from City Admin ------------------------------------------*/
-        if (request()->get("admin_role") == 4) {
-            $record->where('users.area_id', request()->get("admin_city_id"));
-        }
+        app(AdminRbacService::class)->applyCityScopeToQuery($record, 'users.area_id');
         /* ----------------------------------------- End Access from City Admin --------------------------------------*/
         if($searchValue != ""){
             $record = $record->where(function($query) use ($searchValue){

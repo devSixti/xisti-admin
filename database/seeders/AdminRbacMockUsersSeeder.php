@@ -20,11 +20,11 @@ class AdminRbacMockUsersSeeder extends Seeder
         return [
             ['email' => "admin@{$domain}", 'role' => 'admin_total', 'name' => 'Admin Total XISTI'],
             ['email' => "contabilidad@{$domain}", 'role' => 'contabilidad', 'name' => 'Contabilidad XISTI'],
-            ['email' => "socio@{$domain}", 'role' => 'socio', 'name' => 'Socio 1 XISTI', 'credential_key' => 'socio'],
+            ['email' => 'daniel@xistiapp.com', 'role' => 'socio', 'name' => 'Daniel (Socio XISTI)', 'credential_key' => 'socio'],
             [
-                'email' => "socio2@{$domain}",
+                'email' => 'santiago@xistiapp.com',
                 'role' => 'socio',
-                'name' => 'Socio 2 XISTI',
+                'name' => 'Santiago (Socio XISTI)',
                 'credential_key' => 'socio_2',
             ],
             ['email' => "desarrollador@{$domain}", 'role' => 'desarrollador', 'name' => 'Desarrollador XISTI'],
@@ -39,6 +39,11 @@ class AdminRbacMockUsersSeeder extends Seeder
         if (filter_var(env('RBAC_SKIP_MOCK_USERS', false), FILTER_VALIDATE_BOOLEAN)) {
             return;
         }
+
+        $this->migrateLegacySocioEmails([
+            'socio@xistiapp.com' => 'daniel@xistiapp.com',
+            'socio2@xistiapp.com' => 'santiago@xistiapp.com',
+        ]);
 
         $password = (string) env('RBAC_MOCK_PASSWORD', self::DEFAULT_PASSWORD);
         if ($password === '') {
@@ -77,5 +82,27 @@ class AdminRbacMockUsersSeeder extends Seeder
         }
 
         $this->command?->info('XISTI RBAC mock admins seeded (domain '.$domain.').');
+    }
+
+    /** @param array<string, string> $map */
+    private function migrateLegacySocioEmails(array $map): void
+    {
+        foreach ($map as $from => $to) {
+            if ($from === $to) {
+                continue;
+            }
+            $legacy = Admin::query()->where('email', $from)->first();
+            if ($legacy === null) {
+                continue;
+            }
+            $target = Admin::query()->where('email', $to)->first();
+            if ($target !== null && $target->id !== $legacy->id) {
+                $legacy->delete();
+                continue;
+            }
+            $legacy->email = $to;
+            $legacy->save();
+            $this->command?->info("Migrated admin email {$from} → {$to}");
+        }
     }
 }
