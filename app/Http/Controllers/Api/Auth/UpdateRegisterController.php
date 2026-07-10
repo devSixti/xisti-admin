@@ -63,12 +63,43 @@ class UpdateRegisterController extends Controller
             'emergency_contact' => $normalizedEmergency !== '' ? $normalizedEmergency : null,
         ]);
 
-        $validator = Validator::make($request->all(), [
+        $profileUser = User::query()
+            ->where('id', $request->get('user_id'))
+            ->whereNull('deleted_at')
+            ->first();
+        $isPhoneSignup = ! in_array((string) ($profileUser?->login_type ?? ''), ['facebook', 'google', 'apple'], true);
+
+        $rules = [
             "user_id" => "required|numeric",
             "access_token" => "required",
             "full_name" => "required",
             "profile_image" => "nullable",
-            "email" => [
+            "select_country_code" => "required",
+            "emergency_contact" => ['nullable', 'numeric', new ColombianMobileNumber($emergencyCountryCode)],
+            "emergency_contact_name" => 'nullable|string|max:120',
+        ];
+        if ($isPhoneSignup) {
+            $rules['contact_number'] = [
+                'required',
+                'numeric',
+                new ColombianMobileNumber($countryCode),
+            ];
+            $rules['email'] = [
+                'nullable',
+                'email',
+                Rule::unique('users', 'email')->where(function ($query) use ($request) {
+                    $query->where('email', '=', $request->get('email'));
+                    $query->where('id', '!=', $request->get('user_id'));
+                    $query->where('deleted_at', '=', null);
+                }),
+            ];
+        } else {
+            $rules['contact_number'] = [
+                'nullable',
+                'numeric',
+                new ColombianMobileNumber($countryCode),
+            ];
+            $rules['email'] = [
                 'required',
                 'email',
                 Rule::unique('users', 'email')->where(function ($query) use ($request) {
@@ -76,16 +107,10 @@ class UpdateRegisterController extends Controller
                     $query->where('id', '!=', $request->get('user_id'));
                     $query->where('deleted_at', '=', null);
                 }),
-            ],
-            "select_country_code" => "required",
-            "contact_number" => [
-                'required',
-                'numeric',
-                new ColombianMobileNumber($countryCode),
-            ],
-            "emergency_contact" => ['nullable', 'numeric', new ColombianMobileNumber($emergencyCountryCode)],
-            "emergency_contact_name" => 'nullable|string|max:120',
-        ]);
+            ];
+        }
+
+        $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             $failedRules = $validator->failed();
             if (isset($failedRules['email']['Unique'])) {

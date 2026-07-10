@@ -503,7 +503,10 @@ class UserClassApi
         $ride->vehicle_cost_for_km = $get_vehicle_service->cost_for_km;
         $ride->ride_no = $ride->generateRideNo();
         $isCourierRide = $errandType !== null;
-        $ride->otp = $isCourierRide ? null : $ride->generateOtp(4);
+        $general_settings = request()->get('general_settings');
+        $ride->otp = ($general_settings && (int) $general_settings->ride_otp === 1)
+            ? $ride->generateOtp(4)
+            : null;
         $ride->user_name = $user_details['first_name'];
         if ($request['pickup_date_time'] != Null) {
             $destination_datetime = date('Y-m-d H:i:s', strtotime('+'.$request['estimated_time'].' minute',strtotime(date('Y-m-d H:i:s', strtotime($request['pickup_date_time'])))));

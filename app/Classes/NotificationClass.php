@@ -649,6 +649,8 @@ class NotificationClass
     {
         $default_currency = WorldCurrency::query()->where('default_currency',1)->first();
         $currency = $default_currency->symbol;
+        $currencyRatio = (float) ($default_currency->ratio ?? 1);
+        $displayOfferedPrice = round((float) $offered_price * $currencyRatio, 2);
 
         $service_setting = ServiceSettings::query()->first();
         if ($service_setting != Null) {
@@ -732,7 +734,7 @@ class NotificationClass
         $rideType = $ride != null ? (string) $ride->ride_type : '0';
         $event = $this->applyEventTemplate('driver_new_request', 'es', [
             'currency' => $currency,
-            'price' => (string) $offered_price,
+            'price' => (string) $displayOfferedPrice,
             'pickup' => $pickup_address,
             'destination' => $destination_address,
         ]);
@@ -759,7 +761,7 @@ class NotificationClass
             'is_delivery' => $isDeliveryRide ? '1' : '0',
             'pickup_address' => $pickup_address."",
             'destination_address' => $destination_address."",
-            'offered_price' => $offered_price."",
+            'offered_price' => $displayOfferedPrice."",
             "click_action" => "FLUTTER_NOTIFICATION_CLICK",
             'dispatch_action' => 'refresh_available_rides',
             'dispatch_ts' => (string) time(),

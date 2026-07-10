@@ -1169,6 +1169,8 @@ class UserController extends Controller
             'transport_driver_details.vehicle_image_rear',
             'transport_driver_details.child_seat',
             'transport_driver_details.handicap',
+            'transport_driver_details.also_transport_passengers',
+            'transport_driver_details.is_taxi',
             'transport_vehicle_type.name as vehicle_type_name',
         ];
         if (\Illuminate\Support\Facades\Schema::hasColumn('transport_driver_details', 'delivery_variant')) {
@@ -1218,6 +1220,8 @@ class UserController extends Controller
                     : '',
                 "child_safety_seat" => $driver_details->child_seat,
                 "handy_cap_seat" => $driver_details->handicap,
+                "also_transport_passengers" => (int) ($driver_details->also_transport_passengers ?? 0),
+                "is_taxi" => (int) ($driver_details->is_taxi ?? 0),
             ]);
 
         }else {
@@ -1451,13 +1455,12 @@ class UserController extends Controller
         if (Schema::hasColumn('user_courier_service_details', 'errand_type')) {
             $courierSelect[] = 'user_courier_service_details.errand_type';
         }
-
-            $available_ride_requests = TransportRideBook::query()
-                ->select(array_merge([
+        $availableRideSelect = [
                     'user_ride_booking.id as ride_id','user_ride_booking.ride_no','user_ride_booking.pickup_address','user_ride_booking.destination_address','users.rating','user_ride_booking.pickup_datetime as schedule_date',
                     'user_ride_booking.user_name','user_ride_booking.pickup_lat','user_ride_booking.pickup_long','user_ride_booking.user_id','user_ride_booking.vehicle_service_id as service_id','vehicle_services.service_mode','user_ride_booking.ride_type','user_ride_booking.is_auto_accept','user_ride_booking.destination_payment_method',
+                    'vehicle_services.'.$lang_prefix.'name as service_name',
                     'user_ride_booking.child_seat','user_ride_booking.handicap','user_ride_booking.other_user_name','user_ride_booking.other_user_contact_number',
-                    DB::raw('user_ride_booking.total_pay * '.$currency.' as offered_price'),
+                    DB::raw('COALESCE(NULLIF(user_ride_booking.offered_price, 0), user_ride_booking.total_pay) * '.$currency.' as offered_price'),
                     DB::raw("COUNT(user_rating.id) as total_ratings "),'user_ride_booking.additional_request as additional_remarks',
 //                                            DB::raw("TIMESTAMPDIFF(SECOND, user_ride_booking.created_at, NOW()) AS order_time"),
                     DB::raw("SUBSTRING_INDEX(user_ride_booking.destination_latlong,',',1) as destination_lat"),
@@ -1473,7 +1476,13 @@ class UserController extends Controller
                                                 AS order_time"),
                     DB::raw("ROUND((6371 * acos( cos( radians(pickup_lat) ) * cos( radians(" .$current_lat. ") )  * cos( radians( " .$current_long. " ) - radians(pickup_long) ) + sin( radians(pickup_lat) ) * sin(radians( " .$current_lat. " ) ) ) ), 2) as distance" ),
                     DB::raw("ROUND((((6371 * acos( cos( radians(pickup_lat) ) * cos( radians(" .$current_lat. ") )  * cos( radians( " .$current_long. " ) - radians(pickup_long) ) + sin( radians(pickup_lat) ) * sin(radians( " .$current_lat. " ) ) ) ) / 40 ) * 60 ), 2) as time" ),
-                ], $courierSelect))
+                ];
+        if (Schema::hasColumn('user_ride_booking', 'delivery_variant')) {
+            $availableRideSelect[] = 'user_ride_booking.delivery_variant';
+        }
+
+            $available_ride_requests = TransportRideBook::query()
+                ->select(array_merge($availableRideSelect, $courierSelect))
                 ->join('users','users.id','=','user_ride_booking.user_id')
                 ->leftjoin('user_courier_service_details','user_courier_service_details.ride_id','=','user_ride_booking.id')
                 ->leftJoin('user_rating','user_rating.user_id','=','users.id')
@@ -1567,6 +1576,12 @@ class UserController extends Controller
                 "address_lat" => trim($value['destination_lat']),
                 "address_long" => trim($value['destination_long'])
             ];
+            $address_list = array_values(array_filter($address_list, function ($entry) {
+                $lat = (float) ($entry['address_lat'] ?? 0);
+                $lng = (float) ($entry['address_long'] ?? 0);
+
+                return abs($lat) >= 0.01 && abs($lng) >= 0.01;
+            }));
             $available_ride_requests[$key]["address_list"] = $address_list ?? [];
             $available_ride_requests[$key]['destination_payment_label'] = DestinationPaymentHelper::label(
                 $value['destination_payment_method'] ?? null,
@@ -3937,7 +3952,7 @@ class UserController extends Controller
             ->select('user_ride_booking.id as ride_id','user_ride_booking.ride_no','user_ride_booking.pickup_address','user_ride_booking.destination_address','users.rating','user_ride_booking.pickup_datetime',
                 'user_ride_booking.user_name','user_ride_booking.pickup_lat','user_ride_booking.pickup_long','user_ride_booking.user_id','user_ride_booking.vehicle_service_id as service_id','user_ride_booking.payment_type','user_ride_booking.ride_type','user_ride_booking.is_auto_accept','user_ride_booking.destination_payment_method',
                 'user_courier_service_details.recipient_name','user_courier_service_details.recipient_contact_number','user_courier_service_details.item_description','user_courier_service_details.estimate_price','user_courier_service_details.package_weight_kg','user_courier_service_details.package_height_cm','user_courier_service_details.package_width_cm','user_courier_service_details.package_length_cm',
-                DB::raw('user_ride_booking.total_pay * '.$currency.' as offered_price'),
+                DB::raw('COALESCE(NULLIF(user_ride_booking.offered_price, 0), user_ride_booking.total_pay) * '.$currency.' as offered_price'),
                 DB::raw("COUNT(user_rating.id) as total_ratings "),'user_ride_booking.additional_request as additional_remarks',
 //                                            DB::raw("TIMESTAMPDIFF(SECOND, user_ride_booking.created_at, NOW()) AS order_time"),
                 DB::raw("SUBSTRING_INDEX(user_ride_booking.destination_latlong,',',1) as destination_lat"),
