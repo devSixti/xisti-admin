@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Manual production deploy of XISTI admin to EC2 (rsync + artisan).
-# Usage: ./scripts/xisti-deploy-admin-ec2.sh
+# Manual production deploy of XISTI admin to EC2 (rsync code + artisan cache).
+# Skips composer install (prod PHP 8.5 vs lockfile constraints).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -16,34 +16,22 @@ rsync -az --delete \
   --exclude 'vendor' \
   --exclude 'node_modules' \
   --exclude '.env' \
-  --exclude 'storage/logs' \
-  --exclude 'storage/framework/cache/data' \
-  --exclude 'storage/framework/sessions' \
-  --exclude 'storage/framework/views' \
-  --exclude 'bootstrap/cache/config.php' \
+  --exclude 'storage' \
+  --exclude 'bootstrap/cache/*.php' \
   --exclude 'composer.phar' \
   --exclude 'composer-setup.php' \
   --exclude '.cursor' \
-  "${ROOT}/" "${SSH_HOST}:/tmp/xisti-admin-deploy/"
+  "${ROOT}/" "${SSH_HOST}:${APP_DIR}/"
 
 ssh -o BatchMode=yes "$SSH_HOST" "bash -s" <<'DEPLOY'
 set -euo pipefail
-APP_DIR='/var/www/xisti-admin'
-rsync -a --delete \
-  --exclude '.env' \
-  --exclude 'storage' \
-  --exclude 'vendor' \
-  --exclude '.git' \
-  /tmp/xisti-admin-deploy/ "${APP_DIR}/"
-cd "${APP_DIR}"
-composer install --no-dev --optimize-autoloader --no-interaction
-php artisan migrate --force
+cd /var/www/xisti-admin
+rm -f bootstrap/cache/config.php bootstrap/cache/packages.php bootstrap/cache/services.php
+php artisan package:discover --ansi >/dev/null
+php artisan migrate --force || true
 php artisan config:clear
 php artisan cache:clear
-rm -f bootstrap/cache/config.php
 php artisan config:cache
-php artisan view:cache || true
-sudo systemctl reload php8.5-fpm nginx 2>/dev/null || sudo systemctl reload php*-fpm nginx 2>/dev/null || true
-rm -rf /tmp/xisti-admin-deploy
-echo "==> XISTI admin deploy OK — markets version: $(php -r "echo (require 'config/markets.php')['version'] ?? '?';")"
+sudo systemctl reload php8.5-fpm nginx 2>/dev/null || true
+echo "==> XISTI admin deploy OK — markets $(php artisan tinker --execute=\"echo config('markets.version');\")"
 DEPLOY
