@@ -2257,10 +2257,13 @@ class UserController extends Controller
                     }
                 }
                 if ($driver_details->user_id != $ride->driver_id){
-                    $reassigned_driver_detail = ReassignedDriverList::query()
-                        ->where("ride_id","=",$ride->id)
-                        ->where("driver_id","=", $driver_details->user_id)
-                        ->first();
+                    $reassigned_driver_detail = null;
+                    if (Schema::hasTable('reassigned_driver_list')) {
+                        $reassigned_driver_detail = DB::table('reassigned_driver_list')
+                            ->where('ride_id', $ride->id)
+                            ->where('driver_id', $driver_details->user_id)
+                            ->first();
+                    }
                     if ($reassigned_driver_detail != Null){
                         return response()->json([
                             "status" => 0,
@@ -2336,8 +2339,8 @@ class UserController extends Controller
                             $message_code = 24;
                         }
 
-                        //deleting chat from firebase
-                        (new FirebaseService())->deleteOrderChat($ride->ride_no,$ride->id);
+                        //deleting chat from firebase (best-effort; never block status transition)
+                        (new FirebaseService())->safeDeleteOrderChat($ride->ride_no,$ride->id);
 
                         //ProviderUserRunningService::query()->where('provider_id', $driver_id)->where('user_id', $ride->user_id)->where('service_cat_id', $service_category_id)->where('booking_id', $ride->id)->delete();
                         return response()->json([
@@ -2523,9 +2526,8 @@ class UserController extends Controller
                                 $ride->cancel_reason = $request->get('cancel_reason');
                                 $ride->save();
 
-                                //deleting chat from firebase
-                                if((new FirebaseService())->deleteOrderChat($ride->ride_no,$ride->id)){
-                                }
+                                //deleting chat from firebase (best-effort; never block status transition)
+                                (new FirebaseService())->safeDeleteOrderChat($ride->ride_no,$ride->id);
 
                                 $update_driver_status->driver_current_status = 1;
                                 $update_driver_status->save();
@@ -2998,9 +3000,8 @@ class UserController extends Controller
                                     ProviderUserRunningService::query()->where('provider_id', $driver_id)->where('booking_id', $ride->id)->delete();
                                 }
 
-                                //deleting chat from firebase
-                                if((new FirebaseService())->deleteOrderChat($ride->ride_no,$ride->id)){
-                                }
+                                //deleting chat from firebase (best-effort; never block status transition)
+                                (new FirebaseService())->safeDeleteOrderChat($ride->ride_no,$ride->id);
 
                                 if($ride->is_hail != 1) {
                                     $general_settings = request()->get("general_settings");

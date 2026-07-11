@@ -2,6 +2,10 @@
 
 namespace App\Helpers;
 
+use App\Models\GeneralSettings;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
 class MarketConfigHelper
 {
     /**
@@ -21,6 +25,27 @@ class MarketConfigHelper
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public static function isoDefaults(?string $iso): array
+    {
+        $map = self::catalog()['iso_defaults'] ?? [];
+        $iso = strtoupper(trim((string) $iso));
+        if ($iso !== '' && isset($map[$iso])) {
+            return $map[$iso];
+        }
+
+        return $map['DEFAULT'] ?? [
+            'currency_code' => 'USD',
+            'currency_symbol' => '$',
+            'dial_code' => '+1',
+            'language' => 'en',
+            'min_fare' => 5,
+            'fare_step' => 1,
+        ];
+    }
+
+    /**
      * @return array<string, mixed>|null
      */
     public static function countryById(?string $countryId): ?array
@@ -30,6 +55,24 @@ class MarketConfigHelper
         }
         foreach (self::countries() as $country) {
             if (($country['id'] ?? '') === $countryId) {
+                return $country;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public static function countryByIso(?string $iso): ?array
+    {
+        $iso = strtoupper(trim((string) $iso));
+        if ($iso === '') {
+            return null;
+        }
+        foreach (self::countries() as $country) {
+            if (strtoupper((string) ($country['iso_code'] ?? '')) === $iso) {
                 return $country;
             }
         }
@@ -59,7 +102,7 @@ class MarketConfigHelper
         return null;
     }
 
-  /**
+    /**
      * @return array<string, mixed>
      */
     public static function apiPayload(?float $lat = null, ?float $lng = null, ?string $countryId = null, ?string $cityId = null): array
@@ -71,7 +114,7 @@ class MarketConfigHelper
             $country = self::countryById($countryId);
             if ($country !== null) {
                 $city = self::resolveCityInCountry($country, $lat, $lng, $cityId);
-                $resolved = self::resolvedPayload($country, $city, $lat, $lng);
+                $resolved = self::resolvedPayload($country, $city, $lat, $lng, false);
             }
         } elseif ($lat !== null && $lng !== null) {
             $resolved = self::resolveFromCoordinates($lat, $lng);
@@ -81,6 +124,7 @@ class MarketConfigHelper
             'config_version' => (string) ($catalog['version'] ?? '1'),
             'default_country_id' => (string) ($catalog['default_country_id'] ?? 'co'),
             'default_city_id' => (string) ($catalog['default_city_id'] ?? 'medellin'),
+            'iso_defaults' => $catalog['iso_defaults'] ?? [],
             'countries' => array_map(static fn (array $c) => self::countryPayload($c), self::countries()),
             'resolved' => $resolved,
         ];
@@ -132,7 +176,7 @@ class MarketConfigHelper
      * @param  array<string, mixed>  $city
      * @return array<string, mixed>
      */
-    private static function resolvedPayload(array $country, array $city, ?float $lat, ?float $lng): array
+    private static function resolvedPayload(array $country, array $city, ?float $lat, ?float $lng, bool $geocodeDerived = false): array
     {
         $inside = false;
         if ($lat !== null && $lng !== null) {
@@ -145,18 +189,153 @@ class MarketConfigHelper
             'country' => self::countryPayload($country),
             'city' => self::cityPayload($city, (string) $country['id']),
             'is_inside_city_bounds' => $inside,
+            'is_geocode_derived' => $geocodeDerived,
         ];
     }
 
     /**
+     * Catalog bbox first; outside catalog → reverse geocode (no snap to nearest market).
+     *
+     * @return array<string, mixed>|null
+     */
+    public static function resolveFromCoordinates(float $lat, float $lng): ?array
+    {
+        $country = self::countryContaining($lat, $lng);
+        if ($country !== null) {
+            $city = self::resolveCityInCountry($country, $lat, $lng, null);
+
+            return self::resolvedPayload($country, $city, $lat, $lng, false);
+        }
+
+        $geo = self::reverseGeocode($lat, $lng);
+        if ($geo === null) {
+            return null;
+        }
+
+        return self::resolvedFromGeocode($geo, $lat, $lng);
+    }
+
+    /**
+     * @param  array{iso:string,country_name:string,city_name:string}  $geo
      * @return array<string, mixed>
      */
-    private static function resolveFromCoordinates(float $lat, float $lng): array
+    public static function resolvedFromGeocode(array $geo, float $lat, float $lng): array
     {
-        $country = self::countryContaining($lat, $lng) ?? self::nearestCountry($lat, $lng);
-        $city = self::resolveCityInCountry($country, $lat, $lng, null);
+        $iso = strtoupper($geo['iso'] ?? '');
+        $catalogCountry = self::countryByIso($iso);
+        if ($catalogCountry !== null) {
+            $city = self::resolveCityInCountry($catalogCountry, $lat, $lng, null);
 
-        return self::resolvedPayload($country, $city, $lat, $lng);
+            return self::resolvedPayload($catalogCountry, $city, $lat, $lng, true);
+        }
+
+        $defaults = self::isoDefaults($iso);
+        $countryName = trim((string) ($geo['country_name'] ?? $iso));
+        $cityName = trim((string) ($geo['city_name'] ?? $countryName));
+        $countryId = 'geo_'.strtolower($iso !== '' ? $iso : 'xx');
+        $citySlug = strtolower(preg_replace('/[^a-z0-9]+/i', '_', $cityName) ?: 'city');
+        $cityId = $countryId.'_'.$citySlug;
+
+        $country = [
+            'id' => $countryId,
+            'iso_code' => $iso !== '' ? $iso : 'XX',
+            'display_name' => $countryName !== '' ? $countryName : ($iso !== '' ? $iso : 'Unknown'),
+            'currency_code' => $defaults['currency_code'],
+            'currency_symbol' => $defaults['currency_symbol'],
+            'dial_code' => $defaults['dial_code'],
+            'default_language_code' => $defaults['language'],
+            'min_fare' => (float) $defaults['min_fare'],
+            'fare_negotiation_step' => (float) $defaults['fare_step'],
+            'bounds' => [
+                'min_lat' => $lat - 5,
+                'max_lat' => $lat + 5,
+                'min_lng' => $lng - 5,
+                'max_lng' => $lng + 5,
+            ],
+            'cities' => [],
+        ];
+        $city = [
+            'id' => $cityId,
+            'display_name' => $cityName !== '' ? $cityName : $country['display_name'],
+            'center_lat' => $lat,
+            'center_lng' => $lng,
+            'min_lat' => $lat - 0.15,
+            'max_lat' => $lat + 0.15,
+            'min_lng' => $lng - 0.15,
+            'max_lng' => $lng + 0.15,
+            'zones' => [],
+        ];
+        $country['cities'] = [$city];
+
+        return self::resolvedPayload($country, $city, $lat, $lng, true);
+    }
+
+    /**
+     * @return array{iso:string,country_name:string,city_name:string}|null
+     */
+    public static function reverseGeocode(float $lat, float $lng): ?array
+    {
+        try {
+            $settings = GeneralSettings::query()->first();
+            $serverKey = trim((string) ($settings->server_map_key ?? ''));
+            if ($serverKey === '' || str_starts_with($serverKey, 'CHANGE_ME')) {
+                return null;
+            }
+
+            $url = GoogleMapsProxyHelper::appendServerKey(
+                'https://maps.googleapis.com/maps/api/geocode/json?latlng='.urlencode($lat.','.$lng).'&language=es',
+                $serverKey
+            );
+            if (! GoogleMapsProxyHelper::isAllowedUrl($url)) {
+                return null;
+            }
+
+            $response = Http::timeout(8)->get($url);
+            if (! $response->ok()) {
+                return null;
+            }
+            $json = $response->json();
+            $results = $json['results'] ?? [];
+            if (! is_array($results) || $results === []) {
+                return null;
+            }
+
+            $iso = '';
+            $countryName = '';
+            $cityName = '';
+            foreach ($results as $result) {
+                foreach ($result['address_components'] ?? [] as $component) {
+                    $types = $component['types'] ?? [];
+                    if (in_array('country', $types, true)) {
+                        $iso = (string) ($component['short_name'] ?? '');
+                        $countryName = (string) ($component['long_name'] ?? '');
+                    }
+                    if ($cityName === '' && (in_array('locality', $types, true) || in_array('administrative_area_level_2', $types, true))) {
+                        $cityName = (string) ($component['long_name'] ?? '');
+                    }
+                    if ($cityName === '' && in_array('administrative_area_level_1', $types, true)) {
+                        $cityName = (string) ($component['long_name'] ?? '');
+                    }
+                }
+                if ($iso !== '') {
+                    break;
+                }
+            }
+
+            if ($iso === '') {
+                return null;
+            }
+
+            return [
+                'iso' => $iso,
+                'country_name' => $countryName,
+                'city_name' => $cityName !== '' ? $cityName : $countryName,
+            ];
+        } catch (\Throwable $e) {
+            Log::warning('MarketConfigHelper reverseGeocode failed: '.$e->getMessage());
+
+            return null;
+        }
     }
 
     /**
@@ -171,29 +350,6 @@ class MarketConfigHelper
         }
 
         return null;
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private static function nearestCountry(float $lat, float $lng): array
-    {
-        $countries = self::countries();
-        $nearest = $countries[0];
-        $nearestDistance = PHP_FLOAT_MAX;
-
-        foreach ($countries as $country) {
-            $bounds = $country['bounds'] ?? [];
-            $centerLat = (($bounds['min_lat'] ?? 0) + ($bounds['max_lat'] ?? 0)) / 2;
-            $centerLng = (($bounds['min_lng'] ?? 0) + ($bounds['max_lng'] ?? 0)) / 2;
-            $distance = self::haversineKm($lat, $lng, $centerLat, $centerLng);
-            if ($distance < $nearestDistance) {
-                $nearestDistance = $distance;
-                $nearest = $country;
-            }
-        }
-
-        return $nearest;
     }
 
     /**
@@ -216,7 +372,9 @@ class MarketConfigHelper
                     return $city;
                 }
             }
-            return self::nearestCity($cities, $lat, $lng);
+            if ($cities !== []) {
+                return self::nearestCity($cities, $lat, $lng);
+            }
         }
 
         return $cities[0] ?? ['id' => '', 'display_name' => ''];

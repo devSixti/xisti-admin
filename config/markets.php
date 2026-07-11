@@ -2,12 +2,40 @@
 
 /**
  * XISTI market catalog — single source of truth for mobile regional config.
- * Countries: CO, US, BR, AR. Override per-env via XISTI_MARKETS_VERSION.
+ * Countries: CO, US, BR, AR, MX, ES, CL, PE, EC.
+ * Override per-env via XISTI_MARKETS_VERSION.
  */
 return [
-    'version' => env('XISTI_MARKETS_VERSION', '2026-06-03'),
+    'version' => env('XISTI_MARKETS_VERSION', '2026-07-11'),
     'default_country_id' => 'co',
     'default_city_id' => 'medellin',
+    /**
+     * ISO → defaults used when reverse-geocode finds a country outside the catalog.
+     * currency_symbol should match world_currency.symbol where possible.
+     */
+    'iso_defaults' => [
+        'CO' => ['currency_code' => 'COP', 'currency_symbol' => 'COL$', 'dial_code' => '+57', 'language' => 'es', 'min_fare' => 5000, 'fare_step' => 500],
+        'US' => ['currency_code' => 'USD', 'currency_symbol' => '$', 'dial_code' => '+1', 'language' => 'en', 'min_fare' => 8, 'fare_step' => 1],
+        'BR' => ['currency_code' => 'BRL', 'currency_symbol' => 'R$', 'dial_code' => '+55', 'language' => 'pt', 'min_fare' => 12, 'fare_step' => 2],
+        'AR' => ['currency_code' => 'ARS', 'currency_symbol' => 'AR$', 'dial_code' => '+54', 'language' => 'es', 'min_fare' => 2500, 'fare_step' => 500],
+        'MX' => ['currency_code' => 'MXN', 'currency_symbol' => 'MX$', 'dial_code' => '+52', 'language' => 'es', 'min_fare' => 45, 'fare_step' => 5],
+        'ES' => ['currency_code' => 'EUR', 'currency_symbol' => '€', 'dial_code' => '+34', 'language' => 'es', 'min_fare' => 6, 'fare_step' => 1],
+        'CL' => ['currency_code' => 'CLP', 'currency_symbol' => 'CL$', 'dial_code' => '+56', 'language' => 'es', 'min_fare' => 1500, 'fare_step' => 100],
+        'PE' => ['currency_code' => 'PEN', 'currency_symbol' => 'S/', 'dial_code' => '+51', 'language' => 'es', 'min_fare' => 8, 'fare_step' => 1],
+        'EC' => ['currency_code' => 'USD', 'currency_symbol' => '$', 'dial_code' => '+593', 'language' => 'es', 'min_fare' => 3, 'fare_step' => 0.5],
+        'GB' => ['currency_code' => 'GBP', 'currency_symbol' => '£', 'dial_code' => '+44', 'language' => 'en', 'min_fare' => 6, 'fare_step' => 1],
+        'CA' => ['currency_code' => 'CAD', 'currency_symbol' => 'CA$', 'dial_code' => '+1', 'language' => 'en', 'min_fare' => 8, 'fare_step' => 1],
+        'DE' => ['currency_code' => 'EUR', 'currency_symbol' => '€', 'dial_code' => '+49', 'language' => 'en', 'min_fare' => 6, 'fare_step' => 1],
+        'FR' => ['currency_code' => 'EUR', 'currency_symbol' => '€', 'dial_code' => '+33', 'language' => 'fr', 'min_fare' => 6, 'fare_step' => 1],
+        'IT' => ['currency_code' => 'EUR', 'currency_symbol' => '€', 'dial_code' => '+39', 'language' => 'it', 'min_fare' => 6, 'fare_step' => 1],
+        'PT' => ['currency_code' => 'EUR', 'currency_symbol' => '€', 'dial_code' => '+351', 'language' => 'pt', 'min_fare' => 5, 'fare_step' => 1],
+        'UY' => ['currency_code' => 'UYU', 'currency_symbol' => 'UY$', 'dial_code' => '+598', 'language' => 'es', 'min_fare' => 80, 'fare_step' => 10],
+        'PY' => ['currency_code' => 'PYG', 'currency_symbol' => '₲', 'dial_code' => '+595', 'language' => 'es', 'min_fare' => 15000, 'fare_step' => 1000],
+        'BO' => ['currency_code' => 'BOB', 'currency_symbol' => 'Bs', 'dial_code' => '+591', 'language' => 'es', 'min_fare' => 10, 'fare_step' => 1],
+        'CR' => ['currency_code' => 'CRC', 'currency_symbol' => '₡', 'dial_code' => '+506', 'language' => 'es', 'min_fare' => 1500, 'fare_step' => 100],
+        'PA' => ['currency_code' => 'USD', 'currency_symbol' => '$', 'dial_code' => '+507', 'language' => 'es', 'min_fare' => 3, 'fare_step' => 0.5],
+        'DEFAULT' => ['currency_code' => 'USD', 'currency_symbol' => '$', 'dial_code' => '+1', 'language' => 'en', 'min_fare' => 5, 'fare_step' => 1],
+    ],
     'countries' => [
         [
             'id' => 'co',
@@ -81,6 +109,92 @@ return [
                 ['id' => 'buenos_aires', 'display_name' => 'Buenos Aires', 'center_lat' => -34.6037, 'center_lng' => -58.3816, 'min_lat' => -34.75, 'max_lat' => -34.45, 'min_lng' => -58.55, 'max_lng' => -58.30],
                 ['id' => 'cordoba', 'display_name' => 'Córdoba', 'center_lat' => -31.4201, 'center_lng' => -64.1888, 'min_lat' => -31.55, 'max_lat' => -31.30, 'min_lng' => -64.35, 'max_lng' => -64.05],
                 ['id' => 'rosario', 'display_name' => 'Rosario', 'center_lat' => -32.9468, 'center_lng' => -60.6393, 'min_lat' => -33.10, 'max_lat' => -32.80, 'min_lng' => -60.80, 'max_lng' => -60.50],
+            ],
+        ],
+        [
+            'id' => 'mx',
+            'iso_code' => 'MX',
+            'display_name' => 'México',
+            'currency_code' => 'MXN',
+            'currency_symbol' => 'MX$',
+            'dial_code' => '+52',
+            'default_language_code' => 'es',
+            'min_fare' => 45,
+            'fare_negotiation_step' => 5,
+            'bounds' => ['min_lat' => 14.5, 'max_lat' => 32.7, 'min_lng' => -118.5, 'max_lng' => -86.5],
+            'cities' => [
+                ['id' => 'mexico_city', 'display_name' => 'Ciudad de México', 'center_lat' => 19.4326, 'center_lng' => -99.1332, 'min_lat' => 19.20, 'max_lat' => 19.60, 'min_lng' => -99.35, 'max_lng' => -98.95],
+                ['id' => 'guadalajara', 'display_name' => 'Guadalajara', 'center_lat' => 20.6597, 'center_lng' => -103.3496, 'min_lat' => 20.55, 'max_lat' => 20.80, 'min_lng' => -103.50, 'max_lng' => -103.20],
+                ['id' => 'monterrey', 'display_name' => 'Monterrey', 'center_lat' => 25.6866, 'center_lng' => -100.3161, 'min_lat' => 25.55, 'max_lat' => 25.85, 'min_lng' => -100.45, 'max_lng' => -100.15],
+                ['id' => 'cancun', 'display_name' => 'Cancún', 'center_lat' => 21.1619, 'center_lng' => -86.8515, 'min_lat' => 21.05, 'max_lat' => 21.25, 'min_lng' => -86.95, 'max_lng' => -86.75],
+            ],
+        ],
+        [
+            'id' => 'es',
+            'iso_code' => 'ES',
+            'display_name' => 'España',
+            'currency_code' => 'EUR',
+            'currency_symbol' => '€',
+            'dial_code' => '+34',
+            'default_language_code' => 'es',
+            'min_fare' => 6,
+            'fare_negotiation_step' => 1,
+            'bounds' => ['min_lat' => 36.0, 'max_lat' => 43.8, 'min_lng' => -9.5, 'max_lng' => 4.5],
+            'cities' => [
+                ['id' => 'madrid', 'display_name' => 'Madrid', 'center_lat' => 40.4168, 'center_lng' => -3.7038, 'min_lat' => 40.30, 'max_lat' => 40.55, 'min_lng' => -3.85, 'max_lng' => -3.55],
+                ['id' => 'barcelona', 'display_name' => 'Barcelona', 'center_lat' => 41.3874, 'center_lng' => 2.1686, 'min_lat' => 41.30, 'max_lat' => 41.50, 'min_lng' => 2.05, 'max_lng' => 2.30],
+                ['id' => 'valencia', 'display_name' => 'Valencia', 'center_lat' => 39.4699, 'center_lng' => -0.3763, 'min_lat' => 39.40, 'max_lat' => 39.55, 'min_lng' => -0.45, 'max_lng' => -0.28],
+            ],
+        ],
+        [
+            'id' => 'cl',
+            'iso_code' => 'CL',
+            'display_name' => 'Chile',
+            'currency_code' => 'CLP',
+            'currency_symbol' => 'CL$',
+            'dial_code' => '+56',
+            'default_language_code' => 'es',
+            'min_fare' => 1500,
+            'fare_negotiation_step' => 100,
+            'bounds' => ['min_lat' => -56.0, 'max_lat' => -17.5, 'min_lng' => -76.0, 'max_lng' => -66.0],
+            'cities' => [
+                ['id' => 'santiago', 'display_name' => 'Santiago', 'center_lat' => -33.4489, 'center_lng' => -70.6693, 'min_lat' => -33.60, 'max_lat' => -33.30, 'min_lng' => -70.85, 'max_lng' => -70.50],
+                ['id' => 'valparaiso', 'display_name' => 'Valparaíso', 'center_lat' => -33.0472, 'center_lng' => -71.6127, 'min_lat' => -33.12, 'max_lat' => -32.95, 'min_lng' => -71.70, 'max_lng' => -71.50],
+                ['id' => 'concepcion', 'display_name' => 'Concepción', 'center_lat' => -36.8201, 'center_lng' => -73.0444, 'min_lat' => -36.90, 'max_lat' => -36.75, 'min_lng' => -73.15, 'max_lng' => -72.95],
+            ],
+        ],
+        [
+            'id' => 'pe',
+            'iso_code' => 'PE',
+            'display_name' => 'Perú',
+            'currency_code' => 'PEN',
+            'currency_symbol' => 'S/',
+            'dial_code' => '+51',
+            'default_language_code' => 'es',
+            'min_fare' => 8,
+            'fare_negotiation_step' => 1,
+            'bounds' => ['min_lat' => -18.5, 'max_lat' => -0.0, 'min_lng' => -81.5, 'max_lng' => -68.5],
+            'cities' => [
+                ['id' => 'lima', 'display_name' => 'Lima', 'center_lat' => -12.0464, 'center_lng' => -77.0428, 'min_lat' => -12.25, 'max_lat' => -11.90, 'min_lng' => -77.15, 'max_lng' => -76.85],
+                ['id' => 'arequipa', 'display_name' => 'Arequipa', 'center_lat' => -16.4090, 'center_lng' => -71.5375, 'min_lat' => -16.50, 'max_lat' => -16.30, 'min_lng' => -71.65, 'max_lng' => -71.45],
+                ['id' => 'cusco', 'display_name' => 'Cusco', 'center_lat' => -13.5319, 'center_lng' => -71.9675, 'min_lat' => -13.60, 'max_lat' => -13.45, 'min_lng' => -72.05, 'max_lng' => -71.90],
+            ],
+        ],
+        [
+            'id' => 'ec',
+            'iso_code' => 'EC',
+            'display_name' => 'Ecuador',
+            'currency_code' => 'USD',
+            'currency_symbol' => '$',
+            'dial_code' => '+593',
+            'default_language_code' => 'es',
+            'min_fare' => 3,
+            'fare_negotiation_step' => 0.5,
+            'bounds' => ['min_lat' => -5.0, 'max_lat' => 1.7, 'min_lng' => -81.5, 'max_lng' => -75.0],
+            'cities' => [
+                ['id' => 'quito', 'display_name' => 'Quito', 'center_lat' => -0.1807, 'center_lng' => -78.4678, 'min_lat' => -0.35, 'max_lat' => 0.05, 'min_lng' => -78.60, 'max_lng' => -78.35],
+                ['id' => 'guayaquil', 'display_name' => 'Guayaquil', 'center_lat' => -2.1709, 'center_lng' => -79.9224, 'min_lat' => -2.30, 'max_lat' => -2.05, 'min_lng' => -80.05, 'max_lng' => -79.80],
+                ['id' => 'cuenca', 'display_name' => 'Cuenca', 'center_lat' => -2.9001, 'center_lng' => -79.0059, 'min_lat' => -2.98, 'max_lat' => -2.82, 'min_lng' => -79.10, 'max_lng' => -78.90],
             ],
         ],
     ],

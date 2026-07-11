@@ -33,7 +33,18 @@ class RideSessionHelper
         }
 
         foreach (ProviderUserRunningService::query()->where('provider_id', $userId)->get() as $pointer) {
-            self::reconcilePointer((int) $pointer->booking_id, fn () => $pointer->delete(), $notificationClass, $generalSettings);
+            self::reconcilePointer(
+                (int) $pointer->booking_id,
+                function () use ($pointer) {
+                    ProviderUserRunningService::query()
+                        ->where('provider_id', $pointer->provider_id)
+                        ->where('booking_id', $pointer->booking_id)
+                        ->when($pointer->user_id !== null, fn ($q) => $q->where('user_id', $pointer->user_id))
+                        ->delete();
+                },
+                $notificationClass,
+                $generalSettings
+            );
         }
 
         TransportRideBook::query()
