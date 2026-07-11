@@ -6,7 +6,6 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SSH_HOST="${XISTI_SSH_HOST:-xisti-ec2}"
 APP_DIR="/var/www/xisti-admin"
-DEPLOY_USER="ubuntu"
 
 echo "==> Local: $ROOT @ $(git -C "$ROOT" rev-parse --short HEAD 2>/dev/null || echo no-git)"
 echo "==> Syncing to ${SSH_HOST}:${APP_DIR}"
@@ -27,25 +26,24 @@ rsync -az --delete \
   --exclude '.cursor' \
   "${ROOT}/" "${SSH_HOST}:/tmp/xisti-admin-deploy/"
 
-ssh -o BatchMode=yes "$SSH_HOST" "bash -s" <<DEPLOY
+ssh -o BatchMode=yes "$SSH_HOST" "bash -s" <<'DEPLOY'
 set -euo pipefail
-APP_DIR='${APP_DIR}'
-sudo rsync -a --delete \
+APP_DIR='/var/www/xisti-admin'
+rsync -a --delete \
   --exclude '.env' \
   --exclude 'storage' \
   --exclude 'vendor' \
   --exclude '.git' \
-  /tmp/xisti-admin-deploy/ "\${APP_DIR}/"
-sudo chown -R www-data:www-data "\${APP_DIR}/app" "\${APP_DIR}/config" "\${APP_DIR}/routes" "\${APP_DIR}/database" "\${APP_DIR}/tests" 2>/dev/null || true
-cd "\${APP_DIR}"
-sudo -u www-data composer install --no-dev --optimize-autoloader --no-interaction 2>/dev/null || \
-  sudo composer install --no-dev --optimize-autoloader --no-interaction
-sudo -u www-data php artisan migrate --force
-sudo -u www-data php artisan config:clear
-sudo -u www-data php artisan cache:clear
-sudo -u www-data php artisan config:cache
-sudo -u www-data php artisan view:cache || true
-sudo systemctl reload php8.2-fpm nginx 2>/dev/null || sudo systemctl reload php*-fpm nginx 2>/dev/null || true
+  /tmp/xisti-admin-deploy/ "${APP_DIR}/"
+cd "${APP_DIR}"
+composer install --no-dev --optimize-autoloader --no-interaction
+php artisan migrate --force
+php artisan config:clear
+php artisan cache:clear
+rm -f bootstrap/cache/config.php
+php artisan config:cache
+php artisan view:cache || true
+sudo systemctl reload php8.5-fpm nginx 2>/dev/null || sudo systemctl reload php*-fpm nginx 2>/dev/null || true
 rm -rf /tmp/xisti-admin-deploy
-echo '==> XISTI admin deploy OK'
+echo "==> XISTI admin deploy OK — markets version: $(php -r "echo (require 'config/markets.php')['version'] ?? '?';")"
 DEPLOY
