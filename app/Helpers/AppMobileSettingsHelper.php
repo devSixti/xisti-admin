@@ -58,13 +58,56 @@ class AppMobileSettingsHelper
         }
     }
 
-    public static function pricingAndCommissionPayload(?GeneralSettings $general = null): array
+    /**
+     * Negotiation step for the passenger's currency.
+     * Admin stores a COP-scale step (e.g. 500); foreign currencies must not receive that
+     * value or mobile snap(recommended_usd / 500) collapses fares to 0.
+     *
+     * @param  \App\Models\WorldCurrency|null  $userCurrency
+     */
+    public static function negotiationStepForCurrency(?GeneralSettings $general = null, $userCurrency = null): int
+    {
+        if ($general === null) {
+            try {
+                $general = request()->get('general_settings');
+            } catch (\Throwable $e) {
+                $general = null;
+            }
+        }
+        $base = max(1, (int) (optional($general)->fare_negotiation_step ?? 500));
+        if ($userCurrency === null) {
+            return $base;
+        }
+
+        $code = strtoupper((string) ($userCurrency->currency_code ?? ''));
+        if ($code === '' || $code === 'COP') {
+            return $base;
+        }
+
+        // High-denomination currencies can keep a large integer step.
+        $largeUnit = ['ARS', 'CLP', 'PYG', 'CRC', 'UYU', 'JPY', 'VND', 'IDR'];
+        if (in_array($code, $largeUnit, true)) {
+            return $base;
+        }
+
+        $ratio = (float) ($userCurrency->ratio ?? 0);
+        if ($ratio <= 0) {
+            return 1;
+        }
+
+        return max(1, (int) round($base * $ratio));
+    }
+
+    /**
+     * @param  \App\Models\WorldCurrency|null  $userCurrency
+     */
+    public static function pricingAndCommissionPayload(?GeneralSettings $general = null, $userCurrency = null): array
     {
         $general = $general ?? request()->get('general_settings');
         $service = ServiceSettings::query()->first();
 
         return array_merge([
-            'fare_negotiation_step' => (int) ($general->fare_negotiation_step ?? config('xisti.fare_negotiation_step_cop', 500)),
+            'fare_negotiation_step' => self::negotiationStepForCurrency($general, $userCurrency),
             'vat_rate_on_commission' => (float) ($general->vat_rate_on_commission ?? 19),
             'admin_commission_percent' => (float) ($service->admin_commission ?? config('xisti.default_commission_percent', 8)),
             'commission_rates_by_variant' => VehicleCommissionHelper::ratesMapForMobile(),

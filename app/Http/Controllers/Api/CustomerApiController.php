@@ -1425,12 +1425,8 @@ class CustomerApiController extends Controller
             return $failed;
         }
 
-        $user_currency = WorldCurrency::query()->where('symbol', $user_check->currency)->first();
-        if ($user_currency == Null) {
-            $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
-        }
-
-        $currency = $user_currency != Null ? $user_currency->ratio : 1;
+        $user_currency = \App\Support\UserCurrencyResolver::forUser($user_check);
+        $currency = $user_currency != null ? (float) $user_currency->ratio : 1.0;
 
         $vehicle_service = VehicleService::query()->where('id',$request->get('service_category_id'))->first();
         if($vehicle_service == Null){
@@ -1478,14 +1474,24 @@ class CustomerApiController extends Controller
         $minPrice = $priced['min'];
         $maxPrice = $priced['max'];
 
+        $recommendedOut = round($recommendedFare * $currency, 2);
+        $minOut = round($minPrice * $currency, 2);
+        $maxOut = round($maxPrice * $currency, 2);
+        // Never surface a zero suggested fare when distance/time imply a real trip.
+        if ($recommendedOut <= 0 && ($distance > 0 || $estimateTime > 0) && $minFare > 0) {
+            $recommendedOut = max(round($minFare * $currency, 2), 0.01);
+            $minOut = max($minOut, $recommendedOut);
+            $maxOut = max($maxOut, $recommendedOut);
+        }
+
         return response()->json(array_merge([
             "status" => 1,
             'message' => __('user_messages.1'),
             "message_code" => 1,
-            "recommended_fare" => round($recommendedFare * $currency,2),
-            "min_price" => round($minPrice * $currency , 2),
-            "max_price" => round($maxPrice * $currency , 2),
-        ], \App\Helpers\AppMobileSettingsHelper::pricingAndCommissionPayload($general)));
+            "recommended_fare" => $recommendedOut,
+            "min_price" => $minOut,
+            "max_price" => $maxOut,
+        ], \App\Helpers\AppMobileSettingsHelper::pricingAndCommissionPayload($general, $user_currency)));
     }
 
     public function postCustomerAddAddress(Request $request)
