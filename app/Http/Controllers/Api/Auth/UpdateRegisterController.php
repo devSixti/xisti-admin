@@ -56,11 +56,13 @@ class UpdateRegisterController extends Controller
         $normalizedEmergency = $request->get('emergency_contact') !== null && trim((string) $request->get('emergency_contact')) !== ''
             ? ColombiaFormValidation::normalizeColombianMobile($request->get('emergency_contact'), $emergencyCountryCode)
             : '';
+        $normalizedEmail = trim((string) $request->get('email'));
         $request->merge([
             'select_country_code' => $countryCode,
             'emergency_country_code' => $emergencyCountryCode,
             'contact_number' => $normalizedContact,
             'emergency_contact' => $normalizedEmergency !== '' ? $normalizedEmergency : null,
+            'email' => $normalizedEmail !== '' ? $normalizedEmail : null,
         ]);
 
         $profileUser = User::query()
@@ -155,20 +157,37 @@ class UpdateRegisterController extends Controller
         $user_details->first_name = $request->get('full_name');
         $user_details->contact_number = $normalizedContact;
         $user_details->country_code = $countryCode;
-        $user_details->email = $request->get('email');
+        $user_details->email = trim((string) $request->get('email')) ?: null;
         if ($request->file('profile_image') != Null) {
-            if (\File::exists(public_path('/assets/images/profile-images/customer/' . $user_details->avatar))) {
-                \File::delete(public_path('/assets/images/profile-images/customer/' . $user_details->avatar));
+            try {
+                if (\File::exists(public_path('/assets/images/profile-images/customer/' . $user_details->avatar))) {
+                    \File::delete(public_path('/assets/images/profile-images/customer/' . $user_details->avatar));
+                }
+                $destinationPath = public_path('/assets/images/profile-images/customer/');
+                if (! \File::isDirectory($destinationPath)) {
+                    \File::makeDirectory($destinationPath, 0755, true);
+                }
+                $file = $request->file('profile_image');
+                $img = Image::read($file->getRealPath());
+                $img->orient();
+                $extension = $file->getClientOriginalExtension() ?: 'jpg';
+                $file_new = rand(1, 9) . date('siHYdm') . rand(1, 9) . '.' . $extension;
+                $img->resize(300, 300, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($destinationPath . $file_new);
+                $user_details->avatar = $file_new;
+            } catch (\Throwable $e) {
+                \Log::error('profile_image upload failed', [
+                    'user_id' => $user_details->id,
+                    'error' => $e->getMessage(),
+                ]);
+
+                return response()->json([
+                    'status' => 0,
+                    'message' => __('user_messages.9'),
+                    'message_code' => 9,
+                ]);
             }
-            $destinationPath = public_path('/assets/images/profile-images/customer/');
-            $file = $request->file('profile_image');
-            $img = Image::read($file->getRealPath());
-            $img->orient();
-            $file_new = rand(1, 9) . date('siHYdm') . rand(1, 9) . '.' . $file->getClientOriginalExtension();
-            $img->resize(300, 300, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($destinationPath . $file_new);
-            $user_details->avatar = $file_new;
         }
         $user_details->emergency_contact = $normalizedEmergency !== '' ? $normalizedEmergency : null;
         $user_details->emergency_country_code = $normalizedEmergency !== '' ? $emergencyCountryCode : null;
