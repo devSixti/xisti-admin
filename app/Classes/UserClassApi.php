@@ -373,7 +373,7 @@ class UserClassApi
         $general_settings = request()->get("general_settings");
         $last_amount = $this->notificationClass->getWalletBalance($request->get('user_id'));
         if ($user_details['currency'] != Null) {
-            $user_currency = WorldCurrency::query()->where('symbol', $user_details['currency'])->first();
+            $user_currency = \App\Support\UserCurrencyResolver::forCurrency($user_details['currency']);
             if ($user_currency == Null) {
                 $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
             }
@@ -481,7 +481,7 @@ class UserClassApi
         }
 
         if ($user_details['currency'] != Null) {
-            $user_currency = WorldCurrency::query()->where('symbol', $user_details['currency'])->first();
+            $user_currency = \App\Support\UserCurrencyResolver::forCurrency($user_details['currency']);
             if ($user_currency == Null) {
                 $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
             }
@@ -1002,7 +1002,7 @@ class UserClassApi
 
                 $user_details = User::query()->where('id', $ride->user_id)->whereNull('deleted_at')->first();
                 if ($user_details != Null) {
-                    $user_currency = WorldCurrency::query()->where('symbol', $user_details->currency)->first();
+                    $user_currency = \App\Support\UserCurrencyResolver::forCurrency($user_details->currency);
                     if ($user_currency == Null) {
                         $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
                     }
@@ -1324,7 +1324,7 @@ class UserClassApi
         $topupAmount = (float) ($request_details['amount'] ?? 0);
         $minWompiTopup = (float) ($general_settings->driver_min_amount ?? 13000);
         if ($topupAmount > 0 && $topupAmount < $minWompiTopup) {
-            $user_currency = WorldCurrency::query()->where('symbol', $currency)->first();
+            $user_currency = \App\Support\UserCurrencyResolver::forCurrency($currency);
             if ($user_currency == null) {
                 $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
             }
@@ -1384,7 +1384,7 @@ class UserClassApi
             ]);
         }
 
-        $provider_currency = WorldCurrency::query()->where('symbol', $currency)->first();
+        $provider_currency = \App\Support\UserCurrencyResolver::forCurrency($currency);
         if ($provider_currency == Null) {
             $provider_currency = WorldCurrency::query()->where('default_currency', 1)->first();
         }
@@ -1602,7 +1602,7 @@ class UserClassApi
             return false;
         }
 
-        $provider_currency = WorldCurrency::query()->where('symbol', $user->currency)->first();
+        $provider_currency = \App\Support\UserCurrencyResolver::forCurrency($user->currency);
         if ($provider_currency == Null) {
             $provider_currency = WorldCurrency::query()->where('default_currency', 1)->first();
         }
@@ -1766,7 +1766,7 @@ class UserClassApi
         //filter date => 0:all,1:toady,2:7 days,3:30 days,4:this year,5:Last year
         //order_by => 0:all,1:credit,2:debit
         //service_category => null,not null for filter cat wise
-        $user_currency = WorldCurrency::query()->where('symbol', $currency)->first();
+        $user_currency = \App\Support\UserCurrencyResolver::forCurrency($currency);
         if ($user_currency == Null) {
             $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
         }
@@ -1866,7 +1866,7 @@ class UserClassApi
     //Get Wallet Balance Code
     public function getWalletBalance($provider_type, $provider_id, $currency){
         $settings = request()->get("general_settings");
-        $user_currency = WorldCurrency::query()->where('symbol', $currency)->first();
+        $user_currency = \App\Support\UserCurrencyResolver::forCurrency($currency);
         if ($user_currency == Null) {
             $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
         }
@@ -1929,7 +1929,7 @@ class UserClassApi
     //Wallet to Wallet Transfer Manage Code
     public function walletToWalletTransfer($provider_type, $provider_id, $wallet_holder_name, $currency, $request_details){
 
-        $provider_currency = WorldCurrency::query()->where('symbol', $currency)->first();
+        $provider_currency = \App\Support\UserCurrencyResolver::forCurrency($currency);
         if ($provider_currency == Null) {
             $provider_currency = WorldCurrency::query()->where('default_currency', 1)->first();
         }

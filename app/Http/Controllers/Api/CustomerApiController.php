@@ -153,7 +153,7 @@ class CustomerApiController extends Controller
             $lang_prefix = "";
         }
 
-        $user_currency = WorldCurrency::query()->where('symbol', $user_details->currency)->first();
+        $user_currency = \App\Support\UserCurrencyResolver::forCurrency($user_details->currency);
         if ($user_currency == Null) {
             $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
         }
@@ -307,7 +307,7 @@ class CustomerApiController extends Controller
                     $estimate_price = $courier_details->estimate_price;
                 }
             }
-            $user_currency = WorldCurrency::query()->where('symbol', $user_details->currency)->first();
+            $user_currency = \App\Support\UserCurrencyResolver::forCurrency($user_details->currency);
             if ($user_currency == Null) {
                 $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
             }
@@ -1252,11 +1252,7 @@ class CustomerApiController extends Controller
             return $failed;
         }
 
-        $user_currency = WorldCurrency::query()->where('symbol', $user_details->currency)->first();
-        if ($user_currency == Null) {
-            $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
-        }
-        $currency = $user_currency != Null ? $user_currency->ratio : 1;
+         = \App\Support\UserCurrencyResolver::ratioForUser($user_details);
 
         $avatar = url('/assets/images/profile-images/customer/');
         $refer_history = UserReferHistory::query()
@@ -1338,11 +1334,7 @@ class CustomerApiController extends Controller
 
         $settings = request()->get("general_settings");
 
-        $user_currency = WorldCurrency::query()->where('symbol', $user_check->currency)->first();
-        if ($user_currency == Null) {
-            $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
-        }
-        $currency = $user_currency != Null ? $user_currency->ratio : 1;
+         = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
         $currency_code = $user_currency != Null ? $user_currency->currency_code : '';
 
         $amount_to_default = round($request->get('amount')/ $currency, 2);

@@ -31,4 +31,27 @@ final class UserCurrencyResolver
 
         return $currency !== null ? (float) $currency->ratio : 1.0;
     }
+
+    public static function forCurrency(?string $raw): ?WorldCurrency
+    {
+        $raw = trim((string) $raw);
+        if ($raw === '') {
+            return WorldCurrency::query()->where('default_currency', 1)->first();
+        }
+
+        $found = WorldCurrency::query()
+            ->where(function ($q) use ($raw) {
+                $q->where('symbol', $raw)->orWhere('currency_code', $raw);
+            })
+            ->first();
+
+        return $found ?? WorldCurrency::query()->where('default_currency', 1)->first();
+    }
+
+    public static function ratioForCurrency(?string $raw): float
+    {
+        $currency = self::forCurrency($raw);
+
+        return $currency !== null ? (float) $currency->ratio : 1.0;
+    }
 }

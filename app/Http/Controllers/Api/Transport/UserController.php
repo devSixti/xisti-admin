@@ -154,7 +154,7 @@ class UserController extends Controller
         if ($failed = $this->userClassapi->authJsonResponse($user_check)) {
             return $failed;
         }
-        $user_currency = WorldCurrency::query()->where('symbol', $user_check->currency)->first();
+        $user_currency = \App\Support\UserCurrencyResolver::forCurrency($user_check->currency);
         if ($user_currency == Null) {
             $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
         }
@@ -1258,11 +1258,7 @@ class UserController extends Controller
             return $failed;
         }
         $general_settings=request()->get('general_settings');
-        $user_currency = WorldCurrency::query()->where('symbol', $user_check->currency)->first();
-        if ($user_currency == Null) {
-            $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
-        }
-        $currency = $user_currency != Null ? $user_currency->ratio : 1;
+         = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
 
         if($request->get('update_status') == 1){
             if($general_settings != Null && $general_settings->auto_approve == 0){
@@ -1358,11 +1354,8 @@ class UserController extends Controller
             return $failed;
         }
         $user_details = User::query()->where("id", "=", $request->get('user_id'))->first();
-        $user_currency = WorldCurrency::query()->where('symbol', $user_details->currency)->first();
-        if ($user_currency == Null) {
-            $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
-        }
-        $currency = $user_currency != Null ? $user_currency->ratio : 1;
+        $user_currency = \App\Support\UserCurrencyResolver::forUser($user_details);
+        $currency = $user_currency != null ? (float) $user_currency->ratio : 1.0;
 
         $language = $user_details->language;
         if ($language != "en" && $language != "" && $language != "Null") {
@@ -1397,8 +1390,8 @@ class UserController extends Controller
             ]);
         }
 
-        $current_lat = $driver_details->current_lat;
-        $current_long = $driver_details->current_long;
+        [$current_lat, $current_long] = \App\Support\DriverLocationHelper::syncFromRequest($request, $driver_details);
+        $hasDriverGps = \App\Support\DriverLocationHelper::isValid((float) $current_lat, (float) $current_long);
 
         $deliveryCapable = ServiceCatalogHelper::driverCanReceiveDelivery(
             (int) ($driver_details->vehicle_type_id ?? 0),
@@ -1486,7 +1479,9 @@ class UserController extends Controller
                 ->join('users','users.id','=','user_ride_booking.user_id')
                 ->leftjoin('user_courier_service_details','user_courier_service_details.ride_id','=','user_ride_booking.id')
                 ->leftJoin('user_rating','user_rating.user_id','=','users.id')
-                ->whereRaw(DB::raw("(6371 * acos( cos( radians(pickup_lat) ) * cos( radians(" .$current_lat. ") )  * cos( radians( " .$current_long. " ) - radians(pickup_long) ) + sin( radians(pickup_lat) ) * sin(radians( " .$current_lat. " ) ) ) ) < " . $radius))
+                ->when($hasDriverGps, function ($q) use ($current_lat, $current_long, $radius) {
+                    $q->whereRaw(DB::raw("(6371 * acos( cos( radians(pickup_lat) ) * cos( radians(" .$current_lat. ") )  * cos( radians( " .$current_long. " ) - radians(pickup_long) ) + sin( radians(pickup_lat) ) * sin(radians( " .$current_lat. " ) ) ) ) < " . $radius));
+                })
                 ->where('user_ride_booking.status',0)
                 ->where('users.status',1)
                 ->where('users.id','!=',$driver_details->user_id)
@@ -1714,11 +1709,7 @@ class UserController extends Controller
             ]);
         }
       $general_settings=request()->get('general_settings');
-        $user_currency = WorldCurrency::query()->where('symbol', $user_check->currency)->first();
-        if ($user_currency == Null) {
-            $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
-        }
-        $currency = $user_currency != Null ? $user_currency->ratio : 1;
+         = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
 
         $driver_bid_accepted = DriverBid::query()->where('ride_id',$request->get('ride_id'))->where('status',1)->first();
         $service_setting = ServiceSettings::query()->select('admin_commission','driver_timeout')->first();
@@ -1824,11 +1815,7 @@ class UserController extends Controller
         $pickup_lat = $ride_details->pickup_lat;
         $pickup_long = $ride_details->pickup_long;
 
-        $user_currency = WorldCurrency::query()->where('symbol', $user_details->currency)->first();
-        if ($user_currency == Null) {
-            $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
-        }
-        $currency = $user_currency != Null ? $user_currency->ratio : 1;
+         = \App\Support\UserCurrencyResolver::ratioForUser($user_details);
 
         $avatar = url('/assets/images/profile-images/customer/');
         $vehicle_service_icon = url('/assets/images/vehicle-service/');
@@ -1909,11 +1896,7 @@ class UserController extends Controller
             ]);
         }
 
-        $user_currency = WorldCurrency::query()->where('symbol', $user_details->currency)->first();
-        if ($user_currency == Null) {
-            $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
-        }
-        $currency = $user_currency != Null ? $user_currency->ratio : 1;
+         = \App\Support\UserCurrencyResolver::ratioForUser($user_details);
 
         $amount = round($request->get('offered_price') / $currency,2);
 
@@ -2761,7 +2744,7 @@ class UserController extends Controller
                                             "message_code" => 9,
                                         ]);
                                     }
-                                    $driver_currency = WorldCurrency::query()->where('symbol', $driver_check->currency)->first();
+                                    $driver_currency = \App\Support\UserCurrencyResolver::forCurrency($driver_check->currency);
                                     if ($driver_currency == Null) {
                                         $driver_currency = WorldCurrency::query()->where('default_currency', 1)->first();
                                     }
@@ -3108,7 +3091,7 @@ class UserController extends Controller
 
         //code for dynamic Toll charge module 0 - off , 1 - driver will give the final charge , 2 - driver will give no of tolls & charge per toll is decided by admin
         $is_toll_charge = ($settings) ? $settings->is_toll_module : 0;
-        $driver_currency = WorldCurrency::query()->where('symbol', $driver_check->currency)->first();
+        $driver_currency = \App\Support\UserCurrencyResolver::forCurrency($driver_check->currency);
         if ($driver_currency == Null) {
             $driver_currency = WorldCurrency::query()->where('default_currency', 1)->first();
         }
@@ -3365,7 +3348,7 @@ class UserController extends Controller
             return $failed;
         }
 
-        $user_currency = WorldCurrency::query()->where('symbol', $driver_check->currency)->first();
+        $user_currency = \App\Support\UserCurrencyResolver::forCurrency($driver_check->currency);
         if ($user_currency == Null) {
             $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
         }
@@ -3615,7 +3598,7 @@ class UserController extends Controller
             return $failed;
         }
 
-        $user_currency = WorldCurrency::query()->where('symbol', $driver_check->currency)->first();
+        $user_currency = \App\Support\UserCurrencyResolver::forCurrency($driver_check->currency);
         if ($user_currency == Null) {
             $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
         }
@@ -3909,11 +3892,7 @@ class UserController extends Controller
             return $failed;
         }
 
-        $user_currency = WorldCurrency::query()->where('symbol', $user_check->currency)->first();
-        if ($user_currency == Null) {
-            $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
-        }
-        $currency = $user_currency != Null ? $user_currency->ratio : 1;
+         = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
 
         $language = $user_check->language;
         if ($language != "en" && $language != "" && $language != "Null") {
@@ -4525,11 +4504,7 @@ class UserController extends Controller
             ->join('users','users.id','=','transport_driver_details.user_id')
             ->where('transport_driver_details.user_id',$request->get('user_id'))->first();
 
-        $user_currency = WorldCurrency::query()->where('symbol', $user_check->currency)->first();
-        if ($user_currency == Null) {
-            $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
-        }
-        $currency = $user_currency != Null ? $user_currency->ratio : 1;
+         = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
 
         $amount = round($request->get('offered_fare') / $currency,2);
 
@@ -4664,11 +4639,7 @@ class UserController extends Controller
 
         if ($ride != Null) {
             $general_settings=request()->get('general_settings');
-            $user_currency = WorldCurrency::query()->where('symbol', $user_check->currency)->first();
-            if ($user_currency == Null) {
-                $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
-            }
-            $currency = $user_currency != Null ? $user_currency->ratio : 1;
+             = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
             $service_setting = ServiceSettings::query()->select('admin_commission','driver_timeout')->first();
             if($general_settings->auto_settle_wallet == 1){
                 //get wallet balance
@@ -4737,7 +4708,7 @@ class UserController extends Controller
             return $failed;
         }
 
-        $driver_currency = WorldCurrency::query()->where('symbol', $driver_check->currency)->first();
+        $driver_currency = \App\Support\UserCurrencyResolver::forCurrency($driver_check->currency);
         if ($driver_currency == Null) {
             $driver_currency = WorldCurrency::query()->where('default_currency', 1)->first();
         }
