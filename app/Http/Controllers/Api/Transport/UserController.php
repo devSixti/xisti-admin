@@ -290,7 +290,7 @@ class UserController extends Controller
                 "ride_id" => $ride['id'],
                 "booking_no" => $ride['ride_no'],
                 "ride_status" => $ride['status'],
-                "total_pay" => round($ride['total_pay'] * $currency, 2),
+                "total_pay" => \App\Helpers\TripAmountHelper::resolveForCurrency($ride, (float) $currency),
                 'service_date_time' => $ride['service_date_time'],
                 'schedule_order_date_time' => $ride['schedule_order_date_time'],
                 "pickup_address" => $ride['pickup_address'],

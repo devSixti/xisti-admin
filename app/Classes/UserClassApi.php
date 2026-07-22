@@ -1033,12 +1033,12 @@ class UserClassApi
                     "user_refund_status" => $ride->user_refund_status,
                     "refund_amount" => $ride->refund_amount,
                     "refer_discount" => round($ride->refer_discount * $currency, 2),
-                    "total_pay" => round($ride->total_pay * $currency, 2),
+                    "total_pay" => \App\Helpers\TripAmountHelper::resolveForCurrency($ride, (float) $currency),
                     "toll_charge" => round($ride->toll_charge * $currency, 2),
-                    "ride_fare" => round($ride->offered_price * $currency, 2),
+                    "ride_fare" => \App\Helpers\TripAmountHelper::resolveForCurrency($ride, (float) $currency),
                 ];
                 $invoiceBreakdown = \App\Helpers\RideInvoiceHelper::breakdownForCurrency(
-                    (float) $ride->offered_price,
+                    \App\Helpers\TripAmountHelper::resolveBase($ride),
                     (float) $currency,
                     null,
                     (int) $ride->vehicle_service_id,

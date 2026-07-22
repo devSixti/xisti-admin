@@ -39,7 +39,7 @@ class RideInvoiceHelper
 
     public static function breakdownForRide(object $ride, ?object $generalSettings = null): array
     {
-        $tripValue = (float) ($ride->offered_price ?? $ride->total_pay ?? 0);
+        $tripValue = TripAmountHelper::resolveBase($ride);
         $vehicleServiceId = isset($ride->vehicle_service_id) ? (int) $ride->vehicle_service_id : null;
         $deliveryVariant = $ride->delivery_variant ?? null;
 

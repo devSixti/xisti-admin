@@ -316,7 +316,7 @@ class HomeController extends Controller
         //from currency is for feature ref
         if($from_currency == "")
         {
-            $default_currency = WorldCurrency::query()->where('symbol','=',$to_currency)->where('default_currency','!=',1)->first();
+            $default_currency = \App\Support\UserCurrencyResolver::forCurrency($to_currency);
         }
         if($default_currency != Null)
         {
@@ -328,15 +328,9 @@ class HomeController extends Controller
         if($with_sysmbol == 0)
         {
             return $amount;
-        }else{
-            if($amount > 0)
-            {
-                return $to_currency." ".$amount;
-            }else{
-                return 0;
-            }
-
         }
+
+        return $to_currency." ".$amount;
     }
     // invoice for ride invoice download
     public function getRideInvoiceDownload(Request $request,$order_id=0,$provider_type="",$provider_id=0) {
@@ -426,13 +420,13 @@ class HomeController extends Controller
 
             $order_date = $ride_details->created_at;
 
-            $total_pay = (isset($ride_details->total_pay) && $ride_details->total_pay > 0)?$ride_details->total_pay:0;
-            $total_pay = $this->currencyConvert($user_currency, $total_pay, 1, "");
+            $tripAmountBase = \App\Helpers\TripAmountHelper::resolveBase($ride_details);
+            $total_pay = $this->currencyConvert($user_currency, $tripAmountBase, 1, "");
 
             $total_toll_charge = (isset($ride_details->toll_charge) && $ride_details->toll_charge > 0)?$ride_details->toll_charge:0;
             $total_toll_charge = $this->currencyConvert($user_currency, $total_toll_charge, 1, "");
 
-            $trip_value = (isset($ride_details->offered_price) && $ride_details->offered_price > 0) ? $ride_details->offered_price : 0;
+            $trip_value = $tripAmountBase;
             $settings = request()->get("general_settings");
             $invoice = \App\Helpers\RideInvoiceHelper::breakdownForRide($ride_details, $settings);
             $commission_amount = $invoice['commission_amount'];

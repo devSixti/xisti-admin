@@ -165,10 +165,15 @@
     </tr>
     </thead>
     <tbody>
-        @if($total_pay != "0")
+        @php
+            $invoice_total = !empty($total_pay) && $total_pay !== 0 && $total_pay !== '0'
+                ? $total_pay
+                : ($trip_value ?? 0);
+        @endphp
+        @if(!empty($invoice_total) && $invoice_total !== 0 && $invoice_total !== '0')
             <tr>
                 <td colspan="4" class="total-heading">{{__('user_messages.360',[],$user_language)}}:</td>
-                <td colspan="1" class="total-heading">{{ $total_pay }}</td>
+                <td colspan="1" class="total-heading">{{ $invoice_total }}</td>
             </tr>
         @endif
     </tbody>
