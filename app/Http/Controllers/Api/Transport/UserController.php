@@ -3243,6 +3243,8 @@ class UserController extends Controller
                 if($order_details != Null){
                     $invoice_download_link = route('get:ride-invoice-download',[$order_details->id,"driver",$order_details->driver_id]);
                 }
+                $tripAmount = \App\Helpers\TripAmountHelper::resolveForCurrency($ride_details, (float) $currency);
+                $tripBase = \App\Helpers\TripAmountHelper::resolveBase($ride_details);
                 $ride_details_arr = [
                     "ride_id" => $ride_details->ride_id,
                     "user_id" => $ride_details->user_id,
@@ -3256,7 +3258,7 @@ class UserController extends Controller
                     "contact_number" => $ride_details->user_contact_number,
                     "pickup_datetime" => $ride_details->pickup_datetime,
                     "service_date_time" => date('Y-m-d H:i:s', strtotime($ride_details->created_at)),
-                    "total_amount" => round($ride_details->total_amount * $currency, 2),
+                    "total_amount" => $tripAmount,
                     "payment_type" => $ride_details->payment_type,
                     "ride_status" => $ride_details->ride_status,
                     "refer_discount" => round($ride_details->refer_discount * $currency, 2),
@@ -3279,7 +3281,7 @@ class UserController extends Controller
                     "other_user_name" => $ride_details->other_user_name,
                     "other_user_contact_number" => $ride_details->other_user_contact_number,
                     "toll_charge" => round($ride_details->toll_charge * $currency, 2),
-                    "ride_fare" => round($ride_details->offered_price * $currency, 2),
+                    "ride_fare" => $tripAmount,
                     "way_point_status" => $ride_details->way_point_status,
                     "sos_contact_list" => $sos,
                     "is_toll_charge" => $is_toll_charge,
@@ -3294,7 +3296,7 @@ class UserController extends Controller
                     $ride_details_arr = array_merge(
                         $ride_details_arr,
                         RideInvoiceHelper::breakdownForCurrency(
-                            (float) $ride_details->offered_price,
+                            $tripBase,
                             (float) $currency,
                             null,
                             (int) $ride_details->vehicle_service_id,
@@ -4854,7 +4856,7 @@ class UserController extends Controller
                                 "contact_number" => $ride_details->contact_number,
                                 "address_list" => $address_list,
                                 "pickup_datetime" => $ride_details->pickup_datetime,
-                                "total_amount" => round($ride_details->total_amount * $currency, 1),
+                                "total_amount" => \App\Helpers\TripAmountHelper::resolveForCurrency($ride_details, (float) $currency),
                                 "payment_type" => $ride_details->payment_type,
                                 "ride_status" => 3,
                                 "way_point_status" => $ride_details->way_point_status,

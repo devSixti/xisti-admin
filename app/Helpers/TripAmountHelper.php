@@ -9,8 +9,13 @@ class TripAmountHelper
      */
     public static function resolveBase(object|array $ride): float
     {
-        $totalPay = (float) (is_array($ride) ? ($ride['total_pay'] ?? 0) : ($ride->total_pay ?? 0));
-        $offered = (float) (is_array($ride) ? ($ride['offered_price'] ?? 0) : ($ride->offered_price ?? 0));
+        if (is_array($ride)) {
+            $totalPay = (float) ($ride['total_pay'] ?? $ride['total_amount'] ?? 0);
+            $offered = (float) ($ride['offered_price'] ?? 0);
+        } else {
+            $totalPay = (float) ($ride->total_pay ?? $ride->total_amount ?? 0);
+            $offered = (float) ($ride->offered_price ?? 0);
+        }
 
         if ($totalPay > 0) {
             return $totalPay;
