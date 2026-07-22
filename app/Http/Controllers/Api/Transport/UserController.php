@@ -1258,7 +1258,7 @@ class UserController extends Controller
             return $failed;
         }
         $general_settings=request()->get('general_settings');
-         = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
+        $currency = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
 
         if($request->get('update_status') == 1){
             if($general_settings != Null && $general_settings->auto_approve == 0){
@@ -1709,7 +1709,7 @@ class UserController extends Controller
             ]);
         }
       $general_settings=request()->get('general_settings');
-         = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
+        $currency = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
 
         $driver_bid_accepted = DriverBid::query()->where('ride_id',$request->get('ride_id'))->where('status',1)->first();
         $service_setting = ServiceSettings::query()->select('admin_commission','driver_timeout')->first();
@@ -1815,7 +1815,7 @@ class UserController extends Controller
         $pickup_lat = $ride_details->pickup_lat;
         $pickup_long = $ride_details->pickup_long;
 
-         = \App\Support\UserCurrencyResolver::ratioForUser($user_details);
+        $currency = \App\Support\UserCurrencyResolver::ratioForUser($user_details);
 
         $avatar = url('/assets/images/profile-images/customer/');
         $vehicle_service_icon = url('/assets/images/vehicle-service/');
@@ -1896,7 +1896,7 @@ class UserController extends Controller
             ]);
         }
 
-         = \App\Support\UserCurrencyResolver::ratioForUser($user_details);
+        $currency = \App\Support\UserCurrencyResolver::ratioForUser($user_details);
 
         $amount = round($request->get('offered_price') / $currency,2);
 
@@ -3892,7 +3892,7 @@ class UserController extends Controller
             return $failed;
         }
 
-         = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
+        $currency = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
 
         $language = $user_check->language;
         if ($language != "en" && $language != "" && $language != "Null") {
@@ -4504,7 +4504,7 @@ class UserController extends Controller
             ->join('users','users.id','=','transport_driver_details.user_id')
             ->where('transport_driver_details.user_id',$request->get('user_id'))->first();
 
-         = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
+        $currency = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
 
         $amount = round($request->get('offered_fare') / $currency,2);
 
@@ -4639,7 +4639,7 @@ class UserController extends Controller
 
         if ($ride != Null) {
             $general_settings=request()->get('general_settings');
-             = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
+            $currency = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
             $service_setting = ServiceSettings::query()->select('admin_commission','driver_timeout')->first();
             if($general_settings->auto_settle_wallet == 1){
                 //get wallet balance

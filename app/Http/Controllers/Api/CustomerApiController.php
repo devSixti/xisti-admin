@@ -1252,7 +1252,7 @@ class CustomerApiController extends Controller
             return $failed;
         }
 
-         = \App\Support\UserCurrencyResolver::ratioForUser($user_details);
+        $currency = \App\Support\UserCurrencyResolver::ratioForUser($user_details);
 
         $avatar = url('/assets/images/profile-images/customer/');
         $refer_history = UserReferHistory::query()
@@ -1334,7 +1334,7 @@ class CustomerApiController extends Controller
 
         $settings = request()->get("general_settings");
 
-         = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
+        $currency = \App\Support\UserCurrencyResolver::ratioForUser($user_check);
         $currency_code = $user_currency != Null ? $user_currency->currency_code : '';
 
         $amount_to_default = round($request->get('amount')/ $currency, 2);
