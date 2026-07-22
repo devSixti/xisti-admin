@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-# Manual production deploy of XISTI admin to EC2 (rsync code + artisan cache).
+# Manual production deploy of XISTI admin to EC2 (rsync code + safe artisan cache).
 # Skips composer install (prod PHP 8.5 vs lockfile constraints).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SSH_HOST="${XISTI_SSH_HOST:-xisti-ec2}"
 APP_DIR="/var/www/xisti-admin"
+DEPLOY_USER="${XISTI_DEPLOY_USER:-ubuntu}"
 
 echo "==> Local: $ROOT @ $(git -C "$ROOT" rev-parse --short HEAD 2>/dev/null || echo no-git)"
 echo "==> Syncing to ${SSH_HOST}:${APP_DIR}"
@@ -21,17 +22,19 @@ rsync -az --delete \
   --exclude 'composer.phar' \
   --exclude 'composer-setup.php' \
   --exclude '.cursor' \
+  --exclude 'public/assets/images/profile-images/customer/' \
+  --exclude 'public/assets/images/profile-images/provider/' \
   "${ROOT}/" "${SSH_HOST}:${APP_DIR}/"
 
-ssh -o BatchMode=yes "$SSH_HOST" "bash -s" <<'DEPLOY'
+ssh -o BatchMode=yes "$SSH_HOST" "bash -s" <<DEPLOY
 set -euo pipefail
-cd /var/www/xisti-admin
-rm -f bootstrap/cache/config.php bootstrap/cache/packages.php bootstrap/cache/services.php
-php artisan package:discover --ansi >/dev/null
+cd "${APP_DIR}"
+sudo chown -R "${DEPLOY_USER}:www-data" resources app routes config scripts 2>/dev/null || true
 php artisan migrate --force || true
-php artisan config:clear
-php artisan cache:clear
-php artisan config:cache
-sudo systemctl reload php8.5-fpm nginx 2>/dev/null || true
-echo "==> XISTI admin deploy OK — markets $(php artisan tinker --execute=\"echo config('markets.version');\")"
+APP_DIR="${APP_DIR}" DEPLOY_USER="${DEPLOY_USER}" bash "${APP_DIR}/scripts/ec2-safe-artisan-cache.sh" --reload-php --skip-composer
+APP_DIR="${APP_DIR}" API_HOST="admin.xistiapp.com" bash "${APP_DIR}/scripts/ec2-post-deploy-verify.sh"
+echo "==> XISTI admin deploy OK"
 DEPLOY
+
+echo "==> Running remote smoke tests..."
+"${ROOT}/scripts/smoke-test-production.sh"

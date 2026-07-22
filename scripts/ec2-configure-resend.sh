@@ -44,7 +44,11 @@ sudo -u "${DEPLOY_USER:-ubuntu}" bash -lc "
   set -euo pipefail
   cd '${APP_DIR}'
   php artisan config:clear
-  php artisan config:cache
+"
+APP_DIR="${APP_DIR}" DEPLOY_USER="${DEPLOY_USER:-ubuntu}" bash "${APP_DIR}/scripts/ec2-safe-artisan-cache.sh" --skip-composer
+sudo -u "${DEPLOY_USER:-ubuntu}" bash -lc "
+  set -euo pipefail
+  cd '${APP_DIR}'
   php artisan db:seed --class=BrandedEmailTemplatesSeeder --force
 "
 

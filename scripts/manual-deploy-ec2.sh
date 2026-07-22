@@ -77,31 +77,17 @@ bash "${APP_DIR}/scripts/ec2-artisan-migrate.sh" "${APP_DIR}" "${DEPLOY_USER}"
 
 sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/resources" "${APP_DIR}/app" 2>/dev/null || true
 
-sudo -u "${DEPLOY_USER}" bash -lc "
-  set -euo pipefail
-  cd '${APP_DIR}'
-  php artisan config:cache
-  php artisan view:cache
-  rm -f bootstrap/cache/routes-v7.php bootstrap/cache/routes.php 2>/dev/null || true
-  chmod -R ug+rwx storage bootstrap/cache 2>/dev/null || true
-"
+APP_DIR="${APP_DIR}" DEPLOY_USER="${DEPLOY_USER}" bash "${APP_DIR}/scripts/ec2-safe-artisan-cache.sh" --reload-php --skip-composer
 
-sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/storage" "${APP_DIR}/bootstrap/cache"
-sudo chmod -R ug+rwx "${APP_DIR}/storage" "${APP_DIR}/bootstrap/cache"
 if [ -d "${APP_DIR}/public/assets/images" ]; then
   sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/public/assets/images"
   sudo find "${APP_DIR}/public/assets/images" -type d -exec chmod 2775 {} \;
   sudo find "${APP_DIR}/public/assets/images" -type f -exec chmod 664 {} \;
 fi
 rm -rf "${CD_STAGING}"
-if sudo systemctl reload php8.5-fpm 2>/dev/null; then
-  sudo systemctl reload nginx
-elif sudo systemctl reload php8.2-fpm 2>/dev/null; then
-  sudo systemctl reload nginx
-else
-  sudo systemctl reload php-fpm nginx 2>/dev/null || sudo systemctl reload nginx
-fi
+APP_DIR="${APP_DIR}" API_HOST="admin.xistiapp.com" bash "${APP_DIR}/scripts/ec2-post-deploy-verify.sh"
 echo "==> Deploy OK"
 DEPLOY_EOF
 
 echo "==> Done."
+"${ROOT}/scripts/smoke-test-production.sh"

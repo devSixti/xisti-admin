@@ -76,6 +76,16 @@ VERSION_JSON="$(curl -fsS --connect-timeout 15 -X POST "${API_BASE}/api/customer
   -H "Content-Type: application/json" \
   -d '{"app_type":"1","app_version":"1.0.0","device_type":"android","login_device":"1"}' 2>/dev/null || echo '{}')"
 
+CODE="$(http_code --connect-timeout 15 -X POST "${API_BASE}/api/customer/app-version-check" \
+  -H "Content-Type: application/json" \
+  -d '{"app_type":"1","app_version":"1.0.0","device_type":"android","login_device":"1"}')"
+if [[ "${CODE}" == "500" ]]; then fail "app-version-check HTTP 500 (server broken — check bootstrap cache)"; fi
+
+for path in /api/customer/home /api/customer/country-and-currency-list; do
+  CODE="$(http_code --connect-timeout 15 -X POST "${API_BASE}${path}" -H "Content-Type: application/json" -d '{}')"
+  if [[ "${CODE}" == "500" ]]; then fail "${path} HTTP 500 (server broken)"; elif [[ "${CODE}" == "404" ]]; then fail "${path} HTTP 404 (route missing)"; else pass "${path} (${CODE})"; fi
+done
+
 while IFS= read -r line; do
   if [[ "${line}" == PASS:* ]]; then pass "${line#PASS: }"; else fail "${line#FAIL: }"; fi
 done < <(php -r '
