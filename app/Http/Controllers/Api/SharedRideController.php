@@ -10,12 +10,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
 
 class SharedRideController extends Controller
 {
     public function postCreateOffer(Request $request): JsonResponse
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'trip_kind' => 'required|in:' . implode(',', SharedRideHelper::allowedTripKinds()),
             'origin_town' => 'required|string|max:120',
             'destination_town' => 'required|string|max:120',
@@ -23,6 +24,13 @@ class SharedRideController extends Controller
             'seats_total' => 'required|integer|min:1|max:8',
             'fare_per_person' => 'required|numeric|min:0|max:9999999',
         ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 0,
+                'message' => $validator->errors()->first(),
+                'message_code' => 9,
+            ]);
+        }
 
         $driverId = (int) $request->get('user_id');
         $driverDetails = DB::table('transport_driver_details')->where('user_id', $driverId)->first();
@@ -79,13 +87,20 @@ class SharedRideController extends Controller
 
     public function postPassengerSearch(Request $request): JsonResponse
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'trip_kind' => 'required|in:' . implode(',', SharedRideHelper::allowedTripKinds()),
             'origin_town' => 'required|string|max:120',
             'destination_town' => 'required|string|max:120',
             'trip_date' => 'required|date',
             'vehicle_variant' => 'nullable|string|max:64',
         ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 0,
+                'message' => $validator->errors()->first(),
+                'message_code' => 9,
+            ]);
+        }
 
         if (! Schema::hasTable('shared_ride_passenger_searches')) {
             return response()->json(['status' => 0, 'message' => 'Servicio no disponible.', 'message_code' => 0]);
@@ -134,10 +149,17 @@ class SharedRideController extends Controller
 
     public function postJoinOffer(Request $request): JsonResponse
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'offer_id' => 'required|integer|min:1',
             'search_id' => 'nullable|integer|min:1',
         ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 0,
+                'message' => $validator->errors()->first(),
+                'message_code' => 9,
+            ]);
+        }
 
         $result = SharedRideHelper::joinOffer(
             (int) $request->get('offer_id'),
@@ -166,13 +188,20 @@ class SharedRideController extends Controller
 
     public function postFareEstimate(Request $request): JsonResponse
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'origin_town' => 'required|string|max:120',
             'destination_town' => 'required|string|max:120',
             'seats_total' => 'required|integer|min:1|max:8',
             'vehicle_variant' => 'nullable|string|max:64',
             'is_weekend' => 'nullable|boolean',
         ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 0,
+                'message' => $validator->errors()->first(),
+                'message_code' => 9,
+            ]);
+        }
 
         $driverId = (int) $request->get('user_id');
         $variant = XistiVehicleVariantHelper::normalize($request->get('vehicle_variant'));

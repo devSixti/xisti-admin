@@ -160,7 +160,7 @@ class ServiceCatalogHelper
             }
             if ($canReceiveDelivery || $canReceiveEncomiendas) {
                 $method = $transportIds !== [] ? 'orWhere' : 'where';
-                $outer->{$method}(function ($deliveryQuery) use ($canReceiveDelivery, $canReceiveEncomiendas, $driverTransportServiceId, $hasErrandType) {
+                $outer->{$method}(function ($deliveryQuery) use ($canReceiveDelivery, $canReceiveEncomiendas, $driverTransportServiceId, $hasErrandType, $driverVariant) {
                     $addedAny = false;
                     if ($canReceiveDelivery) {
                         $deliveryQuery->where(function ($legacyDelivery) use ($driverTransportServiceId, $hasErrandType, $driverVariant) {

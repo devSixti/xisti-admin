@@ -38,6 +38,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->shouldRenderJsonWhen(function (\Illuminate\Http\Request $request, \Throwable $e) {
+            return $request->is('api/*') || $request->expectsJson();
+        });
+
         $exceptions->renderable(function (NotFoundHttpException $e) {
             if ($e instanceof \Illuminate\Session\TokenMismatchException) {
                 if (request()->is('admin') || request()->is('admin/*')) {
