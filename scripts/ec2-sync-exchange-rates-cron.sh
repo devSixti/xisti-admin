@@ -2,8 +2,8 @@
 # Daily live FX sync (COP base) via artisan currency:sync-live-rates.
 set -euo pipefail
 
-APP_DIR="${APP_DIR:-/var/www/xisti-admin}"
-DEPLOY_USER="${DEPLOY_USER:-ubuntu}"
+APP_DIR="${APP_DIR:-/var/www/app-zimo-fox-drive-v2-clone}"
+DEPLOY_USER="${DEPLOY_USER:-appzimodevop}"
 LOG="${APP_DIR}/storage/logs/exchange-rates-cron.log"
 
 {
