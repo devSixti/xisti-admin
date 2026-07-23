@@ -14,7 +14,10 @@ class LiveExchangeRateSyncService
     public function sync(bool $dryRun = false): array
     {
         $base = strtoupper((string) config('exchange_rates.base_currency', 'COP'));
-        $url = (string) config('exchange_rates.api_url');
+        $url = trim((string) config('exchange_rates.api_url'));
+        if ($url === '') {
+            $url = 'https://open.er-api.com/v6/latest/'.urlencode($base);
+        }
         $timeout = (int) config('exchange_rates.timeout_seconds', 20);
 
         $response = Http::timeout($timeout)
