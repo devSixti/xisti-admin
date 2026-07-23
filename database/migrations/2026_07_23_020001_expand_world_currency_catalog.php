@@ -1,20 +1,13 @@
 <?php
 
-namespace Database\Seeders;
-
-use Illuminate\Database\Seeder;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class WorldCurrencySeeder extends Seeder
+return new class extends Migration
 {
-    /**
-     * Run the database seeds.
-     *
-     * Ratios are stored relative to COP (base currency id=1).
-     */
-    public function run(): void
+    public function up(): void
     {
-        $world_currency_record = [
+        $records = [
             ['id' => 1, 'currency_name' => 'Colombian Peso', 'ratio' => 1.0000, 'currency_code' => 'COP', 'symbol' => 'COL$', 'status' => 1, 'default_currency' => 1],
             ['id' => 2, 'currency_name' => 'US Dollar', 'ratio' => 0.000278, 'currency_code' => 'USD', 'symbol' => '$', 'status' => 1, 'default_currency' => 0],
             ['id' => 3, 'currency_name' => 'Euro', 'ratio' => 0.000236, 'currency_code' => 'EUR', 'symbol' => '€', 'status' => 1, 'default_currency' => 0],
@@ -31,14 +24,15 @@ class WorldCurrencySeeder extends Seeder
             ['id' => 14, 'currency_name' => 'Costa Rican Colón', 'ratio' => 0.1750, 'currency_code' => 'CRC', 'symbol' => '₡', 'status' => 1, 'default_currency' => 0],
         ];
 
-        DB::table('world_currency')
-            ->whereNotIn('currency_code', array_column($world_currency_record, 'currency_code'))
-            ->delete();
-
         DB::table('world_currency')->upsert(
-            $world_currency_record,
+            $records,
             ['id'],
             ['currency_name', 'ratio', 'currency_code', 'symbol', 'status', 'default_currency']
         );
     }
-}
+
+    public function down(): void
+    {
+        // Keep expanded catalog on rollback; ratios can be adjusted via admin.
+    }
+};
