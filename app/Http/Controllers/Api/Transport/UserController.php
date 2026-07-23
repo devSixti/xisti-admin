@@ -1538,8 +1538,9 @@ class UserController extends Controller
             });
         }
 
+        $now = date('Y-m-d H:i:s');
         $available_ride_requests = $available_ride_requests
-                ->where('user_ride_booking.ride_time_out', '>=', $expire_date_time)
+                ->where('user_ride_booking.ride_time_out', '>=', $now)
                 ->whereNull('users.deleted_at')
                 ->when($driver_details->child_seat != 1, function ($q) {
                     $q->where('user_ride_booking.child_seat', 0);
@@ -1952,7 +1953,7 @@ class UserController extends Controller
         if (abs((float) $ride_details->offered_price * $currency - $displayOffered) > 0.009) {
             $ride_details->total_pay = $amount;
             $ride_details->offered_price = $amount;
-            $ride_details->ride_time_out = $date->format('Y-m-d H:i:s');
+            $ride_details->ride_time_out = \App\Helpers\RideLifecycleHelper::rideTimeoutFromNow();
             $ride_details->save();
             DriverBid::query()->where('ride_id',$request->get('ride_id'))->update(['status' => 2]);
             $this->notificationClass->userFareChangeNotification($request->get('ride_id'));

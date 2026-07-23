@@ -650,7 +650,7 @@ class NotificationClass
         $not_multi_delivery_provider_id = ProviderUserRunningService::query()->get()->pluck('provider_id');
 
         $get_drivers = User::query()
-            ->select('users.id as driver_user_id','users.currency','users.device_token','users.login_device','transport_driver_details.search_distance_filter','transport_driver_details.current_lat','transport_driver_details.current_long',
+            ->select('users.id as driver_user_id','users.currency','users.language','users.device_token','users.login_device','transport_driver_details.search_distance_filter','transport_driver_details.current_lat','transport_driver_details.current_long',
                 DB::raw("(CASE WHEN transport_driver_details.search_distance_filter != 0 THEN ROUND((6371 * acos( cos( radians(" .$current_lat. ") ) * cos( radians(current_lat) )  * cos( radians( current_long ) - radians(" .$current_long. ") ) + sin( radians(" .$current_lat. ") ) * sin(radians( current_lat ) ) ) ), 2) ELSE 0 END) as distance")
     )
             ->join('transport_driver_details','transport_driver_details.user_id','=','users.id')
@@ -702,7 +702,10 @@ class NotificationClass
                     $driverRatio
                 );
                 $driverSymbol = (string) ($driverCurrency->symbol ?? $currency);
-                $event = $this->applyEventTemplate('driver_new_request', 'es', [
+                $driverLang = filled($driver['language'] ?? null) && ($driver['language'] ?? '') !== 'Null'
+                    ? (string) $driver['language']
+                    : 'es';
+                $event = $this->applyEventTemplate('driver_new_request', $driverLang, [
                     'currency' => $driverSymbol,
                     'price' => (string) $driverDisplayPrice,
                     'pickup' => $pickup_address,
@@ -837,7 +840,7 @@ class NotificationClass
         $bidding_drivers = DriverBid::query()->where('ride_id',$ride_id)->get()->pluck('driver_id');
         $not_multi_delivery_provider_id = ProviderUserRunningService::query()->get()->pluck('provider_id');
         $drivers = User::query()
-            ->select('users.device_token', 'users.login_device')
+            ->select('users.device_token', 'users.login_device', 'users.language')
             ->join('transport_driver_details','transport_driver_details.user_id','=','users.id')
             ->join('transport_vehicle_type','transport_vehicle_type.id','=','transport_driver_details.vehicle_type_id')
             ->join('vehicle_services','vehicle_services.id','=','transport_vehicle_type.service_id')
@@ -855,10 +858,13 @@ class NotificationClass
             if ($token === '') {
                 continue;
             }
+            $driverLang = filled($driver->language ?? null) && ($driver->language ?? '') !== 'Null'
+                ? (string) $driver->language
+                : 'es';
             $this->sendEventPushToToken(
                 'driver_fare_changed_by_user',
                 $token,
-                'es',
+                $driverLang,
                 [],
                 [
                     'ride_id' => (string) $ride_id,
@@ -869,6 +875,18 @@ class NotificationClass
                 (int) ($driver->login_device ?? 0),
             );
         }
+
+        $this->RequestAllDrivers(
+            (int) $ride->id,
+            (float) $ride->pickup_lat,
+            (float) $ride->pickup_long,
+            (int) $ride->vehicle_service_id,
+            (string) $ride->pickup_address,
+            (string) $ride->destination_address,
+            (float) $ride->offered_price,
+            (int) ($ride->handicap ?? 0),
+            (int) ($ride->child_seat ?? 0)
+        );
 
         return response()->json(['status' => 1, 'message' => __('user_messages.1'), 'message_code' => 1]);
     }
@@ -1337,6 +1355,7 @@ class NotificationClass
             5 => 'passenger_ride_started',
             6 => 'passenger_ride_at_destination',
             7, 9 => 'passenger_ride_completed',
+            8 => 'passenger_ride_payment_pending',
             default => null,
         };
     }

@@ -38,7 +38,6 @@ class RideDriverEligibilityHelper
 
         $serviceSetting = DB::table('service_settings')->first();
         $rideExpiry = (int) ($serviceSetting->ride_expiry ?? 30);
-        $expireDateTime = date('Y-m-d H:i:s', strtotime('-' . $rideExpiry . ' minutes'));
 
         $query = TransportRideBook::query()
             ->join('users', 'users.id', '=', 'user_ride_booking.user_id')
@@ -53,7 +52,7 @@ class RideDriverEligibilityHelper
                     ->orWhere('user_ride_booking.driver_id', 0)
                     ->orWhere('user_ride_booking.driver_id', $driverUserId);
             })
-            ->where('user_ride_booking.ride_time_out', '>=', $expireDateTime);
+            ->where('user_ride_booking.ride_time_out', '>=', date('Y-m-d H:i:s'));
 
         ServiceCatalogHelper::applyDriverAvailableRidesServiceFilter($query, $driverDetails);
 

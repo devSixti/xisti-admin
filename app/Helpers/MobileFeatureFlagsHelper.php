@@ -60,7 +60,7 @@ class MobileFeatureFlagsHelper
     {
         return array_values(array_filter($modes, static function (array $mode) use ($general) {
             $key = $mode['mode'] ?? '';
-            if ($key === 'expreso' && ! self::isExpresoEnabled($general)) {
+            if (in_array($key, ['expreso', 'viajes_compartidos'], true) && ! self::isExpresoEnabled($general)) {
                 return false;
             }
             if ($key === 'encomiendas' && ! self::isEncomiendasEnabled($general)) {
@@ -85,7 +85,13 @@ class MobileFeatureFlagsHelper
             if ($mode === 'expreso' && ! self::isExpresoEnabled($general)) {
                 return false;
             }
+            if (in_array($mode, ['viajes_compartidos', 'expreso'], true) && ! self::isExpresoEnabled($general)) {
+                return false;
+            }
             if ($mode === 'encomiendas' && ! self::isEncomiendasEnabled($general)) {
+                return false;
+            }
+            if (in_array($mode, ['acarreos', 'carga'], true) && ! self::isAcarreosEnabled($general)) {
                 return false;
             }
 

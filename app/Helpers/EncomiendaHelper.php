@@ -6,7 +6,29 @@ class EncomiendaHelper
 {
     public const ERRAND_DELIVERY = 'delivery';
     public const ERRAND_ENCOMIENDA = 'encomienda';
+
     public const ERRAND_ACARREO = 'acarreo';
+
+    public const ENCOMIENDA_COMPRAS = 'compras';
+    public const ENCOMIENDA_RECOGIDAS = 'recogidas';
+
+    public static function normalizedEncomiendaKind(?string $kind): ?string
+    {
+        $kind = is_string($kind) ? trim($kind) : '';
+        if ($kind === self::ENCOMIENDA_RECOGIDAS) {
+            return self::ENCOMIENDA_RECOGIDAS;
+        }
+        if ($kind === self::ENCOMIENDA_COMPRAS) {
+            return self::ENCOMIENDA_COMPRAS;
+        }
+
+        return null;
+    }
+
+    public static function isEncomiendaCompras(?string $kind): bool
+    {
+        return self::normalizedEncomiendaKind($kind) === self::ENCOMIENDA_COMPRAS;
+    }
 
     /**
      * @param  object|array<string, mixed>  $row
@@ -31,19 +53,30 @@ class EncomiendaHelper
         return self::isEncomiendaRide($row) ? 1 : 0;
     }
 
-    public static function shouldPersistCourierRow(int $vehicleServiceId, ?string $errandType): bool
-    {
+    public static function shouldPersistCourierRow(
+        int $vehicleServiceId,
+        ?string $errandType,
+        ?int $requestedVehicleServiceId = null,
+    ): bool {
         if ($vehicleServiceId === 4) {
             return true;
         }
 
-        return in_array($errandType, [self::ERRAND_ENCOMIENDA, self::ERRAND_ACARREO], true);
+        return in_array($errandType, [self::ERRAND_ENCOMIENDA, self::ERRAND_DELIVERY, self::ERRAND_ACARREO], true);
     }
 
-    public static function normalizedErrandType(?string $errandType, int $vehicleServiceId): ?string
-    {
+    public static function normalizedErrandType(
+        ?string $errandType,
+        int $vehicleServiceId,
+        ?int $requestedVehicleServiceId = null,
+    ): ?string {
+        $errandType = is_string($errandType) ? trim($errandType) : '';
+
         if ($errandType === self::ERRAND_ENCOMIENDA) {
             return self::ERRAND_ENCOMIENDA;
+        }
+        if ($errandType === self::ERRAND_DELIVERY) {
+            return self::ERRAND_DELIVERY;
         }
         if ($errandType === self::ERRAND_ACARREO) {
             return self::ERRAND_ACARREO;
@@ -52,6 +85,7 @@ class EncomiendaHelper
             return self::ERRAND_DELIVERY;
         }
 
+        // service_id 1/3/5 is shared between Viajes and Envíos — never infer delivery without errand_type.
         return null;
     }
 

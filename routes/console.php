@@ -17,3 +17,8 @@ Schedule::command('currency:sync-live-rates')
     ->onOneServer()
     ->appendOutputTo(storage_path('logs/exchange-rates-sync.log'));
 
+Schedule::call(function () {
+    \App\Helpers\RideLifecycleHelper::expireStalePendingRides();
+    \App\Helpers\RideLifecycleHelper::purgeOrphanRunningRides();
+})->everyFiveMinutes()->name('ride-lifecycle-prune')->withoutOverlapping();
+

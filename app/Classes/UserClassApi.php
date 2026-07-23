@@ -565,7 +565,7 @@ class UserClassApi
         $ride->driver_algorithm = $driver_algorithm;
         $date = new \DateTime("now", new \DateTimeZone(config('app.timezone')) );
         $ride->retry_time = $date->format('Y-m-d H:i:s');
-        $ride->ride_time_out = $date->format('Y-m-d H:i:s');
+        $ride->ride_time_out = \App\Helpers\RideLifecycleHelper::rideTimeoutFromNow();
         $ride->is_auto_accept = $request['is_auto_accept'];
 
         if (Schema::hasColumn('user_ride_booking', 'delivery_direction')) {

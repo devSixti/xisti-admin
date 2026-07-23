@@ -75,7 +75,8 @@ class SharedRideHelper
         string $tripKind,
         string $originTown,
         string $destinationTown,
-        string $tripDate
+        string $tripDate,
+        ?string $vehicleVariant = null
     ): array {
         if (! Schema::hasTable('shared_ride_offers')) {
             return [];
@@ -94,7 +95,12 @@ class SharedRideHelper
             ->whereRaw('LOWER(TRIM(origin_town)) = ?', [strtolower(trim($originTown))])
             ->whereRaw('LOWER(TRIM(destination_town)) = ?', [strtolower(trim($destinationTown))])
             ->whereBetween('trip_date', [$from, $to])
-            ->where('seats_available', '>', 0)
+            ->where('seats_available', '>', 0);
+        if ($vehicleVariant !== null && trim($vehicleVariant) !== ''
+            && Schema::hasColumn('shared_ride_offers', 'vehicle_variant')) {
+            $rows->where('vehicle_variant', trim($vehicleVariant));
+        }
+        $rows = $rows
             ->orderByRaw('ABS(DATEDIFF(trip_date, ?))', [$date->toDateString()])
             ->limit(30)
             ->get();
