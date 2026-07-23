@@ -10,3 +10,10 @@ Artisan::command('inspire', function () {
 
 Schedule::command('document_expiry')->dailyAt('00:01')->timezone('UTC');
 
+Schedule::command('currency:sync-live-rates')
+    ->dailyAt('06:00')
+    ->timezone('America/Bogota')
+    ->withoutOverlapping()
+    ->onOneServer()
+    ->appendOutputTo(storage_path('logs/exchange-rates-sync.log'));
+
