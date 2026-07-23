@@ -26,25 +26,25 @@ class ServiceCatalogHelper
     {
         $labels = [
             'transport' => $language === 'es' ? 'Viajes' : 'Rides',
-            'delivery' => $language === 'es' ? 'Entregas' : 'Deliveries',
-            'expreso' => $language === 'es' ? 'Compartido' : 'Shared',
-            'viajes_compartidos' => $language === 'es' ? 'Compartido' : 'Shared',
+            'delivery' => $language === 'es' ? 'Envío' : 'Delivery',
+            'viajes_compartidos' => $language === 'es' ? 'Viajes compartidos' : 'Shared rides',
+            'expreso' => $language === 'es' ? 'Viajes compartidos' : 'Shared rides',
             'encomiendas' => $language === 'es' ? 'Encomiendas' : 'Errands',
-            'acarreos' => $language === 'es' ? 'Carga' : 'Freight',
-            'carga' => $language === 'es' ? 'Carga' : 'Freight',
+            'acarreos' => $language === 'es' ? 'Acarreos' : 'Hauling',
         ];
         $grouped = [];
         foreach ($services as $row) {
             $mode = $row['service_mode'] ?? 'transport';
-            if ($mode === 'encomiendas') {
-                continue;
+            if ($mode === 'expreso') {
+                $mode = 'viajes_compartidos';
             }
-            if (!isset($grouped[$mode])) {
+            if (! isset($grouped[$mode])) {
                 $grouped[$mode] = [];
             }
             $grouped[$mode][] = $row;
         }
-        $modeOrder = ['transport', 'delivery', 'expreso', 'viajes_compartidos', 'acarreos', 'carga'];
+        $labelOnlyModes = ['viajes_compartidos', 'encomiendas', 'acarreos'];
+        $modeOrder = ['transport', 'delivery', 'viajes_compartidos', 'encomiendas', 'acarreos'];
         $modes = [];
         $order = 1;
         foreach ($modeOrder as $mode) {
@@ -52,11 +52,14 @@ class ServiceCatalogHelper
                 continue;
             }
             usort($grouped[$mode], fn ($a, $b) => ($a['display_order'] ?? 0) <=> ($b['display_order'] ?? 0));
+            $modeServices = in_array($mode, $labelOnlyModes, true)
+                ? []
+                : array_values($grouped[$mode]);
             $modes[] = [
                 'mode' => $mode,
                 'label' => $labels[$mode] ?? ucfirst($mode),
                 'display_order' => $order++,
-                'services' => array_values($grouped[$mode]),
+                'services' => $modeServices,
             ];
         }
         foreach ($grouped as $mode => $rows) {
@@ -76,27 +79,26 @@ class ServiceCatalogHelper
 
     public static function eligibleServiceIdsForVehicleType(int $vehicleTypeId, int $fallbackServiceId): array
     {
-        $ids = [];
-        if (Schema::hasTable('vehicle_type_service_eligibility')) {
-            $ids = DB::table('vehicle_type_service_eligibility')
-                ->where('vehicle_type_id', $vehicleTypeId)
-                ->pluck('service_id')
-                ->map(fn ($id) => (int) $id)
-                ->unique()
-                ->values()
-                ->all();
+        if (!Schema::hasTable('vehicle_type_service_eligibility')) {
+            return array_values(array_filter([$fallbackServiceId], fn ($id) => $id > 0));
         }
 
-        $merged = array_values(array_unique(array_filter(
-            array_merge($ids, [$fallbackServiceId]),
-            static fn ($id) => $id > 0
-        )));
+        $ids = DB::table('vehicle_type_service_eligibility')
+            ->where('vehicle_type_id', $vehicleTypeId)
+            ->pluck('service_id')
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values()
+            ->all();
+        if (count($ids) === 0) {
+            return [$fallbackServiceId];
+        }
 
-        return $merged !== [] ? $merged : [$fallbackServiceId];
+        return $ids;
     }
 
-    /** Transport services (moto, carro) may receive envíos by default. */
-    public const DELIVERY_CAPABLE_TRANSPORT_SERVICE_IDS = [1, 3];
+    /** Transport services (moto, carro, moto-ratón) may receive envíos by default. */
+    public const DELIVERY_CAPABLE_TRANSPORT_SERVICE_IDS = [1, 3, 5];
 
     public static function driverCanReceiveDelivery(int $vehicleTypeId, int $fallbackServiceId): bool
     {
@@ -127,6 +129,47 @@ class ServiceCatalogHelper
     }
 
     /**
+     * Driver-configured km radius wins over the global provider search radius.
+     */
+    public static function effectiveDriverSearchRadiusKm(object $driverDetails, float $providerSearchRadiusKm): float
+    {
+        $driverFilter = (float) ($driverDetails->search_distance_filter ?? 0);
+        if ($driverFilter > 0) {
+            return $driverFilter;
+        }
+
+        return $providerSearchRadiusKm > 0 ? $providerSearchRadiusKm : 5.0;
+    }
+
+    /**
+     * Transport service ids a driver may receive (passenger rides), respecting accept_transport.
+     *
+     * @return array<int, int>
+     */
+    public static function driverTransportServiceIds(object $driverDetails): array
+    {
+        if ((int) ($driverDetails->accept_transport ?? 1) !== 1) {
+            return [];
+        }
+
+        $vehicleTypeId = (int) ($driverDetails->vehicle_type_id ?? 0);
+        $driverTransportServiceId = (int) ($driverDetails->service_id ?? 0);
+        $eligibleIds = self::eligibleServiceIdsForVehicleType($vehicleTypeId, $driverTransportServiceId);
+        $transportIds = array_values(array_filter($eligibleIds, static fn ($id) => (int) $id !== 4));
+
+        if ($driverTransportServiceId > 0
+            && $driverTransportServiceId !== 4
+            && ! in_array($driverTransportServiceId, $transportIds, true)) {
+            $transportIds[] = $driverTransportServiceId;
+        }
+
+        return array_values(array_unique(array_filter(
+            $transportIds,
+            static fn ($id) => (int) $id > 0 && (int) $id !== 4
+        )));
+    }
+
+    /**
      * Available-ride list: transport services from eligibility + envíos (service 4) when allowed.
      * Envíos sin requested_vehicle_service_id coinciden con cualquier conductor de reparto elegible.
      */
@@ -134,22 +177,19 @@ class ServiceCatalogHelper
     {
         $vehicleTypeId = (int) ($driverDetails->vehicle_type_id ?? 0);
         $driverTransportServiceId = (int) ($driverDetails->service_id ?? 0);
-        $eligibleIds = self::eligibleServiceIdsForVehicleType($vehicleTypeId, $driverTransportServiceId);
-        $transportIds = array_values(array_filter($eligibleIds, static fn ($id) => (int) $id !== 4));
+        $transportIds = self::driverTransportServiceIds($driverDetails);
         $deliveryCapable = self::driverCanReceiveDelivery($vehicleTypeId, $driverTransportServiceId);
         $canReceiveDelivery = $deliveryCapable && (int) ($driverDetails->accept_delivery ?? 0) === 1;
         $acceptEncomiendas = (int) ($driverDetails->accept_encomiendas ?? ($driverDetails->accept_delivery ?? 0)) === 1;
         $canReceiveEncomiendas = $deliveryCapable && $acceptEncomiendas;
 
         $hasErrandType = Schema::hasColumn('user_courier_service_details', 'errand_type');
-        $driverVariant = \App\Helpers\XistiVehicleVariantHelper::normalize($driverDetails->delivery_variant ?? '');
 
-        return $query->where(function ($outer) use ($transportIds, $canReceiveDelivery, $canReceiveEncomiendas, $driverTransportServiceId, $hasErrandType, $driverVariant) {
+        return $query->where(function ($outer) use ($transportIds, $canReceiveDelivery, $canReceiveEncomiendas, $driverTransportServiceId, $hasErrandType, $driverDetails) {
             if ($transportIds !== []) {
-                $outer->where(function ($transportQuery) use ($transportIds, $hasErrandType, $driverVariant) {
+                $outer->where(function ($transportQuery) use ($transportIds, $hasErrandType) {
                     $transportQuery->where('user_ride_booking.vehicle_service_id', '!=', 4)
                         ->whereIn('user_ride_booking.vehicle_service_id', $transportIds);
-                    \App\Helpers\XistiVehicleVariantHelper::applyTransportVariantRideFilter($transportQuery, $driverVariant);
                     if ($hasErrandType) {
                         $transportQuery->where(function ($excludeEncomienda) {
                             $excludeEncomienda->whereNull('user_courier_service_details.errand_type')
@@ -160,10 +200,10 @@ class ServiceCatalogHelper
             }
             if ($canReceiveDelivery || $canReceiveEncomiendas) {
                 $method = $transportIds !== [] ? 'orWhere' : 'where';
-                $outer->{$method}(function ($deliveryQuery) use ($canReceiveDelivery, $canReceiveEncomiendas, $driverTransportServiceId, $hasErrandType, $driverVariant) {
+                $outer->{$method}(function ($deliveryQuery) use ($canReceiveDelivery, $canReceiveEncomiendas, $driverTransportServiceId, $hasErrandType) {
                     $addedAny = false;
                     if ($canReceiveDelivery) {
-                        $deliveryQuery->where(function ($legacyDelivery) use ($driverTransportServiceId, $hasErrandType, $driverVariant) {
+                        $deliveryQuery->where(function ($legacyDelivery) use ($driverTransportServiceId, $hasErrandType) {
                             $legacyDelivery->where('user_ride_booking.vehicle_service_id', 4)
                                 ->where(function ($matchQuery) use ($driverTransportServiceId) {
                                     if (Schema::hasColumn('user_courier_service_details', 'requested_vehicle_service_id')) {
@@ -177,13 +217,12 @@ class ServiceCatalogHelper
                                         ->orWhere('user_courier_service_details.errand_type', EncomiendaHelper::ERRAND_DELIVERY);
                                 });
                             }
-                            \App\Helpers\XistiVehicleVariantHelper::applyTransportVariantRideFilter($legacyDelivery, $driverVariant);
                         });
                         $addedAny = true;
                     }
                     if ($canReceiveEncomiendas && $hasErrandType) {
                         $method = $addedAny ? 'orWhere' : 'where';
-                        $deliveryQuery->{$method}(function ($encomiendaQuery) use ($driverTransportServiceId, $driverVariant) {
+                        $deliveryQuery->{$method}(function ($encomiendaQuery) use ($driverTransportServiceId) {
                             $encomiendaQuery->where('user_courier_service_details.errand_type', EncomiendaHelper::ERRAND_ENCOMIENDA)
                                 ->where(function ($matchQuery) use ($driverTransportServiceId) {
                                     if (Schema::hasColumn('user_courier_service_details', 'requested_vehicle_service_id')) {
@@ -191,10 +230,26 @@ class ServiceCatalogHelper
                                             ->orWhere('user_courier_service_details.requested_vehicle_service_id', $driverTransportServiceId);
                                     }
                                 });
-                            \App\Helpers\XistiVehicleVariantHelper::applyTransportVariantRideFilter($encomiendaQuery, $driverVariant);
                         });
+                        $addedAny = true;
                     }
                 });
+            }
+            if (AcarreoHelper::driverCanReceiveAcarreoRequests($driverDetails) && $hasErrandType) {
+                $driverVariant = AcarreoVehicleHelper::driverVariantForVehicleType((int) ($driverDetails->vehicle_type_id ?? 0));
+                $acarreoServiceId = AcarreoVehicleHelper::acarreosServiceId();
+                $hasAcarreoVariant = Schema::hasColumn('user_courier_service_details', 'acarreo_vehicle_variant');
+                if ($driverVariant !== null && $acarreoServiceId > 0) {
+                    $method = ($transportIds !== [] || $canReceiveDelivery || $canReceiveEncomiendas) ? 'orWhere' : 'where';
+                    $outer->{$method}(function ($acarreoQuery) use ($driverVariant, $acarreoServiceId, $hasAcarreoVariant) {
+                        $acarreoQuery
+                            ->where('user_courier_service_details.errand_type', EncomiendaHelper::ERRAND_ACARREO)
+                            ->where('user_ride_booking.vehicle_service_id', $acarreoServiceId);
+                        if ($hasAcarreoVariant) {
+                            $acarreoQuery->where('user_courier_service_details.acarreo_vehicle_variant', $driverVariant);
+                        }
+                    });
+                }
             }
         });
     }

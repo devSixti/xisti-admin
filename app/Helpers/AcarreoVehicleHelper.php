@@ -96,4 +96,27 @@ class AcarreoVehicleHelper
             default => false,
         };
     }
+
+    public static function applyVariantDriverFilter($query, ?string $requestedVariant, string $vehicleTypeTable = 'transport_vehicle_type'): void
+    {
+        $variant = AcarreoHelper::normalizeVariant($requestedVariant);
+        if ($variant === null) {
+            return;
+        }
+
+        $query->where(function ($variantScope) use ($variant, $vehicleTypeTable) {
+            match ($variant) {
+                AcarreoHelper::VARIANT_MOTOCARGUERO => $variantScope
+                    ->whereRaw("LOWER({$vehicleTypeTable}.name) LIKE ?", ['%motocarg%'])
+                    ->orWhereRaw("LOWER({$vehicleTypeTable}.name) LIKE ?", ['%motocarr%'])
+                    ->orWhere("{$vehicleTypeTable}.service_id", 5),
+                AcarreoHelper::VARIANT_CAMION => $variantScope
+                    ->whereRaw("LOWER({$vehicleTypeTable}.name) LIKE ?", ['%camion%'])
+                    ->orWhereRaw("LOWER({$vehicleTypeTable}.name) LIKE ?", ['%camión%']),
+                AcarreoHelper::VARIANT_JAULA => $variantScope
+                    ->whereRaw("LOWER({$vehicleTypeTable}.name) LIKE ?", ['%jaula%']),
+                default => $variantScope->whereRaw('1 = 0'),
+            };
+        });
+    }
 }

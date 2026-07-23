@@ -11,8 +11,8 @@ namespace App\Classes;
 use App\Helpers\FcmPushHelper;
 use App\Helpers\PushEventTemplateHelper;
 use App\Helpers\VehicleCommissionHelper;
-use App\Helpers\TransactionalMailHelper;
 use App\Jobs\AutoMail;
+use App\Helpers\TransactionalMailHelper;
 use App\Jobs\FavDriverSendNotification;
 use App\Jobs\NearestAlgoSendDriverNotification;
 use App\Models\ApiLogDetail;
@@ -121,14 +121,6 @@ class NotificationClass
                 ->join('users','users.id','=','transport_driver_details.user_id')
                 ->where('transport_driver_details.user_id',$driver_id)->first();
 
-            if ($get_driver_id == Null) {
-                return response()->json([
-                    "status" => 0,
-                    "message" => __('driver_messages.9'),
-                    "message_code" => 9,
-                ]);
-            }
-
             $get_vehicle_type = TransportVehicleType::query()->where('id',$get_driver_id->vehicle_type_id)->first();
             if($get_vehicle_type == NULL){
                 return response()->json([
@@ -166,7 +158,7 @@ class NotificationClass
                     $driver_bid->status = 1;
                     $driver_bid->save();
 
-                    if ((int) $ride->vehicle_service_id !== 4) {
+                    if (! \App\Helpers\RideDriverEligibilityHelper::shouldPreserveRideVehicleServiceId($ride)) {
                         $ride->vehicle_service_id = $get_vehicle_type->service_id;
                     }
                     $ride->vehicle_type_id = $get_driver_id->vehicle_type_id;
@@ -447,29 +439,19 @@ class NotificationClass
         if ($eventKey === null) {
             return response()->json(['status' => 1, 'message' => __('user_messages.1'), 'message_code' => 1]);
         }
-        $event = $this->applyEventTemplate($eventKey, $language);
-        $title = $event['title'];
-        $message = $event['message'];
-        $title_code = $event['title_code'];
-        $message_code = $event['message_code'];
-        //notification type 0= simple , 1= communication
-            $extraNotificationData = [
-                'title' => $title."",
-                'title_code' => $title_code."",
-                'sound' => "true",
-                'notification_type' => (string) $event['notification_type'],
-                'ride_id' => $ride_id."",
-                'ride_status' => $ride_status."",
-                'message' => $message."",
-                'body' => $message."",
-                'message_code' => $message_code."",
-                'ride_type' => $ride->ride_type."",
-                'user_type' => "2",
-                "click_action" => "FLUTTER_NOTIFICATION_CLICK"
-            ];
-        if ($title !== '' || $message !== '') {
-            FcmPushHelper::sendToTokenForLoginDevice($device_token, $title, $message, $extraNotificationData, $event['sound'], (int) $login_device);
-        }
+
+        $this->sendEventPushToToken(
+            $eventKey,
+            $device_token,
+            $language,
+            [],
+            [
+                'ride_id' => (string) $ride_id,
+                'ride_status' => (string) $ride_status,
+                'ride_type' => (string) ($ride->ride_type ?? 0),
+            ],
+            (int) $login_device,
+        );
 
         return response()->json(['status' => 1, 'message' => __('user_messages.1'), 'message_code' => 1]);
     }
@@ -507,28 +489,19 @@ class NotificationClass
                 'message_code' => 9
             ]);
         }
-        $event = $this->applyEventTemplate($eventKey, $language);
-        $title = $event['title'];
-        $message = $event['message'];
-        $title_code = $event['title_code'];
-        $message_code = $event['message_code'];
-            $extraNotificationData = [
-                'title' => $title."",
-                'title_code' => $title_code."",
-                'sound' => "true",
-                'notification_type' => (string) $event['notification_type'],
-                'user_type' => "1",
-                'ride_id' => $ride_id."",
-                'ride_status' => $ride_status."",
-                'message' => $message."",
-                'body' => $message."",
-                'message_code' => $message_code."",
-                'ride_type' => $ride->ride_type."",
-                "click_action" => "FLUTTER_NOTIFICATION_CLICK"
-            ];
-        if ($title !== '' || $message !== '') {
-            FcmPushHelper::sendToTokenForLoginDevice($device_token, $title, $message, $extraNotificationData, $event['sound'], (int) $login_device);
-        }
+
+        $this->sendEventPushToToken(
+            $eventKey,
+            $device_token,
+            $language,
+            [],
+            [
+                'ride_id' => (string) $ride_id,
+                'ride_status' => (string) $ride_status,
+                'ride_type' => (string) ($ride->ride_type ?? 0),
+            ],
+            (int) $login_device
+        );
 
         return response()->json(['status' => 1, 'message' => __('user_messages.1'), 'message_code' => 1]);
     }
@@ -668,11 +641,6 @@ class NotificationClass
             ]);
         }
 
-        $ride = TransportRideBook::query()->where('id', $ride_id)->first();
-        $rideVariant = $ride != null
-            ? \App\Helpers\XistiVehicleVariantHelper::normalize($ride->delivery_variant ?? '')
-            : '';
-
         $isDeliveryRide = \App\Helpers\RideKindHelper::isDeliveryRide([
             'service_id' => $service_id,
             'item_description' => '',
@@ -682,37 +650,13 @@ class NotificationClass
         $not_multi_delivery_provider_id = ProviderUserRunningService::query()->get()->pluck('provider_id');
 
         $get_drivers = User::query()
-            ->select('users.device_token','users.login_device','transport_driver_details.search_distance_filter','transport_driver_details.current_lat','transport_driver_details.current_long',
+            ->select('users.id as driver_user_id','users.currency','users.device_token','users.login_device','transport_driver_details.search_distance_filter','transport_driver_details.current_lat','transport_driver_details.current_long',
                 DB::raw("(CASE WHEN transport_driver_details.search_distance_filter != 0 THEN ROUND((6371 * acos( cos( radians(" .$current_lat. ") ) * cos( radians(current_lat) )  * cos( radians( current_long ) - radians(" .$current_long. ") ) + sin( radians(" .$current_lat. ") ) * sin(radians( current_lat ) ) ) ), 2) ELSE 0 END) as distance")
     )
             ->join('transport_driver_details','transport_driver_details.user_id','=','users.id')
             ->join('transport_vehicle_type','transport_vehicle_type.id','=','transport_driver_details.vehicle_type_id')
-            ->join('vehicle_services','vehicle_services.id','=','transport_vehicle_type.service_id')
-            ->whereRaw(DB::raw("(6371 * acos( cos( radians(current_lat) ) * cos( radians(" .$current_lat. ") )  * cos( radians( " .$current_long. " ) - radians(current_long) ) + sin( radians(current_lat) ) * sin(radians( " .$current_lat. " ) ) ) ) < " . $radius));
-        if ($isDeliveryRide) {
-            \App\Helpers\ServiceCatalogHelper::applyDeliveryCapableDriverFilter($get_drivers);
-            $requestedVehicleServiceId = null;
-            if (\Illuminate\Support\Facades\Schema::hasColumn('user_courier_service_details', 'requested_vehicle_service_id')) {
-                $requestedVehicleServiceId = \App\Models\TransportCourierDetails::query()
-                    ->where('ride_id', $ride_id)
-                    ->value('requested_vehicle_service_id');
-                $requestedVehicleServiceId = $requestedVehicleServiceId !== null ? (int) $requestedVehicleServiceId : null;
-            }
-            if (\App\Helpers\DeliveryVehicleHelper::isValidRequestedVehicleServiceId($requestedVehicleServiceId)) {
-                $get_drivers = $get_drivers->where('transport_vehicle_type.service_id', $requestedVehicleServiceId);
-            }
-            if ($rideVariant !== '') {
-                \App\Helpers\XistiVehicleVariantHelper::applyTransportVariantDriverFilter(
-                    $get_drivers,
-                    $rideVariant,
-                    'transport_driver_details',
-                    true
-                );
-            }
-        } else {
-            $get_drivers = $get_drivers->where('vehicle_services.id', $service_id);
-            \App\Helpers\XistiVehicleVariantHelper::applyTransportVariantDriverFilter($get_drivers, $rideVariant);
-        }
+            ->join('vehicle_services','vehicle_services.id','=','transport_vehicle_type.service_id');
+        \App\Helpers\RideDriverEligibilityHelper::applyPushNotificationDriverFilter($get_drivers, (int) $ride_id, (int) $service_id);
         $get_drivers = $get_drivers
             ->where('users.driver_current_status',1)
             ->where('users.is_driver_type',1)
@@ -727,45 +671,23 @@ class NotificationClass
             ->whereNotIn('users.id', $not_multi_delivery_provider_id)
             ->whereNull('users.deleted_at')
             ->havingRaw('(transport_driver_details.search_distance_filter = 0 OR distance <= transport_driver_details.search_distance_filter)')
+            ->havingRaw('(transport_driver_details.search_distance_filter > 0 OR distance <= ?)', [$radius])
             ->get()
             ->toArray();
 
         $ride = TransportRideBook::query()->where('id', $ride_id)->first();
         $rideType = $ride != null ? (string) $ride->ride_type : '0';
-        $event = $this->applyEventTemplate('driver_new_request', 'es', [
+        $defaultEvent = $this->applyEventTemplate('driver_new_request', 'es', [
             'currency' => $currency,
             'price' => (string) $displayOfferedPrice,
             'pickup' => $pickup_address,
             'destination' => $destination_address,
         ]);
-        $title = $event['title'];
-        $message = $event['message'];
-        $title_code = $event['title_code'];
-        $message_code = $event['message_code'];
-        $iosSound = $event['sound'];
-
-        //notification type 0= simple , 1= communication
-        $extraNotificationData = [
-            'title' => $title."",
-            'title_code' => $title_code."",
-            'sound' => "true",
-            'notification_type' => (string) $event['notification_type'],
-            'user_type' => '2',
-            'ride_status' => '0',
-            'ride_type' => $rideType,
-            'message' => $message."",
-            'body' => $message."",
-            'message_code' => $message_code."",
-            'ride_id' => $ride_id."",
-            'service_id' => $service_id."",
-            'is_delivery' => $isDeliveryRide ? '1' : '0',
-            'pickup_address' => $pickup_address."",
-            'destination_address' => $destination_address."",
-            'offered_price' => $displayOfferedPrice."",
-            "click_action" => "FLUTTER_NOTIFICATION_CLICK",
-            'dispatch_action' => 'refresh_available_rides',
-            'dispatch_ts' => (string) time(),
-        ];
+        $title = $defaultEvent['title'];
+        $message = $defaultEvent['message'];
+        $title_code = $defaultEvent['title_code'];
+        $message_code = $defaultEvent['message_code'];
+        $iosSound = $defaultEvent['sound'];
 
         if ($title !== '' || $message !== '') {
             foreach ($get_drivers as $driver) {
@@ -773,12 +695,48 @@ class NotificationClass
                 if ($token === '') {
                     continue;
                 }
+                $driverCurrency = \App\Support\UserCurrencyResolver::forCurrency($driver['currency'] ?? null);
+                $driverRatio = (float) ($driverCurrency->ratio ?? 1);
+                $driverDisplayPrice = \App\Helpers\TripAmountHelper::resolveForCurrency(
+                    ['offered_price' => $offered_price, 'total_pay' => $offered_price],
+                    $driverRatio
+                );
+                $driverSymbol = (string) ($driverCurrency->symbol ?? $currency);
+                $event = $this->applyEventTemplate('driver_new_request', 'es', [
+                    'currency' => $driverSymbol,
+                    'price' => (string) $driverDisplayPrice,
+                    'pickup' => $pickup_address,
+                    'destination' => $destination_address,
+                ]);
+                $pushTitle = $event['title'] !== '' ? $event['title'] : $title;
+                $pushMessage = $event['message'] !== '' ? $event['message'] : $message;
+                $extraNotificationData = [
+                    'title' => $pushTitle."",
+                    'title_code' => (string) ($event['title_code'] ?? $title_code)."",
+                    'sound' => "true",
+                    'notification_type' => (string) ($event['notification_type'] ?? 7),
+                    'user_type' => '2',
+                    'ride_status' => '0',
+                    'ride_type' => $rideType,
+                    'message' => $pushMessage."",
+                    'body' => $pushMessage."",
+                    'message_code' => (string) ($event['message_code'] ?? $message_code)."",
+                    'ride_id' => $ride_id."",
+                    'service_id' => $service_id."",
+                    'is_delivery' => $isDeliveryRide ? '1' : '0',
+                    'pickup_address' => $pickup_address."",
+                    'destination_address' => $destination_address."",
+                    'offered_price' => (string) $driverDisplayPrice,
+                    "click_action" => "FLUTTER_NOTIFICATION_CLICK",
+                    'dispatch_action' => 'refresh_available_rides',
+                    'dispatch_ts' => (string) time(),
+                ];
                 FcmPushHelper::sendToTokenForLoginDevice(
                     $token,
-                    $title,
-                    $message,
+                    $pushTitle,
+                    $pushMessage,
                     $extraNotificationData,
-                    $iosSound,
+                    $event['sound'] ?? $iosSound,
                     (int) ($driver['login_device'] ?? 0),
                 );
             }
@@ -787,7 +745,7 @@ class NotificationClass
         return response()->json(['status' => 1, 'message' => __('user_messages.1'), 'message_code' => 1]);
     }
 
-    public function userBidNotification($ride_details, $device_token, $language)
+    public function userBidNotification($ride_details, $device_token, $language, $login_device = null)
     {
         if ($device_token === null || trim((string) $device_token) === '') {
             return null;
@@ -861,9 +819,8 @@ class NotificationClass
                 'item_description' => isset($ride_details->item_description) ? (string) $ride_details->item_description : '',
                 'estimate_price' => isset($ride_details->estimate_price) ? (string) $ride_details->estimate_price : '0',
                 'ride_type' => (string) $ride_details->ride_type,
-                'dispatch_action' => 'refresh_driver_bids',
-                'dispatch_ts' => (string) time(),
-            ]
+            ],
+            $login_device !== null ? (int) $login_device : null,
         );
     }
 
@@ -879,8 +836,8 @@ class NotificationClass
         }
         $bidding_drivers = DriverBid::query()->where('ride_id',$ride_id)->get()->pluck('driver_id');
         $not_multi_delivery_provider_id = ProviderUserRunningService::query()->get()->pluck('provider_id');
-        $provider_token = User::query()
-            ->select('users.device_token')
+        $drivers = User::query()
+            ->select('users.device_token', 'users.login_device')
             ->join('transport_driver_details','transport_driver_details.user_id','=','users.id')
             ->join('transport_vehicle_type','transport_vehicle_type.id','=','transport_driver_details.vehicle_type_id')
             ->join('vehicle_services','vehicle_services.id','=','transport_vehicle_type.service_id')
@@ -891,23 +848,29 @@ class NotificationClass
             ->whereIn('users.id',$bidding_drivers)
             ->whereNotIn('users.id', $not_multi_delivery_provider_id)
             ->whereNull('users.deleted_at')
-            ->get()
-            ->pluck('device_token');
+            ->get();
 
-        return $this->sendEventPushToTokens(
-            'driver_fare_changed_by_user',
-            $provider_token->filter()->values()->all(),
-            'es',
-            [],
-            [
-                'ride_id' => (string) $ride_id,
-                'ride_status' => (string) ($ride->status ?? 0),
-                'ride_type' => (string) ($ride->ride_type ?? 0),
-                'customer_name' => (string) $ride->user_name,
-                'dispatch_action' => 'refresh_available_rides',
-                'dispatch_ts' => (string) time(),
-            ]
-        );
+        foreach ($drivers as $driver) {
+            $token = trim((string) ($driver->device_token ?? ''));
+            if ($token === '') {
+                continue;
+            }
+            $this->sendEventPushToToken(
+                'driver_fare_changed_by_user',
+                $token,
+                'es',
+                [],
+                [
+                    'ride_id' => (string) $ride_id,
+                    'ride_status' => (string) ($ride->status ?? 0),
+                    'ride_type' => (string) ($ride->ride_type ?? 0),
+                    'customer_name' => (string) $ride->user_name,
+                ],
+                (int) ($driver->login_device ?? 0),
+            );
+        }
+
+        return response()->json(['status' => 1, 'message' => __('user_messages.1'), 'message_code' => 1]);
     }
 
     public function sendReportIssueResolvedNotification(int $reportId, string $deviceToken, string $referenceNo, ?string $language = 'es'): mixed
@@ -1130,14 +1093,6 @@ class NotificationClass
                 ->join('users','users.id','=','transport_driver_details.user_id')
                 ->where('transport_driver_details.user_id',$driver_id)->first();
 
-            if ($driver_detail == Null) {
-                return response()->json([
-                    "status" => 0,
-                    "message" => __('driver_messages.9'),
-                    "message_code" => 9,
-                ]);
-            }
-
             $get_vehicle_type = TransportVehicleType::query()->where('id',$driver_detail->vehicle_type_id)->first();
             if($get_vehicle_type == NULL){
                 return response()->json([
@@ -1154,7 +1109,7 @@ class NotificationClass
                     $ride->status = 2;
                 }
 
-                if ((int) $ride->vehicle_service_id !== 4) {
+                if (! \App\Helpers\RideDriverEligibilityHelper::shouldPreserveRideVehicleServiceId($ride)) {
                     $ride->vehicle_service_id = $get_vehicle_type->service_id;
                 }
                 $ride->vehicle_type_id = $driver_detail->vehicle_type_id;

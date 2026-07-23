@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Support\FareNegotiationHelper;
 use App\Classes\AdminClass;
 use App\Classes\NotificationClass;
 use App\Classes\UserClassApi;
@@ -31,8 +32,8 @@ use App\Models\UserRideWayPoint;
 use Exception;
 use App\Models\UserAddress;
 use App\Models\UserCardDetails;
+use App\Models\UserReferHistory;
 use App\Helpers\RideSessionHelper;
-use App\Models\UserRunningRide;
 use App\Models\UserWalletTransaction;
 use App\Models\VehicleService;
 use App\Helpers\ServiceCatalogHelper;
@@ -40,6 +41,7 @@ use App\Models\WorldCurrency;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 //use Mockery\Exception;
@@ -83,22 +85,9 @@ class CustomerApiController extends Controller
 
     public function postWompiWebhook(Request $request)
     {
-        $forwardSecret = trim((string) config('services.wompi.forward_secret', ''));
-        if ($forwardSecret !== '' && !hash_equals($forwardSecret, (string) $request->header('X-Wompi-Forward-Secret', ''))) {
-            \Log::warning('wompi_webhook_rejected_unauthorized_forward', [
-                'reference' => data_get($request->all(), 'data.transaction.reference'),
-            ]);
-
-            return response()->json([
-                'status' => 0,
-                'message' => 'Unauthorized',
-                'message_code' => 401,
-            ], 401);
-        }
-
+        $raw = (string)$request->getContent();
         $payload = $request->all();
         if (empty($payload)) {
-            $raw = (string)$request->getContent();
             $decoded = json_decode($raw, true);
             if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
                 $payload = $decoded;
@@ -111,8 +100,97 @@ class CustomerApiController extends Controller
             'reference' => data_get($payload, 'data.transaction.reference'),
             'transaction_id' => data_get($payload, 'data.transaction.id'),
         ]);
+
+        if ($this->shouldForwardWompiWebhookToXisti($payload)) {
+            return $this->forwardWompiWebhookToXisti($payload, $raw);
+        }
+
         $result = $this->userClassapi->processWompiWebhook($payload);
         return response()->json($result, 200);
+    }
+
+    private function shouldForwardWompiWebhookToXisti(array $payload): bool
+    {
+        $reference = strtoupper(trim((string) data_get($payload, 'data.transaction.reference', '')));
+        if (str_starts_with($reference, 'XISTI-WALLET-')) {
+            return true;
+        }
+
+        $redirectUrl = strtolower(trim((string) data_get($payload, 'data.transaction.redirect_url', '')));
+
+        return $redirectUrl !== '' && str_contains($redirectUrl, 'xistiapp.com');
+    }
+
+    private function forwardWompiWebhookToXisti(array $payload, string $raw)
+    {
+        $targetUrl = $this->validatedXistiWebhookUrl();
+        if ($targetUrl === null) {
+            \Log::error('wompi_webhook_forward_misconfigured', [
+                'reference' => data_get($payload, 'data.transaction.reference'),
+                'transaction_id' => data_get($payload, 'data.transaction.id'),
+            ]);
+
+            return response()->json([
+                'status' => 0,
+                'message' => 'Xisti webhook URL is not configured',
+                'message_code' => 9,
+            ], 500);
+        }
+
+        $forwardSecret = trim((string) config('services.wompi.forward_secret', ''));
+        $headers = ['Content-Type' => 'application/json'];
+        if ($forwardSecret !== '') {
+            $headers['X-Wompi-Forward-Secret'] = $forwardSecret;
+        }
+
+        $body = $raw !== '' ? $raw : json_encode($payload);
+        $response = Http::timeout(30)
+            ->withHeaders($headers)
+            ->withBody($body, 'application/json')
+            ->post($targetUrl);
+
+        \Log::info('wompi_webhook_forwarded_to_xisti', [
+            'reference' => data_get($payload, 'data.transaction.reference'),
+            'transaction_id' => data_get($payload, 'data.transaction.id'),
+            'target_url' => $targetUrl,
+            'http_status' => $response->status(),
+        ]);
+
+        if (!$response->successful()) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Failed to forward webhook to Xisti',
+                'message_code' => 9,
+            ], 502);
+        }
+
+        return response($response->body(), 200)->header('Content-Type', 'application/json');
+    }
+
+    private function validatedXistiWebhookUrl(): ?string
+    {
+        $url = trim((string) config('services.wompi.xisti_webhook_url', ''));
+        if ($url === '') {
+            return null;
+        }
+
+        $parts = parse_url($url);
+        $scheme = strtolower((string) ($parts['scheme'] ?? ''));
+        $host = strtolower((string) ($parts['host'] ?? ''));
+        if ($host === '') {
+            return null;
+        }
+
+        if ($scheme === 'https' && str_ends_with($host, 'xistiapp.com')) {
+            return $url;
+        }
+
+        // Internal forward until admin.xistiapp.com has public DNS + TLS.
+        if ($scheme === 'http' && $host === '54.159.169.235') {
+            return $url;
+        }
+
+        return null;
     }
 
     public function postHomepage(Request $request){
@@ -194,7 +272,6 @@ class CustomerApiController extends Controller
             ->toArray();
 
         $services = \App\Helpers\MobileFeatureFlagsHelper::filterServiceRows($services);
-        $services = \App\Helpers\DeliveryVehicleHelper::filterHomeServiceRows($services);
         $service_modes = ServiceCatalogHelper::buildServiceModesFromRows($services, $user_details->language ?? 'es');
 
         $general_settings = request()->get("general_settings");
@@ -208,7 +285,15 @@ class CustomerApiController extends Controller
             "service_modes" => $service_modes,
             "delivery_vehicle_options" => \App\Helpers\DeliveryVehicleHelper::deliveryOptionsForApi($lang_prefix),
             "delivery_passenger_disclaimer" => \App\Helpers\DeliveryVehicleHelper::passengerDisclaimer($userLanguage),
-            "encomienda_passenger_disclaimer" => 'Indica qué comprar, el tope de precio, dónde comprar y dónde entregar.',
+            "shared_ride_passenger_disclaimer" => \App\Helpers\SharedRideHelper::passengerDisclaimer($userLanguage),
+            "transport_passenger_disclaimer" => $userLanguage === 'es'
+                ? 'Consiste en transporte de pasajeros. Elige vehículo y ruta.'
+                : 'Passenger transport. Pick a vehicle and route.',
+            "encomienda_passenger_disclaimer" => $userLanguage === 'es'
+                ? 'Consiste en compras o recogidas con tope de precio.'
+                : 'Errands and pickups with a price cap.',
+            "acarreo_vehicle_options" => \App\Helpers\AcarreoVehicleHelper::optionsForApi($lang_prefix),
+            "acarreo_passenger_disclaimer" => \App\Helpers\AcarreoHelper::passengerDisclaimer($userLanguage),
             "is_driver_type" => $user_details->is_driver_type,
             "is_driver_status" => $user_details->is_driver_status,
             "driver_doc_status" => $user_details->driver_doc_status,
@@ -224,7 +309,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required"
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -547,15 +632,22 @@ class CustomerApiController extends Controller
     public function postCountryAndCurrencyList(Request $request)
     {
         $country_list = LanguageLists::query()->select('id as country_id', 'language_name as country_name', 'language_code as country_code')->where('status', 1)->orderBy('id', 'asc')->get();
-        $currency_list = WorldCurrency::query()->select('id as currency_id', 'currency_code as currency_name', 'symbol as currency_symbol')->where('status', 1)->get();
-        return response()->json(array_merge([
+        $currency_list = WorldCurrency::query()
+            ->select('id as currency_id', 'currency_code as currency_name', 'symbol as currency_symbol')
+            ->where('status', 1)
+            ->whereIn('currency_code', \App\Helpers\WorldCurrencyCatalogHelper::mobileVisibleCodes())
+            ->get();
+        $general_settings = request()->get("general_settings");
+        $app_key =  ($general_settings->app_key != NUll)?$general_settings->app_key:"";
+        return response()->json([
             "status" => 1,
             //"message" => "success!",
             "message" => __('user_messages.1'),
             "message_code" => 1,
+            "app_key" => $app_key,
             "country_list" => $country_list,
             "currency_list" => $currency_list
-        ], \App\Helpers\AppMobileSettingsHelper::mobileBootstrapAppKeyPayload()));
+        ]);
     }
     public function postMyCheckoutSupportPages(Request $request)
     {
@@ -595,10 +687,10 @@ class CustomerApiController extends Controller
             }
             return response()->json([
                 "status" => 1,
-//                "message" => "success!",
                 "message" => __('user_messages.1'),
                 "message_code" => 1,
-                "pages" => $support_pages
+                "pages" => $support_pages,
+                'centro_legal_url' => \App\Support\LegalConfig::centroLegalUrl($user_check->language ?? 'es'),
             ]);
         } else {
             return response()->json([
@@ -611,42 +703,35 @@ class CustomerApiController extends Controller
     }
     public function postFirebaseSecurityRules(Request $request)
     {
-        $general_settings = request()->get('general_settings');
-        if ($general_settings == null || $general_settings->server_map_key == null) {
-            return \App\Helpers\GoogleMapsApiResponse::missingMapKey();
+        $general_settings = request()->get("general_settings");
+        if ($general_settings == Null || $general_settings->map_key == Null) {
+            return "";
         }
 
-        $url = trim((string) $request->get('url', ''));
-        if ($url === '' || ! \App\Helpers\GoogleMapsProxyHelper::isAllowedUrl($url)) {
-            return response()->json([
-                'status' => 0,
-                'message' => __('user_messages.9'),
-                'message_code' => 9,
-            ], 400);
+        $server_key = $general_settings->server_map_key;
+        $url = $request->get('url');
+        if ($url == Null) {
+            return "";
         }
 
-        $server_key = (string) $general_settings->server_map_key;
-        $final_url = str_replace(' ', '%20', \App\Helpers\GoogleMapsProxyHelper::appendServerKey($url, $server_key));
-
+        $fcmUrl = $url . $server_key;
+        $final_url = str_replace(' ', '%20', $fcmUrl);
+        $fcmData = [];
+        $headers = [
+//            'Authorization: key=' . $server_key,
+            'Content-Type: application/json'
+        ];
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $final_url);
-        curl_setopt($ch, CURLOPT_HTTPGET, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        \App\Support\CurlSecurity::applyToCurlHandle($ch);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmData));
         $result = curl_exec($ch);
-        $curlError = curl_error($ch);
-        $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-
-        if ($curlError !== '') {
-            return \App\Helpers\GoogleMapsApiResponse::curlFailure($curlError);
-        }
-
-        $response = json_decode((string) $result, true);
-
-        return \App\Helpers\GoogleMapsApiResponse::proxyJson(is_array($response) ? $response : null, $httpCode > 0 ? $httpCode : 200);
+        $response = json_decode($result, true);
+        return $response;
     }
     public function postFacebookUserDataDeletion(Request $request)
     {
@@ -692,7 +777,11 @@ class CustomerApiController extends Controller
 
         // general settings null or mapKey null then return Please try again
         if ($general_settings == Null || $general_settings->server_map_key == Null) {
-            return \App\Helpers\GoogleMapsApiResponse::missingMapKey();
+            return response()->json([
+                "status" => 0,
+                "message" => __('user_messages.9'), // Please try again
+                "message_code" => 9,
+            ]);
         }
 
         // Google Places Autocomplete API URL for cURL call
@@ -728,8 +817,7 @@ class CustomerApiController extends Controller
         curl_setopt($ch, CURLOPT_POST, true); // post request
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers); // headers
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        \App\Support\CurlSecurity::applyToCurlHandle($ch);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload)); // payload
 
         $result = curl_exec($ch);
@@ -738,7 +826,10 @@ class CustomerApiController extends Controller
         $curl_error = curl_error($ch);
         if (!empty($curl_error)) {
             curl_close($ch);
-            return \App\Helpers\GoogleMapsApiResponse::curlFailure($curl_error);
+            return response()->json([
+                "status" => 0,
+                "message" => $curl_error,
+            ]);
         }
 
         $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -748,7 +839,7 @@ class CustomerApiController extends Controller
         $decodedResult = json_decode($result, true);
 
         // Return the response from Google Places API
-        return \App\Helpers\GoogleMapsApiResponse::proxyJson(is_array($decodedResult) ? $decodedResult : null, $httpStatus);
+        return response()->json($decodedResult, $httpStatus);
     }
 
     /* This function retrieves place details from the Google Places API based on a provided place_id */
@@ -759,7 +850,11 @@ class CustomerApiController extends Controller
         $general_settings = GeneralSettings::query()->select('id', 'server_map_key')->first();
         // if general_settings Null or mapKey null
         if ($general_settings == Null || $general_settings->server_map_key == Null) {
-            return \App\Helpers\GoogleMapsApiResponse::missingMapKey();
+            return response()->json([
+                "status" => 0,
+                "message" => __('user_messages.9'), // Sorry, something went wrong
+                "message_code" => 9,
+            ]);
         }
 
         // Google Places API URL for cURL call
@@ -779,8 +874,7 @@ class CustomerApiController extends Controller
         curl_setopt($ch, CURLOPT_HTTPGET, true); // This API supports GET request
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        \App\Support\CurlSecurity::applyToCurlHandle($ch);
 
         $result = curl_exec($ch);
 
@@ -788,7 +882,10 @@ class CustomerApiController extends Controller
         $curl_error = curl_error($ch);
         if (!empty($curl_error)) {
             curl_close($ch);
-            return \App\Helpers\GoogleMapsApiResponse::curlFailure($curl_error);
+            return response()->json([
+                "status" => 0,
+                "message" => $curl_error,
+            ]);
         }
 
         $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -798,7 +895,7 @@ class CustomerApiController extends Controller
         $decodedResult = json_decode($result, true);
 
         // Return the response from Google Places API
-        return \App\Helpers\GoogleMapsApiResponse::proxyJson(is_array($decodedResult) ? $decodedResult : null, $httpStatus);
+        return response()->json($decodedResult, $httpStatus);
     }
 
     /* This function requests route details from the Google Routes API, including origin, destination, waypoints, and traffic information. */
@@ -808,7 +905,11 @@ class CustomerApiController extends Controller
         $general_settings = GeneralSettings::query()->select('id', 'server_map_key')->first();
         // if general_settings Null or mapKey Null
         if ($general_settings == Null || $general_settings->server_map_key == Null) {
-            return \App\Helpers\GoogleMapsApiResponse::missingMapKey();
+            return response()->json([
+                "status" => 0,
+                "message" => __('user_messages.9'), // Sorry, something went wrong
+                "message_code" => 9,
+            ]);
         }
 
         // Google Places API URL
@@ -883,8 +984,7 @@ class CustomerApiController extends Controller
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        \App\Support\CurlSecurity::applyToCurlHandle($ch);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 
         $result = curl_exec($ch);
@@ -893,7 +993,10 @@ class CustomerApiController extends Controller
         $curl_error = curl_error($ch);
         if (!empty($curl_error)) {
             curl_close($ch);
-            return \App\Helpers\GoogleMapsApiResponse::curlFailure($curl_error);
+            return response()->json([
+                "status" => 0,
+                "message" => $curl_error,
+            ]);
         }
 
         $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -903,7 +1006,7 @@ class CustomerApiController extends Controller
         $decodedResult = json_decode($result, true);
 
         // Return the response from Google Places API
-        return \App\Helpers\GoogleMapsApiResponse::proxyJson(is_array($decodedResult) ? $decodedResult : null, $httpStatus);
+        return response()->json($decodedResult, $httpStatus);
     }
 
    //code check api splash screen data
@@ -923,6 +1026,7 @@ class CustomerApiController extends Controller
         $app_type = $request->get('app_type');;
         $login_device = $request->get('login_device');
         $general_settings = request()->get("general_settings");
+        $app_key =  ($general_settings->app_key != NUll)?$general_settings->app_key:"";
 
         $is_google_login = ($general_settings != Null && $general_settings->is_google_login != Null) ? $general_settings->is_google_login : 0;
         $is_facebook_login = ($general_settings != Null && $general_settings->is_facebook_login != Null) ? $general_settings->is_facebook_login : 0;
@@ -948,41 +1052,26 @@ class CustomerApiController extends Controller
                 "status" => 1,
                 'message' => __('user_messages.1'),
                 "message_code" => 1,
+                "app_key" => $app_key,
                 "app_version" => $version_name . "",
                 "is_forcefully_update" => $is_forcefully_update,
                 "is_google_login" => $is_google_login,
                 "is_facebook_login" => $is_facebook_login,
                 "is_apple_login" => $is_apple_login,
                 "is_finger_login" => $is_finger_login,
-            ], \App\Helpers\AppMobileSettingsHelper::pricingAndCommissionPayload($general_settings), \App\Helpers\AppMobileSettingsHelper::mobileBootstrapAppKeyPayload()));
+            ], \App\Helpers\AppMobileSettingsHelper::pricingAndCommissionPayload($general_settings), \App\Support\LegalConfig::mobilePayload()));
         } else {
             return response()->json([
                 "status" => 1,
+//                "message" => "success!",
                 'message' => __('user_messages.1'),
                 "message_code" => 1,
+                "app_key" => $app_key,
                 "app_version" => "",
                 "is_forcefully_update" => 0,
             ]);
         }
 
-    }
-
-    /**
-     * Regional market catalog (countries, cities, currency, min fares).
-     * Optional: current_lat, current_lng OR country_id + city_id.
-     */
-    public function postMarketConfig(Request $request)
-    {
-        $lat = $request->filled('current_lat') ? (float) $request->get('current_lat') : null;
-        $lng = $request->filled('current_lng') ? (float) $request->get('current_lng') : null;
-        $countryId = $request->get('country_id');
-        $cityId = $request->get('city_id');
-
-        return response()->json(array_merge([
-            'status' => 1,
-            'message' => __('user_messages.1'),
-            'message_code' => 1,
-        ], \App\Helpers\MarketConfigHelper::apiPayload($lat, $lng, $countryId, $cityId)));
     }
 
     //remove provider account(softdelete)
@@ -1311,7 +1400,7 @@ class CustomerApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
-            "access_token" => "required",
+            "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
             "amount" => "required"
         ]);
         if ($validator->fails()) {
@@ -1395,8 +1484,6 @@ class CustomerApiController extends Controller
 
     public function postRidePricing(Request $request)
     {
-        info("postRidePricing");
-        info($request);
         $validator = Validator::make($request->all(), [
             "user_id" => "required|numeric",
             "access_token" => \App\Support\ApiValidationRules::ACCESS_TOKEN,
@@ -1448,12 +1535,10 @@ class CustomerApiController extends Controller
         $bargainAmount = ($recommendedFare * $maxBargainPercent) / 100;
         $minPrice = max($recommendedFare - $bargainAmount, $minFare);
         $maxPrice = $recommendedFare + (($recommendedFare * $maxOfferPercent) / 100);
-        if ($maxPrice < $minPrice) {
-            $maxPrice = $minPrice + max(($minPrice * $maxOfferPercent) / 100, 500);
-        }
 
 
         $general = request()->get('general_settings');
+        $step = FareNegotiationHelper::step($general);
 
         $pricingEngine = app(\App\Services\FarePricingEngine::class);
         $priced = $pricingEngine->priceRange(
@@ -1469,7 +1554,6 @@ class CustomerApiController extends Controller
         $recommendedOut = round($recommendedFare * $currency, 2);
         $minOut = round($minPrice * $currency, 2);
         $maxOut = round($maxPrice * $currency, 2);
-        // Never surface a zero suggested fare when distance/time imply a real trip.
         if ($recommendedOut <= 0 && ($distance > 0 || $estimateTime > 0) && $minFare > 0) {
             $recommendedOut = max(round($minFare * $currency, 2), 0.01);
             $minOut = max($minOut, $recommendedOut);
@@ -1632,6 +1716,121 @@ class CustomerApiController extends Controller
                 "message_code" => 9,
             ]);
         }
+    }
+
+    /**
+     * Resolve Colombian municipality (DIVIPOLA) from GPS coordinates.
+     */
+    public function postResolveMunicipio(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'current_lat' => 'required|numeric',
+            'current_lng' => 'nullable|numeric',
+            'current_long' => 'nullable|numeric',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 0,
+                'message' => $validator->errors()->first(),
+                'message_code' => 9,
+            ]);
+        }
+
+        $lat = (float) $request->get('current_lat');
+        $lng = (float) ($request->get('current_lng') ?? $request->get('current_long'));
+        if (! $request->filled('current_lng') && ! $request->filled('current_long')) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'El campo current lng es obligatorio.',
+                'message_code' => 9,
+            ]);
+        }
+        $resolved = \App\Helpers\MunicipioResolveHelper::resolve($lat, $lng);
+        if ($resolved === null) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Municipio no encontrado',
+                'message_code' => 9,
+                'catalog_version' => \App\Helpers\MunicipioResolveHelper::catalogVersion(),
+            ]);
+        }
+
+        return response()->json([
+            'status' => 1,
+            'message' => __('user_messages.1'),
+            'message_code' => 1,
+            'catalog_version' => \App\Helpers\MunicipioResolveHelper::catalogVersion(),
+            'municipio' => $resolved,
+        ]);
+    }
+
+    /**
+     * Persist active municipio on the authenticated user (area_id + dane code).
+     */
+    public function postApplyMunicipio(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|numeric',
+            'access_token' => \App\Support\ApiValidationRules::ACCESS_TOKEN,
+            'dane_code' => 'required|string|max:10',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 0,
+                'message' => $validator->errors()->first(),
+                'message_code' => 9,
+            ]);
+        }
+
+        $user = $this->userClassapi->checkUserAllow($request->get('user_id'), $request->get('access_token'));
+        if ($failed = $this->userClassapi->authJsonResponse($user)) {
+            return $failed;
+        }
+
+        $muni = \App\Models\Municipality::query()
+            ->where('dane_code', $request->get('dane_code'))
+            ->where('status', 1)
+            ->first();
+        if ($muni === null) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Municipio no encontrado',
+                'message_code' => 9,
+            ]);
+        }
+
+        $payload = \App\Helpers\MunicipioResolveHelper::payload($muni);
+        $user->municipio_dane_code = $muni->dane_code;
+        if (! empty($payload['admin_area_list_id'])) {
+            $user->area_id = (int) $payload['admin_area_list_id'];
+        }
+        $user->save();
+
+        return response()->json([
+            'status' => 1,
+            'message' => __('user_messages.1'),
+            'message_code' => 1,
+            'municipio' => $payload,
+            'area_id' => $user->area_id,
+        ]);
+    }
+
+    /**
+     * Regional market catalog (countries, cities, currency, min fares).
+     * Optional: current_lat, current_lng OR country_id + city_id.
+     */
+    public function postMarketConfig(Request $request)
+    {
+        $lat = $request->filled('current_lat') ? (float) $request->get('current_lat') : null;
+        $lng = $request->filled('current_lng') ? (float) $request->get('current_lng') : null;
+        $countryId = $request->get('country_id');
+        $cityId = $request->get('city_id');
+
+        return response()->json(array_merge([
+            'status' => 1,
+            'message' => __('user_messages.1'),
+            'message_code' => 1,
+        ], \App\Helpers\MarketConfigHelper::apiPayload($lat, $lng, $countryId, $cityId)));
     }
 
 }

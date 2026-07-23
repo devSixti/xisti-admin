@@ -1089,6 +1089,15 @@ class UserController extends Controller
                 ],
                 ['updated_at' => now(), 'created_at' => now()]
             );
+            if ($vehicleServiceId > 0 && $vehicleServiceId !== 4) {
+                \Illuminate\Support\Facades\DB::table('vehicle_type_service_eligibility')->updateOrInsert(
+                    [
+                        'vehicle_type_id' => (int) $request->get('vehicle_type_id'),
+                        'service_id' => $vehicleServiceId,
+                    ],
+                    ['updated_at' => now(), 'created_at' => now()]
+                );
+            }
         }
 
         if (\Illuminate\Support\Facades\Schema::hasColumn('transport_driver_details', 'delivery_variant')) {
@@ -1392,6 +1401,7 @@ class UserController extends Controller
 
         [$current_lat, $current_long] = \App\Support\DriverLocationHelper::syncFromRequest($request, $driver_details);
         $hasDriverGps = \App\Support\DriverLocationHelper::isValid((float) $current_lat, (float) $current_long);
+        $effectiveRadius = \App\Helpers\ServiceCatalogHelper::effectiveDriverSearchRadiusKm($driver_details, (float) $radius);
 
         $deliveryCapable = ServiceCatalogHelper::driverCanReceiveDelivery(
             (int) ($driver_details->vehicle_type_id ?? 0),
@@ -1448,9 +1458,11 @@ class UserController extends Controller
         if (Schema::hasColumn('user_courier_service_details', 'errand_type')) {
             $courierSelect[] = 'user_courier_service_details.errand_type';
         }
+        $driverUserId = (int) $driver_details->user_id;
+
         $availableRideSelect = [
                     'user_ride_booking.id as ride_id','user_ride_booking.ride_no','user_ride_booking.pickup_address','user_ride_booking.destination_address','users.rating','user_ride_booking.pickup_datetime as schedule_date',
-                    'user_ride_booking.user_name','user_ride_booking.pickup_lat','user_ride_booking.pickup_long','user_ride_booking.user_id','user_ride_booking.vehicle_service_id as service_id','vehicle_services.service_mode','user_ride_booking.ride_type','user_ride_booking.is_auto_accept','user_ride_booking.destination_payment_method',
+                    'user_ride_booking.user_name','user_ride_booking.pickup_lat','user_ride_booking.pickup_long','user_ride_booking.user_id','user_ride_booking.driver_id','user_ride_booking.vehicle_service_id as service_id','vehicle_services.service_mode','user_ride_booking.ride_type','user_ride_booking.is_auto_accept','user_ride_booking.destination_payment_method',
                     'vehicle_services.'.$lang_prefix.'name as service_name',
                     'user_ride_booking.child_seat','user_ride_booking.handicap','user_ride_booking.other_user_name','user_ride_booking.other_user_contact_number',
                     DB::raw('COALESCE(NULLIF(user_ride_booking.offered_price, 0), user_ride_booking.total_pay) * '.$currency.' as offered_price'),
@@ -1479,8 +1491,21 @@ class UserController extends Controller
                 ->join('users','users.id','=','user_ride_booking.user_id')
                 ->leftjoin('user_courier_service_details','user_courier_service_details.ride_id','=','user_ride_booking.id')
                 ->leftJoin('user_rating','user_rating.user_id','=','users.id')
-                ->when($hasDriverGps, function ($q) use ($current_lat, $current_long, $radius) {
-                    $q->whereRaw(DB::raw("(6371 * acos( cos( radians(pickup_lat) ) * cos( radians(" .$current_lat. ") )  * cos( radians( " .$current_long. " ) - radians(pickup_long) ) + sin( radians(pickup_lat) ) * sin(radians( " .$current_lat. " ) ) ) ) < " . $radius));
+                ->where(function ($assignedDriverScope) use ($driverUserId) {
+                    $assignedDriverScope->whereNull('user_ride_booking.driver_id')
+                        ->orWhere('user_ride_booking.driver_id', 0)
+                        ->orWhere('user_ride_booking.driver_id', $driverUserId);
+                })
+                ->where(function ($proximityScope) use ($hasDriverGps, $current_lat, $current_long, $effectiveRadius, $driverUserId) {
+                    $proximityScope->where('user_ride_booking.driver_id', $driverUserId);
+                    if ($hasDriverGps) {
+                        $proximityScope->orWhereRaw(DB::raw("(6371 * acos( cos( radians(pickup_lat) ) * cos( radians(" .$current_lat. ") )  * cos( radians( " .$current_long. " ) - radians(pickup_long) ) + sin( radians(pickup_lat) ) * sin(radians( " .$current_lat. " ) ) ) ) < " . $effectiveRadius));
+                    } else {
+                        $proximityScope->orWhere(function ($unassignedOnly) {
+                            $unassignedOnly->whereNull('user_ride_booking.driver_id')
+                                ->orWhere('user_ride_booking.driver_id', 0);
+                        });
+                    }
                 })
                 ->where('user_ride_booking.status',0)
                 ->where('users.status',1)
@@ -1525,10 +1550,6 @@ class UserController extends Controller
                 ->orderBy('distance','ASC')
                 ->groupBy('user_ride_booking.id');
 
-        if($driver_details->search_distance_filter > 0){
-            $available_ride_requests = $available_ride_requests->having('distance','<=',$driver_details->search_distance_filter);
-        }
-
         $available_ride_requests = $available_ride_requests->get()->toArray();
 
         $address_list = array();
@@ -1539,6 +1560,7 @@ class UserController extends Controller
                 "address_lat" => trim($value['pickup_lat']),
                 "address_long" => trim($value['pickup_long'])
             ];
+            unset($available_ride_requests[$key]['driver_id']);
             $ride_way_point = UserRideWayPoint::query()->where('ride_id', $value['ride_id'])->first();
             if ($ride_way_point != Null) {
                 if ($ride_way_point->way_point_1 != Null && $ride_way_point->lat_long_1 != Null) {
@@ -1644,7 +1666,8 @@ class UserController extends Controller
         }
 
         $driver_details = TransportDriverDetails::query()
-            ->select('transport_driver_details.*')
+            ->select('transport_driver_details.*','transport_vehicle_type.service_id')
+            ->join('transport_vehicle_type','transport_vehicle_type.id','=','transport_driver_details.vehicle_type_id')
             ->where('transport_driver_details.user_id',$request->get('user_id'))->first();
         if($driver_details == Null){
             return response()->json([
@@ -1666,11 +1689,27 @@ class UserController extends Controller
             ]);
         }
 
-        if($ride_details->status == 4){
+        if($ride_details->status != 0){
             return response()->json([
                 "status" => 0,
-                "message" => __('user_messages.24'),
-                "message_code" => 24,
+                "message" => __('driver_messages.23'),
+                "message_code" => 23,
+            ]);
+        }
+
+        if ((int) ($ride_details->is_auto_accept ?? 0) === 1) {
+            return response()->json([
+                "status" => 0,
+                "message" => __('driver_messages.23'),
+                "message_code" => 23,
+            ]);
+        }
+
+        if (! \App\Helpers\RideDriverEligibilityHelper::driverCanServePendingRide($driver_details, (int) $request->get('ride_id'))) {
+            return response()->json([
+                "status" => 0,
+                "message" => __('driver_messages.343'),
+                "message_code" => 343,
             ]);
         }
 
@@ -1751,7 +1790,12 @@ class UserController extends Controller
                 $driver_bid->ride_id = $ride_details->id;
             }
             $driver_bid->vehicle_type_id = $driver_details->vehicle_type_id;
-            $driver_bid->offered_price = $request->get('offered_price') / $currency;
+            $driver_bid->offered_price = TripAmountHelper::parseDisplayAmount(
+                $request->get('offered_price'),
+                (string) (\App\Support\UserCurrencyResolver::forUser($user_check)?->currency_code
+                    ?? \App\Support\UserCurrencyResolver::forUser($user_check)?->symbol
+                    ?? '')
+            ) / $currency;
             $driver_bid->status = 0;
             $driver_bid->bidding_time = date('Y-m-d H:i:s');
             $driver_bid->save();
@@ -1897,12 +1941,15 @@ class UserController extends Controller
         }
 
         $currency = \App\Support\UserCurrencyResolver::ratioForUser($user_details);
+        $currencyMeta = \App\Support\UserCurrencyResolver::forUser($user_details);
+        $currencyLabel = (string) ($currencyMeta->currency_code ?? $currencyMeta->symbol ?? '');
 
-        $amount = round($request->get('offered_price') / $currency,2);
+        $displayOffered = TripAmountHelper::parseDisplayAmount($request->get('offered_price'), $currencyLabel);
+        $amount = round($displayOffered / $currency, 2);
 
         $date = new \DateTime("now", new \DateTimeZone(config('app.timezone')) );
 
-        if($ride_details->offered_price != $request->get('offered_price')){
+        if (abs((float) $ride_details->offered_price * $currency - $displayOffered) > 0.009) {
             $ride_details->total_pay = $amount;
             $ride_details->offered_price = $amount;
             $ride_details->ride_time_out = $date->format('Y-m-d H:i:s');
@@ -2322,8 +2369,8 @@ class UserController extends Controller
                             $message_code = 24;
                         }
 
-                        //deleting chat from firebase (best-effort; never block status transition)
-                        (new FirebaseService())->safeDeleteOrderChat($ride->ride_no,$ride->id);
+                        //deleting chat from firebase
+                        (new FirebaseService())->deleteOrderChat($ride->ride_no,$ride->id);
 
                         //ProviderUserRunningService::query()->where('provider_id', $driver_id)->where('user_id', $ride->user_id)->where('service_cat_id', $service_category_id)->where('booking_id', $ride->id)->delete();
                         return response()->json([
@@ -2509,8 +2556,9 @@ class UserController extends Controller
                                 $ride->cancel_reason = $request->get('cancel_reason');
                                 $ride->save();
 
-                                //deleting chat from firebase (best-effort; never block status transition)
-                                (new FirebaseService())->safeDeleteOrderChat($ride->ride_no,$ride->id);
+                                //deleting chat from firebase
+                                if((new FirebaseService())->deleteOrderChat($ride->ride_no,$ride->id)){
+                                }
 
                                 $update_driver_status->driver_current_status = 1;
                                 $update_driver_status->save();
@@ -2983,8 +3031,9 @@ class UserController extends Controller
                                     ProviderUserRunningService::query()->where('provider_id', $driver_id)->where('booking_id', $ride->id)->delete();
                                 }
 
-                                //deleting chat from firebase (best-effort; never block status transition)
-                                (new FirebaseService())->safeDeleteOrderChat($ride->ride_no,$ride->id);
+                                //deleting chat from firebase
+                                if((new FirebaseService())->deleteOrderChat($ride->ride_no,$ride->id)){
+                                }
 
                                 if($ride->is_hail != 1) {
                                     $general_settings = request()->get("general_settings");
@@ -3925,6 +3974,14 @@ class UserController extends Controller
             ]);
         }
 
+        if (! \App\Helpers\RideDriverEligibilityHelper::driverCanServePendingRide($driver_details, (int) $request->get('ride_id'))) {
+            return response()->json([
+                'status' => 0,
+                'message' => __('driver_messages.343',[],$language),
+                'message_code' => 343,
+            ]);
+        }
+
         $avatar = url('/assets/images/profile-images/customer/');
 
         $current_lat = $driver_details->current_lat;
@@ -3956,6 +4013,12 @@ class UserController extends Controller
             ->leftJoin('user_rating','user_rating.user_id','=','users.id')
             ->where('user_ride_booking.id',$request->get('ride_id'))
             ->where('user_ride_booking.status',0)
+            ->where(function ($assignedDriverScope) use ($request) {
+                $driverUserId = (int) $request->get('user_id');
+                $assignedDriverScope->whereNull('user_ride_booking.driver_id')
+                    ->orWhere('user_ride_booking.driver_id', 0)
+                    ->orWhere('user_ride_booking.driver_id', $driverUserId);
+            })
             ->where('users.status',1)
             ->whereNull('users.deleted_at')
             ->when($driver_details->child_seat != 1, function ($q) {
@@ -4665,6 +4728,37 @@ class UserController extends Controller
             }
 
             if ($ride->status == 0) {
+                if ((int) ($ride->driver_id ?? 0) > 0
+                    && (int) $ride->driver_id !== (int) $request->get('user_id')) {
+                    return response()->json([
+                        "status" => 0,
+                        "message" => __('driver_messages.23'),
+                        "message_code" => 23,
+                    ]);
+                }
+
+                if ((int) ($ride->is_auto_accept ?? 0) !== 1) {
+                    return response()->json([
+                        "status" => 0,
+                        "message" => __('user_messages.326'),
+                        "message_code" => 326,
+                    ]);
+                }
+
+                $driver_details = TransportDriverDetails::query()
+                    ->select('transport_driver_details.*', 'transport_vehicle_type.service_id')
+                    ->join('transport_vehicle_type', 'transport_vehicle_type.id', '=', 'transport_driver_details.vehicle_type_id')
+                    ->where('transport_driver_details.user_id', $request->get('user_id'))
+                    ->first();
+                if ($driver_details === null
+                    || ! \App\Helpers\RideDriverEligibilityHelper::driverCanServePendingRide($driver_details, (int) $request->get('ride_id'))) {
+                    return response()->json([
+                        "status" => 0,
+                        "message" => __('driver_messages.343'),
+                        "message_code" => 343,
+                    ]);
+                }
+
                 return $this->notificationClass->driverDirectAcceptedTransportRequestNotification($request->get('ride_id'), $request->get('user_id'));
             } elseif ($ride->status == 4) {
                 return response()->json([

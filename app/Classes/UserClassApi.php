@@ -22,13 +22,15 @@ use App\Models\TransportCourierDetails;
 use App\Models\TransportDriverDetails;
 use App\Models\TransportRatings;
 use App\Models\TransportRideBook;
+use App\Support\FareNegotiationHelper;
+use App\Helpers\TripAmountHelper;
 use App\Helpers\ApiValidationHelper;
 use App\Helpers\DeliveryVehicleHelper;
+use App\Helpers\AcarreoHelper;
 use App\Helpers\EncomiendaHelper;
 use App\Helpers\RideKindHelper;
 use App\Helpers\AppMobileSettingsHelper;
 use App\Helpers\DestinationPaymentHelper;
-use App\Helpers\RideLifecycleHelper;
 use App\Rules\ColombianMobileNumber;
 use App\Rules\ColombianNationalId;
 use App\Support\ColombiaFormValidation;
@@ -39,6 +41,7 @@ use App\Models\UserAddress;
 use App\Models\UserCardDetails;
 use App\Models\UserReferHistory;
 use App\Models\UserRideWayPoint;
+use App\Services\RideTelemetryService;
 use App\Models\UserRunningRide;
 use App\Models\UserWalletTransaction;
 use App\Models\VehicleService;
@@ -75,9 +78,8 @@ class UserClassApi
                     'message_code' => 3,
                 ]);
             }
-            $storedToken = (string) ($user_details->access_token ?? '');
-            $providedToken = (string) ($access_token ?? '');
-            if ($storedToken === '' || ! hash_equals($storedToken, $providedToken)) {
+            if ((string) $user_details->access_token !== (string) $access_token) {
+                RideTelemetryService::logAuthFailure((int) $user_id, 4, 'token_mismatch');
                 return response()->json([
                     'status' => 4,
                     'message' => __('user_messages.4'),
@@ -100,6 +102,7 @@ class UserClassApi
             }
             return $user_details;
         } else {
+            RideTelemetryService::logAuthFailure((int) $user_id, 5, 'user_not_found');
             return response()->json([
                 'status' => 5,
                 'message' => __('user_messages.5'),
@@ -150,7 +153,7 @@ class UserClassApi
         $cash_payment = 0;
         $card_payment = 0;
         $wallet_payment = 0;
-        $general_settings = \App\Support\RequestSettingsHelper::generalSettings();
+        $general_settings = request()->get("general_settings");
         if ($general_settings != Null){
             $cash_payment = $general_settings->cash_payment;
             $card_payment = $general_settings->card_payment;
@@ -169,7 +172,7 @@ class UserClassApi
             'message_code' => 1,
             'is_register' => $is_register,
             'user_id' => $user_details['id'],
-            'access_token' => (string) ($user_details['access_token'] ?? ''),
+            'access_token' => $user_details['access_token'] . '',
             'contact_number' => $user_details['contact_number'] != Null ? $user_details['contact_number'] : "",
             'select_country_code' => $user_details['country_code'] != Null ? $user_details['country_code'] : "",
             'login_type' => $user_details['login_type'],
@@ -201,41 +204,33 @@ class UserClassApi
         if (!empty($user_details['emergency_contact_name'])) {
             $final_response_array['emergency_contact_name'] = trim((string) $user_details['emergency_contact_name']);
         }
-        if (in_array($user_details['login_type'], ['google', 'facebook', 'apple'], true)) {
-            if (!empty($user_details['email'])) {
-                $final_response_array['email'] = $user_details['email'];
-            }
-            if (!empty($user_details['first_name'])) {
-                $final_response_array['user_name'] = $user_details['first_name'];
-            }
-            if ($avatar !== null) {
+        if ($user_details['verified_at'] != Null){
+            if ($is_register == 1){
+                if ($user_details instanceof User) {
+                    $user_details->ensureInviteCode();
+                    $referralCode = (string) $user_details->invite_code;
+                } else {
+                    $referralCode = (string) ($user_details['invite_code'] ?? '');
+                }
+
+                $final_response_array['user_name'] = $user_details['first_name'].'';
+                $final_response_array['email'] = $user_details['email'].'';
+                $final_response_array['referral_code'] = $referralCode;
+                $final_response_array['gender'] = $user_details['gender'];
                 $final_response_array['profile_image'] = $avatar;
+                $final_response_array['select_currency'] = $user_details['currency'].'';
+                $final_response_array['select_language'] = $user_details['language'].'';
+                $final_response_array['emergency_contact'] = $user_details['emergency_contact'].'';
+                $final_response_array['emergency_country_code'] = $user_details['emergency_country_code'] != Null ? $user_details['emergency_country_code'] : $user_details['country_code'];
+                if (!empty($user_details['emergency_contact_name'])) {
+                    $final_response_array['emergency_contact_name'] = trim((string) $user_details['emergency_contact_name']);
+                }
+                $final_response_array['server_time_zone'] = config('app.timezone');
+                $final_response_array['is_driver_type'] = $user_details['is_driver_type'];
+                $final_response_array['is_driver_status'] = $user_details['is_driver_status'];
+                $final_response_array['driver_doc_status'] = $user_details['driver_doc_status'];
+                $final_response_array['driver_vehicle_status'] = $user_details['driver_vehicle_status'];
             }
-        }
-        if ($is_register == 1) {
-            if ($user_details instanceof User) {
-                $user_details->ensureInviteCode();
-                $referralCode = (string) $user_details->invite_code;
-            } else {
-                $referralCode = (string) ($user_details['invite_code'] ?? '');
-            }
-            $final_response_array['user_name'] = $user_details['first_name'].'';
-            $final_response_array['email'] = $user_details['email'].'';
-            $final_response_array['referral_code'] = $referralCode;
-            $final_response_array['gender'] = $user_details['gender'];
-            $final_response_array['profile_image'] = $avatar;
-            $final_response_array['select_currency'] = $user_details['currency'].'';
-            $final_response_array['select_language'] = $user_details['language'].'';
-            $final_response_array['emergency_contact'] = $user_details['emergency_contact'].'';
-            $final_response_array['emergency_country_code'] = $user_details['emergency_country_code'] != Null ? $user_details['emergency_country_code'] : $user_details['country_code'];
-            if (!empty($user_details['emergency_contact_name'])) {
-                $final_response_array['emergency_contact_name'] = trim((string) $user_details['emergency_contact_name']);
-            }
-            $final_response_array['server_time_zone'] = config('app.timezone');
-            $final_response_array['is_driver_type'] = $user_details['is_driver_type'];
-            $final_response_array['is_driver_status'] = $user_details['is_driver_status'];
-            $final_response_array['driver_doc_status'] = $user_details['driver_doc_status'];
-            $final_response_array['driver_vehicle_status'] = $user_details['driver_vehicle_status'];
         }
         if ($is_register === 1) {
             if ($user_details instanceof User) {
@@ -283,21 +278,24 @@ class UserClassApi
             "additional_remarks" => "nullable",
             "min_bargain_amt" => "required",
             "max_bargain_amt" => "required",
-            "recipient_name" => "required_if:service_id,==,4|required_if:errand_type,encomienda|max:80",
+            "recipient_name" => "nullable|required_if:service_id,4|required_if:errand_type,encomienda|required_if:errand_type,delivery|max:80",
             "recipient_contact_number" => [
-                "required_if:service_id,==,4",
+                "nullable",
+                "required_if:service_id,4",
                 "required_if:errand_type,encomienda",
+                "required_if:errand_type,delivery",
                 "numeric",
                 new ColombianMobileNumber($recipientCountry),
             ],
-            "item_description" => "required_if:service_id,==,4|required_if:errand_type,encomienda|max:500",
-            "estimate_price" => "nullable|required_if:errand_type,encomienda|numeric|min:0",
+            "item_description" => "nullable|required_if:service_id,4|required_if:errand_type,encomienda|required_if:errand_type,delivery|max:500",
+            "estimate_price" => "nullable|numeric|min:0",
             "document_number" => ["nullable", new ColombianNationalId()],
             "is_auto_accept" => "required|in:0,1",
             "ride_for_other" => "nullable|in:0,1",
-            "other_user_name" => "required_if:ride_for_other,==,1|max:80",
+            "other_user_name" => "nullable|required_if:ride_for_other,1|max:80",
             "other_user_contact_number" => [
-                "required_if:ride_for_other,==,1",
+                "nullable",
+                "required_if:ride_for_other,1",
                 "numeric",
                 new ColombianMobileNumber($otherCountry),
             ],
@@ -305,9 +303,9 @@ class UserClassApi
             "child_seat" => "required",
             "payment_type" => "required",
             "destination_payment_method" => DestinationPaymentHelper::validationRule(),
-            "requested_vehicle_service_id" => "nullable|integer|in:1,3,4",
-            "delivery_variant" => "nullable|string|max:64",
+            "requested_vehicle_service_id" => "nullable|integer|min:0",
             "errand_type" => "nullable|in:delivery,encomienda,acarreo",
+            "encomienda_kind" => "nullable|in:compras,recogidas",
             "acarreo_vehicle_variant" => "nullable|in:motocarguero,camion,jaula,motocarro",
             "estimated_service_date" => "nullable|date",
             "delivery_direction" => "nullable|in:send,receive",
@@ -317,20 +315,29 @@ class UserClassApi
 
         $errandType = EncomiendaHelper::normalizedErrandType(
             $request->get('errand_type'),
-            (int) $request->get('service_id')
+            (int) $request->get('service_id'),
+            (int) $request->get('requested_vehicle_service_id')
         );
         $isEncomiendaBooking = $errandType === EncomiendaHelper::ERRAND_ENCOMIENDA;
         $isAcarreoBooking = $errandType === EncomiendaHelper::ERRAND_ACARREO;
+        $encomiendaKind = EncomiendaHelper::normalizedEncomiendaKind($request->get('encomienda_kind'))
+            ?? EncomiendaHelper::ENCOMIENDA_COMPRAS;
         if ($isEncomiendaBooking) {
-            $validator->after(function ($v) use ($request) {
-                if (!DeliveryVehicleHelper::isValidRequestedVehicleServiceId((int) $request->get('requested_vehicle_service_id'))) {
+            $validator->after(function ($v) use ($request, $encomiendaKind) {
+                $requestedVehicleId = (int) $request->get('requested_vehicle_service_id');
+                if ($requestedVehicleId <= 0) {
+                    $requestedVehicleId = (int) $request->get('service_id');
+                }
+                if (!DeliveryVehicleHelper::isValidRequestedVehicleServiceId($requestedVehicleId)) {
                     $v->errors()->add('requested_vehicle_service_id', __('user_messages.9'));
                 }
                 if (trim((string) $request->get('item_description')) === '') {
                     $v->errors()->add('item_description', __('user_messages.9'));
                 }
-                if (trim((string) $request->get('estimate_price')) === '' && (float) $request->get('estimate_price') <= 0) {
-                    $v->errors()->add('estimate_price', __('user_messages.9'));
+                if ($encomiendaKind === EncomiendaHelper::ENCOMIENDA_COMPRAS) {
+                    if (trim((string) $request->get('estimate_price')) === '' && (float) $request->get('estimate_price') <= 0) {
+                        $v->errors()->add('estimate_price', __('user_messages.9'));
+                    }
                 }
             });
         }
@@ -342,7 +349,7 @@ class UserClassApi
                 if ((float) $request->get('offered_fare') <= 0) {
                     $v->errors()->add('offered_fare', __('user_messages.9'));
                 }
-                if (\App\Helpers\AcarreoHelper::normalizeVariant($request->get('acarreo_vehicle_variant')) === null) {
+                if (AcarreoHelper::normalizeVariant($request->get('acarreo_vehicle_variant')) === null) {
                     $v->errors()->add('acarreo_vehicle_variant', __('user_messages.9'));
                 }
             });
@@ -380,22 +387,33 @@ class UserClassApi
         } else {
             $user_currency = WorldCurrency::query()->where('default_currency', 1)->first();
         }
-        $currency = $user_currency->ratio;
-        $amount = round($request['offered_fare'] / $currency,2);
-
         if ($general_settings != Null) {
-            $step = max(1, (int) ($general_settings->fare_negotiation_step ?? 500));
-            if ($user_currency->symbol === 'COP') {
-                $offered = (float) $request['offered_fare'];
-                if (fmod($offered, $step) > 0.009) {
+            $step = FareNegotiationHelper::step($general_settings);
+            $currencyLabel = (string) ($user_currency->currency_code ?? $user_currency->symbol ?? '');
+            $parsedOffered = TripAmountHelper::parseDisplayAmount($request['offered_fare'], $currencyLabel);
+            $request->merge(['offered_fare' => $parsedOffered]);
+            $currencyCode = strtoupper((string) ($user_currency->currency_code ?? ''));
+            $currencySymbol = strtoupper((string) ($user_currency->symbol ?? ''));
+            if ($currencyCode === 'COP' || str_contains($currencySymbol, 'COL')) {
+                $offered = FareNegotiationHelper::snap($parsedOffered, $step);
+                $request->merge(['offered_fare' => $offered]);
+                if (! FareNegotiationHelper::isValidStep($offered, $step)) {
                     return response()->json([
-                        "status" => 0,
-                        "message" => __('user_messages.388', ['step' => $step]),
-                        "message_code" => 388,
+                        'status' => 0,
+                        'message' => __('user_messages.388', ['step' => $step]),
+                        'message_code' => 388,
                     ]);
                 }
             }
+        } else {
+            $currencyLabel = (string) ($user_currency->currency_code ?? $user_currency->symbol ?? '');
+            $request->merge([
+                'offered_fare' => TripAmountHelper::parseDisplayAmount($request['offered_fare'], $currencyLabel),
+            ]);
         }
+
+        $currency = $user_currency->ratio;
+        $amount = round($request['offered_fare'] / $currency, 2);
 
         if ($general_settings != Null){
             //check user_min_amount condition wallet
@@ -448,16 +466,6 @@ class UserClassApi
             ]);
         }
 
-        if ((int) $get_vehicle_service->id === 5
-            || ((string) ($get_vehicle_service->service_mode ?? '') === 'transport'
-                && ! DeliveryVehicleHelper::isPassengerActiveVehicleServiceId((int) $get_vehicle_service->id))) {
-            return response()->json([
-                'status' => 0,
-                'message' => __('user_messages.9'),
-                'message_code' => 9,
-            ]);
-        }
-
         $current_lat = $new_address_list[0]['address_lat'];
         $current_long = $new_address_list[0]['address_long'];
         $area_id = 0;
@@ -490,16 +498,30 @@ class UserClassApi
         }
 
         $currency = $user_currency->ratio;
+        $currencyLabel = (string) ($user_currency->currency_code ?? $user_currency->symbol ?? '');
+        $request->merge([
+            'offered_fare' => TripAmountHelper::parseDisplayAmount($request['offered_fare'], $currencyLabel),
+        ]);
         $amount = round($request['offered_fare'] / $currency,2);
 
         $ride = new TransportRideBook();
         $ride->user_id = $request['user_id'];
         $ride->area_id = $area_id;
-        $ride->vehicle_service_id = $get_vehicle_service->id;
-        if (\Illuminate\Support\Facades\Schema::hasColumn('user_ride_booking', 'delivery_variant')) {
-            $variant = \App\Helpers\XistiVehicleVariantHelper::normalize($request->get('delivery_variant'));
-            $ride->delivery_variant = $variant !== '' ? $variant : null;
+        if (! empty($request['municipio_dane_code'])) {
+            $ride->municipio_dane_code = (string) $request['municipio_dane_code'];
+        } elseif (! empty($user_details['municipio_dane_code'])) {
+            $ride->municipio_dane_code = (string) $user_details['municipio_dane_code'];
+        } elseif ($current_lat != Null && $current_long != Null) {
+            $resolvedMuni = \App\Helpers\MunicipioResolveHelper::resolve((float) $current_lat, (float) $current_long);
+            if ($resolvedMuni !== null) {
+                $ride->municipio_dane_code = $resolvedMuni['dane_code'];
+                if ($area_id == 0 && ! empty($resolvedMuni['admin_area_list_id'])) {
+                    $ride->area_id = (int) $resolvedMuni['admin_area_list_id'];
+                    $area_id = $ride->area_id;
+                }
+            }
         }
+        $ride->vehicle_service_id = $get_vehicle_service->id;
         $ride->vehicle_cost_for_km = $get_vehicle_service->cost_for_km;
         $ride->ride_no = $ride->generateRideNo();
         $isCourierRide = $errandType !== null;
@@ -523,8 +545,8 @@ class UserClassApi
         $ride->pickup_long = $new_address_list[0]['address_long'];
         $ride->destination_address = $new_address_list[$address_count - 1]['address'];
         $ride->destination_latlong = $new_address_list[$address_count - 1]['address_lat'] . ',' . $new_address_list[$address_count - 1]['address_long'];
-        $ride->min_bargain_amt = $request['min_bargain_amt'] != Null ? $request['min_bargain_amt'] / $currency : 0 ;
-        $ride->max_bargain_amt = $request['max_bargain_amt'] != Null ? $request['max_bargain_amt'] / $currency : 0 ;
+        $ride->min_bargain_amt = $request['min_bargain_amt'] != Null ? TripAmountHelper::parseDisplayAmount($request['min_bargain_amt'], $currencyLabel ?? '') / $currency : 0 ;
+        $ride->max_bargain_amt = $request['max_bargain_amt'] != Null ? TripAmountHelper::parseDisplayAmount($request['max_bargain_amt'], $currencyLabel ?? '') / $currency : 0 ;
         $ride->total_pay = $amount;
         $ride->offered_price = $amount;
         $ride->total_distance = $request['total_distance'];
@@ -541,9 +563,9 @@ class UserClassApi
         $ride->additional_request = ($request->get('additional_remarks') != "") ? $request->get('additional_remarks') : "";
         $ride->status = 0;
         $ride->driver_algorithm = $driver_algorithm;
-        $date = new \DateTime('now', new \DateTimeZone(config('app.timezone')));
+        $date = new \DateTime("now", new \DateTimeZone(config('app.timezone')) );
         $ride->retry_time = $date->format('Y-m-d H:i:s');
-        $ride->ride_time_out = RideLifecycleHelper::rideTimeoutFromNow();
+        $ride->ride_time_out = $date->format('Y-m-d H:i:s');
         $ride->is_auto_accept = $request['is_auto_accept'];
 
         if (Schema::hasColumn('user_ride_booking', 'delivery_direction')) {
@@ -557,15 +579,21 @@ class UserClassApi
         }
         $ride->save();
 
-        if (EncomiendaHelper::shouldPersistCourierRow((int) $get_vehicle_service->id, $errandType)
-            || \App\Helpers\AcarreoHelper::shouldPersistCourierRow($errandType)) {
+        if (EncomiendaHelper::shouldPersistCourierRow(
+            (int) $get_vehicle_service->id,
+            $errandType,
+            (int) $request->get('requested_vehicle_service_id')
+        )) {
             $courier_details = new TransportCourierDetails();
             $courier_details->ride_id = $ride->id;
             if (Schema::hasColumn('user_courier_service_details', 'errand_type')) {
                 $courier_details->errand_type = $errandType ?? EncomiendaHelper::ERRAND_DELIVERY;
             }
+            if (Schema::hasColumn('user_courier_service_details', 'encomienda_kind') && $isEncomiendaBooking) {
+                $courier_details->encomienda_kind = $encomiendaKind;
+            }
             if (Schema::hasColumn('user_courier_service_details', 'acarreo_vehicle_variant') && $isAcarreoBooking) {
-                $courier_details->acarreo_vehicle_variant = \App\Helpers\AcarreoHelper::normalizeVariant(
+                $courier_details->acarreo_vehicle_variant = AcarreoHelper::normalizeVariant(
                     $request->get('acarreo_vehicle_variant')
                 );
             }
@@ -589,7 +617,7 @@ class UserClassApi
             }
             $courier_details->item_description = $request['item_description'] ?? '';
             $courier_details->estimate_price = round((float) ($request['estimate_price'] ?? 0), 2);
-            if (!$isEncomiendaBooking && !$isAcarreoBooking) {
+            if (! $isEncomiendaBooking && ! $isAcarreoBooking) {
                 AppMobileSettingsHelper::applyCourierPackageMetricsToModel($courier_details, $request);
             }
             $requestedVehicleServiceId = (int) $request->get('requested_vehicle_service_id');
@@ -1446,7 +1474,7 @@ class UserClassApi
         }
 
         $amount_in_cents = (int) round(((float) $amount) * 100);
-        $reference = 'XISTI-WALLET-U' . (int)$provider_id . '-P' . (int)$provider_type . '-' . time() . '-' . rand(1000, 9999);
+        $reference = 'ZIMO-WALLET-U' . (int)$provider_id . '-P' . (int)$provider_type . '-' . time() . '-' . rand(1000, 9999);
         $signature = hash('sha256', $reference . $amount_in_cents . 'COP' . $integrity_key);
 
         $query = http_build_query([
@@ -1536,11 +1564,7 @@ class UserClassApi
         $event_key = $is_sandbox ? ($general_settings->wompi_sandbox_event_key ?? '') : ($general_settings->wompi_production_event_key ?? '');
         $event_key = trim((string)$event_key);
         if ($event_key === '') {
-            Log::warning('wompi.webhook.missing_event_key', [
-                'sandbox' => $is_sandbox,
-            ]);
-
-            return false;
+            return app()->environment('local', 'testing');
         }
 
         $signature = (array)($payload['signature'] ?? []);
@@ -1580,7 +1604,7 @@ class UserClassApi
 
     private function creditWalletFromWebhookReference($reference, $transaction_id, $amount_in_cents)
     {
-        if (!preg_match('/^XISTI-WALLET-U(\d+)-P(\d+)-/i', $reference, $matches)) {
+        if (!preg_match('/^(?:ZIMO-)?WALLET-U(\d+)-P(\d+)-/i', $reference, $matches)) {
             return false;
         }
 
@@ -1749,7 +1773,7 @@ class UserClassApi
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        \App\Support\CurlSecurity::applyToCurlHandle($ch);
         $response = curl_exec($ch);
         curl_close($ch);
 
