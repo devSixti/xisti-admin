@@ -79,6 +79,10 @@ sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/resources" "${APP_DIR}/app" 
 
 APP_DIR="${APP_DIR}" DEPLOY_USER="${DEPLOY_USER}" bash "${APP_DIR}/scripts/ec2-safe-artisan-cache.sh" --reload-php --skip-composer
 
+sudo bash "${APP_DIR}/scripts/install-ec2-exchange-rates-cron.sh" 2>/dev/null || true
+sudo bash "${APP_DIR}/scripts/install-ec2-healthcheck-cron.sh" 2>/dev/null || true
+sudo -u "${DEPLOY_USER}" bash -lc "cd '${APP_DIR}' && php artisan config:clear && php artisan currency:sync-live-rates" || true
+
 if [ -d "${APP_DIR}/public/assets/images" ]; then
   sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/public/assets/images"
   sudo find "${APP_DIR}/public/assets/images" -type d -exec chmod 2775 {} \;
