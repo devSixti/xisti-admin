@@ -14,6 +14,9 @@ return [
     'fare_negotiation_step_cop' => (int) env('XISTI_FARE_NEGOTIATION_STEP', 500),
     /** Max Google Maps proxy calls per device/session per day (autocomplete, geocode, routes). */
     'maps_daily_limit' => (int) env('XISTI_MAPS_DAILY_LIMIT', 10000),
+    'curl' => [
+        'ssl_verify_peer' => filter_var(env('CURL_SSL_VERIFY_PEER', true), FILTER_VALIDATE_BOOLEAN),
+    ],
     'firebase_database_url' => env('FIREBASE_DATABASE_URL'),
     'fcm_user_topic' => env('FIREBASE_FCM_USER_TOPIC', 'XistiUser'),
     'fcm_driver_topic' => env('FIREBASE_FCM_DRIVER_TOPIC', 'XistiDriver'),
@@ -38,6 +41,17 @@ return [
         'centro_legal_url' => env('XISTI_LEGAL_URL', 'https://admin.xistiapp.com/terms-and-conditions'),
         'terms_url' => env('XISTI_TERMS_URL', 'https://admin.xistiapp.com/terms-and-conditions'),
         'privacy_url' => env('XISTI_PRIVACY_URL', 'https://admin.xistiapp.com/privacy-policy'),
+        'emails' => [
+            'support' => env('XISTI_SUPPORT_EMAIL', 'soporte@xistiapp.com'),
+            'legal' => env('XISTI_EMAIL_LEGAL', 'legal@xistiapp.com'),
+            'privacy' => env('XISTI_EMAIL_PRIVACY', 'privacidad@xistiapp.com'),
+            'pqr' => env('XISTI_EMAIL_PQR', 'pqr@xistiapp.com'),
+            'hello' => env('XISTI_EMAIL_HELLO', 'hola@xistiapp.com'),
+        ],
+        'store_links' => [
+            'android' => env('XISTI_PLAY_STORE_URL', ''),
+            'ios' => env('XISTI_APP_STORE_URL', ''),
+        ],
         'consent_version' => env('XISTI_LEGAL_CONSENT_VERSION', '2026-06-legal-v1'),
     ],
 ];
