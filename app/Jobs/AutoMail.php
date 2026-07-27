@@ -25,7 +25,11 @@ class AutoMail implements ShouldQueue
     public function handle()
     {
         $data = $this->data;
-        $email = $data['email'];
+        $email = $data['email'] ?? null;
+        if (! is_string($email) || trim($email) === '') {
+            // Phone-only signups have no email; nothing to send.
+            return;
+        }
         $path = $data['path'];
         $subject = $data['subject'];
         $mail_site_name = $data['mail_site_name'];
