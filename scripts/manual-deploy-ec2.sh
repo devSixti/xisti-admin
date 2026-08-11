@@ -25,8 +25,11 @@ fi
 RELEASE_TAR="$(mktemp /tmp/xisti-release.XXXXXX.tar.gz)"
 trap 'rm -f "${RELEASE_TAR}"' EXIT
 
-echo "==> Branch: $(git branch --show-current) @ $(git rev-parse --short HEAD)"
+DEPLOY_COMMIT="$(git rev-parse HEAD)"
+DEPLOY_COMMIT_SHORT="$(git rev-parse --short HEAD)"
+echo "==> Branch: $(git branch --show-current) @ ${DEPLOY_COMMIT_SHORT}"
 echo "==> Building release tarball..."
+printf '%s\n' "${DEPLOY_COMMIT}" > "${ROOT}/REVISION"
 tar czf "${RELEASE_TAR}" \
   --exclude=.git \
   --exclude=vendor \
@@ -37,7 +40,14 @@ tar czf "${RELEASE_TAR}" \
   --exclude=storage/framework/sessions \
   --exclude=storage/framework/views \
   --exclude=database/database.sqlite \
+  --exclude=bootstrap/cache/config.php \
+  --exclude=bootstrap/cache/routes-v7.php \
+  --exclude=bootstrap/cache/routes.php \
+  --exclude=bootstrap/cache/packages.php \
+  --exclude=bootstrap/cache/services.php \
+  --exclude=.cursor \
   .
+rm -f "${ROOT}/REVISION"
 
 echo "==> Uploading to EC2..."
 if [[ -f "${HOME}/.ssh/config" ]] && grep -q '^Host xisti-ec2' "${HOME}/.ssh/config" 2>/dev/null; then
@@ -59,13 +69,32 @@ TAR_PATH="/tmp/xisti-release.tar.gz"
 tar xzf "${TAR_PATH}" -C "${CD_STAGING}"
 rm -f "${TAR_PATH}"
 
-sudo -u "${DEPLOY_USER}" rsync -av \
+sudo rsync -av \
   --exclude '.env' \
   --exclude 'storage' \
   --exclude 'vendor' \
   --exclude '.git' \
   --exclude 'node_modules' \
+  --exclude 'bootstrap/cache/config.php' \
+  --exclude 'bootstrap/cache/routes-v7.php' \
+  --exclude 'bootstrap/cache/routes.php' \
+  --exclude 'bootstrap/cache/packages.php' \
+  --exclude 'bootstrap/cache/services.php' \
   "${CD_STAGING}/" "${APP_DIR}/"
+
+sudo rm -f \
+  "${APP_DIR}/bootstrap/cache/config.php" \
+  "${APP_DIR}/bootstrap/cache/routes-v7.php" \
+  "${APP_DIR}/bootstrap/cache/routes.php" \
+  "${APP_DIR}/bootstrap/cache/packages.php" \
+  "${APP_DIR}/bootstrap/cache/services.php"
+
+sudo chown -R "${DEPLOY_USER}:${DEPLOY_USER}" \
+  "${APP_DIR}/app" "${APP_DIR}/config" "${APP_DIR}/routes" "${APP_DIR}/database" \
+  "${APP_DIR}/scripts" "${APP_DIR}/resources" "${APP_DIR}/bootstrap" "${APP_DIR}/public"
+sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/bootstrap/cache" "${APP_DIR}/storage"
+sudo chmod -R ug+rwX "${APP_DIR}/bootstrap/cache" "${APP_DIR}/storage"
+sudo find "${APP_DIR}/storage" "${APP_DIR}/bootstrap/cache" -type d -exec chmod g+s {} \;
 
 sudo -u "${DEPLOY_USER}" bash -lc "
   set -euo pipefail
@@ -83,6 +112,10 @@ sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/resources" "${APP_DIR}/app" 
 
 APP_DIR="${APP_DIR}" DEPLOY_USER="${DEPLOY_USER}" bash "${APP_DIR}/scripts/ec2-safe-artisan-cache.sh" --reload-php --skip-composer
 
+sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/bootstrap/cache" "${APP_DIR}/storage"
+sudo chmod -R ug+rwX "${APP_DIR}/bootstrap/cache" "${APP_DIR}/storage"
+sudo systemctl reload php8.2-fpm nginx 2>/dev/null || true
+
 sudo bash "${APP_DIR}/scripts/install-ec2-exchange-rates-cron.sh" 2>/dev/null || true
 sudo bash "${APP_DIR}/scripts/install-ec2-healthcheck-cron.sh" 2>/dev/null || true
 sudo -u "${DEPLOY_USER}" bash -lc "cd '${APP_DIR}' && php artisan config:clear && php artisan currency:sync-live-rates" || true
@@ -94,7 +127,8 @@ if [ -d "${APP_DIR}/public/assets/images" ]; then
 fi
 rm -rf "${CD_STAGING}"
 APP_DIR="${APP_DIR}" API_HOST="admin.xistiapp.com" bash "${APP_DIR}/scripts/ec2-post-deploy-verify.sh"
-echo "==> Deploy OK"
+DEPLOYED_REV="$(sudo -u ${DEPLOY_USER} bash -lc "cat ${APP_DIR}/REVISION 2>/dev/null | head -c 12")"
+echo "==> Deploy OK — revision ${DEPLOYED_REV:-unknown}"
 DEPLOY_EOF
 
 echo "==> Done."
