@@ -26,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
             'revalidate' => \App\Http\Middleware\RevalidateBackHistory::class,
             'adminrole' =>\App\Http\Middleware\adminRole::class,
+            'adminMfa' => \App\Http\Middleware\EnsureAdminMfaVerified::class,
             'VerifyUser' => \App\Http\Middleware\VerifyUser::class,
             'setLocaleLang' => \App\Http\Middleware\SetLocalLang::class,
             'setAdminLocale' => \App\Http\Middleware\SetAdminLocale::class,

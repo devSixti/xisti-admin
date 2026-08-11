@@ -11,17 +11,20 @@
 |
 */
 
-use App\Http\Controllers\LegalWebController;
+use App\Http\Controllers\AdminAuditLogController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminLocaleController;
 use App\Http\Controllers\Api\CustomerApiController;
 use App\Http\Controllers\Auth\AuthPagesController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\MfaController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\LegalWebController;
 use App\Http\Controllers\HeatMapController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderWiseChatController;
 use App\Http\Controllers\ReportIssueController;
+use App\Http\Controllers\SuperAdminManagementController;
 use App\Http\Controllers\TransportController;
 use Illuminate\Support\Facades\Auth;
 
@@ -98,14 +101,24 @@ Route::middleware(['setAdminLocale'])->group(function () {
 
 Route::group(['middleware' => 'revalidate'], function () {
     Route::get('/admin/login', [AuthPagesController::class,'getAdminLogin'])->name('get:admin:login');
-    Route::post('/admin/login', [LoginController::class,'postSuperAdminLogin'])->name('post:admin:update_super_admin_login');
+    Route::post('/admin/login', [LoginController::class,'postSuperAdminLogin'])
+        ->middleware('throttle:' . config('admin.login_throttle', '5,1'))
+        ->name('post:admin:update_super_admin_login');
 });
 Route::prefix('admin')->group(function () {
     Route::group(['middleware' => 'auth:admin'], function () {
         Route::get('/logout/{admin}', [LoginController::class,'logout'])->name('admin:logout');
         Route::group(['middleware' => 'revalidate'], function () {
+            Route::get('/mfa/verify', [MfaController::class, 'showVerify'])->name('get:admin:mfa.verify');
+            Route::post('/mfa/verify', [MfaController::class, 'verify'])->name('post:admin:mfa.verify');
+            Route::get('/mfa/enroll', [MfaController::class, 'showEnroll'])->name('get:admin:mfa.enroll');
+            Route::post('/mfa/enroll', [MfaController::class, 'enroll'])->name('post:admin:mfa.enroll');
+
+            Route::group(['middleware' => 'adminMfa'], function () {
             Route::get('/vehicle-type-list', [TransportController::class,'getTransportVehicleTypeList'])->name('get:admin:vehicle_type_list');
             Route::group(['middleware' => 'adminrole'], function () {
+                Route::get('/security', [MfaController::class, 'showSecurity'])->name('get:admin:security');
+                Route::post('/mfa/reset', [MfaController::class, 'resetEnrollment'])->name('post:admin:mfa.reset');
                 //test-mail
                 Route::get('/test-mail', [AdminController::class,'getAdminTest_Mail'])->name('get:admin:test_mail');
                 Route::get('/change-password', [ResetPasswordController::class,'getAdminChangePassword'])->name('get:admin:change_password');
@@ -310,6 +323,15 @@ Route::prefix('admin')->group(function () {
                 Route::get('/delete-city-admin', [AdminController::class,'getAdminDeleteCityAdmin'])->name('get:admin:delete_city_admin');
                 // city admin List ajax code
                 Route::get('/city-admin-list-new', [AdminController::class,'getAdminCityAdminListNew'])->name('get:admin:city_admin_list_new');
+
+                Route::get('/super-admin-list', [SuperAdminManagementController::class, 'index'])->name('get:admin:super_admin_list');
+                Route::get('/add-super-admin', [SuperAdminManagementController::class, 'create'])->name('get:admin:add_super_admin');
+                Route::post('/store-super-admin', [SuperAdminManagementController::class, 'store'])->name('post:admin:store_super_admin');
+                Route::get('/edit-super-admin/{admin_id}', [SuperAdminManagementController::class, 'edit'])->name('get:admin:edit_super_admin');
+                Route::post('/update-super-admin', [SuperAdminManagementController::class, 'update'])->name('post:admin:update_super_admin');
+                Route::get('/suspend-super-admin/{admin_id}', [SuperAdminManagementController::class, 'suspend'])->name('get:admin:suspend_super_admin');
+                Route::get('/audit-logs', [AdminAuditLogController::class, 'index'])->name('get:admin:audit_logs');
+                Route::get('/audit-logs/export', [AdminAuditLogController::class, 'export'])->name('get:admin:audit_logs.export');
                 /*--------------------------------------------------------- End City Admin ---------------------------------------------------------*/
                 Route::get('/transport-heat-map', [HeatMapController::class,'getAdminTransportHeatMap'])->name('get:admin:transport_heat_map');
 
@@ -389,6 +411,7 @@ Route::prefix('admin')->group(function () {
                 Route::get('/chat-history/{order_id}', [OrderWiseChatController::class,'getOrderWiseChat'])->name('get:admin:get_order_wise_chat');
                 Route::get('/fetch-chats', [OrderWiseChatController::class,'getOrderWiseChatAjax'])->name('get:admin:get_order_wise_chat_ajax');
 
+            });
             });
         });
     });

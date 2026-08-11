@@ -32,7 +32,22 @@
                         <ul class="show-notification profile-notification dropdown-menu" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                             @if(Illuminate\Support\Facades\Auth::guard("admin")->check() && Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 1)
                                 <li>
-                                    <a href="@if(Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 1 || Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 4) {{ route('get:admin:change_password') }} @elseif(Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 2) {{ route('get:dispatcher:change_password') }} @elseif(Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 3) {{ route('get:account:change_password') }} @endif">
+                                    <a href="{{ route('get:admin:security') }}">
+                                        <i class="feather icon-shield"></i> {{ __('admin.mfa.nav_security') }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('get:admin:super_admin_list') }}">
+                                        <i class="feather icon-users"></i> {{ __('admin.mfa.nav_super_admins') }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('get:admin:audit_logs') }}">
+                                        <i class="feather icon-file-text"></i> {{ __('admin.mfa.nav_audit_logs') }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('get:admin:change_password') }}">
                                         <i class="feather icon-edit"></i> {{ __('admin.nav.change_password') }}
                                     </a>
                                 </li>

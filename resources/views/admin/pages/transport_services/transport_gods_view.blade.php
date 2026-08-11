@@ -464,7 +464,7 @@
             $("#provider-head h4").text(adminGodsViewLabels.all);
             temp = [];
             $.ajax({
-                url: '{{ (Illuminate\Support\Facades\Auth::guard("admin")->check() && (Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 1 || Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 4)  ) ? route("get:admin:transport_all_provider_location") : route("get:dispatcher:transport_all_provider_location") }}',
+                url: '{{ route("get:admin:transport_all_provider_location") }}',
                 type: "get",
                 data: {provider: all_provider},
                 success: function (data) {
@@ -487,7 +487,7 @@
             $("#provider-head h4").text(adminGodsViewLabels.available);
             temp = [];
             $.ajax({
-                url: '{{ (Illuminate\Support\Facades\Auth::guard("admin")->check() && (Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 1 || Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 4 )) ? route("get:admin:transport_available_provider_location") : route("get:dispatcher:transport_available_provider_location") }}',
+                url: '{{ route("get:admin:transport_available_provider_location") }}',
                 type: "get",
                 data: {provider: available_provider},
                 success: function (data) {
@@ -510,7 +510,7 @@
             $("#provider-head h4").text(adminGodsViewLabels.ride_start);
             temp = [];
             $.ajax({
-                url: '{{ (Illuminate\Support\Facades\Auth::guard("admin")->check() && (Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 1 || Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 4)) ? route("get:admin:transport_ride_start_provider_location") : route("get:dispatcher:transport_ride_start_provider_location") }}',
+                url: '{{ route("get:admin:transport_ride_start_provider_location") }}',
                 type: "get",
                 data: {provider: ride_start_provider},
                 success: function (data) {
@@ -533,7 +533,7 @@
             $("#provider-head h4").text(adminGodsViewLabels.reached_pickup);
             temp = [];
             $.ajax({
-                url: '{{ (Illuminate\Support\Facades\Auth::guard("admin")->check() && (Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 1 || Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 4)) ? route("get:admin:transport_ride_reached_provider_location") : route("get:dispatcher:transport_ride_reached_provider_location") }}',
+                url: '{{ route("get:admin:transport_ride_reached_provider_location") }}',
                 type: "get",
                 data: {provider: reached_pickup_provider},
                 success: function (data) {
@@ -556,7 +556,7 @@
             $("#provider-head h4").text(adminGodsViewLabels.enroute_to_pickup);
             temp = [];
             $.ajax({
-                url: '{{ (Illuminate\Support\Facades\Auth::guard("admin")->check() && (Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 1 || Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 4 )) ? route("get:admin:transport_ride_enroute_provider_location") : route("get:dispatcher:transport_ride_enroute_provider_location") }}',
+                url: '{{ route("get:admin:transport_ride_enroute_provider_location") }}',
                 type: "get",
                 data: {provider: enroute_pickup_provider},
                 success: function (data) {

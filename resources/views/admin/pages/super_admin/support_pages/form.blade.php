@@ -61,7 +61,7 @@
                                         <div class="col-sm-12">
                                             <textarea id="textarea" name="description" placeholder="{{ __('admin.forms.page_description') }}"
                                                       class="form-control">{{ (isset($pages)) ? $pages->description : old('description')}}</textarea>
-                                            <span class="error">{{ $errors->first('email') }}</span>
+                                            <span class="error">{{ $errors->first('description') }}</span>
                                         </div>
                                     </div>
                                     <div class="form-group row">

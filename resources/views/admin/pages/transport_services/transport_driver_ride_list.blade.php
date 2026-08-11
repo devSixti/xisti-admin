@@ -251,7 +251,7 @@
                                                                  @endif
                                                              @elseif(Illuminate\Support\Facades\Auth::guard("admin")->user()->roles == 2)
                                                                  @if(in_array($ride_list['service_cat_id'], $transport_services))
-                                                                     <a href="{{ route('get:dispatcher:ride_details',[$ride_list['id']]) }}"
+                                                                     <a href="{{ route('get:admin:ride_details',[$ride_list['id']]) }}"
                                                                         class="render_link">
                                                                          <span class="icon-list-demo">
                                                                              <i class="fa fa-info-circle text-c-green"

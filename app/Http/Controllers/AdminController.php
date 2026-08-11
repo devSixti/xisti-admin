@@ -197,10 +197,10 @@ class AdminController extends Controller
             return $view;
         }
         elseif (Auth::guard("admin")->user()->roles == 3) {
-            return redirect()->route('get:account:dashboard');
+            return redirect()->route('get:admin:dashboard');
         }
         elseif (Auth::guard("admin")->user()->roles == 2) {
-            return redirect()->route('get:dispatcher:manual_ride_booking');
+            return redirect()->route('get:admin:dashboard');
         }
         else {
             Auth::guard('admin')->logout();

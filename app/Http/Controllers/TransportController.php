@@ -611,7 +611,7 @@ class TransportController extends Controller
 
                 } elseif(Auth::guard("admin")->user()->roles == 2){
                     if(in_array($record->service_cat_id, $transport_services)){
-                        $ride_details_html = '<a href="'.route('get:dispatcher:ride_details',[ $slug, $record->id]).'" class="render_link">
+                        $ride_details_html = '<a href="'.route('get:admin:ride_details',[ $slug, $record->id]).'" class="render_link">
                                                 <span class="icon-list-demo">
                                                     <i class="fa fa-info-circle text-c-green" data-toggle="tooltip" data-placement="top" title="Ride Details"></i>
                                                 </span>
@@ -1480,9 +1480,9 @@ class TransportController extends Controller
         if (Auth::guard("admin")->check()) {
             if (Auth::guard("admin")->user()->roles == 1 || Auth::guard("admin")->user()->roles == 4) {
             } elseif (Auth::guard("admin")->user()->roles == 2) {
-                return redirect()->route('get:dispatcher:manual_ride_booking');
+                return redirect()->route('get:admin:dashboard');
             } elseif (Auth::guard("admin")->user()->roles == 3) {
-                return redirect()->route('get:account:dashboard');
+                return redirect()->route('get:admin:dashboard');
             } else {
                 Auth::guard('admin')->logout();
                 return redirect()->route('get:admin:login');
@@ -2183,7 +2183,7 @@ class TransportController extends Controller
 
                 } elseif(Auth::guard("admin")->user()->roles == 2){
                     if(in_array($record->service_cat_id, $transport_services)){
-                        $ride_details_html = '<a href="'.route('get:dispatcher:ride_details',[ $slug, $record->id]).'" class="render_link">
+                        $ride_details_html = '<a href="'.route('get:admin:ride_details',[ $slug, $record->id]).'" class="render_link">
                                                 <span class="icon-list-demo">
                                                     <i class="fa fa-info-circle text-c-green" data-toggle="tooltip" data-placement="top" title="Ride Details"></i>
                                                 </span>

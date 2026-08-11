@@ -62,7 +62,7 @@
                                         <h5>Issue Details of {{ $user_name }}</h5>
                                     </div>
                                     <div class="col-md-3" style="text-align:right">
-                                        <a @if(isset($report_issue) && $report_issue->status == 0) href="{{route('get:admin:update_report_issue_status')}}" @endif   id="changeStatus" data-id="{{$id}}" class="btn btn-primary" style="@if(isset($report_issue) && $report_issue->status == 1)display:none @endif" >Resolve this issue</a>
+                                        <a @if(isset($report_issue) && $report_issue->status == 0) href="{{route('get:ajax:admin:update_report_issue_status')}}" @endif   id="changeStatus" data-id="{{$id}}" class="btn btn-primary" style="@if(isset($report_issue) && $report_issue->status == 1)display:none @endif" >Resolve this issue</a>
                                     </div>
                                 </div>
                             </div>
@@ -154,7 +154,7 @@
                         $.ajax({
                             type: "GET",
                             dataType: "json",
-                            url: '{{route('get:admin:update_report_issue_status')}}',
+                            url: '{{route('get:ajax:admin:update_report_issue_status')}}',
                             data: {'id': id},
                             success: function(result){
                                 if (result.success == true) {

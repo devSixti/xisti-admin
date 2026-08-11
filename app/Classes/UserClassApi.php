@@ -1474,7 +1474,7 @@ class UserClassApi
         }
 
         $amount_in_cents = (int) round(((float) $amount) * 100);
-        $reference = 'ZIMO-WALLET-U' . (int)$provider_id . '-P' . (int)$provider_type . '-' . time() . '-' . rand(1000, 9999);
+        $reference = 'XISTI-WALLET-U' . (int)$provider_id . '-P' . (int)$provider_type . '-' . time() . '-' . rand(1000, 9999);
         $signature = hash('sha256', $reference . $amount_in_cents . 'COP' . $integrity_key);
 
         $query = http_build_query([

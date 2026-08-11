@@ -17,12 +17,12 @@
                         @if(count($single_menu['child_menu']) > 0)
                             <a href="javascript:void(0)" class="waves-effect waves-dark render_link">
                                 <span class="pcoded-micon"><i class="fa {{ $single_menu['parent_menu']['image']}} "></i></span>
-                                <span class="pcoded-mtext">{{$single_menu['parent_menu']['name']}}</span>
+                                <span class="pcoded-mtext">{{ \App\Helpers\AdminUi::menuEntryLabel((string) ($single_menu['parent_menu']['name'] ?? ''), $single_menu['parent_menu']['module_name'] ?? null) }}</span>
                             </a>
                         @else
                             <a href="{{ route($single_menu['parent_menu']['route_path']) }}" class="waves-effect waves-dark render_link">
                                 <span class="pcoded-micon"><i class="fa {{ $single_menu['parent_menu']['image']}} "></i></span>
-                                <span class="pcoded-mtext">{{$single_menu['parent_menu']['name']}}</span>
+                                <span class="pcoded-mtext">{{ \App\Helpers\AdminUi::menuEntryLabel((string) ($single_menu['parent_menu']['name'] ?? ''), $single_menu['parent_menu']['module_name'] ?? null) }}</span>
                             </a>
                         @endif
                         {{-- code check submenu--}}
@@ -32,11 +32,11 @@
                                     <li class="">
                                         @if(!empty($child_menu["route_path_arr"]))
                                             <a href="{{ route( $child_menu['route_path'],[$child_menu["route_path_arr"]] ) }}" class="waves-effect waves-dark">
-                                                <span class="pcoded-mtext">{{$child_menu['name']}} </span>
+                                                <span class="pcoded-mtext">{{ \App\Helpers\AdminUi::menuEntryLabel((string) ($child_menu['name'] ?? ''), $child_menu['module_name'] ?? null) }} </span>
                                             </a>
                                         @else
                                             <a href="{{ route( $child_menu['route_path']) }}" class="waves-effect waves-dark">
-                                                <span class="pcoded-mtext">{{$child_menu['name']}} </span>
+                                                <span class="pcoded-mtext">{{ \App\Helpers\AdminUi::menuEntryLabel((string) ($child_menu['name'] ?? ''), $child_menu['module_name'] ?? null) }} </span>
                                             </a>
                                         @endif
                                     </li>

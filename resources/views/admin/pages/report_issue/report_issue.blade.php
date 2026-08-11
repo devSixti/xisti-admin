@@ -138,7 +138,7 @@
                         $.ajax({
                             type: "GET",
                             dataType: "json",
-                            url: '{{route('get:admin:update_report_issue_status')}}',
+                            url: '{{route('get:ajax:admin:update_report_issue_status')}}',
                             data: {'id': id},
                             success: function(result){
                                 if (result.success == true) {

@@ -24,7 +24,10 @@ $chat_replace_domain = preg_replace("/[\s_\-\.]/", "-",$get_host);
     //         console.log(error);
     //     });
     //for sing-in
-    firebase.auth().signInWithEmailAndPassword("admin@xistiapp.com", "{{ config('xisti.firebase_chat_admin_password', '') }}")
+    firebase.auth().signInWithEmailAndPassword(
+        @json(config('xisti.firebase_chat_admin_email', 'admin@xistiapp.com')),
+        @json(config('xisti.firebase_chat_admin_password', ''))
+    )
         .then((userCredential) => {
             // Signed in
             var user = userCredential.user;
