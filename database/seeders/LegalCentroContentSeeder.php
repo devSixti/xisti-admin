@@ -37,8 +37,10 @@ class LegalCentroContentSeeder extends Seeder
 
             $docEn = LegalContent::resolve($slug, 'en');
             if ($docEn !== null) {
-                $page->en_name = strip_tags($docEn['title']);
-                if (property_exists($page, 'en_description') || array_key_exists('en_description', $page->getAttributes())) {
+                if (\Illuminate\Support\Facades\Schema::hasColumn($page->getTable(), 'en_name')) {
+                    $page->en_name = strip_tags($docEn['title']);
+                }
+                if (\Illuminate\Support\Facades\Schema::hasColumn($page->getTable(), 'en_description')) {
                     $page->en_description = $docEn['body'];
                 }
             }
