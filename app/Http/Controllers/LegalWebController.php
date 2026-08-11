@@ -99,6 +99,7 @@ class LegalWebController extends Controller
     public function localizedSupportPage(Request $request, string $slug)
     {
         $lang = $this->resolveLang($request);
+        app()->setLocale($lang);
         $idMap = [
             'contacto' => 1,
             'faq' => 2,
