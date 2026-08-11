@@ -54,8 +54,8 @@ Route::get('/legal', [LegalWebController::class, 'index'])->name('get:legal');
 Route::get('/legal/cookies', [LegalWebController::class, 'cookies'])->name('get:legal:cookies');
 Route::get('/legal/eliminar-cuenta', [LegalWebController::class, 'deleteAccountInfo'])->name('get:legal:delete-account');
 Route::post('/contact', [LegalWebController::class, 'postContact'])->name('post:contact');
-Route::get('/legal/{slug}', [LegalWebController::class, 'localizedSupportPage'])
-    ->where('slug', 'faq|aviso-legal|privacidad|terminos|contacto|seguridad')
+Route::get('/legal/{slug}', [LegalWebController::class, 'document'])
+    ->where('slug', 'faq|aviso-legal|privacidad|terminos|contacto|seguridad|tratamiento-datos|condiciones-usuario|condiciones-conductor|pqr')
     ->name('get:legal:page');
 
 //end support pages routes

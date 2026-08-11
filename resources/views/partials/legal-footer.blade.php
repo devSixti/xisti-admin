@@ -11,11 +11,12 @@
                 <p class="small text-muted mb-3">{{ __('legal.footer_disclaimer') }}</p>
                 <div class="d-flex flex-wrap gap-3 small">
                     <a href="{{ url('/legal') }}{{ $q }}">{{ __('legal.centro_legal') }}</a>
-                    <a href="{{ url('/legal/privacidad') }}{{ $q }}">{{ __('legal.privacy') }}</a>
                     <a href="{{ url('/legal/terminos') }}{{ $q }}">{{ __('legal.terms') }}</a>
+                    <a href="{{ url('/legal/privacidad') }}{{ $q }}">{{ __('legal.privacy') }}</a>
+                    <a href="{{ url('/legal/tratamiento-datos') }}{{ $q }}">{{ __('legal.data_processing') }}</a>
+                    <a href="{{ url('/legal/pqr') }}{{ $q }}">{{ __('legal.pqr') }}</a>
                     <a href="{{ url('/legal/cookies') }}{{ $q }}">{{ __('legal.cookies') }}</a>
                     <a href="{{ url('/legal/faq') }}{{ $q }}">{{ __('legal.faq') }}</a>
-                    <a href="{{ url('/') }}#contact">{{ __('legal.contact_link') }}</a>
                     <a href="{{ url('/legal/eliminar-cuenta') }}{{ $q }}">{{ __('legal.delete_account') }}</a>
                 </div>
             </div>

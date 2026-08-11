@@ -75,6 +75,10 @@ sudo -u "${DEPLOY_USER}" bash -lc "
 
 bash "${APP_DIR}/scripts/ec2-artisan-migrate.sh" "${APP_DIR}" "${DEPLOY_USER}"
 
+sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/bootstrap/cache" "${APP_DIR}/storage" 2>/dev/null || true
+sudo chmod -R ug+rwX "${APP_DIR}/bootstrap/cache" "${APP_DIR}/storage" 2>/dev/null || true
+sudo find "${APP_DIR}/storage" "${APP_DIR}/bootstrap/cache" -type d -exec chmod g+s {} \; 2>/dev/null || true
+
 sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/resources" "${APP_DIR}/app" 2>/dev/null || true
 
 APP_DIR="${APP_DIR}" DEPLOY_USER="${DEPLOY_USER}" bash "${APP_DIR}/scripts/ec2-safe-artisan-cache.sh" --reload-php --skip-composer

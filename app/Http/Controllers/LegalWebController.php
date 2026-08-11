@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PageSettings;
+use App\Support\LegalCentro\LegalContent;
+use App\Support\LegalCentro\LegalHub;
 use App\Support\LegalConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -13,45 +14,95 @@ class LegalWebController extends Controller
     private function resolveLang(Request $request): string
     {
         $lang = strtolower(substr((string) $request->query('lang', ''), 0, 2));
-        if (in_array($lang, ['es', 'en', 'pt', 'fr', 'it'], true)) {
+        if (in_array($lang, LegalHub::LANGS, true)) {
             return $lang;
         }
         $accept = strtolower(substr((string) $request->header('Accept-Language', 'es'), 0, 2));
 
-        return in_array($accept, ['es', 'en', 'pt', 'fr', 'it'], true) ? $accept : 'es';
+        return in_array($accept, LegalHub::LANGS, true) ? $accept : 'es';
     }
 
+    /** @param array<string, mixed> $extra */
     private function legalView(string $view, Request $request, array $extra = [])
     {
         $lang = $this->resolveLang($request);
         app()->setLocale($lang);
 
-        return view($view, array_merge([
+        return view($view, array_merge($this->sharedContext($lang, $extra['activeSlug'] ?? null), $extra));
+    }
+
+    /** @return array<string, mixed> */
+    private function sharedContext(string $lang, ?string $activeSlug = null): array
+    {
+        return [
             'lang' => $lang,
+            'activeSlug' => $activeSlug,
             'centroLegalUrl' => LegalConfig::centroLegalUrl($lang),
             'legalEmails' => LegalConfig::emails(),
             'storeLinks' => [
                 'android' => LegalConfig::storeLink('android'),
                 'ios' => LegalConfig::storeLink('ios'),
             ],
-        ], $extra));
+            'brandName' => LegalHub::brandName(),
+            'tagline' => LegalHub::tagline(),
+            'consentVersion' => LegalHub::consentVersion(),
+            'lastUpdated' => LegalHub::lastUpdated(),
+            'entity' => LegalHub::entity(),
+            'navSections' => LegalHub::sections(),
+            'langs' => LegalHub::LANGS,
+        ];
     }
 
     public function index(Request $request)
     {
-        return $this->legalView('legal.index', $request);
+        return $this->legalView('legal.index', $request, ['activeSlug' => 'hub']);
     }
 
     public function cookies(Request $request)
     {
-        return $this->legalView('legal.cookies', $request);
+        $doc = LegalContent::resolve('cookies', $this->resolveLang($request));
+
+        return $this->legalView('legal.page', $request, [
+            'activeSlug' => 'cookies',
+            'title' => $doc['title'] ?? __('legal.cookies'),
+            'summary' => $doc['summary'] ?? '',
+            'body' => $doc['body'] ?? view('legal.partials.cookies-fallback')->render(),
+        ]);
     }
 
     public function deleteAccountInfo(Request $request)
     {
-        return $this->legalView('legal.delete-account', $request, [
+        $doc = LegalContent::resolve('eliminar-cuenta', $this->resolveLang($request));
+
+        return $this->legalView('legal.page', $request, [
+            'activeSlug' => 'eliminar-cuenta',
+            'title' => $doc['title'] ?? __('legal.delete_account_page.title'),
+            'summary' => $doc['summary'] ?? '',
+            'body' => $doc['body'] ?? '',
             'deletionFlowUrl' => url('/account-deletion/login'),
         ]);
+    }
+
+    public function document(Request $request, string $slug)
+    {
+        $lang = $this->resolveLang($request);
+        app()->setLocale($lang);
+
+        $doc = LegalContent::resolve($slug, $lang);
+        if ($doc === null) {
+            abort(404);
+        }
+
+        return view('legal.page', $this->sharedContext($lang, $slug) + [
+            'title' => $doc['title'],
+            'summary' => $doc['summary'],
+            'body' => $doc['body'],
+        ]);
+    }
+
+    public function localizedSupportPage(Request $request, string $slug)
+    {
+        return $this->document($request, $slug);
     }
 
     public function postContact(Request $request)
@@ -71,7 +122,7 @@ class LegalWebController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->to(url('/#contact') . '?lang=' . $lang)
+            return redirect()->to(url('/#contact').'?lang='.$lang)
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -83,7 +134,7 @@ class LegalWebController extends Controller
                     "Contact form\n\nName: {$request->input('name')}\nEmail: {$request->input('email')}\n\n{$request->input('message')}",
                     function ($message) use ($to, $request) {
                         $message->to($to)
-                            ->subject('XISTI contact: ' . $request->input('name'))
+                            ->subject(LegalHub::brandName().' contact: '.$request->input('name'))
                             ->replyTo($request->input('email'), $request->input('name'));
                     }
                 );
@@ -92,39 +143,7 @@ class LegalWebController extends Controller
             }
         }
 
-        return redirect()->to(url('/#contact') . '?lang=' . $lang)
+        return redirect()->to(url('/#contact').'?lang='.$lang)
             ->with('contact_success', __('legal.contact_form.success'));
-    }
-
-    public function localizedSupportPage(Request $request, string $slug)
-    {
-        $lang = $this->resolveLang($request);
-        app()->setLocale($lang);
-        $idMap = [
-            'contacto' => 1,
-            'faq' => 2,
-            'aviso-legal' => 3,
-            'privacidad' => 4,
-            'terminos' => 5,
-            'seguridad' => 6,
-        ];
-        $pageId = $idMap[$slug] ?? null;
-        if ($pageId === null) {
-            abort(404);
-        }
-
-        $page = PageSettings::query()->where('type', 1)->where('id', $pageId)->first();
-        if ($page === null) {
-            abort(404);
-        }
-
-        $localized = $page->localized($lang);
-
-        return view('legal.page', [
-            'lang' => $lang,
-            'title' => $localized->name,
-            'body' => $localized->description,
-            'centroLegalUrl' => LegalConfig::centroLegalUrl($lang),
-        ]);
     }
 }
