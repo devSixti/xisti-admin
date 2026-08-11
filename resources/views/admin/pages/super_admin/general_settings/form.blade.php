@@ -11,7 +11,7 @@
             width: 100%;
             height: 200px;
             position: relative;
-            /* /* overflow: hidden; */ /* admin-zimo: allow page scroll */ */ /* admin-zimo: allow page scroll */
+            /* allow page scroll */
             background-color: #ffffff;
             color: #ecf0f1;
             cursor: pointer;

@@ -123,7 +123,7 @@
             list-style-type: none;
             margin: 0;
             padding: 0;
-            /* /* overflow: hidden; */ /* admin-zimo: allow page scroll */ */ /* admin-zimo: allow page scroll */
+            /* allow page scroll */
         }
 
         ul.set-date li {

@@ -10,7 +10,7 @@
         .md-perspective,
         .md-perspective body {
             height: 100%;
-            /* /* overflow: hidden; */ /* admin-zimo: allow page scroll */ */ /* admin-zimo: allow page scroll */
+            /* allow page scroll */
         }
         .md-perspective body {
             background: #222;

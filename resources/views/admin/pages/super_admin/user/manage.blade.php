@@ -464,8 +464,8 @@
     </script>
 
     <script type="text/javascript">
-        if (!window.__zimoCustomerListHandlers) {
-            window.__zimoCustomerListHandlers = true;
+        if (!window.__xistiCustomerListHandlers) {
+            window.__xistiCustomerListHandlers = true;
 
         $(document).on('click', '.delete', function (e) {
             e.preventDefault();

@@ -38,9 +38,9 @@ return [
         'logo_url' => env('XISTI_MAIL_LOGO_URL', ''),
     ],
     'legal' => [
-        'centro_legal_url' => env('XISTI_LEGAL_URL', 'https://admin.xistiapp.com/terms-and-conditions'),
-        'terms_url' => env('XISTI_TERMS_URL', 'https://admin.xistiapp.com/terms-and-conditions'),
-        'privacy_url' => env('XISTI_PRIVACY_URL', 'https://admin.xistiapp.com/privacy-policy'),
+        'centro_legal_url' => env('XISTI_LEGAL_URL', 'https://admin.xistiapp.com/legal'),
+        'terms_url' => env('XISTI_TERMS_URL', 'https://admin.xistiapp.com/legal/terminos'),
+        'privacy_url' => env('XISTI_PRIVACY_URL', 'https://admin.xistiapp.com/legal/privacidad'),
         'emails' => [
             'support' => env('XISTI_SUPPORT_EMAIL', 'soporte@xistiapp.com'),
             'legal' => env('XISTI_EMAIL_LEGAL', 'legal@xistiapp.com'),

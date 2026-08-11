@@ -6,7 +6,7 @@ class LegalConfig
 {
     public static function centroLegalUrl(?string $lang = null): string
     {
-        $url = (string) config('xisti.legal.centro_legal_url', 'https://admin.xistiapp.com/terms-and-conditions');
+        $url = (string) config('xisti.legal.centro_legal_url', 'https://admin.xistiapp.com/legal');
         if ($lang === null || $lang === '') {
             return $url;
         }

@@ -31,53 +31,38 @@ class HomeController extends Controller
         return view('home');
     }
 
+    private function resolveLegalPageLang(Request $request): string
+    {
+        $lang = strtolower(substr((string) $request->query('lang', ''), 0, 2));
+        if ($lang !== '') {
+            return $lang;
+        }
+        $accept = (string) $request->header('Accept-Language', 'es');
+        return strtolower(substr($accept, 0, 2)) ?: 'es';
+    }
+
     //Terms and conditions code
     public function getTermsAndConditions(Request $request)
     {
-        //1=user;
-        $get_page_data = PageSettings::query()->where('name', 'LIKE', "%terms%")->where('type', 1)->first();
-        if ($get_page_data != Null) {
-            return view('terms-and-conditions', compact('get_page_data'));
-        }
-        return view('terms-and-conditions');
+        return redirect()->to(url('/legal/terminos').'?lang='.$this->resolveLegalPageLang($request), 301);
     }
 
     //Privacy Policy code
     public function getPrivacyPolicy(Request $request)
     {
-        //1=user;
-        $title = "privacy policy";
-        $get_page_data = PageSettings::query()->where('name', 'LIKE', "%privacy%")->where('type', 1)->first();
-        if ($get_page_data != Null) {
-
-            return view('terms-and-conditions', compact('get_page_data', 'title'));
-        }
-        return view('terms-and-conditions', compact('title'));
+        return redirect()->to(url('/legal/privacidad').'?lang='.$this->resolveLegalPageLang($request), 301);
     }
 
     //Disclaimer code
     public function getDisclaimer(Request $request)
     {
-        //1=user;
-        $title = "disclaimer";
-        $get_page_data = PageSettings::query()->where('name', 'LIKE', "%disclaimer%")->where('type', 1)->first();
-        if ($get_page_data != Null) {
-
-            return view('terms-and-conditions', compact('get_page_data', 'title'));
-        }
-        return view('terms-and-conditions', compact('title'));
+        return redirect()->to(url('/legal/aviso-legal').'?lang='.$this->resolveLegalPageLang($request), 301);
     }
 
     //Faq code
     public function getFaq(Request $request)
     {
-        //1=user;
-        $title = "faq";
-        $get_page_data = PageSettings::query()->where('name', 'LIKE', "%faq%")->where('type', 1)->first();
-        if ($get_page_data != Null) {
-            return view('terms-and-conditions', compact('get_page_data', 'title'));
-        }
-        return view('terms-and-conditions', compact('title'));
+        return redirect()->to(url('/legal/faq').'?lang='.$this->resolveLegalPageLang($request), 301);
     }
 
     public function getWompiPaymentRedirect(Request $request)

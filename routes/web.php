@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\LegalWebController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminLocaleController;
 use App\Http\Controllers\Api\CustomerApiController;
@@ -46,7 +47,15 @@ Route::get('/privacy-policy', [HomeController::class,'getPrivacyPolicy'])->name(
 Route::get('/disclaimer', [HomeController::class,'getDisclaimer'])->name('get:disclaimer');
 Route::get('/faq', [HomeController::class,'getFaq'])->name('get:faq');
 
-// Static payment status pages for mobile app WebView
+Route::get('/legal', [LegalWebController::class, 'index'])->name('get:legal');
+Route::get('/legal/cookies', [LegalWebController::class, 'cookies'])->name('get:legal:cookies');
+Route::get('/legal/eliminar-cuenta', [LegalWebController::class, 'deleteAccountInfo'])->name('get:legal:delete-account');
+Route::post('/contact', [LegalWebController::class, 'postContact'])->name('post:contact');
+Route::get('/legal/{slug}', [LegalWebController::class, 'localizedSupportPage'])
+    ->where('slug', 'faq|aviso-legal|privacidad|terminos|contacto|seguridad')
+    ->name('get:legal:page');
+
+//end support pages routes
 Route::get('/payments/wompi/redirect', [HomeController::class,'getWompiPaymentRedirect'])->name('payment.wompi.redirect');
 Route::get('/payments/success', function() { return view('success'); })->name('payment.success');
 Route::get('/payments/failed', function() { return view('failed'); })->name('payment.failed');
@@ -158,9 +167,6 @@ Route::prefix('admin')->group(function () {
                 Route::get('/about-us', [AdminController::class,'getAdminAboutPages'])->name('get:admin:about-us');
                 Route::get('/contact-us', [AdminController::class,'getAdminContactUsPages'])->name('get:admin:contact-us');
                 Route::get('/faq', [AdminController::class,'getAdminFaqPages'])->name('get:admin:faq');
-
-                Route::post('/update', [AdminController::class,'postAdminUpdateSupportPages'])->name('post:admin:update_pages');
-
 
                 //Geo Fencing Restricted areas
                 Route::get('/restricted-area-list', [AdminController::class,'getAdminRestrictedAreaList'])->name('get:admin:restricted_area_list');
