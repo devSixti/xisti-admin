@@ -1788,6 +1788,14 @@ class CustomerApiController extends Controller
             return $failed;
         }
 
+        if (! \App\Helpers\MunicipioResolveHelper::catalogAvailable()) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Municipio no encontrado',
+                'message_code' => 9,
+            ]);
+        }
+
         $muni = \App\Models\Municipality::query()
             ->where('dane_code', $request->get('dane_code'))
             ->where('status', 1)

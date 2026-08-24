@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Support\LegalCentro\LegalContent;
 use App\Support\LegalCentro\LegalHub;
 use App\Support\LegalConfig;
+use App\Support\PublicLocale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -13,13 +14,7 @@ class LegalWebController extends Controller
 {
     private function resolveLang(Request $request): string
     {
-        $lang = strtolower(substr((string) $request->query('lang', ''), 0, 2));
-        if (in_array($lang, LegalHub::LANGS, true)) {
-            return $lang;
-        }
-        $accept = strtolower(substr((string) $request->header('Accept-Language', 'es'), 0, 2));
-
-        return in_array($accept, LegalHub::LANGS, true) ? $accept : 'es';
+        return PublicLocale::fromRequest($request);
     }
 
     /** @param array<string, mixed> $extra */

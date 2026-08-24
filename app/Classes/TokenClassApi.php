@@ -7,6 +7,7 @@ use App\Models\UserVerification;
 use App\Support\ColombiaFormValidation;
 use App\Support\OtpVerificationHelper;
 use App\Support\QaTestUserHelper;
+use App\Support\TwilioSettings;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Twilio\Rest\Client;
@@ -52,8 +53,12 @@ class TokenClassApi
         }
         if ($settings->is_otp_verification != Null && $settings->is_otp_verification == 1 && $user_details->is_default_user == 0) {
             if (isset($settings->otp_method) && (int) $settings->otp_method === 1) {
-                if ($settings->twilio_service_key == Null || $settings->twilio_auth_token == Null || $settings->twilio_verify_service_key == Null) {
-                    Log::warning('Twilio Verify settings missing for user OTP.', ['user_id' => $user_details->id]);
+                TwilioSettings::hydrate($settings);
+                if (! TwilioSettings::isConfigured($settings)) {
+                    Log::warning('Twilio Verify settings missing for user OTP.', [
+                        'user_id' => $user_details->id,
+                        'sid_prefix' => TwilioSettings::sidPrefix($settings),
+                    ]);
 
                     return response()->json([
                         'status' => 0,
@@ -104,8 +109,12 @@ class TokenClassApi
         }
 
         try {
-            $twilio = new Client($settings->twilio_service_key, $settings->twilio_auth_token);
-            $serviceSid = $settings->twilio_verify_service_key;
+            TwilioSettings::hydrate($settings);
+            $twilio = new Client(
+                TwilioSettings::accountSid($settings),
+                TwilioSettings::authToken($settings)
+            );
+            $serviceSid = TwilioSettings::verifyServiceSid($settings);
 
             $this->cancelStoredPendingVerification($twilio, $serviceSid, (int) $user_details->id);
 

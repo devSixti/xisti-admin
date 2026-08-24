@@ -374,7 +374,8 @@ class UpdateRegisterController extends Controller
                             ]);
                         }
                         try {
-                            if ($settings->twilio_service_key == Null || $settings->twilio_auth_token == Null || $settings->twilio_verify_service_key == Null) {
+                            \App\Support\TwilioSettings::hydrate($settings);
+                            if (! \App\Support\TwilioSettings::isConfigured($settings)) {
                                 info("step 2");
                                 return response()->json([
                                     "status" => 0,

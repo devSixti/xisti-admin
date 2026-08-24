@@ -12,9 +12,8 @@ final class TwilioOtpVerification
 {
     public static function verifyCode(User $user, UserVerification $record, string $code, $settings): bool
     {
-        if ($settings->twilio_service_key === null
-            || $settings->twilio_auth_token === null
-            || $settings->twilio_verify_service_key === null) {
+        TwilioSettings::hydrate($settings);
+        if (! TwilioSettings::isConfigured($settings)) {
             return false;
         }
 
@@ -30,8 +29,11 @@ final class TwilioOtpVerification
         $whatsappTo = 'whatsapp:'.$smsTo;
         $to = $channel === TokenClassApi::CHANNEL_WHATSAPP ? $whatsappTo : $smsTo;
 
-        $twilio = new Client($settings->twilio_service_key, $settings->twilio_auth_token);
-        $serviceSid = $settings->twilio_verify_service_key;
+        $twilio = new Client(
+            TwilioSettings::accountSid($settings),
+            TwilioSettings::authToken($settings)
+        );
+        $serviceSid = TwilioSettings::verifyServiceSid($settings);
 
         $attempts = [
             ['To' => $to, 'Code' => $code],

@@ -114,6 +114,9 @@ APP_DIR="${APP_DIR}" DEPLOY_USER="${DEPLOY_USER}" bash "${APP_DIR}/scripts/ec2-s
 
 sudo chown -R "${DEPLOY_USER}:www-data" "${APP_DIR}/bootstrap/cache" "${APP_DIR}/storage"
 sudo chmod -R ug+rwX "${APP_DIR}/bootstrap/cache" "${APP_DIR}/storage"
+sudo find "${APP_DIR}/storage" "${APP_DIR}/bootstrap/cache" -type d -exec chmod g+s {} \;
+sudo find "${APP_DIR}/storage/logs" -type f -exec chmod 664 {} \; 2>/dev/null || true
+sudo find "${APP_DIR}/storage/logs" -type d -exec chmod 2775 {} \; 2>/dev/null || true
 sudo systemctl reload php8.2-fpm nginx 2>/dev/null || true
 
 sudo bash "${APP_DIR}/scripts/install-ec2-exchange-rates-cron.sh" 2>/dev/null || true
